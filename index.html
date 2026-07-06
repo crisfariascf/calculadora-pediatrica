@@ -13,15 +13,14 @@
 <header>
   <div class="badge">🩺 PediCalc offline</div>
   <h1>Calculadoras Pediátricas</h1>
-  <div class="sub">Página inicial para reunir suas calculadoras e protocolos. A parte de medicações já está conectada como um módulo próprio, com busca por nome, sintoma, apresentação, via e categoria.</div>
+  <div class="sub">Página inicial para reunir suas calculadoras e protocolos. A parte de medicações está conectada como um módulo próprio do RFOFOS, com busca por nome, sintoma, apresentação, via e categoria.</div>
   <div class="topbar">
-    <input id="search" placeholder="Buscar: medicações, asma, diarreia, OMA, ITU, pneumonia, crupe..." autofocus>
+    <input id="search" placeholder="Buscar: medicações, asma, diarreia, cálculos..." autofocus>
     <select id="filter">
       <option value="">Todos</option>
       <option>Calculadora</option>
       <option>Protocolo</option>
       <option>Medicações</option>
-      <option>Em breve</option>
     </select>
   </div>
 </header>
@@ -30,25 +29,19 @@
 <div class="grid" id="grid"></div>
 
 <div class="footer">
-  <b>Como organizar no GitHub Pages:</b> deixe este arquivo como <b>index.html</b> na pasta principal. Coloque também o arquivo <b>rfofos_2026_medicacoes_busca.html</b> na mesma pasta. Os demais cards já ficam preparados para você apontar para suas outras calculadoras HTML.
+  <b>Organização dos arquivos:</b> deixe este arquivo como <b>index.html</b> na pasta principal. Na mesma pasta, coloque também <b>asma.html</b>, <b>calculos-gerais.html</b>, <b>diarreia.html</b> e <b>rfofos.html</b>.
 </div>
 </div>
 <script>
 const modules=[
- {title:'Medicações RFOFOS 2026',desc:'Busca offline com doses, apresentações, vias, diluições, tempo de infusão, regras práticas e calculadora mg/kg.',href:'rfofos_2026_medicacoes_busca.html',icon:'💊',type:'Medicações',tags:['RFOFOS','Busca','Dose'],accent:'#7c3aed'},
- {title:'Cálculos gerais',desc:'Espaço para sua calculadora de dipirona, paracetamol, hidratação, dose por peso e prescrições rápidas.',href:'calculos-gerais.html',icon:'🧮',type:'Calculadora',tags:['Peso','mL','Prescrição'],accent:'#06b6d4',soon:true},
+ {title:'RFOFOS 2026 / Medicações',desc:'Busca offline com doses, apresentações, vias, diluições, tempo de infusão, regras práticas e calculadora mg/kg.',href:'rfofos.html',icon:'💊',type:'Medicações',tags:['RFOFOS','Busca','Dose'],accent:'#7c3aed'},
+ {title:'Cálculos gerais',desc:'Calculadora geral para dose por peso, medicações comuns, hidratação e prescrições rápidas.',href:'calculos-gerais.html',icon:'🧮',type:'Calculadora',tags:['Peso','mL','Prescrição'],accent:'#06b6d4'},
  {title:'Asma',desc:'Classificação leve/moderada/grave, salbutamol, ipratrópio, corticoide, magnésio e reavaliação.',href:'asma.html',icon:'🫁',type:'Protocolo',tags:['PA','Puffs','Conduta'],accent:'#10b981'},
- {title:'Diarreia / GECA',desc:'Planos A, B e C, SRO, ondansetrona, zinco, hidratação e prescrição para casa.',href:'diarreia-geca.html',icon:'💧',type:'Protocolo',tags:['SRO','Zinco','Vômitos'],accent:'#0ea5e9'},
- {title:'Febre sem foco',desc:'Fluxo por idade, vacinação, risco para ITU, exames, ceftriaxona e seguimento.',href:'febre-sem-foco.html',icon:'🌡️',type:'Protocolo',tags:['FSSL','ITU','ATB'],accent:'#ef4444'},
- {title:'Crupe',desc:'Westley, dexametasona em mL, nebulização com adrenalina/epinefrina e observação.',href:'crupe.html',icon:'😮‍💨',type:'Protocolo',tags:['Dexa','NBZ','Westley'],accent:'#f59e0b'},
- {title:'OMA',desc:'Otite média aguda: critérios, analgesia, observação versus antibiótico e apresentações.',href:'oma.html',icon:'👂',type:'Protocolo',tags:['Amoxi','Dor','ATB'],accent:'#ec4899'},
- {title:'ITU',desc:'Investigação, fatores de risco, coleta, tratamento, apresentações e cálculo por peso.',href:'itu.html',icon:'🧫',type:'Protocolo',tags:['Urina','ATB','Cultura'],accent:'#14b8a6'},
- {title:'Pneumonia',desc:'PAC complicada/não complicada, gravidade, antibiótico, sinais de internação e evolução.',href:'pneumonia.html',icon:'🩻',type:'Protocolo',tags:['PAC','ATB','Internação'],accent:'#6366f1'},
- {title:'Dor abdominal',desc:'Sinais de alarme, fluxograma, analgesia, investigação e encaminhamento.',href:'dor-abdominal.html',icon:'🤕',type:'Protocolo',tags:['Alarme','Fluxo','Dor'],accent:'#a855f7'}
+ {title:'Diarreia / GECA',desc:'Planos A, B e C, SRO, ondansetrona, zinco, hidratação e prescrição para casa.',href:'diarreia.html',icon:'💧',type:'Protocolo',tags:['SRO','Zinco','Vômitos'],accent:'#0ea5e9'}
 ];
 const grid=document.getElementById('grid'), search=document.getElementById('search'), filter=document.getElementById('filter'), count=document.getElementById('count');
 function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function render(){const q=norm(search.value), f=filter.value; let arr=modules.filter(m=>(!f||m.type===f||(f==='Em breve'&&m.soon)) && (!q||norm(m.title+' '+m.desc+' '+m.type+' '+m.tags.join(' ')).includes(q))); count.textContent=arr.length+' módulo(s)'; grid.innerHTML=arr.map(m=>`<a class="card ${m.soon?'soon':''}" href="${m.href}" style="--accent:${m.accent}"><div class="icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p><div class="tags">${(m.soon?['preparado']:m.tags).map(t=>`<span class="tag">${t}</span>`).join('')}</div></a>`).join('') || '<div class="footer">Nenhum módulo encontrado.</div>'}
+function render(){const q=norm(search.value), f=filter.value; let arr=modules.filter(m=>(!f||m.type===f) && (!q||norm(m.title+' '+m.desc+' '+m.type+' '+m.tags.join(' ')).includes(q))); count.textContent=arr.length+' módulo(s)'; grid.innerHTML=arr.map(m=>`<a class="card" href="${m.href}" style="--accent:${m.accent}"><div class="icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p><div class="tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a>`).join('') || '<div class="footer">Nenhum módulo encontrado.</div>'}
 search.addEventListener('input',render); filter.addEventListener('input',render); render();
 </script>
 </body>
