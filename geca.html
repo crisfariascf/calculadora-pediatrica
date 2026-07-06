@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GECA Pediátrica — Calculadora FINAL SBP 2023</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--blue:#175cd3;--green:#067647;--yellow:#b54708;--red:#b42318;--line:#d0d5dd}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1120px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#173f75,#176b87);color:#fff;padding:22px;border-radius:18px;margin-bottom:14px}
+.hero h1{margin:0 0 7px;font-size:26px}.hero p{margin:5px 0;line-height:1.4}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid #e4e7ec;border-radius:16px;padding:16px;box-shadow:0 1px 3px #10182810}.full{grid-column:1/-1}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:15px 0 8px}
+label{font-size:13px;font-weight:650;display:block;margin:9px 0 5px}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:15px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checks{display:grid;gap:7px}.check{display:flex;gap:8px;align-items:flex-start;font-weight:500;margin:0;padding:7px 8px;border:1px solid #eaecf0;border-radius:9px}.check input{width:auto;margin-top:2px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;background:var(--blue);color:#fff;cursor:pointer}.secondary{background:#475467}.light{background:#eaf0fb;color:#1849a9}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#eef4ff;color:#3538cd;font-weight:750;font-size:12px;margin:0 5px 6px 0}.ok{background:#ecfdf3;color:var(--green)}.warn{background:#fffaeb;color:var(--yellow)}.danger{background:#fef3f2;color:var(--red)}
+.box{border-radius:12px;padding:12px;margin:10px 0;border-left:5px solid var(--blue);background:#f5f8ff;line-height:1.5}.box.ok{border-color:var(--green);background:#ecfdf3;color:#172033}.box.warn{border-color:#f79009;background:#fffaeb;color:#172033}.box.danger{border-color:var(--red);background:#fef3f2;color:#172033}
+.rx{white-space:pre-wrap;background:#101828;color:#f2f4f7;padding:16px;border-radius:12px;line-height:1.5;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;overflow:auto}
+.small{font-size:12px;color:var(--muted);line-height:1.45}.hide{display:none}.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.kpi div{padding:10px;background:#f8fafc;border-radius:10px}.kpi b,.kpi span{display:block}.kpi span{margin-top:5px;font-size:15px}
+@media(max-width:760px){.grid,.row{grid-template-columns:1fr}.full{grid-column:auto}.kpi{grid-template-columns:1fr 1fr}.wrap{padding:10px}.hero{border-radius:12px}}
+@media print{body{background:#fff}.noPrint{display:none!important}.card{box-shadow:none;break-inside:avoid}.grid{display:block}.card{margin-bottom:10px}.rx{color:#000;background:#fff;border:1px solid #999}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="hero">
+<h1>GECA / Diarreia Aguda Pediátrica — SBP 2023</h1>
+<p><b>Base principal e exclusiva do fluxo clínico:</b> Guia Prático de Atualização SBP — Diarreia Aguda Infecciosa, nº 74, junho de 2023. O protocolo local HCA é usado somente como informação institucional complementar de apresentações/diluições, sem substituir o fluxo SBP 2023.</p>
+<p>Diarreia aguda: mudança do hábito intestinal com ≥3 evacuações menos consistentes/líquidas ao dia e duração de até 14 dias. O eixo da conduta é <b>hidratação + alimentação + zinco quando indicado</b>.</p>
+</div>
+
+<div class="grid">
+<div class="card">
+<h2>1) Paciente e evolução</h2>
+<div class="row"><div><label>Idade</label><input id="idade" type="number" min="0" step="0.1" placeholder="Ex.: 18"></div><div><label>Unidade</label><select id="unidade"><option value="meses">meses</option><option value="anos">anos</option><option value="dias">dias</option></select></div></div>
+<label>Peso atual (kg)</label><input id="peso" type="number" min="0.1" step="0.1" placeholder="Ex.: 12,5">
+<label>Peso recente pré-doença (kg), se conhecido</label><input id="pesoPrev" type="number" min="0.1" step="0.1" placeholder="Opcional — calcula % de perda">
+<div class="row"><div><label>Dias de diarreia</label><input id="dias" type="number" min="0" step="1" value="1"></div><div><label>Evacuações/24 h</label><input id="evac" type="number" min="0" step="1" value="3"></div></div>
+<div class="row"><div><label>Vômitos/24 h</label><input id="vom" type="number" min="0" step="1" value="0"></div><div><label>Temperatura máx. °C</label><input id="temp" type="number" step="0.1" placeholder="Opcional"></div></div>
+<label>Contexto especial</label><select id="especial"><option value="nenhum">Nenhum</option><option value="cardio">Cardiopatia grave</option><option value="desnut">Desnutrição grave</option><option value="imuno">Imunodeficiência/imunossupressão</option><option value="falciforme">Anemia falciforme</option></select>
+</div>
+
+<div class="card">
+<h2>2) Classificação de hidratação — observe e explore</h2>
+<p class="small">A calculadora aplica a lógica do quadro SBP/MS: Plano B com ≥2 sinais de desidratação; Plano C com ≥2 sinais, sendo ≥1 sinal grave marcado com *.</p>
+<div class="checks" id="sinais"></div>
+</div>
+
+<div class="card">
+<h2>3) Características que mudam a conduta</h2>
+<div class="checks" id="clinica"></div>
+<label>Tolerância à via oral</label><select id="vo"><option value="boa">Boa / aceita líquidos</option><option value="baixa">Baixa / vômitos persistentes</option><option value="incapaz">Incapaz de beber</option></select>
+<label>Aspecto da diarreia</label><select id="aspecto"><option value="aquosa">Aquosa, sem sangue</option><option value="sangueBom">Sangue, mas estado geral preservado</option><option value="disenteria">Sangue + febre/comprometimento do estado geral</option><option value="colera">Suspeita de cólera grave</option></select>
+</div>
+
+<div class="card">
+<h2>4) Apresentações disponíveis</h2>
+<label>Dipirona</label><select id="dipConc"><option value="500">Gotas 500 mg/mL (20 gotas/mL)</option><option value="50">Solução/xarope 50 mg/mL</option></select>
+<label>Dose de dipirona para cálculo</label><select id="dipDose"><option value="10">10 mg/kg/dose</option><option value="15" selected>15 mg/kg/dose</option><option value="20">20 mg/kg/dose</option></select>
+<label>Ondansetrona solução oral</label><select id="ondaConc"><option value="0.8">4 mg/5 mL (0,8 mg/mL)</option><option value="1">1 mg/mL</option></select>
+<label>Zinco solução</label><select id="zincoConc"><option value="4">4 mg/mL</option><option value="4">2 mg/0,5 mL (= 4 mg/mL)</option></select>
+<label>Azitromicina suspensão</label><select id="aziConc"><option value="40">200 mg/5 mL</option><option value="20">100 mg/5 mL</option></select>
+<p class="small">Ondansetrona é calculada como <b>dose única no Plano B com vômitos persistentes</b>, conforme o guia. Não é gerada como uso rotineiro domiciliar.</p>
+</div>
+
+<div class="card full">
+<div class="btns noPrint"><button class="btn" onclick="calcular()">Gerar conduta + prescrição</button><button class="btn secondary" onclick="limpar()">Limpar</button><button class="btn light" onclick="window.print()">Imprimir / salvar PDF</button></div>
+<div id="saida" class="hide">
+<h2 style="margin-top:18px">Resultado</h2><div id="badges"></div><div id="resumo"></div>
+<h3>Conduta adaptada</h3><div id="conduta"></div>
+<h3>Prescrição gerada</h3><div id="rx" class="rx"></div>
+<h3>Orientações de alta / responsável</h3><div id="orient" class="rx"></div>
+<h3>Memória de cálculo e cuidados por idade/peso</h3><div id="mem" class="rx"></div>
+</div>
+</div>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const n=id=>{let x=parseFloat($(id).value);return Number.isFinite(x)?x:null};
+const yes=id=>$(id)&&$(id).checked;
+const fmt=(x,d=1)=>Number(x).toLocaleString('pt-BR',{maximumFractionDigits:d});
+const round=(x,d=1)=>Math.round(x*10**d)/10**d;
+
+const sinais=[
+['irritado','Irritado / intranquilo',false],
+['olhos','Olhos fundos',false],
+['sedento','Sedento, bebe rápido e avidamente',false],
+['lagrimas','Lágrimas ausentes',false],
+['boca','Boca/língua seca ou levemente seca',false],
+['prega','Prega abdominal desaparece lentamente',false],
+['graveMental','Comatoso, hipotônico, letárgico ou inconsciente *',true],
+['incapazSede','Não é capaz de beber *',true],
+['pulso','Pulso fraco ou ausente *',true],
+['pregaGrave','Prega desaparece muito lentamente (>2 s)',false]
+];
+const clinica=[
+['bilioso','Vômito bilioso'],
+['abdome','Suspeita de abdome agudo / íleo'],
+['convulsao','Convulsão / alteração importante do sensório'],
+['choque','Sinais de choque hipovolêmico / perfusão lentificada'],
+['febreDor','Febre ou dor — considerar antitérmico/analgésico'],
+['vomPersist','Vômitos persistentes'],
+['oliguria','Diminuição da diurese'],
+['toxemia','Toxemia / prostração significativa'],
+['surto','Contexto de surto epidemiológico']
+];
+$('sinais').innerHTML=sinais.map(x=>`<label class="check"><input type="checkbox" id="${x[0]}"><span>${x[1]}</span></label>`).join('');
+$('clinica').innerHTML=clinica.map(x=>`<label class="check"><input type="checkbox" id="${x[0]}"><span>${x[1]}</span></label>`).join('');
+
+function idadeMeses(){
+ let i=n('idade')||0,u=$('unidade').value;
+ return u==='anos'?i*12:u==='dias'?i/30.4375:i;
+}
+function idadeTxt(){
+ let i=n('idade'),u=$('unidade').value;
+ return `${fmt(i,1)} ${u}`;
+}
+function perdaPeso(){
+ let a=n('peso'),p=n('pesoPrev');
+ if(!a||!p||p<=0||a>p)return null;
+ return (p-a)/p*100;
+}
+function classificacao(){
+ let comuns=['irritado','olhos','sedento','lagrimas','boca','prega','pregaGrave'].filter(yes).length;
+ let graves=['graveMental','incapazSede','pulso'].filter(yes).length;
+ let total=comuns+graves;
+ let perda=perdaPeso();
+ if(yes('choque')|| (total>=2&&graves>=1) || (perda!==null&&perda>10)) return 'C';
+ if(total>=2 || (perda!==null&&perda>0&&perda<=10)) return 'B';
+ return 'A';
+}
+function faixaPlanoC(m){
+ if(m < 1) return 'RN';
+ if(m < 12) return 'MENOR_1_ANO';
+ return 'ACIMA_1_ANO';
+}
+function planoCVolumes(w,m,especial){
+ let faixa=faixaPlanoC(m);
+ if(faixa==='RN' || (especial==='cardio' && m<60)){
+   return {faixa:faixa==='RN'?'Recém-nascido':'Cardiopatia grave',cautela:true,etapa1:10*w,tempo1:'avaliar parâmetros clínicos',etapa2:null,tempo2:'adequar velocidade/repetição conforme resposta'};
+ }
+ if(faixa==='MENOR_1_ANO') return {faixa:'Menor de 1 ano',cautela:false,etapa1:30*w,tempo1:'1 hora',etapa2:70*w,tempo2:'5 horas'};
+ return {faixa:'1 ano ou mais — aplicar faixa operacional acima de 1 ano',cautela:false,etapa1:30*w,tempo1:'30 minutos',etapa2:70*w,tempo2:'2 horas e 30 minutos'};
+}
+function holliday(w){
+ if(w<=10)return 100*w;
+ if(w<=20)return 1000+50*(w-10);
+ return Math.min(2000,1500+20*(w-20));
+}
+function ondaDose(m,w){
+ if(m<6)return null;
+ if(m<=24)return 2;
+ if(m<=120 && w<=30)return 4;
+ if(m>120 || w>30)return 8;
+ return 4;
+}
+function dipirona(w){
+ let dose=Number($('dipDose').value),conc=Number($('dipConc').value);
+ let mg=round(w*dose,0),ml=round(mg/conc,2);
+ return {dose,mg,ml,gotas:conc===500?Math.max(1,Math.round(ml*20)):null};
+}
+function zinco(m){
+ if(m>=60)return null;
+ return m<=6?10:20;
+}
+function aziMS(w){
+ let d1=Math.min(10*w,500), d2=Math.min(5*w,250), c=Number($('aziConc').value);
+ return {d1:round(d1,0),d2:round(d2,0),ml1:round(d1/c,1),ml2:round(d2/c,1),c};
+}
+function aziHCA(w){
+ let d1=Math.min(12*w,500), d2=Math.min(6*w,250), c=Number($('aziConc').value);
+ return {d1:round(d1,0),d2:round(d2,0),ml1:round(d1/c,1),ml2:round(d2/c,1),c};
+}
+
+function calcular(){
+ let w=n('peso'),m=idadeMeses(),dias=n('dias')||0;
+ if(!w||w<=0||n('idade')===null){alert('Preencha idade e peso.');return}
+ let plano=classificacao(),perda=perdaPeso(),asp=$('aspecto').value,vo=$('vo').value;
+ if(vo==='incapaz' && plano!=='C') plano='C';
+ if((yes('abdome')||yes('convulsao')||yes('choque')) && plano!=='C') plano='C';
+ let badges=[`<span class="badge ${plano==='A'?'ok':plano==='B'?'warn':'danger'}">PLANO ${plano}</span>`,
+ `<span class="badge">${idadeTxt()}</span>`,`<span class="badge">${fmt(w)} kg</span>`];
+ if(dias>=14)badges.push('<span class="badge danger">DIARREIA PERSISTENTE ≥14 DIAS</span>');
+ if(asp==='disenteria'||asp==='colera')badges.push('<span class="badge danger">ATB INDICADO PELO PERFIL MARCADO</span>');
+ $('badges').innerHTML=badges.join('');
+ $('resumo').innerHTML=`<div class="kpi"><div><b>Plano</b><span>${plano}</span></div><div><b>Peso</b><span>${fmt(w)} kg</span></div><div><b>Perda ponderal</b><span>${perda===null?'não calculada':fmt(perda,1)+'%'}</span></div><div><b>Duração</b><span>${dias} dia(s)</span></div></div>`;
+
+ let cond=[];
+ if(perda!==null) cond.push(`<div class="box ${perda>10?'danger':perda>5?'warn':'ok'}"><b>Perda ponderal estimada: ${fmt(perda,1)}%.</b> O peso recente é o melhor marcador disponível para acompanhar desidratação; pesar e reavaliar evolução.</div>`);
+ if(dias>=14)cond.push(`<div class="box danger"><b>Diarreia persistente.</b> Se &lt;6 meses ou com desidratação: após hidratar, encaminhar para unidade hospitalar/especialista. Investigar conforme contexto; não tratar automaticamente como GECA viral simples.</div>`);
+ if(yes('bilioso')||yes('abdome'))cond.push(`<div class="box danger"><b>Alerta abdominal/cirúrgico.</b> Vômito bilioso ou suspeita de abdome agudo/íleo contraindicam insistência em TRO isolada e exigem avaliação hospitalar dirigida.</div>`);
+ if($('especial').value==='desnut')cond.push(`<div class="box danger"><b>Desnutrição grave:</b> sinais de desidratação podem ser difíceis de interpretar. O guia recomenda hidratação cautelosa, evitando sobrecarga; na via EV, 10 mL/kg de SF 0,9% com reavaliação frequente a cada hora.</div>`);
+ if(plano==='A'){
+   let sro=m<12?'50–100 mL':m<=120?'100–200 mL':'volume tolerado';
+   cond.push(`<div class="box ok"><b>Plano A — domicílio.</b> Oferecer SRO após cada evacuação: <b>${sro}</b>. Manter aleitamento e alimentação habitual. Não usar refrigerantes; evitar bebidas muito açucaradas/hiperosmolares.</div>`);
+ } else if(plano==='B'){
+   cond.push(`<div class="box warn"><b>Plano B — TRO supervisionada na unidade.</b> SRO <b>${fmt(50*w,0)} a ${fmt(100*w,0)} mL</b> em 4–6 h, em pequenos volumes e frequência progressiva. Reavaliar continuamente. Se reidratar → Plano A; se continuar desidratado e pouca tolerância → considerar SNG/gastróclise; se piorar → Plano C.</div>`);
+   if(yes('vomPersist')||vo==='baixa')cond.push(`<div class="box warn"><b>Vômitos persistentes no Plano B:</b> o guia SBP/MS prevê <b>uma dose VO de ondansetrona</b>. Reavaliar resposta e retomar TRO.</div>`);
+ } else {
+   let pc=planoCVolumes(w,m,$('especial').value);
+   if(pc.cautela){
+     cond.push(`<div class="box danger"><b>Plano C — ${pc.faixa} / expansão cautelosa.</b> SF 0,9% ou Ringer lactato: iniciar com <b>${fmt(pc.etapa1,0)} mL (10 mL/kg)</b> e reavaliar parâmetros clínicos antes de nova expansão. Em cardiopatas graves, adequar velocidade e repetição à resposta clínica.</div>`);
+   } else {
+     cond.push(`<div class="box danger"><b>Plano C — desidratação grave (${pc.faixa}).</b> SF 0,9% ou Ringer lactato:<br><b>1ª etapa:</b> ${fmt(pc.etapa1,0)} mL (30 mL/kg) em <b>${pc.tempo1}</b>.<br><b>2ª etapa:</b> ${fmt(pc.etapa2,0)} mL (70 mL/kg) em <b>${pc.tempo2}</b>.<br>Reavaliar; iniciar SRO em pequenos volumes tão logo aceite.</div>`);
+   }
+   let man=holliday(w),rep=50*w,kcl=man*0.02;
+   cond.push(`<div class="box"><b>Após correção — manutenção/reposição do quadro SBP/MS:</b> manutenção calculada em <b>${fmt(man,0)} mL/24 h</b> de SG5% + SF0,9% 4:1; reposição inicial <b>${fmt(rep,0)} mL/dia</b> de SG5% + SF0,9% 1:1, reajustar às perdas. KCl 10%: 2 mL/100 mL da solução de manutenção = <b>${fmt(kcl,1)} mL</b> no volume calculado. Usar potássio somente após avaliar diurese/eletrólitos e conforme rotina do serviço.</div>`);
+ }
+ if(asp==='sangueBom')cond.push(`<div class="box warn"><b>Sangue nas fezes sem comprometimento geral marcado:</b> reavaliar cuidadosamente etiologia e sinais sistêmicos. A recomendação SBP/MS 2023 restringe ATB a disenteria com comprometimento do estado geral ou cólera grave; não gerar ATB automático apenas por sangue isolado nesta seleção.</div>`);
+ if(asp==='disenteria')cond.push(`<div class="box danger"><b>Disenteria + comprometimento do estado geral:</b> antibioticoterapia indicada. Se possível, colher fezes para coprocultura/antibiograma, sem atrasar tratamento quando clinicamente necessário. O protocolo local HCA prioriza ceftriaxona em sintomas sistêmicos.</div>`);
+ if(yes('surto'))cond.push(`<div class="box warn"><b>Possível surto:</b> articular vigilância epidemiológica municipal para coleta de amostras.</div>`);
+ $('conduta').innerHTML=cond.join('');
+
+ let rx=[],i=1;
+ const add=t=>rx.push(`${i++}. ${t}`);
+ if(plano==='A'){
+   add(`SAIS DE REIDRATAÇÃO ORAL (SRO) — VO.\nOferecer ${m<12?'50 a 100 mL':m<=120?'100 a 200 mL':'o volume tolerado'} após CADA evacuação diarreica, em pequenos volumes e com frequência.`);
+ } else if(plano==='B'){
+   add(`SAIS DE REIDRATAÇÃO ORAL (SRO) — VO, NA UNIDADE.\nAdministrar ${fmt(50*w,0)} a ${fmt(100*w,0)} mL em 4–6 horas, continuamente, em pequenos volumes. Reavaliar sinais de hidratação durante a TRO.`);
+   if(yes('vomPersist')||vo==='baixa'){
+     let od=ondaDose(m,w),c=Number($('ondaConc').value);
+     if(od) add(`ONDANSETRONA solução oral ${c===0.8?'4 mg/5 mL':'1 mg/mL'} — DOSE ÚNICA VO.\nAdministrar ${fmt(od/c,1)} mL (${od} mg) agora. Após controle dos vômitos, retomar SRO em pequenos volumes.`);
+     else add(`ONDANSETRONA — lactente <6 meses: o quadro posológico do guia começa em 6 meses e recomenda avaliação cautelosa em lactentes. NÃO foi gerada dose automática.`);
+   }
+ } else {
+   let pc=planoCVolumes(w,m,$('especial').value);
+   if(pc.cautela) add(`SF 0,9% OU RINGER LACTATO EV — PLANO C / EXPANSÃO CAUTELOSA (${pc.faixa}).\nAdministrar ${fmt(pc.etapa1,0)} mL (10 mL/kg) e reavaliar parâmetros clínicos antes de nova expansão/ajuste.`);
+   else add(`SF 0,9% OU RINGER LACTATO EV — PLANO C (${pc.faixa}).\n1ª etapa: ${fmt(pc.etapa1,0)} mL (30 mL/kg) em ${pc.tempo1}.\n2ª etapa: ${fmt(pc.etapa2,0)} mL (70 mL/kg) em ${pc.tempo2}.\nReavaliar clinicamente; iniciar SRO em pequenos volumes assim que tolerado.`);
+ }
+ let z=zinco(m);
+ if(z){
+   let zc=Number($('zincoConc').value);
+   add(`ZINCO solução ${zc} mg/mL — VO, 1x/dia, por 10–14 dias.\nAdministrar ${fmt(z/zc,1)} mL (${z} mg) VO 1x/dia.`);
+ }
+ if(yes('febreDor')){
+   let d=dipirona(w),ap=$('dipConc').value;
+   if(m<3 || w<5){
+     add(`DIPIRONA — NÃO GERADA AUTOMATICAMENTE: paciente <3 meses ou <5 kg. Rever segurança/alternativa e protocolo do serviço.`);
+   } else if(ap==='500'){
+     add(`DIPIRONA gotas 500 mg/mL (20 gotas/mL) — VO, se febre ou dor, a cada 6 horas se necessário.\nDose selecionada: ${d.dose} mg/kg/dose. Administrar ${d.gotas} gotas (${fmt(d.ml,2)} mL ≈ ${d.mg} mg) por dose.`);
+   } else {
+     add(`DIPIRONA solução oral/xarope 50 mg/mL — VO, se febre ou dor, a cada 6 horas se necessário.\nDose selecionada: ${d.dose} mg/kg/dose. Administrar ${fmt(d.ml,1)} mL (${d.mg} mg) por dose.`);
+   }
+ }
+ if(asp==='disenteria'||asp==='colera'){
+   let a=aziMS(w);
+   if(m<=120 && w<=30){
+     add(`AZITROMICINA suspensão ${a.c===40?'200 mg/5 mL':'100 mg/5 mL'} — VO.\nSBP/MS 2023: D1 ${fmt(a.ml1,1)} mL (${a.d1} mg = 10 mg/kg); D2–D5 ${fmt(a.ml2,1)} mL (${a.d2} mg = 5 mg/kg), 1x/dia. Total: 5 dias.`);
+     add(`ALTERNATIVA / SINTOMAS SISTÊMICOS: CEFTRIAXONA ${fmt(50*w,0)} a ${fmt(Math.min(100*w,2000),0)} mg IM/EV 1x/dia por 3–5 dias, conforme gravidade e protocolo. No HCA, a tabela local descreve 50 mg/kg/dia e orienta priorizar ceftriaxona em sintomas sistêmicos.`);
+   } else {
+     add(`ANTIBIOTICOTERAPIA — >10 anos / >30 kg: SBP/MS 2023 lista ciprofloxacino 500 mg VO 12/12 h por 3 dias OU ceftriaxona 50–100 mg/kg IM 1x/dia por 3–5 dias; casos graves podem receber ceftriaxona EV. O protocolo HCA alerta que ciprofloxacino em <18 anos só deve ser usado se não houver alternativa segura e eficaz.`);
+   }
+ }
+ $('rx').textContent=rx.join('\n\n');
+
+ let orient=`ALTA / DOMICÍLIO
+• Manter aleitamento materno e alimentação habitual. Não diluir leite/fórmula de rotina.
+• Oferecer líquidos em quantidade maior que a habitual e SRO após cada evacuação.
+• Evitar refrigerantes e bebidas muito açucaradas/hiperosmolares.
+• Higiene rigorosa das mãos; cuidado com água e higienização dos alimentos.
+• Não usar loperamida em pediatria.
+• Ondansetrona não foi prescrita como rotina domiciliar: no guia, a indicação destacada é dose única no Plano B quando há vômitos persistentes.
+• Retornar IMEDIATAMENTE se: vômitos repetidos, aumento importante da frequência/volume da diarreia, sangue nas fezes, diminuição da diurese, sede excessiva, recusa de alimentos/líquidos, prostração ou sinais de desidratação.
+• Reavaliar se não houver melhora em 2 dias.
+• Se diarreia chegar a 14 dias, reclassificar como persistente e investigar/encaminhar conforme idade, hidratação e contexto clínico.`;
+ $('orient').textContent=orient;
+
+ let od=ondaDose(m,w),dip=dipirona(w);
+ let mem=`PACIENTE: ${idadeTxt()} | ${fmt(w)} kg
+PLANO CALCULADO: ${plano}
+${perda===null?'Perda de peso: peso pré-doença não informado/valor não aplicável.':`Perda de peso = (peso prévio - atual) ÷ peso prévio × 100 = ${fmt(perda,1)}%.`}
+
+SRO
+• Plano A: <1 ano 50–100 mL após cada evacuação; 1–10 anos 100–200 mL; >10 anos, volume tolerado.
+• Plano B: 50–100 mL/kg em 4–6 h.
+• Para ${fmt(w)} kg: 50 × peso = ${fmt(50*w,0)} mL; 100 × peso = ${fmt(100*w,0)} mL.
+• Se persistir desidratado e com pouca tolerância oral, considerar SNG/gastróclise; se evoluir grave, Plano C.
+
+ZINCO
+• Indicação do documento: menores de 5 anos.
+• Até 6 meses: 10 mg/dia; >6 meses até 5 anos: 20 mg/dia; 10–14 dias.
+• Neste paciente: ${z?z+' mg/dia = '+fmt(z/Number($('zincoConc').value),1)+' mL/dia na apresentação selecionada':'não indicado automaticamente pela faixa etária do guia'}.
+
+ONDANSETRONA
+• Usar apenas se vômitos persistentes no Plano B, em dose única VO.
+• 6 meses–2 anos: 2 mg (faixa citada 0,2–0,4 mg/kg).
+• >2–10 anos e até 30 kg: 4 mg.
+• >10 anos / >30 kg: 8 mg.
+• Neste paciente: ${od?od+' mg = '+fmt(od/Number($('ondaConc').value),1)+' mL da solução selecionada; comprimidos disponíveis para conferência: '+(od===2?'dose não corresponde diretamente a cp 4/8 mg':od+' mg'):'<6 meses: não gerar automaticamente; avaliar cautelosamente'}.
+
+DIPIRONA
+• A SBP cita dipirona ou paracetamol para febre/dor; a dose operacional selecionável nesta calculadora é 10–20 mg/kg/dose.
+• Cálculo selecionado: ${w} × ${dip.dose} = ${dip.mg} mg/dose.
+• ${$('dipConc').value==='500'?`500 mg/mL → ${fmt(dip.ml,2)} mL × 20 gotas/mL ≈ ${dip.gotas} gotas/dose.`:`50 mg/mL → ${dip.mg} ÷ 50 = ${fmt(dip.ml,1)} mL/dose.`}
+• Trava de segurança operacional: não gerar automaticamente em <3 meses ou <5 kg.
+
+PLANO C — CONFERÊNCIA POR IDADE
+• Faixa aplicada: ${planoCVolumes(w,m,$('especial').value).faixa}.
+• Menores de 1 ano: 30 mL/kg em 1 hora + 70 mL/kg em 5 horas.
+• Faixa acima de 1 ano: 30 mL/kg em 30 minutos + 70 mL/kg em 2 horas e 30 minutos.
+• Recém-nascidos e menores de 5 anos com cardiopatia grave: começar com 10 mL/kg e adequar a velocidade conforme parâmetros clínicos.
+• Para este peso: 10 mL/kg = ${fmt(10*w,0)} mL; 30 mL/kg = ${fmt(30*w,0)} mL; 70 mL/kg = ${fmt(70*w,0)} mL.
+• Manutenção Holliday-Segar do quadro do MS/SBP = ${fmt(holliday(w),0)} mL/24 h (máx. 2.000 mL na tabela).
+• Reposição inicial = 50 mL/kg/dia = ${fmt(50*w,0)} mL/dia, reajustar às perdas.
+• KCl 10% da tabela: 2 mL/100 mL da manutenção. Só adicionar após avaliar diurese/eletrólitos e conforme rotina institucional.
+
+ANTIBIÓTICO
+• Não usar de rotina na GECA aquosa.
+• SBP/MS 2023: sangue + comprometimento do estado geral/disenteria ou cólera grave.
+• A calculadora usa exclusivamente a tabela SBP/MS 2023 para definir indicação, escolha e dose de antibiótico na diarreia aguda.
+• Até 10 anos / até 30 kg: azitromicina 10 mg/kg D1 + 5 mg/kg D2–D5; ou ceftriaxona 50–100 mg/kg IM 1x/dia por 3–5 dias.
+• <3 meses ou imunodeficiência: ceftriaxona 50–100 mg/kg EV 1x/dia.
+• >10 anos / >30 kg: aplicar a faixa específica da tabela SBP/MS 2023.`;
+ $('mem').textContent=mem;
+ $('saida').classList.remove('hide');
+ $('saida').scrollIntoView({behavior:'smooth'});
+}
+function limpar(){
+ document.querySelectorAll('input').forEach(e=>{if(e.type==='checkbox')e.checked=false;else e.value=''});
+ document.querySelectorAll('select').forEach(e=>e.selectedIndex=0);
+ $('dias').value=1;$('evac').value=3;$('vom').value=0;$('dipDose').value='15';
+ $('saida').classList.add('hide');
+}
+</script>
+</body></html>
