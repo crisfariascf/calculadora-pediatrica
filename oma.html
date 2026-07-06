@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora OMA Pediátrica</title>
+<style>
+:root{--navy:#17365d;--blue:#315d9b;--light:#eef4fb;--green:#dcebd2;--yellow:#fff1b8;--red:#ffe1df;--gray:#667085}
+*{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;margin:0;background:#f5f7fa;color:#172033}
+header{background:linear-gradient(135deg,var(--navy),var(--blue));color:white;padding:24px 18px}
+header .wrap,main{max-width:1050px;margin:auto} h1{margin:0 0 7px;font-size:28px} h2{color:var(--navy);margin-top:0}
+.subtitle{opacity:.92}.badge{display:inline-block;background:#fff;color:var(--navy);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;margin-top:10px}
+main{padding:18px}.card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #1c35551a;border:1px solid #e6eaf0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+label{display:block;font-size:13px;font-weight:700;color:#344054;margin-bottom:6px} input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:white;font-size:15px}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.check{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid #dde3eb;border-radius:9px;background:#fafbfc}.check input{width:auto;margin-top:3px}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy);color:white;font-size:16px;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.08)}
+.alert{padding:13px;border-radius:10px;margin:10px 0}.info{background:var(--light);border-left:5px solid var(--blue)}.warn{background:var(--yellow);border-left:5px solid #d79b00}.danger{background:var(--red);border-left:5px solid #c9362b}.ok{background:#e6f4e3;border-left:5px solid #4d8b3a}
+.result{display:none}.rx{background:#f8fafc;border:1px solid #dbe2ea;border-radius:10px;padding:14px;margin:10px 0}.rx h3{margin:0 0 8px;color:var(--navy)}.big{font-size:20px;font-weight:850;color:var(--navy)}.muted{color:var(--gray);font-size:13px}.step{padding:10px 12px;border-left:4px solid var(--blue);margin:9px 0;background:#f8fbff}.source{font-size:12px;color:#667085}
+@media(max-width:700px){.grid,.grid3,.checks{grid-template-columns:1fr}h1{font-size:23px}}
+@media print{button,.no-print{display:none!important}body{background:white}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Calculadora de Otite Média Aguda Pediátrica</h1>
+<div class="subtitle">Diagnóstico → gravidade → observar ou tratar → antimicrobiano e dose calculada</div>
+<span class="badge">Uso clínico de apoio • funcionamento offline</span></div></header>
+<main>
+<div class="card">
+<h2>1. Dados do paciente</h2>
+<div class="grid3">
+<div><label>Idade</label><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 18"></div>
+<div><label>Unidade da idade</label><select id="ageUnit"><option value="months">meses</option><option value="years">anos</option></select></div>
+<div><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 12,5"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>2. A otoscopia sustenta OMA?</h2>
+<div class="alert info"><b>OMA exige efusão/inflamação de orelha média.</b> Hiperemia isolada da membrana timpânica não fecha diagnóstico.</div>
+<div class="checks">
+<label class="check"><input type="checkbox" id="bulgeMS"> Abaulamento moderado ou severo da MT</label>
+<label class="check"><input type="checkbox" id="otorrheaDx"> Otorreia recente não atribuível a otite externa</label>
+<label class="check"><input type="checkbox" id="bulgeMild"> Abaulamento leve da MT</label>
+<label class="check"><input type="checkbox" id="otalgia48"> Otalgia de início recente (&lt;48 h) / manipulação excessiva da orelha</label>
+<label class="check"><input type="checkbox" id="markedRed"> Hiperemia importante da MT</label>
+</div>
+</div>
+
+<div class="card">
+<h2>3. Lateralidade e gravidade</h2>
+<div class="grid">
+<div><label>Apresentação</label><select id="side"><option value="uni">Unilateral</option><option value="bi">Bilateral</option></select></div>
+<div><label>Alergia a beta-lactâmico/penicilina</label><select id="allergy"><option value="none">Não</option><option value="mild">Reação não grave / não IgE-mediada</option><option value="severe">Anafilaxia, urticária ou angioedema / IgE-mediada</option></select></div>
+</div>
+<br>
+<div class="checks">
+<label class="check"><input type="checkbox" class="sev" id="severePain"> Otalgia intensa sem melhora com analgésico simples</label>
+<label class="check"><input type="checkbox" class="sev" id="persistentPain"> Otalgia persistente &gt;48 h</label>
+<label class="check"><input type="checkbox" class="sev" id="fever39"> Febre ≥39 °C</label>
+<label class="check"><input type="checkbox" class="sev" id="otorrheaSev"> Otorreia recente / possível ruptura timpânica</label>
+<label class="check"><input type="checkbox" class="sev" id="toxemia"> Toxemia ou prostração significativa</label>
+</div>
+</div>
+
+<div class="card">
+<h2>4. Modificadores da antibioticoterapia</h2>
+<div class="checks">
+<label class="check"><input type="checkbox" id="ab30"> Beta-lactâmico / antibiótico nos últimos 30 dias</label>
+<label class="check"><input type="checkbox" id="conj"> Conjuntivite purulenta associada</label>
+<label class="check"><input type="checkbox" id="recurrent"> OMA recorrente / sem resposta prévia à amoxicilina</label>
+<label class="check"><input type="checkbox" id="daycare"> Frequenta creche</label>
+<label class="check"><input type="checkbox" id="failed"> Ausência de melhora ou piora após 48–72 h</label>
+<label class="check"><input type="checkbox" id="noPO"> Não aceita / não consegue usar medicação VO</label>
+<label class="check"><input type="checkbox" id="complication"> Suspeita de mastoidite, meningite, abscesso intracraniano, paralisia facial ou outra complicação</label>
+</div>
+</div>
+
+<div class="card no-print">
+<h2>5. Apresentação disponível</h2>
+<div class="grid">
+<div><label>Amoxicilina</label><select id="amoxConc"><option value="50">250 mg/5 mL</option><option value="80">400 mg/5 mL</option></select></div>
+<div><label>Amoxicilina + clavulanato</label><select id="clavConc"><option value="80">400 mg amoxicilina/5 mL</option><option value="120">600 mg amoxicilina/5 mL</option><option value="50">250 mg amoxicilina/5 mL</option></select></div>
+<div><label>Cefuroxima axetil</label><select id="cefConc"><option value="25">125 mg/5 mL</option><option value="50">250 mg/5 mL</option></select></div>
+<div><label>Azitromicina</label><select id="aziConc"><option value="40">200 mg/5 mL</option></select></div>
+</div>
+<br><button onclick="calculate()">GERAR CONDUTA E PRESCRIÇÃO</button>
+</div>
+
+<div id="result" class="card result">
+<h2>Resultado</h2>
+<div id="out"></div>
+<div class="alert warn"><b>Conferência obrigatória:</b> calculadora de apoio baseada nos documentos anexados. Confirmar apresentação/concentração disponível, alergias, função renal, história clínica e protocolo institucional antes da prescrição.</div>
+</div>
+
+<div class="card source">
+<b>Base documental incorporada:</b> diretriz “Otite Média Aguda em Crianças e Adolescentes – Diretrizes para o Diagnóstico e Tratamento”, revisão 06/08/2025; e “Normatização de Antibioticoterapia Inicial em Pediatria” do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho, seção OMA.<br><br>
+A lógica de diagnóstico/observação e duração segue prioritariamente a diretriz de OMA de 2025. A seção “protocolo local HCA” é mostrada quando há diferença relevante de seleção/dose em relação à diretriz de 2025.
+</div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+function yes(id){return $(id).checked}
+function round(x,d=1){let p=10**d;return Math.round(x*p)/p}
+function ageMonths(){let a=parseFloat($('age').value);return $('ageUnit').value==='years'?a*12:a}
+function ml(mg,conc){return mg/conc}
+function capDaily(dose, max){return Math.min(dose,max)}
+function rxBox(name, details, calc, note=''){return `<div class="rx"><h3>${name}</h3><div>${details}</div><div class="big">${calc}</div>${note?`<div class="muted">${note}</div>`:''}</div>`}
+
+function calculate(){
+ const w=parseFloat($('weight').value), m=ageMonths();
+ if(!w||!Number.isFinite(m)){alert('Informe idade e peso.');return}
+ const diag=yes('bulgeMS')||yes('otorrheaDx')||(yes('bulgeMild')&&(yes('otalgia48')||yes('markedRed')));
+ const severe=[...document.querySelectorAll('.sev')].some(x=>x.checked);
+ const comp=yes('complication');
+ let out='';
+ if(!diag){
+   out+=`<div class="alert danger"><b>Critérios clínico-otoscópicos informados NÃO sustentam OMA.</b> Hiperemia isolada não é diagnóstico. Se a otoscopia não for sugestiva, a diretriz orienta analgesia, orientações e seguimento.</div>`;
+   out+=`<div class="step"><b>Reavaliar a otoscopia.</b> Cerume impactado ou dificuldade técnica: considerar retaguarda de Otorrino, se disponível.</div>`;
+   $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});return;
+ }
+ out+=`<div class="alert ok"><b>Critérios informados compatíveis com OMA.</b></div>`;
+ if(comp){
+   out+=`<div class="alert danger"><b>SUSPEITA DE COMPLICAÇÃO.</b> Critério de internação/avaliação hospitalar e acionamento urgente da retaguarda de Otorrino. Exames são direcionados à complicação suspeita: mastoidite → TC de mastoide; meningite → LCR quando seguro; abscesso cerebral → TC/RM de crânio.</div>`;
+   out+=`<div class="step">Sepse ou instabilidade hemodinâmica: considerar alocação em UTI.</div>`;
+ }
+ let mandatory = m<6 || severe || yes('otorrheaSev') || yes('otorrheaDx') || (m>=6&&m<24&&$('side').value==='bi');
+ let observe = !mandatory;
+ if(m<6) out+=`<div class="alert warn"><b>&lt;6 meses:</b> a tabela terapêutica da diretriz indica antibiótico.</div>`;
+ else if(m<24 && $('side').value==='uni' && !severe && !yes('otorrheaDx') && !yes('otorrheaSev'))
+   out+=`<div class="alert info"><b>6 meses a &lt;2 anos, OMA unilateral leve:</b> observação por 48–72 h OU antibiótico, com decisão compartilhada e seguimento garantido.</div>`;
+ else if(m>=24 && !severe && !yes('otorrheaDx') && !yes('otorrheaSev'))
+   out+=`<div class="alert info"><b>≥2 anos, sem gravidade/otorreia:</b> observação por 48–72 h OU antibiótico, com decisão compartilhada e seguimento garantido.</div>`;
+ else out+=`<div class="alert danger"><b>Antibioticoterapia indicada pelo fluxograma.</b></div>`;
+
+ out+=`<div class="step"><b>Analgesia é prioritária em todos os casos.</b> Usar dipirona, ibuprofeno ou paracetamol conforme avaliação clínica. Evitar gotas tópicas se houver suspeita de perfuração timpânica.</div>`;
+
+ if(observe && !yes('failed') && !yes('ab30') && !yes('conj') && !yes('recurrent') && !yes('noPO')){
+   out+=`<div class="step"><b>Se optar por observação:</b> analgesia + reavaliação em 48–72 h. Sem melhora, iniciar/reavaliar antimicrobiano.</div>`;
+ }
+
+ let days=(m<24||severe)?10:7;
+ const allergy=$('allergy').value;
+ if(yes('noPO') || (yes('failed') && allergy==='none')){
+   let daily=Math.min(50*w,1000), dose=daily;
+   out+=rxBox('Ceftriaxona — falha terapêutica ou dificuldade VO',
+    `50 mg/kg/dose IM ou EV, 1x/dia, por 3 dias. Dose máxima 1 g/dia.`,
+    `${round(dose,0)} mg por dose, 1x/dia × 3 dias`,
+    `Diretriz OMA 2025. O protocolo local HCA descreve 50 mg/kg/dose 1x/dia IM/EV por >3 dias; dose máxima 1 g/dia.`);
+ } else if(allergy==='severe'){
+   let d1=Math.min(10*w,500), d25=Math.min(5*w,250), c=parseFloat($('aziConc').value);
+   out+=rxBox('Azitromicina — alergia grave IgE-mediada',
+    `D1: 10 mg/kg VO 1x/dia. D2–D5: 5 mg/kg VO 1x/dia.`,
+    `D1: ${round(d1,0)} mg = ${round(ml(d1,c),1)} mL; D2–D5: ${round(d25,0)} mg = ${round(ml(d25,c),1)} mL 1x/dia`,
+    `Calculado para ${c*5} mg/5 mL. Última opção na diretriz devido à elevada resistência do pneumococo; não usar como escolha por refratariedade.`);
+ } else if(allergy==='mild'){
+   let daily=Math.min(30*w,1000), dose=daily/2, c=parseFloat($('cefConc').value);
+   out+=rxBox('Axetilcefuroxima — reação não grave à penicilina',
+    `30 mg/kg/dia VO divididos de 12/12 h. Dose máxima 1 g/dia.`,
+    `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 12 h por ${days} dias`,
+    `Calculado para ${c*5} mg/5 mL.`);
+ } else {
+   let useClav=yes('ab30')||yes('conj')||yes('recurrent')||yes('failed');
+   if(useClav){
+     let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('clavConc').value);
+     let reasons=[]; if(yes('ab30'))reasons.push('ATB/beta-lactâmico nos últimos 30 dias');if(yes('conj'))reasons.push('conjuntivite purulenta');if(yes('recurrent'))reasons.push('OMA recorrente/sem resposta à amoxicilina');if(yes('failed'))reasons.push('falha em 48–72 h');
+     out+=rxBox('Amoxicilina + clavulanato — dose calculada pelo componente amoxicilina',
+       `80–90 mg/kg/dia de amoxicilina VO em 2 doses. Dose máxima de amoxicilina: 4 g/dia. Motivo: ${reasons.join(', ')}.`,
+       `${round(dose,0)} mg de amoxicilina/dose = ${round(ml(dose,c),1)} mL VO a cada 12 h por ${days} dias`,
+       `Calculado para apresentação com ${c*5} mg de amoxicilina/5 mL. Conferir a proporção de clavulanato do produto disponível.`);
+   } else {
+     let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value);
+     out+=rxBox('Amoxicilina — 1ª linha',
+       `80–90 mg/kg/dia VO em 2 doses. Dose máxima 4 g/dia.`,
+       `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 12 h por ${days} dias`,
+       `Calculado com 90 mg/kg/dia e apresentação ${c*5} mg/5 mL.`);
+     if(m<24 && yes('daycare')){
+       out+=`<div class="alert info"><b>Conferência com protocolo local HCA:</b> para idade &lt;2 anos E frequência à creche, o HCA classifica como “amoxicilina em dose dobrada” 70–90 mg/kg/dia. A dose alta acima já contempla essa faixa.</div>`;
+     }
+   }
+ }
+ out+=`<div class="step"><b>Duração VO sugerida pela diretriz 2025:</b> ${days} dias — ${m<24?'idade <2 anos':severe?'presença de gravidade':'idade ≥2 anos sem sinais de gravidade'}.</div>`;
+ out+=`<div class="step"><b>Reavaliação:</b> obrigatória em 48–72 h. Sem melhora: confirmar diagnóstico, adesão e complicações; após amoxicilina, considerar amoxicilina-clavulanato/cefuroxima; ceftriaxona por 3 dias é opção na diretriz para falha ou dificuldade VO.</div>`;
+ out+=`<div class="step"><b>Encaminhar Otorrino:</b> urgência se complicação; ambulatorial se OMA recorrente (≥3 episódios/6 meses ou ≥4/ano, com pelo menos um recente) ou efusão persistente >3 meses.</div>`;
+ $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>

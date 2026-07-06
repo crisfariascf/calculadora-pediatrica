@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de Crupe Pediátrico</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--ink:#17352b;--mut:#66756f;--green:#1f6f54;--line:#dce6e1;--warn:#fff3cd;--danger:#f8d7da;--blue:#e7f1ff}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1e2925}
+.wrap{max-width:920px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#173f32,#26775a);color:white;padding:24px;border-radius:22px;margin-bottom:16px}
+.hero h1{margin:0 0 7px;font-size:28px}.hero p{margin:4px 0;opacity:.94}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 4px 16px #17352b0a}
+h2{font-size:19px;margin:0 0 14px;color:var(--ink)}h3{margin:14px 0 8px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.hero h1{font-size:24px}}
+label{font-weight:650;font-size:14px;display:block;margin-bottom:5px}input,select{width:100%;padding:12px;border:1px solid #cbd9d3;border-radius:11px;background:white;font-size:16px}
+.scoreRow{display:grid;grid-template-columns:1.2fr 2fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #edf2ef}.scoreRow:last-child{border:0}
+button{border:0;border-radius:12px;padding:14px 18px;font-size:16px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white;width:100%;margin-top:14px}.secondary{background:#e9f1ed;color:var(--ink)}
+.result{display:none}.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:800}.leve{background:#d9f2e5;color:#145c3d}.moderado{background:#fff0bf;color:#7a5900}.grave{background:#f8d7da;color:#842029}
+.rx{background:#f8fbf9;border-left:5px solid var(--green);padding:14px;border-radius:10px;margin:10px 0}.alert{padding:13px;border-radius:11px;margin:10px 0;background:var(--warn)}.danger{background:var(--danger)}.blue{background:var(--blue)}
+.small{font-size:13px;color:var(--mut)}ul{padding-left:20px}li{margin:6px 0}.check{display:flex;gap:9px;align-items:flex-start;margin:9px 0}.check input{width:auto;margin-top:3px}
+pre{white-space:pre-wrap;background:#f6f8f7;padding:14px;border-radius:12px;font-family:inherit;font-size:14px}
+</style>
+</head>
+<body><div class="wrap">
+<section class="hero">
+<h1>Calculadora de Crupe Pediátrico</h1>
+<p><b>Crupe:</b> síndrome com rouquidão, tosse ladrante, estridor predominantemente inspiratório e graus variáveis de desconforto respiratório.</p>
+<p>Base: Guia Prático SBP — Crupe Viral e Bacteriano + protocolo local HCA para apresentações/diluições de antimicrobianos.</p>
+</section>
+
+<section class="card"><h2>1. Dados do paciente</h2><div class="grid">
+<div><label>Idade</label><div style="display:grid;grid-template-columns:1.5fr 1fr;gap:8px"><input id="age" type="number" min="0" step="1" placeholder="Ex.: 18"><select id="ageunit"><option value="months">meses</option><option value="years">anos</option></select></div></div>
+<div><label>Peso (kg)</label><input id="weight" type="number" min=".5" step=".1" placeholder="Ex.: 12,5"></div>
+<div><label>SpO₂ (%)</label><input id="spo2" type="number" min="40" max="100" placeholder="Ex.: 97"></div>
+<div><label>Temperatura (°C)</label><input id="temp" type="number" min="30" max="45" step=".1" placeholder="Ex.: 37,8"></div>
+<div><label>Dexametasona injetável</label><select id="dexconc"><option value="4">4 mg/mL — padrão</option><option value="2">2 mg/mL</option><option value="10">10 mg/mL</option></select></div>
+<div><label>Diluição da dexametasona EV</label><select id="dexdil"><option value="50">Diluir em SF 0,9% 50 mL</option><option value="100">Diluir em SF 0,9% 100 mL</option><option value="0">Sem diluição / IM / VO conforme disponibilidade</option></select></div>
+</div></section>
+
+<section class="card"><h2>2. Escore clínico de estridor — SBP</h2>
+<div class="scoreRow"><label>Estridor</label><select id="s1"><option value="0">0 — Ausente</option><option value="1">1 — Com agitação</option><option value="2">2 — Leve em repouso</option><option value="3">3 — Grave em repouso</option></select></div>
+<div class="scoreRow"><label>Retração</label><select id="s2"><option value="0">0 — Ausente</option><option value="1">1 — Leve</option><option value="2">2 — Moderada</option><option value="3">3 — Grave</option></select></div>
+<div class="scoreRow"><label>Entrada de ar</label><select id="s3"><option value="0">0 — Normal</option><option value="1">1 — Normal</option><option value="2">2 — Diminuída</option><option value="3">3 — Muito diminuída</option></select></div>
+<div class="scoreRow"><label>Cor</label><select id="s4"><option value="0">0 — Normal</option><option value="1">1 — Normal</option><option value="2">2 — Cianótica com agitação</option><option value="3">3 — Cianótica em repouso</option></select></div>
+<div class="scoreRow"><label>Nível de consciência</label><select id="s5"><option value="0">0 — Normal</option><option value="1">1 — Agitação sob estímulo</option><option value="2">2 — Agitação</option><option value="3">3 — Letárgico</option></select></div>
+<p class="small">Classificação do documento: &lt;6 leve; 7–8 moderado; &gt;8 grave. O valor 6 não é explicitamente classificado na tabela; a calculadora sinaliza essa lacuna e usa avaliação clínica reforçada.</p>
+</section>
+
+<section class="card"><h2>3. Alertas e suspeita de traqueíte bacteriana</h2>
+<div class="check"><input id="tox" type="checkbox"><label for="tox">Toxemia / alteração importante de perfusão</label></div>
+<div class="check"><input id="pur" type="checkbox"><label for="pur">Secreção purulenta em via aérea / exsudato sugestivo</label></div>
+<div class="check"><input id="fail" type="checkbox"><label for="fail">Sem resposta ao tratamento inicial com epinefrina + corticosteroide</label></div>
+<div class="check"><input id="air" type="checkbox"><label for="air">Manipulação, cirurgia ou intubação prévia de via aérea superior</label></div>
+<div class="check"><input id="drink" type="checkbox"><label for="drink">Desidratação ou incapacidade de ingerir líquidos</label></div>
+<div class="check"><input id="worse" type="checkbox"><label for="worse">Piora clínica após 2 h da epinefrina / resposta inadequada</label></div>
+<button class="primary" onclick="calc()">GERAR CONDUTA E PRESCRIÇÃO</button>
+</section>
+
+<section id="result" class="card result"><h2>Resultado</h2><div id="out"></div>
+<h3>Texto de prescrição / conduta</h3><pre id="rxtext"></pre>
+<button class="secondary" onclick="navigator.clipboard.writeText(document.getElementById('rxtext').innerText)">Copiar prescrição</button>
+</section>
+
+<section class="card"><h2>Pontos-chave do protocolo</h2>
+<ul><li>Manter a criança calma e evitar manipulação/exames desnecessários.</li><li>Nebulização com SF ou ar umidificado não tem eficácia comprovada; oxigênio é indicado quando há hipoxemia.</li><li>Saturação normal não exclui risco de falência respiratória; hipoxemia no crupe indica doença avançada e internação em UTI no documento.</li><li>Radiografia cervical não é exame rotineiro para confirmar crupe; reservar para evolução atípica ou investigação de outra etiologia.</li><li>Suspeita de traqueíte bacteriana: UTI, controle de via aérea e antibiótico EV; o guia não recomenda corticosteroide ou epinefrina como tratamento da traqueíte bacteriana.</li><li>A diluição da dexametasona em SF 0,9% 50 mL foi deixada como padrão operacional editável na calculadora.</li></ul>
+<p class="small">Ferramenta de apoio à decisão. Confirmar apresentação disponível, protocolo institucional vigente, alergias, função renal e contexto clínico antes da prescrição.</p>
+</section>
+</div>
+<script>
+function n(id){return parseFloat(document.getElementById(id).value)}
+function yes(id){return document.getElementById(id).checked}
+function fmt(x,d=1){return x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function calc(){
+ const w=n('weight'), ageInput=n('age'), ageUnit=document.getElementById('ageunit').value, age=ageUnit==='years'?ageInput*12:ageInput, spo=n('spo2'), temp=n('temp');
+ if(!w||w<=0){alert('Informe o peso.');return}
+ const score=['s1','s2','s3','s4','s5'].reduce((a,id)=>a+Number(document.getElementById(id).value),0);
+ let sev=score<6?'LEVE':score>=7&&score<=8?'MODERADO':score>8?'GRAVE':'ESCORE 6 — ZONA NÃO CLASSIFICADA NA TABELA';
+ let cls=score<6?'leve':score>8?'grave':'moderado';
+ let bact=(yes('tox')&&((temp||0)>38.5||yes('pur'))) || yes('pur') || yes('fail');
+ let hyp=spo&&spo<94;
+ let out=`<p><span class="badge ${cls}">Escore ${score} — ${sev}</span></p>`;
+ let lines=[];
+ if(age<6) out+=`<div class="alert"><b>Maior cautela:</b> idade &lt;6 meses é marcador de potencial risco de falência respiratória no guia.</div>`;
+ if(hyp) out+=`<div class="alert danger"><b>Hipoxemia:</b> no documento, hipoxemia associada ao crupe indica doença avançada/falência respiratória iminente e é indicação de UTI. Ofertar O₂ e priorizar via aérea.</div>`;
+ if(bact){
+   const ctx=Math.min(w*50,2000), ctxVol=ctx/100;
+   const cfuDay=w*150, cfuDose=cfuDay/3, cfuReconst=cfuDose/(750/6);
+   out+=`<div class="alert danger"><b>ALTA SUSPEITA DE TRAQUEÍTE BACTERIANA.</b> O padrão clínico selecionado favorece crupe bacteriano: doença grave, toxemia/secreção purulenta e/ou ausência de resposta à epinefrina + corticosteroide. Conduta do guia: UTI, assegurar via aérea, considerar intubação em ambiente controlado com endoscopia e coletar secreção.</div>`;
+   out+=`<div class="rx"><b>Antibioticoterapia EV — opções descritas no guia SBP</b><br><br><b>Ceftriaxona:</b> o guia de crupe cita cefalosporina de 3ª geração como monoterapia, mas não fornece dose. Para não inventar uma posologia específica de traqueíte, esta calculadora mostra apenas a apresentação/diluição do protocolo HCA: frasco 1 g + 10 mL AD; concentração reconstituída 100 mg/mL; rediluir conforme protocolo local e administrar em bolus ou 15–30 min.<br><br><b>Cefuroxima:</b> o guia de crupe cita cefalosporina de 2ª geração como monoterapia, sem dose específica. Protocolo HCA: frasco 750 mg + 6 mL AD; faixa de concentração 30–137 mg/mL; infusão 30 min.</div>`;
+   lines.push(`SUSPEITA DE TRAQUEÍTE BACTERIANA — ADMITIR EM UTI.`);
+   lines.push(`Manter mínima manipulação. Assegurar via aérea; acionar equipe experiente/anestesia/ORL e considerar IOT em ambiente controlado com endoscopia.`);
+   lines.push(`Coletar secreção traqueal para microbiologia quando via aérea controlada.`);
+   lines.push(`Iniciar cefalosporina EV de 2ª ou 3ª geração conforme protocolo institucional e disponibilidade. Guia SBP cita cefuroxima ou ceftriaxona como monoterapia.`);
+   lines.push(`ATENÇÃO: o guia de crupe não fornece dose mg/kg para traqueíte bacteriana; conferir dose institucional antes de prescrever.`);
+   lines.push(`Não usar epinefrina inalatória ou corticosteroide como tratamento da traqueíte bacteriana.`);
+ } else {
+   let dexLow=score<6?.15:score>8?.6:.3, dexHigh=score<6?.3:score>8?.6:.6;
+   let d1=w*dexLow,d2=w*dexHigh;
+   const dexConc = Number(document.getElementById('dexconc').value);
+   const dexDil = Number(document.getElementById('dexdil').value);
+   const ml1 = d1/dexConc, ml2 = d2/dexConc;
+   const dilTxt = dexDil>0 ? `Diluir a dose em SF 0,9% ${dexDil} mL e administrar EV.` : `Pode fazer sem diluição/IM/VO conforme apresentação e disponibilidade.`;
+   out+=`<div class="rx"><b>Dexametasona — dose única</b><br>${sev}: <b>${fmt(d1,2)}${d2!==d1?' a '+fmt(d2,2):''} mg</b> (${dexLow}${dexHigh!==dexLow?'–'+dexHigh:''} mg/kg).<br>Com apresentação <b>${dexConc} mg/mL</b>: fazer <b>${fmt(ml1,2)}${ml2!==ml1?' a '+fmt(ml2,2):''} mL</b>.<br><b>Diluição:</b> ${dilTxt}<br><span class="small">SBP: leve 0,15–0,3 mg/kg; moderado 0,3–0,6 mg/kg; grave 0,6 mg/kg IM.</span></div>`;
+   lines.push(`DEXAMETASONA ${fmt(d1,2)}${d2!==d1?' a '+fmt(d2,2):''} mg (${fmt(ml1,2)}${ml2!==ml1?' a '+fmt(ml2,2):''} mL da apresentação ${dexConc} mg/mL), dose única. ${dilTxt}`);
+   if(score>=7 || yes('air') || score===6){
+     let epi=Math.min(.5*w,5);
+     out+=`<div class="rx"><b>NBZ com Epinefrina 1:1000</b><br>0,5 mL/kg = ${fmt(.5*w,2)} mL → <b>nebulizar ${fmt(epi,2)} mL</b> (máx. 5 mL).<br><b>Preparo:</b> usar epinefrina 1:1000 não diluída no copo do nebulizador; realizar NBZ com fonte de O₂/ar comprimido conforme rotina da unidade.<br><span class="small">Efeito breve (~2 h). O guia descreve possibilidade clínica de repetição a cada 2 h em falência respiratória, mas relata evento cardiovascular grave após doses repetidas; reavaliar e monitorizar.</span></div>`;
+     lines.push(`NBZ COM EPINEFRINA 1:1000: nebulizar ${fmt(epi,2)} mL, não diluída, em copo do nebulizador (0,5 mL/kg; máx. 5 mL). Reavaliar após nebulização e manter observação.`);
+   }
+   if(score<6){
+     out+=`<div class="blue alert"><b>Destino sugerido pelo protocolo:</b> alta para casa após avaliação clínica. Orientar retorno por estridor em repouso, aumento do esforço respiratório, cianose, prostração ou incapacidade de ingerir líquidos.</div>`;
+     lines.push(`Após resposta clínica e avaliação: alta com orientações de sinais de alarme.`);
+   } else if(score<=8){
+     out+=`<div class="alert"><b>Observação:</b> 3–4 horas após tratamento; decidir alta versus admissão conforme resposta. Considerar internação se toxemia, desidratação/incapacidade VO, estridor/retrações significantes em repouso ou ausência de resposta/piora após epinefrina.</div>`;
+     lines.push(`OBSERVAR por 3–4 horas e reavaliar estridor em repouso, retrações, entrada de ar, cor e consciência.`);
+   } else {
+     out+=`<div class="alert danger"><b>Crupe grave:</b> admissão em UTI. Se obstrução iminente, via aérea em ambiente controlado pelo profissional mais experiente; o guia recomenda cânula 0,5 mm menor que o diâmetro interno ideal para a idade.</div>`;
+     lines.push(`ADMITIR EM UTI. Monitorização contínua e preparo para controle de via aérea.`);
+   }
+ }
+ if(yes('drink')||yes('worse')) out+=`<div class="alert"><b>Critério adicional de internação presente:</b> ${yes('drink')?'desidratação/incapacidade de ingerir líquidos. ':''}${yes('worse')?'ausência de resposta ou piora após 2 h da epinefrina.':''}</div>`;
+ document.getElementById('out').innerHTML=out;
+ document.getElementById('rxtext').innerText=lines.join('\n\n');
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script></body></html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de ITU Pediátrica — SBP + HCA</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--ink:#17352c;--muted:#65766f;--green:#26734d;--green2:#dff1e7;--amber:#fff3cd;--red:#fde2e2;--blue:#e8f1fb;--line:#d9e3de}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1d2925}
+header{background:linear-gradient(135deg,#174b37,#2f7a55);color:white;padding:24px 18px}
+header h1{margin:0 0 5px;font-size:25px} header p{margin:0;opacity:.9;font-size:14px}
+.wrap{max-width:1080px;margin:auto;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 2px 8px #00000008}
+h2{font-size:18px;color:var(--ink);margin:0 0 14px}.field{margin:10px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+input,select{width:100%;padding:11px;border:1px solid #cbd8d1;border-radius:10px;background:white;font-size:15px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{display:flex;gap:8px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:10px;font-size:13px}
+.check input{width:auto;margin-top:2px}.actions{display:flex;gap:10px;margin:16px 0}
+button{border:0;border-radius:11px;padding:13px 18px;font-weight:800;cursor:pointer;font-size:15px}
+.primary{background:var(--green);color:#fff;flex:1}.secondary{background:#e7ece9;color:#29453a}
+#result{display:none}.banner{border-radius:12px;padding:14px;margin:10px 0;font-weight:700}.red{background:var(--red);color:#7c2222}.amber{background:var(--amber);color:#694f00}.green{background:var(--green2);color:#155d3b}.blue{background:var(--blue);color:#1f4f7b}
+.rx{border-left:5px solid var(--green);padding:13px 14px;background:#f7fbf8;border-radius:10px;margin:10px 0}.rx b{color:var(--ink)} .apres{margin-top:6px;font-size:13px;color:#31433c;line-height:1.5}
+.small{font-size:12px;color:var(--muted);line-height:1.45}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eaf3ee;color:#205c40;font-size:12px;font-weight:800;margin:2px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+@media(max-width:760px){.grid,.checks{grid-template-columns:1fr}.wrap{padding:10px}header{padding:18px 14px}}
+@media print{.input-area,.actions{display:none!important}#result{display:block!important}.card{box-shadow:none}body{background:white}}
+</style>
+</head>
+<body>
+<header><h1>Calculadora de ITU Pediátrica</h1><p>Fluxo diagnóstico SBP 2023 + antibioticoterapia inicial do HCA</p></header>
+<div class="wrap">
+<div class="input-area">
+<div class="grid">
+<section class="card">
+<h2>1. Paciente</h2>
+<div class="field"><label>Idade</label><div style="display:grid;grid-template-columns:2fr 1fr;gap:8px"><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 8"><select id="ageUnit"><option value="m">meses</option><option value="y">anos</option></select></div></div>
+<div class="field"><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 12,5"></div>
+<div class="field"><label>Temperatura máxima</label><input id="temp" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 39,0"></div>
+<div class="field"><label>Controle esfincteriano</label><select id="toilet"><option value="no">Não / lactente</option><option value="yes">Sim</option></select></div>
+</section>
+<section class="card">
+<h2>2. Clínica e gravidade</h2>
+<div class="checks">
+<label class="check"><input type="checkbox" id="nofocus"> Febre sem foco identificável</label>
+<label class="check"><input type="checkbox" id="tox"> Toxemia / comprometimento do estado geral</label>
+<label class="check"><input type="checkbox" id="vomit"> Vômitos ou incapacidade de VO</label>
+<label class="check"><input type="checkbox" id="sepsis"> Urosepse ou bacteremia</label>
+<label class="check"><input type="checkbox" id="immuno"> Imunocomprometido</label>
+<label class="check"><input type="checkbox" id="follow"> Dificuldade de seguimento/adesão</label>
+<label class="check"><input type="checkbox" id="failure"> Falha do tratamento ambulatorial</label>
+<label class="check"><input type="checkbox" id="pna"> Suspeita clínica de pielonefrite</label>
+</div>
+</section>
+<section class="card">
+<h2>3. Sintomas</h2>
+<div class="checks">
+<label class="check"><input type="checkbox" id="dysuria"> Disúria</label>
+<label class="check"><input type="checkbox" id="frequency"> Polaciúria/urgência</label>
+<label class="check"><input type="checkbox" id="lumbar"> Dor lombar</label>
+<label class="check"><input type="checkbox" id="abd"> Dor abdominal</label>
+<label class="check"><input type="checkbox" id="foul"> Urina fétida/turva</label>
+<label class="check"><input type="checkbox" id="hematuria"> Hematúria</label>
+<label class="check"><input type="checkbox" id="lethargy"> Letargia/irritabilidade</label>
+<label class="check"><input type="checkbox" id="poorfeed"> Recusa alimentar</label>
+</div>
+</section>
+<section class="card">
+<h2>4. Urina</h2>
+<div class="field"><label>Fita reagente</label><select id="dip"><option value="na">Não realizada</option><option value="neg">Esterase e nitrito negativos</option><option value="pos">Leucocitúria/esterase e/ou nitrito positivo</option></select></div>
+<div class="field"><label>Sedimento/EAS</label><select id="eas"><option value="na">Não disponível</option><option value="neg">Sem achados sugestivos</option><option value="pos">Piúria &gt;5–10 leucócitos/campo e/ou bactéria</option></select></div>
+<div class="field"><label>Método de coleta da urocultura</label><select id="collection"><option value="none">Ainda não coletada</option><option value="psp">Punção suprapúbica</option><option value="cat">Cateterismo vesical</option><option value="mid">Jato intermediário</option><option value="bag">Saco coletor</option></select></div>
+<div class="field"><label>Urocultura — UFC/mL (se disponível)</label><input id="cfu" type="number" min="0" step="1" placeholder="Ex.: 100000"></div>
+</section>
+</div>
+<div class="actions"><button class="secondary" onclick="clearAll()">Limpar</button><button class="primary" onclick="calculate()">Gerar conduta</button></div>
+<p class="small"><b>Agora inclui conversão para apresentações pediátricas comuns</b>, como amoxicilina/clavulanato 250/62,5 mg/5 mL, 400/57 mg/5 mL e 600/42,9 mg/5 mL; cefalexina 250 mg/5 mL; nitrofurantoína 25 mg/5 mL; SMX-TMP 200/40 mg/5 mL, entre outras.</p>
+</div>
+
+<section id="result" class="card">
+<h2>Conduta sugerida</h2><div id="out"></div>
+<div class="actions"><button class="secondary" onclick="window.print()">Imprimir / salvar PDF</button></div>
+<p class="small"><b>Uso de apoio à decisão.</b> Confirmar alergias, função renal, antibiograma e disponibilidade/formulações locais. A calculadora prioriza o protocolo local do HCA para antibioticoterapia e usa o documento da SBP para diagnóstico/coleta/investigação. Não substitui avaliação clínica.</p>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const ck=id=>$(id).checked;
+function n(id){return parseFloat($(id).value)}
+function ageMonths(){let a=n('age'); return isNaN(a)?NaN:($('ageUnit').value==='y'?a*12:a)}
+function fmt(x){return (Math.round(x*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})}
+function doseDay(mgkg,w,max){return Math.min(mgkg*w,max||Infinity)}
+const presentations = {
+ "Amoxicilina + clavulanato":[
+   ["Susp. 250/62,5 mg/5 mL",50,"amoxicilina"],
+   ["Susp. 400/57 mg/5 mL",80,"amoxicilina"],
+   ["Susp. 600/42,9 mg/5 mL",120,"amoxicilina"]
+ ],
+ "Cefalexina":[["Susp. 250 mg/5 mL",50,"cefalexina"],["Susp. 500 mg/5 mL",100,"cefalexina"]],
+ "Nitrofurantoína":[["Susp. 25 mg/5 mL",5,"nitrofurantoína"]],
+ "Axetilcefuroxima":[["Susp. 250 mg/5 mL",50,"cefuroxima"]],
+ "Cefaclor":[["Susp. 250 mg/5 mL",50,"cefaclor"]],
+ "Sulfametoxazol + trimetoprima":[["Susp. 200/40 mg/5 mL",8,"TMP"]],
+ "Cefuroxima":[["Frasco-ampola 750 mg",750,"cefuroxima"],["Frasco-ampola 1,5 g",1500,"cefuroxima"]],
+ "Cefotaxima":[["Frasco-ampola 1 g",1000,"cefotaxima"]],
+ "Gentamicina":[["Inj. 40 mg/mL",40,"gentamicina"],["Inj. 80 mg/2 mL",40,"gentamicina"]],
+ "Amicacina":[["Inj. 250 mg/mL",250,"amicacina"]],
+ "Piperacilina/tazobactam":[["Frasco 4 g + 0,5 g",4000,"piperacilina"]]
+};
+function presentationHtml(name, perDose){
+ let arr=presentations[name]||[];
+ if(!arr.length) return "";
+ let lines=arr.map(a=>{
+   let ml = perDose/a[1];
+   if(a[0].includes("Frasco")) return `${a[0]}: dose corresponde a ${fmt(perDose)} mg de ${a[2]} por dose; reconstituir/diluir conforme rotina local.`;
+   return `${a[0]}: <b>${fmt(ml)} mL por dose</b> (${fmt(perDose)} mg de ${a[2]}).`;
+ });
+ return `<div class="apres"><b>Apresentações comuns:</b><br>${lines.join("<br>")}</div>`;
+}
+function rx(name,mgkg,divisor,interval,route,duration,max,extra=''){
+ let w=n('weight'), daily=doseDay(mgkg,w,max), per=daily/divisor;
+ return `<div class="rx"><b>${name}</b><br>${fmt(mgkg)} mg/kg/dia → <b>${fmt(daily)} mg/dia</b><br>${fmt(per)} mg/dose, ${interval}, ${route}${duration?` · ${duration}`:''}${presentationHtml(name,per)}${extra?`<br><span class="small">${extra}</span>`:''}</div>`;
+}
+function calculate(){
+ let m=ageMonths(), w=n('weight'), t=n('temp'), out=[];
+ if(isNaN(m)||isNaN(w)){alert('Preencha idade e peso.');return}
+ let febrile=!isNaN(t)&&t>=38.0, sbpFlow=m>=1&&m<24&&!isNaN(t)&&t>=38.5&&ck('nofocus');
+ let admit=m<2||ck('sepsis')||ck('immuno')||ck('vomit')||ck('follow')||ck('failure')||ck('tox');
+ let upper=febrile||ck('pna')||ck('lumbar')||ck('tox');
+ let dip=$('dip').value,eas=$('eas').value,col=$('collection').value,cfu=n('cfu');
+ out.push(`<div>${m<1?'<span class="pill">RN</span>':m<3?'<span class="pill">&lt;3 meses</span>':m<24?'<span class="pill">3 meses–2 anos</span>':'<span class="pill">≥2 anos</span>'} ${upper?'<span class="pill">ITU febril/alta provável</span>':'<span class="pill">ITU afebril/baixa provável</span>'}</div>`);
+ if(sbpFlow){
+   if(m<3) out.push(`<div class="banner red">Fluxograma SBP (&lt;2 anos): 1–&lt;3 meses, febre ≥38,5 °C sem foco → <b>urocultura por coleta invasiva</b>. Pela idade, o protocolo local também indica internação/tratamento parenteral se &lt;2 meses.</div>`);
+   else if(ck('tox')||ck('pna')) out.push(`<div class="banner red">Fluxograma SBP: ≥3 meses + comprometimento do estado geral/suspeita de PNA → <b>coleta invasiva</b> e manejo como ITU febril.</div>`);
+   else if(dip==='pos') out.push(`<div class="banner amber">Fluxograma SBP: paciente sem comprometimento geral + fita com leucocitúria e/ou nitrito → <b>confirmar com coleta invasiva</b>.</div>`);
+   else if(dip==='neg') out.push(`<div class="banner green">Fluxograma SBP: fita negativa no cenário do algoritmo → ITU não sustentada pelo rastreio. Reavaliar se a suspeita clínica permanecer alta.</div>`);
+   else out.push(`<div class="banner blue">Fluxograma SBP: sem comprometimento geral → pode realizar teste rápido por fita como triagem. Se positivo, confirmar por coleta invasiva.</div>`);
+ }
+ if($('toilet').value==='no') out.push(`<div class="banner blue"><b>Coleta:</b> sem controle esfincteriano, preferir cateterismo vesical ou punção suprapúbica. Saco coletor negativo pode ajudar a excluir; se positivo, repetir por método adequado antes de confirmar.</div>`);
+ else out.push(`<div class="banner blue"><b>Coleta:</b> com controle esfincteriano, pode utilizar jato intermediário, com técnica adequada.</div>`);
+ if(col!=='none'&&!isNaN(cfu)){
+   let positive=col==='psp'?cfu>0:col==='cat'?cfu>50000:col==='mid'?cfu>100000:false;
+   if(col==='bag') out.push(`<div class="banner amber">Cultura por saco coletor positiva <b>não confirma ITU</b>; repetir por método adequado.</div>`);
+   else out.push(`<div class="banner ${positive?'green':'amber'}">Urocultura: ${positive?'<b>atinge o limiar microbiológico do método informado</b>':'<b>não atinge o limiar descrito pela SBP para o método informado</b>'}. PSP: qualquer crescimento; cateterismo: &gt;50.000 UFC/mL; jato intermediário: &gt;100.000 UFC/mL.</div>`);
+ }
+ if(eas==='pos'||dip==='pos') out.push(`<div class="banner amber">Urina sugestiva de ITU. Colher urocultura <b>antes do antibiótico sempre que possível</b>, sem atrasar tratamento de paciente grave.</div>`);
+ out.push(`<hr><h2>Destino e via</h2>`);
+ if(admit) out.push(`<div class="banner red"><b>Indicação de internação/tratamento parenteral pelo protocolo HCA:</b> ${[m<2?'idade <2 meses':'',ck('sepsis')?'urosepse/bacteremia':'',ck('immuno')?'imunocomprometido':'',ck('vomit')?'vômitos/incapacidade VO':'',ck('follow')?'dificuldade de seguimento':'',ck('failure')?'falha ambulatorial':'',ck('tox')?'comprometimento geral/toxemia':''].filter(Boolean).join('; ')}.</div>`);
+ else out.push(`<div class="banner green"><b>Via oral é possível pelo protocolo HCA</b> se ITU baixa ou ITU alta em >2 meses sem toxemia/vômitos. Reavaliar em 48–72 h com antibiograma.</div>`);
+ out.push(`<hr><h2>Antibioticoterapia — protocolo local HCA</h2>`);
+ if(upper){
+   if(admit){
+     out.push(`<p><b>ITU febril — opções parenterais do protocolo local:</b></p>`);
+     out.push(rx('Cefuroxima',150,3,'8/8 h','EV','10–14 dias',500,'Atenção: o protocolo local impresso registra dose máxima de 500 mg/dia; conferir com a CCIH/farmácia, pois esse teto é incomum para a dose pediátrica listada.'));
+     out.push(rx('Gentamicina',5,1,'1x/dia','EV/IM','—',Infinity,'Faixa do protocolo: 5–7,5 mg/kg/dia. Calculado no limite inferior; ajustar conforme função renal e rotina local.'));
+     out.push(rx('Amicacina',15,1,'1x/dia','EV','—',1500));
+     out.push(rx('Cefotaxima',150,3,'8/8 h','EV','10–14 dias',6000,'Faixa do protocolo: 150–200 mg/kg/dia. Calculado no limite inferior.'));
+     out.push(rx('Piperacilina/tazobactam',300,4,'6/6 h','EV','10–14 dias',16000,'Dose expressa pelo componente piperacilina; o protocolo permite 6/6 h ou 8/8 h.'));
+   } else {
+     out.push(`<p><b>ITU febril — opções VO do protocolo local:</b></p>`);
+     out.push(rx('Axetilcefuroxima',30,2,'12/12 h','VO','10 dias',500));
+     out.push(rx('Cefaclor',40,3,'8/8 h','VO','10 dias',1000));
+     out.push(rx('Amoxicilina + clavulanato',20,3,'8/8 h','VO','10 dias',4000,'Dose calculada pelo componente amoxicilina. Faixa do protocolo: 20–40 mg/kg/dia.'));
+   }
+   out.push(`<div class="banner amber"><b>Não usar nitrofurantoína para ITU febril/pielonefrite:</b> concentração no parênquima renal é inadequada.</div>`);
+ } else {
+   out.push(`<p><b>ITU afebril/baixa — opções VO do protocolo local, 10 dias:</b></p>`);
+   out.push(rx('Nitrofurantoína',5,4,'6/6 h','VO','10 dias',400,'Faixa do protocolo: 5–7 mg/kg/dia. Calculado no limite inferior.'));
+   out.push(rx('Cefalexina',50,4,'6/6 h','VO','10 dias',2000,'Faixa do protocolo: 50–100 mg/kg/dia. Calculado no limite inferior.'));
+   let tmp=Math.min(8*w,320), tmpDose=tmp/2; out.push(`<div class="rx"><b>Sulfametoxazol + trimetoprima</b><br>Dose pelo TMP: 8 mg TMP/kg/dia → <b>${fmt(tmp)} mg TMP/dia</b><br>${fmt(tmpDose)} mg TMP/dose, 12/12 h, VO · 10 dias${presentationHtml('Sulfametoxazol + trimetoprima',tmpDose)}<br><span class="small">Faixa local: 8–12 mg TMP/kg/dia; máximo 320 mg/dia de TMP.</span></div>`);
+   out.push(rx('Amoxicilina + clavulanato',20,3,'8/8 h','VO','10 dias',4000,'Dose calculada pelo componente amoxicilina. Faixa do protocolo: 20–40 mg/kg/dia.'));
+ }
+ out.push(`<hr><h2>Reavaliação e investigação</h2><div class="banner blue">Revisar terapia em <b>48–72 h</b> com urocultura/antibiograma e descalonar quando possível. Sem melhora clínica em 48 h: reconsiderar diagnóstico, anormalidades do trato urinário e cobertura antimicrobiana.</div>`);
+ if(m<24) out.push(`<div class="banner amber">Em menores de 2 anos, investigar história de alterações na ultrassonografia antenatal/malformações do trato urinário. A investigação por imagem deve ser individualizada conforme evolução, recorrência e achados clínicos.</div>`);
+ $('out').innerHTML=out.join(''); $('result').style.display='block'; $('result').scrollIntoView({behavior:'smooth'});
+}
+function clearAll(){document.querySelectorAll('input').forEach(x=>x.type==='checkbox'?x.checked=false:x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('result').style.display='none'}
+</script>
+</body></html>
