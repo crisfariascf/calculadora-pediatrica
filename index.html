@@ -1,133 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#173b66">
-<title>Calculadoras Pediátricas</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PediCalc — Calculadoras Pediátricas</title>
 <style>
-:root{
-  --bg:#f4f7fb; --card:#fff; --ink:#162033; --muted:#667085; --line:#e6eaf0;
-  --shadow:0 10px 28px rgba(24,39,75,.08);
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-.hero{padding:34px 20px 54px;background:linear-gradient(135deg,#173b66,#245b94,#1686a7);color:#fff}
-.wrap{max-width:1120px;margin:auto}
-.hero h1{margin:0 0 8px;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.04em}
-.hero p{margin:0;max-width:720px;opacity:.9;line-height:1.5}
-.search{margin-top:22px;max-width:620px}
-.search input{width:100%;border:0;border-radius:15px;padding:15px 17px;font-size:1rem;box-shadow:0 8px 24px rgba(0,0,0,.12);outline:none}
-main{max-width:1120px;margin:-28px auto 0;padding:0 16px 40px}
-.section{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
-.topline{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
-h2{margin:0;font-size:1.15rem}
-.note{color:var(--muted);font-size:.85rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card{position:relative;min-height:150px;padding:18px;border-radius:18px;text-decoration:none;color:inherit;overflow:hidden;border:1px solid rgba(0,0,0,.04);transition:.18s transform,.18s box-shadow}
-.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(24,39,75,.13)}
-.card:active{transform:scale(.98)}
-.icon{width:45px;height:45px;border-radius:13px;background:rgba(255,255,255,.65);display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
-.card h3{margin:0 0 6px;font-size:1.05rem}
-.card p{margin:0;color:#475467;font-size:.86rem;line-height:1.4}
-.arrow{position:absolute;right:16px;top:17px;font-size:1.15rem;opacity:.55}
-.blue{background:#dbeafe}.cyan{background:#cffafe}.green{background:#d1fae5}.orange{background:#ffedd5}
-.red{background:#fee2e2}.purple{background:#ede9fe}.yellow{background:#fef3c7}.pink{background:#fce7f3}
-.indigo{background:#e0e7ff}.teal{background:#ccfbf1}.lime{background:#ecfccb}.gray{background:#f2f4f7}
-.placeholder{border:2px dashed #cbd5e1;background:#f8fafc}
-footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 12px}
-.hidden{display:none!important}
-@media(max-width:560px){.hero{padding-top:27px}.grid{grid-template-columns:1fr 1fr;gap:10px}.card{min-height:145px;padding:14px}.card p{font-size:.78rem}.icon{margin-bottom:12px}}
-@media(max-width:390px){.grid{grid-template-columns:1fr}}
+:root{--bg:#f8f5ff;--card:#fff;--text:#251b35;--muted:#746883;--pri:#7c3aed;--pri2:#06b6d4;--pink:#ec4899;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--border:#eadff7;--shadow:0 12px 32px rgba(90,42,160,.10)}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,#efe7ff 0,#f8f5ff 32%,#eefaff 100%);color:var(--text)}.wrap{max-width:1120px;margin:auto;padding:22px}header{padding:34px 0 22px}.badge{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;color:#5b21b6;font-weight:700;font-size:13px;box-shadow:var(--shadow)}h1{font-size:clamp(32px,6vw,58px);line-height:1.02;margin:18px 0 10px;color:#4c1d95}.sub{font-size:17px;color:var(--muted);max-width:800px;line-height:1.5}.topbar{display:grid;grid-template-columns:1fr 190px;gap:12px;margin:20px 0}input,select{width:100%;border:1px solid var(--border);border-radius:18px;padding:14px 16px;font:inherit;background:#fff;color:var(--text);box-shadow:0 6px 18px rgba(90,42,160,.05)}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.section-title h2{font-size:20px;margin:0;color:#4c1d95}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}.card{position:relative;display:flex;flex-direction:column;gap:10px;min-height:176px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:26px;padding:18px;text-decoration:none;color:inherit;box-shadow:var(--shadow);overflow:hidden;transition:.15s transform,.15s box-shadow}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(90,42,160,.16)}.card:before{content:"";position:absolute;inset:auto -30px -45px auto;width:130px;height:130px;border-radius:50%;background:var(--accent,#7c3aed);opacity:.12}.icon{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:color-mix(in srgb,var(--accent,#7c3aed) 14%,white);font-size:25px}.card h3{font-size:20px;margin:0;color:#27133f}.card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}.tags{margin-top:auto;display:flex;flex-wrap:wrap;gap:7px}.tag{font-size:12px;background:#f5f3ff;color:#5b21b6;border-radius:999px;padding:5px 9px}.soon{opacity:.72}.soon .tag:first-child{background:#fff7ed;color:#9a3412}.footer{margin:34px 0 10px;padding:18px;border:1px dashed #c4b5fd;border-radius:22px;color:#6b5d79;background:rgba(255,255,255,.62);font-size:13px;line-height:1.45}@media(max-width:720px){.wrap{padding:16px}.topbar{grid-template-columns:1fr}.card{min-height:150px}}
 </style>
 </head>
 <body>
-<header class="hero">
-  <div class="wrap">
-    <h1>Calculadoras Pediátricas</h1>
-    <p>Ferramentas de apoio para consulta rápida, cálculo de doses, hidratação e condutas no pronto atendimento pediátrico.</p>
-    <div class="search"><input id="busca" type="search" placeholder="Buscar calculadora..." oninput="filtrar()"></div>
+<div class="wrap">
+<header>
+  <div class="badge">🩺 PediCalc offline</div>
+  <h1>Calculadoras Pediátricas</h1>
+  <div class="sub">Página inicial para reunir suas calculadoras e protocolos. A parte de medicações já está conectada como um módulo próprio, com busca por nome, sintoma, apresentação, via e categoria.</div>
+  <div class="topbar">
+    <input id="search" placeholder="Buscar: medicações, asma, diarreia, OMA, ITU, pneumonia, crupe..." autofocus>
+    <select id="filter">
+      <option value="">Todos</option>
+      <option>Calculadora</option>
+      <option>Protocolo</option>
+      <option>Medicações</option>
+      <option>Em breve</option>
+    </select>
   </div>
 </header>
 
-<main>
-<section class="section">
-  <div class="topline">
-    <h2>Escolha uma calculadora</h2>
-    <span class="note">Toque para abrir</span>
-  </div>
+<div class="section-title"><h2>Módulos principais</h2><span id="count"></span></div>
+<div class="grid" id="grid"></div>
 
-  <div class="grid" id="grid">
-    <!-- EDITE SOMENTE O href PARA O NOME DO SEU ARQUIVO HTML -->
-    <a class="card blue" href="calculos-gerais.html" data-name="calculos gerais medicacoes doses dipirona paracetamol ondansetrona hidratacao">
-      <span class="arrow">→</span><div class="icon">💊</div><h3>Cálculos Gerais</h3><p>Doses, apresentações, volumes e cálculos rápidos de medicações.</p>
-    </a>
-
-    <a class="card indigo" href="asma.html" data-name="asma crise broncoespasmo">
-      <span class="arrow">→</span><div class="icon">🫁</div><h3>Asma</h3><p>Classificação, doses e conduta por gravidade.</p>
-    </a>
-
-    <a class="card cyan" href="geca.html" data-name="geca diarreia desidratacao hidratacao">
-      <span class="arrow">→</span><div class="icon">💧</div><h3>GECA / Diarreia</h3><p>Planos A, B e C, manutenção, reposição e medicações.</p>
-    </a>
-
-    <a class="card green" href="pneumonia.html" data-name="pneumonia pac antibiotico">
-      <span class="arrow">→</span><div class="icon">🩺</div><h3>Pneumonia</h3><p>Avaliação, gravidade e antibioticoterapia.</p>
-    </a>
-
-    <a class="card orange" href="itu.html" data-name="itu infeccao urinaria urina">
-      <span class="arrow">→</span><div class="icon">🧪</div><h3>ITU</h3><p>Investigação e doses das principais apresentações.</p>
-    </a>
-
-    <a class="card red" href="oma.html" data-name="oma otite media aguda ouvido">
-      <span class="arrow">→</span><div class="icon">👂</div><h3>Otite Média Aguda</h3><p>Critérios e tratamento conforme idade e peso.</p>
-    </a>
-
-    <a class="card purple" href="crupe.html" data-name="crupe laringite estridor">
-      <span class="arrow">→</span><div class="icon">🌬️</div><h3>Crupe</h3><p>Gravidade, dexametasona e epinefrina nebulizada.</p>
-    </a>
-
-    <a class="card yellow" href="febre.html" data-name="febre sem sinais localizatorios fssl">
-      <span class="arrow">→</span><div class="icon">🌡️</div><h3>Febre sem Sinais</h3><p>Fluxo por idade, risco e achados clínicos.</p>
-    </a>
-
-    <a class="card pink" href="dor-abdominal.html" data-name="dor abdominal pediatrica">
-      <span class="arrow">→</span><div class="icon">🤕</div><h3>Dor Abdominal</h3><p>Avaliação e direcionamento do fluxo clínico.</p>
-    </a>
-
-    <!-- ESPAÇOS EXTRAS: DUPLIQUE UM CARD E TROQUE NOME + href -->
-    <a class="card indigo placeholder" href="#" data-name="nova calculadora">
-      <span class="arrow">＋</span><div class="icon">📋</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
-    </a>
-
-    <a class="card teal placeholder" href="#" data-name="nova calculadora">
-      <span class="arrow">＋</span><div class="icon">⚕️</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
-    </a>
-
-    <a class="card lime placeholder" href="#" data-name="nova calculadora">
-      <span class="arrow">＋</span><div class="icon">💊</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
-    </a>
-
-    <a class="card gray placeholder" href="#" data-name="nova calculadora">
-      <span class="arrow">＋</span><div class="icon">➕</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
-    </a>
-  </div>
-</section>
-</main>
-
-<footer>Ferramentas de apoio à decisão clínica. Conferir protocolo institucional, apresentações disponíveis e julgamento clínico.</footer>
-
+<div class="footer">
+  <b>Como organizar no GitHub Pages:</b> deixe este arquivo como <b>index.html</b> na pasta principal. Coloque também o arquivo <b>rfofos_2026_medicacoes_busca.html</b> na mesma pasta. Os demais cards já ficam preparados para você apontar para suas outras calculadoras HTML.
+</div>
+</div>
 <script>
-function filtrar(){
-  const q=document.getElementById('busca').value.toLowerCase().trim();
-  document.querySelectorAll('#grid .card').forEach(card=>{
-    const texto=(card.dataset.name+' '+card.innerText).toLowerCase();
-    card.classList.toggle('hidden',!texto.includes(q));
-  });
-}
-document.querySelectorAll('a[href="#"]').forEach(a=>{
-  a.addEventListener('click',e=>e.preventDefault());
-});
+const modules=[
+ {title:'Medicações RFOFOS 2026',desc:'Busca offline com doses, apresentações, vias, diluições, tempo de infusão, regras práticas e calculadora mg/kg.',href:'rfofos_2026_medicacoes_busca.html',icon:'💊',type:'Medicações',tags:['RFOFOS','Busca','Dose'],accent:'#7c3aed'},
+ {title:'Cálculos gerais',desc:'Espaço para sua calculadora de dipirona, paracetamol, hidratação, dose por peso e prescrições rápidas.',href:'calculos-gerais.html',icon:'🧮',type:'Calculadora',tags:['Peso','mL','Prescrição'],accent:'#06b6d4',soon:true},
+ {title:'Asma',desc:'Classificação leve/moderada/grave, salbutamol, ipratrópio, corticoide, magnésio e reavaliação.',href:'asma.html',icon:'🫁',type:'Protocolo',tags:['PA','Puffs','Conduta'],accent:'#10b981'},
+ {title:'Diarreia / GECA',desc:'Planos A, B e C, SRO, ondansetrona, zinco, hidratação e prescrição para casa.',href:'diarreia-geca.html',icon:'💧',type:'Protocolo',tags:['SRO','Zinco','Vômitos'],accent:'#0ea5e9'},
+ {title:'Febre sem foco',desc:'Fluxo por idade, vacinação, risco para ITU, exames, ceftriaxona e seguimento.',href:'febre-sem-foco.html',icon:'🌡️',type:'Protocolo',tags:['FSSL','ITU','ATB'],accent:'#ef4444'},
+ {title:'Crupe',desc:'Westley, dexametasona em mL, nebulização com adrenalina/epinefrina e observação.',href:'crupe.html',icon:'😮‍💨',type:'Protocolo',tags:['Dexa','NBZ','Westley'],accent:'#f59e0b'},
+ {title:'OMA',desc:'Otite média aguda: critérios, analgesia, observação versus antibiótico e apresentações.',href:'oma.html',icon:'👂',type:'Protocolo',tags:['Amoxi','Dor','ATB'],accent:'#ec4899'},
+ {title:'ITU',desc:'Investigação, fatores de risco, coleta, tratamento, apresentações e cálculo por peso.',href:'itu.html',icon:'🧫',type:'Protocolo',tags:['Urina','ATB','Cultura'],accent:'#14b8a6'},
+ {title:'Pneumonia',desc:'PAC complicada/não complicada, gravidade, antibiótico, sinais de internação e evolução.',href:'pneumonia.html',icon:'🩻',type:'Protocolo',tags:['PAC','ATB','Internação'],accent:'#6366f1'},
+ {title:'Dor abdominal',desc:'Sinais de alarme, fluxograma, analgesia, investigação e encaminhamento.',href:'dor-abdominal.html',icon:'🤕',type:'Protocolo',tags:['Alarme','Fluxo','Dor'],accent:'#a855f7'}
+];
+const grid=document.getElementById('grid'), search=document.getElementById('search'), filter=document.getElementById('filter'), count=document.getElementById('count');
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function render(){const q=norm(search.value), f=filter.value; let arr=modules.filter(m=>(!f||m.type===f||(f==='Em breve'&&m.soon)) && (!q||norm(m.title+' '+m.desc+' '+m.type+' '+m.tags.join(' ')).includes(q))); count.textContent=arr.length+' módulo(s)'; grid.innerHTML=arr.map(m=>`<a class="card ${m.soon?'soon':''}" href="${m.href}" style="--accent:${m.accent}"><div class="icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p><div class="tags">${(m.soon?['preparado']:m.tags).map(t=>`<span class="tag">${t}</span>`).join('')}</div></a>`).join('') || '<div class="footer">Nenhum módulo encontrado.</div>'}
+search.addEventListener('input',render); filter.addEventListener('input',render); render();
 </script>
 </body>
 </html>
