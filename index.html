@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Pediátrica Final – GECA, Medicações e Hidratação</title>
+<style>
+:root{
+  --bg:#f3f6fb; --card:#fff; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue2:#dbeafe; --green:#059669; --green2:#d1fae5;
+  --orange:#ea580c; --orange2:#ffedd5; --red:#dc2626; --red2:#fee2e2;
+  --purple:#7c3aed; --purple2:#ede9fe; --cyan:#0891b2; --cyan2:#cffafe;
+  --gray:#374151; --gray2:#f3f4f6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.35}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb,#0891b2);color:#fff;padding:24px 16px}
+main{max-width:1180px;margin:auto;padding:16px}
+h1{font-size:1.55rem;margin:0 0 6px}
+h2{font-size:1.16rem;margin:0 0 12px}
+h3{font-size:1rem;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;margin:13px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px}
+.output-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+label{font-size:.86rem;color:var(--muted);display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:1rem}
+button{border:0;background:var(--blue);color:#fff;padding:11px 14px;border-radius:11px;font-weight:800;cursor:pointer}
+button.ghost{background:#e5e7eb;color:#111827}
+.small{font-size:.86rem;color:var(--muted)}
+.tiny{font-size:.78rem;color:var(--muted)}
+.box{border-radius:15px;border:1px solid var(--line);padding:12px;background:#fafafa}
+.blue{background:var(--blue2);border-color:#93c5fd}.green{background:var(--green2);border-color:#6ee7b7}
+.orange{background:var(--orange2);border-color:#fdba74}.red{background:var(--red2);border-color:#fca5a5}
+.purple{background:var(--purple2);border-color:#c4b5fd}.cyan{background:var(--cyan2);border-color:#67e8f9}.graybox{background:var(--gray2)}
+.kv{display:grid;grid-template-columns:1fr auto;gap:8px;border-bottom:1px dashed rgba(0,0,0,.15);padding:5px 0}
+.kv:last-child{border-bottom:0}
+.big{font-size:1.06rem;font-weight:900;text-align:right}
+.bad{color:var(--red);font-weight:900}.warn{color:var(--orange);font-weight:900}.good{color:var(--green);font-weight:900}
+.dosechips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border-radius:999px;padding:6px 10px;font-weight:850;display:inline-block;background:#eef2ff;color:#3730a3}
+.redc{background:#fee2e2;color:#991b1b}.greenc{background:#d1fae5;color:#065f46}
+.orangec{background:#ffedd5;color:#9a3412}.bluec{background:#dbeafe;color:#1e40af}
+.purplec{background:#ede9fe;color:#5b21b6}.cyanc{background:#cffafe;color:#155e75}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:#f3f4f6}
+hr{border:0;border-top:1px solid rgba(0,0,0,.12);margin:12px 0}
+.section-title{display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+footer{font-size:.8rem;color:var(--muted);padding:20px 0}
+@media(max-width:640px){.output-grid{grid-template-columns:1fr}.big{text-align:left}.kv{grid-template-columns:1fr}}
+@media print{button{display:none}.card{break-inside:avoid}body{background:#fff}header{color:#111;background:#fff;border-bottom:1px solid #ddd}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Calculadora Pediátrica Final – GECA, Medicações e Hidratação</h1>
+  <div>Fluxo: classificação A/B/C → Plano C por idade/cardiopatia → manutenção Holliday-Segar → reposição de perdas → medicações e antibióticos.</div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Dados do paciente</h2>
+    <div class="grid">
+      <div><label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 12"></div>
+      <div><label>Idade</label><input id="idade" type="number" min="0" step="1" placeholder="Ex.: 18"></div>
+      <div><label>Unidade da idade</label><select id="idadeUn"><option value="dias">dias</option><option value="meses">meses</option><option value="anos">anos</option></select></div>
+      <div><label>Realizar hidratação?</label><select id="hidratar"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div id="planoWrap" style="display:none"><label>Plano de hidratação</label><select id="plano"><option value="A">A – sem desidratação</option><option value="B">B – com desidratação</option><option value="C">C – desidratação grave</option></select></div>
+      <div id="cardioWrap" style="display:none"><label>&lt;5 anos com cardiopatia grave?</label><select id="cardiopatia"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div><label>Indicação de ATB?</label><select id="atb"><option value="nao">Não / GECA sem indicação</option><option value="sim">Sim – disenteria/EG comprometido/cólera grave</option></select></div>
+    </div>
+    <br><button onclick="calcularTudo()">Calcular tudo</button>
+    <button class="ghost" onclick="limpar()">Limpar</button>
+    <p class="small">Uso de apoio. Conferir alergias, contraindicações, função renal/hepática, eletrólitos, QT, comorbidades e protocolo local.</p>
+  </div>
+
+  <div class="card">
+    <h2>Resultado visual</h2>
+    <div id="saidaVisual" class="output-grid"><div class="box graybox">Aguardando cálculo...</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Prescrição-base gerada</h2>
+    <textarea id="prescricao" rows="22" placeholder="A prescrição aparecerá aqui..."></textarea>
+    <br><br><button onclick="copiarPrescricao()">Copiar prescrição</button>
+  </div>
+
+  <div class="card">
+    <h2>Referência rápida incorporada</h2>
+    <table>
+      <tr><th>Bloco</th><th>Regra</th></tr>
+      <tr><td><b>Plano C &lt;1 ano</b></td><td>SF 0,9% ou Ringer: 30 mL/kg em 1h + 70 mL/kg em 5h. Total 100 mL/kg em 6h.</td></tr>
+      <tr><td><b>Plano C ≥1 ano</b></td><td>SF 0,9% ou Ringer: 30 mL/kg em 30 min + 70 mL/kg em 2h30. Total 100 mL/kg em 3h.</td></tr>
+      <tr><td><b>Recém-nascido ou &lt;5 anos com cardiopatia grave</b></td><td>Recém-nascido = idade &lt;28 dias. No Plano C: 10 mL/kg e reavaliar parâmetros clínicos para adequar velocidade de infusão.</td></tr>
+      <tr><td><b>Manutenção</b></td><td>Holliday-Segar com SG5% + SF0,9% em proporção 4:1. KCl 10%: 2 mL/100 mL da manutenção, se seguro.</td></tr>
+      <tr><td><b>Reposição</b></td><td>Iniciar 50 mL/kg/dia com SG5% + SF0,9% em proporção 1:1, ajustando conforme perdas.</td></tr>
+      <tr><td><b>ATB</b></td><td>Somente se diarreia com sangue/disenteria com comprometimento do estado geral ou cólera grave.</td></tr>
+    </table>
+  </div>
+
+<footer>
+Material educacional baseado nos documentos fornecidos. Não substitui julgamento clínico, protocolos institucionais ou validação farmacêutica.
+</footer>
+</main>
+
+<script>
+function n(x){return Math.round((x + Number.EPSILON)*100)/100}
+function gotas(x){return Math.max(1, Math.round(x))}
+function idadeDias(){
+  let idade=parseFloat(document.getElementById('idade').value)||0;
+  let un=document.getElementById('idadeUn').value;
+  if(un==='anos') return idade*365;
+  if(un==='meses') return idade*30.4375;
+  return idade;
+}
+function idadeMeses(){
+  return idadeDias()/30.4375;
+}
+function idadeTexto(){
+  let idade=parseFloat(document.getElementById('idade').value)||0;
+  let un=document.getElementById('idadeUn').value;
+  return `${idade} ${un}`;
+}
+function faixaPlanoC(meses){return meses < 12 ? "menor1ano" : "maiorIgual1ano";}
+function ehRN(meses){return idadeDias() < 28;}
+function kv(k,v){return `<div class="kv"><span>${k}</span><span class="big">${v}</span></div>`}
+function faixaPesoDipMax(p){
+  if(p>=5&&p<=8) return 500;
+  if(p>=9&&p<=15) return 1000;
+  if(p>=16&&p<=23) return 1500;
+  if(p>=24&&p<=30) return 2000;
+  if(p>=31&&p<=45) return 3000;
+  if(p>=46&&p<=53) return 3500;
+  if(p>53) return 4000;
+  return null;
+}
+function holliday(p){
+  let vol=0, formula="";
+  if(p<=10){vol=100*p; formula="100 mL/kg/dia";}
+  else if(p<=20){vol=1000+50*(p-10); formula="1000 mL + 50 mL/kg acima de 10 kg";}
+  else {vol=1500+20*(p-20); formula="1500 mL + 20 mL/kg acima de 20 kg";}
+  let capped=Math.min(vol,2000);
+  return {vol:n(vol), capped:n(capped), hora:n(capped/24), sg5:n(capped*0.8), sf09:n(capped*0.2), kcl:n(capped*0.02), formula};
+}
+function planoHidratacao(p, meses, cardiopatia){
+  let plano=document.getElementById('plano').value;
+  if(plano==="A"){
+    let sro = meses<12 ? "50–100 mL após cada evacuação" : (meses<=120 ? "100–200 mL após cada evacuação" : "volume conforme tolerado após cada evacuação");
+    return {titulo:"PLANO A – sem desidratação", cor:"green", texto:`SRO: ${sro}.`, extra:"Manter alimentação e aleitamento. Zinco se <5 anos. Retornar se sinais de alerta."};
+  }
+  if(plano==="B"){
+    return {titulo:"PLANO B – com desidratação", cor:"orange", texto:`SRO ${n(50*p)}–${n(100*p)} mL em 4–6 horas na unidade.`, extra:"Ofertar em pequenos volumes e reavaliar continuamente. Se vômitos persistentes, ondansetrona e reiniciar SRO. Sem melhora/piora: considerar Plano C."};
+  }
+  if(ehRN(meses) || (meses<60 && cardiopatia==="sim")){
+    let motivo = ehRN(meses) ? "recém-nascido" : "<5 anos com cardiopatia grave";
+    return {titulo:`PLANO C ESPECIAL – ${motivo}`, cor:"red", texto:`SF 0,9% ou Ringer: ${n(10*p)} mL.`, extra:"Reavaliar parâmetros clínicos e adequar a velocidade/necessidade de nova etapa conforme resposta. Atenção à sobrecarga hídrica."};
+  }
+  let etapa1=n(30*p), etapa2=n(70*p);
+  if(faixaPlanoC(meses)==="menor1ano"){
+    return {titulo:"PLANO C – desidratação grave (<1 ano)", cor:"red", texto:`1ª etapa: ${etapa1} mL em 1 hora. 2ª etapa: ${etapa2} mL em 5 horas.`, extra:"SF 0,9% ou Ringer lactato. Total 100 mL/kg em 6 horas. Após corrigir desidratação, seguir manutenção + reposição."};
+  }
+  return {titulo:"PLANO C – desidratação grave (≥1 ano)", cor:"red", texto:`1ª etapa: ${etapa1} mL em 30 minutos. 2ª etapa: ${etapa2} mL em 2 horas e 30 minutos.`, extra:"SF 0,9% ou Ringer lactato. Total 100 mL/kg em 3 horas. Após corrigir desidratação, seguir manutenção + reposição."};
+}
+function ondansetronaDose(p, meses){
+  return n(0.15*p);
+}
+function atbCalc(p, meses){
+  let anos=meses/12;
+  let menorGrupo = (anos<=10 && p<=30);
+  if(menorGrupo){
+    return {
+      grupo:"≤10 anos e ≤30 kg",
+      itens:[
+        `Azitromicina VO: D1 ${n(10*p)} mg; D2–D5 ${n(5*p)} mg 1x/dia.`,
+        `Ceftriaxona IM: ${n(50*p)}–${n(100*p)} mg 1x/dia por 3–5 dias.`,
+        `${meses<3 ? "Menor de 3 meses: preferir ceftriaxona EV conforme protocolo." : "Se imunodeficiência: ceftriaxona EV conforme protocolo."}`
+      ]
+    }
+  }
+  return {
+    grupo:">10 anos ou >30 kg",
+    itens:[
+      `Ciprofloxacino VO: 500 mg 12/12h por 3 dias.`,
+      `Ceftriaxona IM/EV: ${n(50*p)}–${n(100*p)} mg 1x/dia por 3–5 dias.`,
+      `Cefotaxima casos graves: ${n(100*p)} mg/dia dividido em 4 doses = ${n((100*p)/4)} mg/dose 6/6h.`
+    ]
+  }
+}
+function calcularTudo(){
+  const p=parseFloat(document.getElementById('peso').value);
+  const meses=idadeMeses();
+  if(!p || p<=0){alert("Informe peso válido.");return;}
+  const cardiopatia=document.getElementById('cardiopatia').value;
+  const atbInd=document.getElementById('atb').value;
+  const anos=meses/12;
+  let alertas=[];
+  if(meses<3) alertas.push("Evitar dipirona e ondansetrona de rotina em <3 meses; usar apenas conforme avaliação/protocolo.");
+  if(meses<6) alertas.push("Evitar ibuprofeno em <6 meses.");
+  if(meses<12) alertas.push("Bromoprida contraindicada em <1 ano.");
+  if(ehRN(meses)) alertas.push("Recém-nascido identificado automaticamente (<28 dias): no Plano C, aplicar esquema especial de 10 mL/kg com reavaliação.");
+  else if(meses<60 && cardiopatia==="sim") alertas.push("<5 anos com cardiopatia grave: no Plano C, aplicar esquema especial de 10 mL/kg e reavaliar para evitar sobrecarga.");
+
+  let h=holliday(p);
+  let repos=n(50*p), reposSG=n(repos/2), reposSF=n(repos/2);
+  let plano=planoHidratacao(p, meses, cardiopatia);
+
+  let dip15=n(15*p), dip20=n(20*p), dip25=n(25*p), dipMax=faixaPesoDipMax(p);
+  let para10=n(10*p), para15=n(15*p);
+  let ibu10=n(10*p);
+  let onda=ondansetronaDose(p,meses), ondaCalc=n(0.15*p);
+  let ondaDil = onda<=8 ? "Pode administrar sem diluição. Se EV pediátrico, pode diluir em 20–50 mL SF 0,9% e correr lento." :
+                onda<=16 ? "Diluir em SF 0,9% 50 mL, conforme padrão informado." :
+                "Diluir em SF 0,9% ou SG5% 50–100 mL.";
+  let bromoDoseLow=n((0.5*p)/3), bromoDoseHigh=n((1*p)/3);
+  let sim = meses<12 ? "3–5 gotas 8/8h" : (meses<144 ? "5–10 gotas 8/8h" : "13 gotas 8/8h");
+  let zinco = meses<6 ? "10 mg VO 1x/dia por 10–14 dias se indicado" : (meses<60 ? "20 mg VO 1x/dia por 10–14 dias" : "não rotineiro se ≥5 anos");
+  let race=n(1.5*p);
+  let atb=atbCalc(p,meses);
+
+  let visual = `
+    ${document.getElementById('hidratar').value==="sim" ? `
+    <div class="box ${plano.cor}">
+      <div class="section-title"><span class="dot" style="background:var(--red)"></span><h3>1) Classificação e plano escolhido</h3></div>
+      ${kv("Idade lida", `${idadeTexto()} | ${n(meses)} meses (${n(anos)} anos)`)}
+      ${kv("Peso", `${p} kg`)}
+      ${kv("Plano", plano.titulo)}
+      <hr><div class="big" style="text-align:left">${plano.texto}</div>
+      <div class="dosechips">
+        ${document.getElementById('plano').value==="C" && cardiopatia==="nao" ? `<span class="chip redc">${faixaPlanoC(meses)==="menor1ano" ? "<1 ano: total em 6h" : "≥1 ano: total em 3h"}</span>` : ""}
+        ${(ehRN(meses)||(meses<60&&cardiopatia==="sim")) ? `<span class="chip redc">Regra especial: 10 mL/kg</span>` : ""}
+      </div>
+      <div class="small">${plano.extra}</div>
+    </div>
+
+    <div class="box blue">
+      <div class="section-title"><span class="dot" style="background:var(--blue)"></span><h3>2) Manutenção – Holliday-Segar</h3></div>
+      ${kv("Fórmula", h.formula)}
+      ${kv("Volume calculado", `${h.vol} mL/24h`)}
+      ${h.vol>2000 ? kv("Teto usado", `${h.capped} mL/24h`) : ""}
+      ${kv("Velocidade", `${h.hora} mL/h`)}
+      <hr><div class="small">Usar após correção da desidratação ou quando manutenção EV for necessária. Não é o bolus/expansão do Plano C.</div>
+    </div>
+
+    <div class="box purple">
+      <div class="section-title"><span class="dot" style="background:var(--purple)"></span><h3>3) Eletrólitos da manutenção</h3></div>
+      ${kv("SG5% 80%", `${h.sg5} mL`)}
+      ${kv("SF0,9% 20%", `${h.sf09} mL`)}
+      ${kv("Proporção", "4:1")}
+      ${kv("KCl 10%", `${h.kcl} mL/24h`)}
+      <hr><div class="small">KCl 10% = 2 mL/100 mL da manutenção. Só com diurese presente, eletrólitos avaliados e sem contraindicação renal/hipercalemia.</div>
+    </div>
+
+    <div class="box green">
+      <div class="section-title"><span class="dot" style="background:var(--green)"></span><h3>4) Reposição de perdas</h3></div>
+      ${kv("Volume inicial", `${repos} mL/dia`)}
+      ${kv("Solução", "SG5% + SF0,9% 1:1")}
+      ${kv("SG5%", `${reposSG} mL`)}
+      ${kv("SF0,9%", `${reposSF} mL`)}
+      <hr><div class="small">Iniciar com 50 mL/kg/dia e ajustar conforme vômitos/diarreia, balanço hídrico, diurese e exame clínico.</div>
+    </div>
+
+    ` : ""}
+
+    <div class="box red">
+      <div class="section-title"><span class="dot" style="background:var(--red)"></span><h3>5) Dipirona – doses separadas</h3></div>
+      ${kv("15 mg/kg – febre/dor leve", `${dip15} mg = ${gotas(p*0.6)} gotas`)}
+      ${kv("20 mg/kg – dor moderada", `${dip20} mg = ${gotas(p*0.8)} gotas`)}
+      ${kv("25 mg/kg – dor forte", `${dip25} mg ≈ ${gotas(p)} gotas`)}
+      ${kv("Suspensão 50 mg/mL", `${n(dip15/50)}–${n(dip20/50)} mL`)}
+      ${kv("EV/IM 500 mg/mL", `${n(dip15/500)}–${n(dip20/500)} mL`)}
+      ${dipMax?kv("Máx/dia por faixa", `${dipMax} mg/dia`):""}
+      <hr><div class="small">Gotas 500 mg/mL: 1 gota = 25 mg. Evitar em menores de 3 meses.</div>
+    </div>
+
+    <div class="box cyan">
+      <div class="section-title"><span class="dot" style="background:var(--cyan)"></span><h3>6) Antiemético – Ondansetrona</h3></div>
+      ${kv("Dose calculada – 0,15 mg/kg", `${ondaCalc} mg`)}
+      ${kv("EV/IM 2 mg/mL", `${n(onda/2)} mL`)}
+      ${kv("Solução 4 mg/5 mL", `${n(onda/0.8)} mL`)}
+      ${kv("Gotas 8 mg/mL", `${gotas(onda/0.4)} gotas`)}
+      <hr><div class="small">${ondaDil} Usar em GECA se vômitos persistentes. Cautela em QT longo e distúrbios eletrolíticos.</div>
+    </div>
+
+    <div class="box orange">
+      <div class="section-title"><span class="dot" style="background:var(--orange)"></span><h3>7) Outros sintomáticos</h3></div>
+      ${kv("Paracetamol", `${para10}–${para15} mg/dose | 200 mg/mL: ~${gotas(p)} gotas`)}
+      ${kv("Ibuprofeno", `${ibu10} mg/dose | 100 mg/mL: ~${gotas(p)} gotas`)}
+      ${kv("Bromoprida", `${bromoDoseLow}–${bromoDoseHigh} mg/dose 8/8h`)}
+      ${kv("Simeticona", sim)}
+      ${kv("Zinco", zinco)}
+      ${kv("Racecadotrila", `${race} mg 8/8h`)}
+    </div>
+
+    <div class="box ${atbInd==="sim" ? "purple" : "graybox"}">
+      <div class="section-title"><span class="dot" style="background:var(--purple)"></span><h3>8) Antibiótico – se indicado</h3></div>
+      ${atbInd==="sim" ? `
+        ${kv("Grupo", atb.grupo)}
+        <ul>${atb.itens.map(i=>`<li><b>${i}</b></li>`).join("")}</ul>
+        <div class="small">Indicar apenas para disenteria com comprometimento do estado geral ou cólera grave, conforme avaliação clínica.</div>
+      ` : `<div class="warn">Sem indicação selecionada.</div><div class="small">GECA comum geralmente não precisa de antibiótico.</div>`}
+    </div>
+
+    <div class="box graybox">
+      <div class="section-title"><span class="dot" style="background:var(--gray)"></span><h3>Alertas</h3></div>
+      ${alertas.length ? alertas.map(a=>`<div class="bad">• ${a}</div>`).join("") : `<div class="good">Sem alertas automáticos por idade/opções.</div>`}
+    </div>
+  `;
+
+  document.getElementById('saidaVisual').innerHTML=visual;
+  document.getElementById('prescricao').value=gerarPrescricao(p,meses,plano,h,{repos,reposSG,reposSF,dip15,dip20,dip25,dipMax,para10,para15,ibu10,onda,ondaDil,bromoDoseLow,bromoDoseHigh,sim,zinco,race,atb,atbInd,alertas,cardiopatia});
+}
+function gerarPrescricao(p,meses,plano,h,d){
+  let linhas=[];
+  linhas.push(`PRESCRIÇÃO-BASE – GECA/PEDIATRIA`);
+  linhas.push(`Peso: ${p} kg | Idade: ${idadeTexto()} (${n(meses)} meses / ${n(meses/12)} anos)`);
+  linhas.push(``);
+  linhas.push(`1. Dieta conforme aceitação. Manter aleitamento materno se aplicável.`);
+  if(document.getElementById('hidratar').value==="sim"){
+    linhas.push(`2. Hidratação/classificação: ${plano.titulo}. ${plano.texto} ${plano.extra}`);
+    if(document.getElementById('plano').value==="C"){
+      linhas.push(`3. Após correção da desidratação, se manutenção EV indicada: SG5% ${h.sg5} mL + SF0,9% ${h.sf09} mL, EV em 24h (${h.hora} mL/h).`);
+      linhas.push(`4. KCl 10% ${h.kcl} mL no total da manutenção, apenas se diurese presente, K/risco renal avaliados e sem contraindicação.`);
+      linhas.push(`5. Reposição de perdas: SG5% ${d.reposSG} mL + SF0,9% ${d.reposSF} mL em 24h, iniciar com 50 mL/kg/dia e ajustar conforme perdas.`);
+    }
+  }
+  linhas.push(`6. Dipirona ${d.dip15}–${d.dip20} mg VO/EV se febre ou dor. Gotas 500 mg/mL: ${gotas(p*0.6)} gotas (15 mg/kg) OU ${gotas(p*0.8)} gotas (20 mg/kg).`);
+  linhas.push(`7. Paracetamol ${d.para10}–${d.para15} mg VO 6/6h se febre/dor, alternativa. Gotas 200 mg/mL: cerca de ${gotas(p)} gotas/dose.`);
+  if(meses>=6) linhas.push(`8. Ibuprofeno ${d.ibu10} mg VO se febre/dor, evitar se desidratação/doença renal/risco GI. 100 mg/mL: cerca de ${gotas(p)} gotas/dose.`);
+  linhas.push(`${meses>=6?'9':'8'}. Ondansetrona ${d.onda} mg VO/EV se vômitos persistentes. EV/IM 2 mg/mL: ${n(d.onda/2)} mL. Solução 4 mg/5mL: ${n(d.onda/0.8)} mL. Gotas 8 mg/mL: ${gotas(d.onda/0.4)} gotas. ${d.ondaDil}`);
+  let idx=meses>=6?10:9;
+  if(meses>=12){linhas.push(`${idx}. Bromoprida se indicada: ${d.bromoDoseLow}–${d.bromoDoseHigh} mg/dose 8/8h.`); idx++;}
+  linhas.push(`${idx}. Simeticona ${d.sim} se cólicas/meteorismo.`); idx++;
+  if(meses<60){linhas.push(`${idx}. Zinco: ${d.zinco}.`); idx++;}
+  if(meses>=3){linhas.push(`${idx}. Racecadotrila ${d.race} mg VO 8/8h, se indicada como adjuvante; suspender ao cessar diarreia.`); idx++;}
+  if(d.atbInd==="sim"){
+    linhas.push(`${idx}. Antibiótico se indicado clinicamente (${d.atb.grupo}):`);
+    d.atb.itens.forEach((i,j)=>linhas.push(`   ${String.fromCharCode(97+j)}) ${i}`));
+    idx++;
+  }
+  linhas.push(`${idx}. Orientações: SRO em pequenos volumes frequentes; higiene das mãos; retornar se vômitos repetidos, sangue nas fezes, pouca urina, sede intensa, sonolência/irritabilidade importante, piora ou sem melhora em 48h.`);
+  if(d.alertas.length){linhas.push(`\nALERTAS: ${d.alertas.join(" | ")}`)}
+  return linhas.join("\n");
+}
+function copiarPrescricao(){
+  const t=document.getElementById('prescricao');
+  t.select(); document.execCommand('copy');
+  alert('Prescrição copiada.');
+}
+function limpar(){
+  document.getElementById('peso').value='';
+  document.getElementById('idade').value='';
+  document.getElementById('saidaVisual').innerHTML='<div class="box graybox">Aguardando cálculo...</div>';
+  document.getElementById('prescricao').value='';
+}
+function atualizarCamposHidratacao(){
+  const hidratar=document.getElementById('hidratar').value;
+  const plano=document.getElementById('plano').value;
+  const meses=idadeMeses();
+  document.getElementById('planoWrap').style.display=hidratar==="sim"?"block":"none";
+  document.getElementById('cardioWrap').style.display=(hidratar==="sim"&&plano==="C"&&!ehRN(meses)&&meses<60)?"block":"none";
+  if(ehRN(meses)||meses>=60) document.getElementById('cardiopatia').value="nao";
+}
+document.addEventListener('DOMContentLoaded', () => {
+  atualizarCamposHidratacao();
+  ['peso','idade','idadeUn','hidratar','plano','cardiopatia','atb'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('change', () => {
+      atualizarCamposHidratacao();
+      const peso = parseFloat(document.getElementById('peso').value);
+      if(peso && peso > 0) calcularTudo();
+    });
+    el.addEventListener('input', () => {
+      atualizarCamposHidratacao();
+      const peso = parseFloat(document.getElementById('peso').value);
+      if(peso && peso > 0) calcularTudo();
+    });
+  });
+});
+</script>
+
+<script>
+// --- Versão final: preparo integrado e automático das bolsas ---
+function sugestaoBolsas(volume){
+  let nB=volume<=500?1:(volume<=1000?2:3);
+  let por=n(volume/nB), horas=24/nB, velocidade=n(volume/24);
+  return {n:nB,por,horas,velocidade,macro:Math.round(velocidade/3),micro:Math.round(velocidade)};
+}
+function preparoAvancado(volume){
+  const naDesejado=13.6, kDesejado=2.5, s=sugestaoBolsas(volume);
+  const naTotal=n(volume*naDesejado/100), kTotal=n(volume*kDesejado/100);
+  const nacl20Total=n(naTotal/3.4), kcl191Total=n(kTotal/2.5);
+  return {...s,naDesejado,kDesejado,naTotal,kTotal,nacl20Total,kcl191Total,
+    nacl20Bolsa:n(nacl20Total/s.n),kcl191Bolsa:n(kcl191Total/s.n)};
+}
+document.addEventListener("DOMContentLoaded",()=>{
+ const old=window.calcularTudo;
+ if(typeof old==="function"){
+  window.calcularTudo=function(){
+   old();
+   const p=parseFloat(document.getElementById("peso").value);
+   if(!p||p<=0)return;
+   const h=holliday(p), vol=h.capped, s=preparoAvancado(vol);
+   const sgBolsa=n(s.por*.8), sfBolsa=n(s.por*.2), kcl10Bolsa=n(s.por*.02);
+   const vis=document.getElementById("saidaVisual");
+   if(vis && document.getElementById("hidratar").value==="sim" && document.getElementById("plano").value==="C") vis.innerHTML+=`
+   <div class="box cyan">
+    <div class="section-title"><span class="dot" style="background:var(--cyan)"></span><h3>9) Preparo integrado das bolsas – automático pelo peso</h3></div>
+    ${kv("Total desejado por dia",`${vol} mL/24h`)}
+    ${kv("Velocidade contínua",`${s.velocidade} mL/h`)}
+    ${kv("Estratégia",`${s.n} bolsa(s) iguais de ${s.por} mL`)}
+    ${kv("Troca",`a cada ${s.horas} h`)}
+    <hr><b>Cálculo avançado da planilha – por bolsa</b>
+    ${kv("Na desejado",`${s.naDesejado} mEq/100 mL`)}
+    ${kv("Na total desejado/dia",`${s.naTotal} mEq/dia`)}
+    ${kv("NaCl 20%",`${s.nacl20Bolsa} mL/bolsa | ${s.nacl20Total} mL/dia`)}
+    ${kv("K desejado",`${s.kDesejado} mEq/100 mL`)}
+    ${kv("K total desejado/dia",`${s.kTotal} mEq/dia`)}
+    ${kv("KCl 19,1%",`${s.kcl191Bolsa} mL/bolsa | ${s.kcl191Total} mL/dia`)}
+    <hr><b>Sem bomba de infusão</b>
+    ${kv("Equipo macro 20 gotas/mL",`≈ ${s.macro} gotas/min`)}
+    ${kv("Equipo micro 60 microgotas/mL",`≈ ${s.micro} microgotas/min`)}
+    <div class="small">A divisão prioriza bolsas iguais. O volume de cada bolsa é o volume final prescrito; preparar/fracionar conforme padronização do serviço. Preferir bomba quando disponível.</div>
+   </div>`;
+   const alvo=document.getElementById("prescricao");
+   if(alvo && document.getElementById("hidratar").value==="sim" && document.getElementById("plano").value==="C") alvo.value+=`
+
+==============================
+PREPARO DAS BOLSAS – AUTOMÁTICO
+==============================
+Total desejado: ${vol} mL/24h
+Velocidade: ${s.velocidade} mL/h
+Estratégia: ${s.n} bolsa(s) iguais de ${s.por} mL
+Trocar a cada ${s.horas} h
+
+OPÇÃO 4:1 – CADA BOLSA
+SG 5%: ${sgBolsa} mL
+SF 0,9%: ${sfBolsa} mL
+KCl 10%: ${kcl10Bolsa} mL, se indicado e seguro
+
+CÁLCULO AVANÇADO DA PLANILHA – CADA BOLSA
+Na desejado: ${s.naDesejado} mEq/100 mL
+NaCl 20%: ${s.nacl20Bolsa} mL/bolsa
+K desejado: ${s.kDesejado} mEq/100 mL
+KCl 19,1%: ${s.kcl191Bolsa} mL/bolsa
+Infundir cada bolsa em ${s.horas} h (${s.velocidade} mL/h)
+
+Sem BIC:
+Macro 20 gotas/mL: ≈ ${s.macro} gotas/min
+Micro 60 microgotas/mL: ≈ ${s.micro} microgotas/min
+
+ATENÇÃO: usar a opção 4:1 OU a formulação avançada, conforme protocolo do serviço; não somar as duas formulações.`;
+  };
+ }
+ const peso=document.getElementById("peso");
+ if(peso) peso.addEventListener("input",()=>{const p=parseFloat(peso.value);if(p&&p>0)calcularTudo();});
+});
+</script></body>
+</html>
