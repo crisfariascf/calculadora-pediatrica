@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173b66">
+<title>Calculadoras Pediátricas</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#fff; --ink:#162033; --muted:#667085; --line:#e6eaf0;
+  --shadow:0 10px 28px rgba(24,39,75,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.hero{padding:34px 20px 54px;background:linear-gradient(135deg,#173b66,#245b94,#1686a7);color:#fff}
+.wrap{max-width:1120px;margin:auto}
+.hero h1{margin:0 0 8px;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.04em}
+.hero p{margin:0;max-width:720px;opacity:.9;line-height:1.5}
+.search{margin-top:22px;max-width:620px}
+.search input{width:100%;border:0;border-radius:15px;padding:15px 17px;font-size:1rem;box-shadow:0 8px 24px rgba(0,0,0,.12);outline:none}
+main{max-width:1120px;margin:-28px auto 0;padding:0 16px 40px}
+.section{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.topline{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
+h2{margin:0;font-size:1.15rem}
+.note{color:var(--muted);font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{position:relative;min-height:150px;padding:18px;border-radius:18px;text-decoration:none;color:inherit;overflow:hidden;border:1px solid rgba(0,0,0,.04);transition:.18s transform,.18s box-shadow}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(24,39,75,.13)}
+.card:active{transform:scale(.98)}
+.icon{width:45px;height:45px;border-radius:13px;background:rgba(255,255,255,.65);display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
+.card h3{margin:0 0 6px;font-size:1.05rem}
+.card p{margin:0;color:#475467;font-size:.86rem;line-height:1.4}
+.arrow{position:absolute;right:16px;top:17px;font-size:1.15rem;opacity:.55}
+.blue{background:#dbeafe}.cyan{background:#cffafe}.green{background:#d1fae5}.orange{background:#ffedd5}
+.red{background:#fee2e2}.purple{background:#ede9fe}.yellow{background:#fef3c7}.pink{background:#fce7f3}
+.indigo{background:#e0e7ff}.teal{background:#ccfbf1}.lime{background:#ecfccb}.gray{background:#f2f4f7}
+.placeholder{border:2px dashed #cbd5e1;background:#f8fafc}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 12px}
+.hidden{display:none!important}
+@media(max-width:560px){.hero{padding-top:27px}.grid{grid-template-columns:1fr 1fr;gap:10px}.card{min-height:145px;padding:14px}.card p{font-size:.78rem}.icon{margin-bottom:12px}}
+@media(max-width:390px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Calculadoras Pediátricas</h1>
+    <p>Ferramentas de apoio para consulta rápida, cálculo de doses, hidratação e condutas no pronto atendimento pediátrico.</p>
+    <div class="search"><input id="busca" type="search" placeholder="Buscar calculadora..." oninput="filtrar()"></div>
+  </div>
+</header>
+
+<main>
+<section class="section">
+  <div class="topline">
+    <h2>Escolha uma calculadora</h2>
+    <span class="note">Toque para abrir</span>
+  </div>
+
+  <div class="grid" id="grid">
+    <!-- EDITE SOMENTE O href PARA O NOME DO SEU ARQUIVO HTML -->
+    <a class="card blue" href="asma.html" data-name="asma crise broncoespasmo">
+      <span class="arrow">→</span><div class="icon">🫁</div><h3>Asma</h3><p>Classificação, doses e conduta por gravidade.</p>
+    </a>
+
+    <a class="card cyan" href="geca.html" data-name="geca diarreia desidratacao hidratacao">
+      <span class="arrow">→</span><div class="icon">💧</div><h3>GECA / Diarreia</h3><p>Planos A, B e C, manutenção, reposição e medicações.</p>
+    </a>
+
+    <a class="card green" href="pneumonia.html" data-name="pneumonia pac antibiotico">
+      <span class="arrow">→</span><div class="icon">🩺</div><h3>Pneumonia</h3><p>Avaliação, gravidade e antibioticoterapia.</p>
+    </a>
+
+    <a class="card orange" href="itu.html" data-name="itu infeccao urinaria urina">
+      <span class="arrow">→</span><div class="icon">🧪</div><h3>ITU</h3><p>Investigação e doses das principais apresentações.</p>
+    </a>
+
+    <a class="card red" href="oma.html" data-name="oma otite media aguda ouvido">
+      <span class="arrow">→</span><div class="icon">👂</div><h3>Otite Média Aguda</h3><p>Critérios e tratamento conforme idade e peso.</p>
+    </a>
+
+    <a class="card purple" href="crupe.html" data-name="crupe laringite estridor">
+      <span class="arrow">→</span><div class="icon">🌬️</div><h3>Crupe</h3><p>Gravidade, dexametasona e epinefrina nebulizada.</p>
+    </a>
+
+    <a class="card yellow" href="febre.html" data-name="febre sem sinais localizatorios fssl">
+      <span class="arrow">→</span><div class="icon">🌡️</div><h3>Febre sem Sinais</h3><p>Fluxo por idade, risco e achados clínicos.</p>
+    </a>
+
+    <a class="card pink" href="dor-abdominal.html" data-name="dor abdominal pediatrica">
+      <span class="arrow">→</span><div class="icon">🤕</div><h3>Dor Abdominal</h3><p>Avaliação e direcionamento do fluxo clínico.</p>
+    </a>
+
+    <!-- ESPAÇOS EXTRAS: DUPLIQUE UM CARD E TROQUE NOME + href -->
+    <a class="card indigo placeholder" href="#" data-name="nova calculadora">
+      <span class="arrow">＋</span><div class="icon">📋</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
+    </a>
+
+    <a class="card teal placeholder" href="#" data-name="nova calculadora">
+      <span class="arrow">＋</span><div class="icon">⚕️</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
+    </a>
+
+    <a class="card lime placeholder" href="#" data-name="nova calculadora">
+      <span class="arrow">＋</span><div class="icon">💊</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
+    </a>
+
+    <a class="card gray placeholder" href="#" data-name="nova calculadora">
+      <span class="arrow">＋</span><div class="icon">➕</div><h3>Nova calculadora</h3><p>Espaço reservado para adicionar outro protocolo.</p>
+    </a>
+  </div>
+</section>
+</main>
+
+<footer>Ferramentas de apoio à decisão clínica. Conferir protocolo institucional, apresentações disponíveis e julgamento clínico.</footer>
+
+<script>
+function filtrar(){
+  const q=document.getElementById('busca').value.toLowerCase().trim();
+  document.querySelectorAll('#grid .card').forEach(card=>{
+    const texto=(card.dataset.name+' '+card.innerText).toLowerCase();
+    card.classList.toggle('hidden',!texto.includes(q));
+  });
+}
+document.querySelectorAll('a[href="#"]').forEach(a=>{
+  a.addEventListener('click',e=>e.preventDefault());
+});
+</script>
+</body>
+</html>
