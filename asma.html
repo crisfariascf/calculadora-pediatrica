@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Asma Pediátrica HCA — Calculadora Offline v9</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--ink:#17211b;--green:#315d43;--line:#d9e2dc;--red:#8b2e2e;--amber:#8a5b00;--blue:#244d73}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--green);color:white;padding:20px} header h1{margin:0 0 6px;font-size:22px} header p{margin:0;opacity:.9;font-size:13px}
+main{max-width:900px;margin:auto;padding:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px #0000000a}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.checks{display:grid;gap:7px}.chk{border:1px solid var(--line);border-radius:9px;padding:9px}
+label{font-size:13px;font-weight:600}input,select{width:100%;padding:10px;border:1px solid #bfcac2;border-radius:8px;margin-top:4px;font-size:16px}
+.chk input{width:auto;margin:0 7px 0 0}button{border:0;border-radius:9px;padding:11px 14px;background:var(--green);color:white;font-weight:700;cursor:pointer;margin:6px 4px 6px 0}
+.secondary{background:#53645a}.tab{background:#dde7e0;color:#22352a}.tab.active{background:var(--green);color:#fff}
+.rx{white-space:pre-wrap;background:#f7faf8;border:1px solid var(--line);border-radius:10px;padding:13px;line-height:1.48;font-size:14px}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e7eee9;margin:2px;font-weight:700;font-size:12px}.danger{background:#fbeaea;color:var(--red)}.warn{background:#fff4dc;color:var(--amber)}
+.box{padding:11px;border-radius:9px;margin:8px 0}.dangerbox{background:#fbeaea;border-left:4px solid var(--red)}.infobox{background:#eaf2f9;border-left:4px solid var(--blue)}
+.note{font-size:12px;color:#5b675f}.painel{margin-top:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr 1fr}} @media print{.noprint{display:none!important}.card{box-shadow:none}.rx{background:white;color:black}}
+</style>
+</head>
+<body>
+<header><h1>Asma Pediátrica no PA — HCA v9 — macetes visíveis</h1><p>Calculadora offline baseada no protocolo HCA enviado. Corrigida para diferenciar &lt;6 anos e ≥6 anos e o momento do corticoide sistêmico.</p></header>
+<main>
+<section class="card">
+<h2>1) Dados do paciente</h2>
+<div class="grid">
+<div><label>Idade<input id="idade" type="number" min="0" step=".1"></label></div>
+<div><label>Unidade<select id="unidade"><option value="anos">anos</option><option value="meses">meses</option></select></label></div>
+<div><label>Peso (kg)<input id="peso" type="number" min="1" step=".1"></label></div>
+<div><label>SatO₂ (%)<input id="sat" type="number" min="40" max="100"></label></div>
+<div><label>FR (irpm)<input id="fr" type="number" min="0"></label></div>
+<div><label>FC (bpm)<input id="fc" type="number" min="0"></label></div>
+</div>
+<h3>Apresentações disponíveis</h3>
+<div class="grid">
+<div><label>Prednisolona solução<select id="predConc">
+<option value="3">3 mg/mL</option>
+<option value="1">1 mg/mL</option>
+<option value="11">11 mg/mL</option>
+<option value="0">Não calcular volume</option>
+</select></label></div>
+<div><label>Dose sistêmica para cálculo<select id="predMgKg">
+<option value="1">1 mg/kg/dia — padrão de alta HCA</option>
+<option value="2">2 mg/kg/dia — limite superior da crise</option>
+</select></label></div>
+<div><label>MgSO₄ para cálculo<select id="mgDose">
+<option value="50">50 mg/kg — macete do guia</option>
+<option value="25">25 mg/kg</option>
+<option value="75">75 mg/kg</option>
+</select></label></div>
+<div><label>Metilprednisolona EV<select id="metilDose"><option value="1">1 mg/kg/dia em 2 doses</option><option value="2">2 mg/kg/dia em 2 doses</option></select></label></div>
+<div><label>Controlador para alta<select id="ciAlta"><option value="beclo">Beclometasona HFA 100 mcg/jato</option><option value="bude">Budesonida 250 mcg</option><option value="fluti">Fluticasona 50 mcg/jato</option></select></label></div>
+<div><label>Via de resgate exibida<select id="viaSaba"><option value="ambas">Spray + nebulização</option><option value="spray">Priorizar spray + espaçador</option><option value="neb">Priorizar nebulização</option></select></label></div>
+</div>
+<h3>Sinais clínicos</h3>
+<div class="checks">
+<label class="chk"><input id="fala" type="checkbox">Fala entrecortada / dificuldade para falar ou alimentar-se</label>
+<label class="chk"><input id="musculo" type="checkbox">Musculatura acessória / retração subcostal ou supraglótica</label>
+<label class="chk"><input id="agitado" type="checkbox">Agitação importante</label>
+<label class="chk"><input id="curvado" type="checkbox">Curvado para frente / prefere sentado</label>
+<label class="chk"><input id="cianose" type="checkbox">Cianose central</label>
+<label class="chk"><input id="neuro" type="checkbox">Confusão / sonolência / desorientação</label>
+<label class="chk"><input id="silencioso" type="checkbox">Tórax silencioso</label>
+<label class="chk"><input id="semvo" type="checkbox">Dispneia/vômitos impedindo VO</label>
+<label class="chk"><input id="controle" type="checkbox">Já usa corticoide inalatório controlador</label>
+</div>
+<button onclick="calcular()">Gerar conduta adaptada</button>
+<div id="erro" class="box dangerbox" style="display:none"></div>
+</section>
+
+<section id="saida" class="card" style="display:none">
+<h2>2) Resultado</h2><div id="resumo"></div><div id="alerta"></div>
+<details open>
+<summary style="cursor:pointer;font-weight:700;margin:12px 0">Ver memória dos cálculos / macetes usados</summary>
+<div id="memCalc" class="rx"></div>
+</details>
+<div class="noprint">
+<button class="tab active" onclick="aba('h1',this)">1ª hora</button>
+<button class="tab" onclick="aba('h2',this)">2ª hora</button>
+<button class="tab" onclick="aba('h3',this)">3ª hora</button>
+<button class="tab" onclick="aba('alta',this)">Alta</button>
+<button class="tab" onclick="aba('internacao',this)">Internação</button>
+</div>
+
+<div id="h1" class="painel"><h3>Prescrição PA — 1ª hora</h3><div id="rx1" class="rx"></div><button class="secondary noprint" onclick="copiar('rx1')">Copiar</button></div>
+
+<div id="h2" class="painel" style="display:none">
+<h3>Após a 1ª hora</h3>
+<div class="checks noprint">
+<label class="chk"><input type="radio" name="r1" value="boa">Boa resposta / critérios clínicos para possível alta</label>
+<label class="chk"><input type="radio" name="r1" value="parcial">Resposta parcial / ainda sintomático</label>
+<label class="chk"><input type="radio" name="r1" value="ruim">Piora / sinais de gravidade</label>
+</div><button class="secondary noprint" onclick="hora2()">Gerar 2ª hora</button><div id="rx2" class="rx"></div>
+</div>
+
+<div id="h3" class="painel" style="display:none">
+<h3>Após a 2ª hora</h3>
+<div class="checks noprint">
+<label class="chk"><input type="radio" name="r2" value="boa">Boa resposta</label>
+<label class="chk"><input type="radio" name="r2" value="parcial">Ainda sintomático, estável</label>
+<label class="chk"><input type="radio" name="r2" value="ruim">Piora / refratariedade</label>
+</div><button class="secondary noprint" onclick="hora3()">Gerar 3ª hora</button><div id="rx3" class="rx"></div>
+</div>
+
+<div id="alta" class="painel" style="display:none"><h3>Alta — protocolo HCA</h3><div id="rxAlta" class="rx"></div><button class="secondary noprint" onclick="copiar('rxAlta')">Copiar alta</button></div>
+<div id="internacao" class="painel" style="display:none"><h3>Internação/observação</h3><div id="rxInt" class="rx"></div></div>
+<button class="secondary noprint" onclick="window.print()">Imprimir / salvar PDF</button>
+</section>
+<section class="card">
+<h2>Fronteiras da tabela — leitura literal</h2>
+<div class="rx">A calculadora preserva os operadores do protocolo sem arredondar a fronteira:
+• FR > 30: 30 NÃO preenche; 31 preenche.
+• SatO₂ < 90%: 90% NÃO preenche; 89% preenche.
+• FC > 120: 120 NÃO preenche; 121 preenche.
+A classificação agora mostra exatamente qual critério foi acionado.</div>
+</section>
+<section class="card"><h2>Referência rápida incorporada</h2><div class="rx">SALBUTAMOL SPRAY: 1 jato/3 kg; mín. 2; máx. 10. >12 anos: 4–8 jatos/dose.
+SALBUTAMOL NEB 5 mg/mL: 1 gota/2–3 kg/dose (1 gota=0,25 mg), máx. 10 gotas em crianças; >12 anos 10–20 gotas. SF 0,9% 3–5 mL. Não usar água destilada.
+IPRATRÓPIO: <10 kg 10 gotas/2 jatos; 10–20 kg 20 gotas/4 jatos; >20 kg 40 gotas/8 jatos. Um ciclo 20/20 min junto ao salbutamol.
+METILPREDNISOLONA: 1–2 mg/kg/dia em 2 doses; máx. 60 mg/dose. Frasco 125 mg + 2 mL = 62,5 mg/mL. SF 0,9% 20–50 mL; 30 min.
+MgSO₄ EV: 25–75 mg/kg; máx. 2 g. 10%=100 mg/mL; 50%=500 mg/mL.
+MgSO₄ NEB HCA: 150 mg + SF 0,9% 3 mL; 1,5 mL do 10% OU 0,3 mL do 50%; até 3x; maior benefício citado em <6 anos.
+ALTA HCA: salbutamol 4–6 jatos 4/4–6/6h por 5 dias + CI 8–12 semanas + prednisolona 1 mg/kg/dia 3–5 dias; técnica/adesão; reavaliação 24–48h; especialista.</div></section>
+<section class="card"><p class="note"><b>Atenção:</b> ferramenta de apoio ao plantão e reprodução operacional do protocolo HCA fornecido. Não substitui avaliação clínica. Conferir apresentação disponível, alergias, contraindicações e prescrição institucional.</p></section>
+</main>
+<script>
+let E={}; const $=id=>document.getElementById(id), n=id=>parseFloat($(id).value)||0, c=id=>$(id).checked;
+function age(){return $('unidade').value==='meses'?n('idade')/12:n('idade')}
+function ageTxt(){return $('unidade').value==='meses'?n('idade')+' meses':n('idade')+' anos'}
+function rh(x){return Math.round(x*2)/2}
+function puffs(p,a){
+  // Guia: 1 jato/3 kg, mínimo 2, máximo 10; >12 anos: 4–8 jatos/dose.
+  if(a>12) return Math.min(8,Math.max(4,Math.ceil(p/3)));
+  return Math.min(10,Math.max(2,Math.ceil(p/3)));
+}
+function ipra(p){return p<10?{g:10,s:2}:p<=20?{g:20,s:4}:{g:40,s:8}}
+function pred(p,a,dose){
+  dose = dose || parseFloat($('predMgKg').value) || 1;
+  let max=a<2?20:a<6?30:a<=11?40:60;
+  let bruto=p*dose, dia=Math.min(bruto,max), conc=parseFloat($('predConc').value)||0;
+  return {dia:rh(dia),max:max,dose:dose,bruto:rh(bruto),ml:conc?Math.round((dia/conc)*10)/10:null,conc:conc};
+}
+function predTexto(pr){
+  let t=`${pr.dia} mg/dia (${pr.dose} mg/kg/dia; teto etário ${pr.max} mg/dia)`;
+  if(pr.ml!==null) t+=` = ${pr.ml} mL/dia da solução ${pr.conc} mg/mL`;
+  return t;
+}
+function mg(p){
+  let dose=parseFloat($('mgDose').value)||50;
+  let x=Math.min(2000,Math.round(p*dose));
+  return {dose:dose,mg:x,g:Math.round(x/100)/10,m10:Math.round((x/100)*10)/10,m50:Math.round((x/500)*10)/10};
+}
+
+function salbNeb(p,a){
+ if(a>12)return {mg:2.5,gotas:10,texto:'10 gotas = 2,5 mg da solução 5 mg/mL; diluir em SF 0,9% 3–5 mL'};
+ let gotas=Math.min(10,Math.max(1,Math.ceil(p/3))), mg=Math.round(gotas*0.25*100)/100;
+ return {mg,gotas,texto:`${gotas} gotas = ${mg} mg da solução 5 mg/mL (1 gota=0,25 mg); diluir em SF 0,9% 3–5 mL`};
+}
+function metil(p){
+ let dose=parseFloat($('metilDose').value)||1, dia=p*dose, dose12=Math.min(60,dia/2), ml=Math.round((dose12/62.5)*100)/100;
+ return {dose,dia:rh(dia),dose12:rh(dose12),ml,macete:Math.round(0.01*p*100)/100};
+}
+function alvoO2(a){
+ if(a<=5)return 'GINA 2026: se O₂ for administrado em criança ≤5 anos com sibilância aguda/exacerbação grave, alvo ≥92%. Protocolo HCA local: alvo 94–98%.';
+ if(a<=11)return 'GINA: alvo pediátrico 94–98% (6–11 anos). Protocolo HCA local: 94–98%.';
+ return 'GINA: alvo 93–95% para adolescentes/adultos.';
+}
+function ciAltaTexto(){
+ let t=$('ciAlta').value, ja=c('controle');
+ if(t==='beclo')return ja?'Beclometasona HFA: paciente já usava CI — protocolo HCA orienta dobrar a dose controladora prévia; conferir dose domiciliar antes de converter em jatos.':'Beclometasona HFA 100 mcg/jato: sugestão operacional na faixa baixa do protocolo HCA — inalar 1 jato a cada 12 horas com espaçador (200 mcg/dia), por 8–12 semanas; enxaguar a boca após uso.';
+ if(t==='bude')return ja?'Budesonida: paciente já usava CI — dobrar temporariamente a dose prévia conforme protocolo HCA; conferir apresentação e dose domiciliar.':'Budesonida 250 mcg: iniciar em faixa baixa do protocolo HCA, 250–500 mcg/dia, conforme dispositivo/apresentação; manter 8–12 semanas.';
+ return ja?'Fluticasona: paciente já usava CI — dobrar temporariamente a dose prévia conforme protocolo HCA; conferir apresentação e dose domiciliar.':'Fluticasona 50 mcg/jato: iniciar em faixa baixa do protocolo HCA, 50–100 mcg/dia, conforme idade/dispositivo; manter 8–12 semanas.';
+}
+function sabaTexto(p,a){
+ let sb=puffs(p,a),nb=salbNeb(p,a),via=$('viaSaba').value;
+ let sp=`SPRAY: Salbutamol 100 mcg/jato — ${sb} jatos/dose com M+E, 20/20 min por 1 hora (3 doses). Cálculo: 1 jato/3 kg; mín. 2, máx. 10; >12 anos faixa 4–8 jatos/dose.`;
+ let ne=`NEB: Salbutamol 5 mg/mL — ${nb.texto}; 20/20 min por 1 ciclo conforme resposta. Não usar água destilada.`;
+ return via==='spray'?sp+' Alternativa: '+ne:via==='neb'?ne+' Alternativa/preferência quando apropriado: '+sp:sp+'\n   '+ne;
+}
+
+function memoriaCalculo(p,a){
+ let sb=puffs(p,a), nb=salbNeb(p,a), ip=ipra(p), pr=pred(p,a), mt=metil(p), m=mg(p);
+ let faixaIpPeso = p<10 ? '<10 kg → 2 jatos ou 10 gotas' : (p<=20 ? '10–20 kg → 4 jatos ou 20 gotas' : '>20 kg → 8 jatos ou 40 gotas');
+ let faixaIpIdade = a<6 ? '<6 anos → 8–20 gotas' : (a<=12 ? '6–12 anos → 20 gotas' : '>12 anos → 40 gotas');
+ let sbFormula = a>12
+   ? `>12 anos: protocolo/guia permite 4–8 jatos/dose. Cálculo bruto por 1 jato/3 kg: ${p} ÷ 3 = ${(p/3).toFixed(2)} → ${Math.ceil(p/3)}; ajustar para a faixa 4–8 → ${sb} jatos/dose.`
+   : `Criança: 1 jato/3 kg. Conta: ${p} ÷ 3 = ${(p/3).toFixed(2)} → arredondar para cima = ${Math.ceil(p/3)}; aplicar mínimo 2 e máximo 10 → ${sb} jatos/dose.`;
+ let nbFormula = a>12
+   ? `>12 anos: 10–20 gotas/dose; exibida dose inicial ${nb.gotas} gotas = ${nb.mg} mg.`
+   : `Criança: 1 gota/2–3 kg. Macete usado: ${p} ÷ 3 = ${(p/3).toFixed(2)} → ${nb.gotas} gotas. Como 1 gota = 0,25 mg: ${nb.gotas} × 0,25 = ${nb.mg} mg. Máximo 10 gotas na criança.`;
+ let predBruta = Math.round(p*pr.dose*10)/10;
+ let mgBruto = Math.round(p*m.dose);
+ return `MEMÓRIA DOS CÁLCULOS E MACETES — ${p} kg
+
+1) SALBUTAMOL SPRAY 100 mcg/jato
+• Indicação/uso no PA: 1 ciclo = doses de 20/20 min por 1 hora, geralmente 3 doses; depois espaçar conforme resposta.
+• Parâmetro:
+  - Crianças: 1 jato a cada 3 kg/dose.
+  - Mínimo: 2 jatos/dose.
+  - Máximo: 10 jatos/dose.
+  - >12 anos: 4–8 jatos/dose.
+• Cálculo deste paciente:
+  ${sbFormula}
+• Resultado prescritivo: ${sb} jatos/dose com máscara + espaçador.
+
+2) SALBUTAMOL NEBULIZAÇÃO 5 mg/mL
+• Parâmetro:
+  - Crianças: 0,07–0,15 mg/kg/dose.
+  - Macete: 1 gota a cada 2–3 kg/dose.
+  - 1 gota = 0,25 mg.
+  - Máximo em crianças: 10 gotas.
+  - >12 anos: 2,5–5 mg = 10–20 gotas.
+  - Diluir em SF 0,9% 3–5 mL. Não usar água destilada.
+• Cálculo deste paciente:
+  ${nbFormula}
+• Resultado prescritivo: ${nb.texto}.
+
+3) BROMETO DE IPRATRÓPIO
+• Indicação/uso:
+  - Usar junto ao salbutamol.
+  - Fazer 1 ciclo de 20/20 min.
+  - Pelo protocolo HCA, deve ser realizado uma única vez, não repetir ciclos de rotina.
+• Parâmetro por peso — HCA:
+  - <10 kg: 2 jatos/dose OU 10 gotas/dose.
+  - 10–20 kg: 4 jatos/dose OU 20 gotas/dose.
+  - >20 kg: 8 jatos/dose OU 40 gotas/dose.
+• Parâmetro por idade — guia:
+  - <6 anos: 8–20 gotas.
+  - 6–12 anos: 20 gotas.
+  - >12 anos: 40 gotas.
+• Cálculo/conferência deste paciente:
+  - Por peso: ${faixaIpPeso}.
+  - Por idade: ${faixaIpIdade}.
+• Resultado prescritivo usado pela calculadora: ${ip.s} jatos/dose OU ${ip.g} gotas/dose + SF 0,9% 3–5 mL.
+• Atenção de fronteira: exatamente 20 kg fica na faixa 10–20 kg → 4 jatos/20 gotas. Apenas >20 kg entra em 8 jatos/40 gotas.
+
+4) PREDNISOLONA / PREDNISONA VO
+• Parâmetro:
+  - 1–2 mg/kg/dia.
+  - Alta HCA: 1 mg/kg/dia por 3–5 dias.
+  - Tetos: <2 anos 20 mg/dia; 2–5 anos 30 mg/dia; 6–11 anos 40 mg/dia; >12 anos 60 mg/dia.
+• Cálculo deste paciente:
+  - Dose selecionada: ${pr.dose} mg/kg/dia.
+  - Conta bruta: ${p} × ${pr.dose} = ${predBruta} mg/dia.
+  - Teto etário aplicado: ${pr.max} mg/dia.
+• Resultado final: ${predTexto(pr)}.
+
+5) METILPREDNISOLONA EV
+• Quando usar: impossibilidade de VO por dispneia/vômitos ou necessidade de via EV conforme gravidade.
+• Parâmetro:
+  - 1–2 mg/kg/dia em 2 doses.
+  - Dose máxima: 60 mg/dose.
+  - Frasco 125 mg; reconstituir em 2 mL.
+  - Concentração final: 125 mg ÷ 2 mL = 62,5 mg/mL.
+  - Diluir dose em SF 0,9% 20–50 mL e infundir em 30 min, de 12/12h.
+• Cálculo deste paciente:
+  - ${p} × ${mt.dose} = ${mt.dia} mg/dia.
+  - ${mt.dia} ÷ 2 = ${mt.dose12} mg por dose 12/12h.
+  - Volume: ${mt.dose12} ÷ 62,5 = ${mt.ml} mL/dose.
+• Macete do guia para conferência rápida:
+  - 0,01 × peso = 0,01 × ${p} = ${mt.macete} mL EV 12/12h.
+• Resultado prescritivo: aspirar ${mt.ml} mL/dose, diluir em SF 0,9% 20–50 mL e correr em 30 min.
+
+6) SULFATO DE MAGNÉSIO EV
+• Indicação: não usar de rotina; considerar em grave/refratário ou moderado-grave sem resposta após 1 hora.
+• Parâmetro:
+  - 25–75 mg/kg/dose EV.
+  - Macete padrão: 50 mg/kg.
+  - Máximo: 2 g.
+  - Infundir em 20 min; diluir em SF 0,9% 50–100 mL.
+• Cálculo deste paciente:
+  - Dose selecionada: ${m.dose} mg/kg.
+  - Conta bruta: ${p} × ${m.dose} = ${mgBruto} mg.
+  - Após teto: ${m.mg} mg = ${m.g} g.
+• Macetes de volume:
+  - MgSO₄ 10% = 100 mg/mL → mL = dose ÷ 100. No macete de 50 mg/kg: 0,5 × peso.
+    Para ${p} kg: ${m.mg} ÷ 100 = ${m.m10} mL.
+  - MgSO₄ 50% = 500 mg/mL → mL = dose ÷ 500. No macete de 50 mg/kg: 0,1 × peso.
+    Para ${p} kg: ${m.mg} ÷ 500 = ${m.m50} mL.
+• Resultado prescritivo: ${m.mg} mg (${m.g} g); usar ${m.m10} mL do 10% OU ${m.m50} mL do 50%, diluir em SF 0,9% 50–100 mL e infundir em 20 min.
+
+7) SULFATO DE MAGNÉSIO NEBULIZADO — HCA
+• Parâmetro fixo:
+  - 150 mg + SF 0,9% 3 mL.
+  - MgSO₄ 10%: 1,5 mL.
+  - MgSO₄ 50%: 0,3 mL.
+  - Pode repetir até 3 vezes.
+  - Protocolo cita maior benefício em <6 anos.`;
+}
+function classificarDetalhada(){
+ let a=age(), sat=n('sat'), fr=n('fr'), fc=n('fc'), motivos=[];
+
+ if(c('neuro')) motivos.push('confusão/sonolência/desorientação');
+ if(c('silencioso')) motivos.push('tórax silencioso');
+
+ if(c('neuro') || c('silencioso')){
+   return {grau:'AMEAÇA À VIDA', motivos:motivos};
+ }
+
+ if(a>=6){
+   if(c('fala')) motivos.push('fala entrecortada/dificuldade para falar ou alimentar-se');
+   if(c('musculo')) motivos.push('musculatura acessória/retrações');
+   if(c('curvado')) motivos.push('curvado para frente/prefere sentado');
+   if(c('agitado')) motivos.push('agitação importante');
+   if(fr && fr>30) motivos.push(`FR ${fr} irpm > 30`);
+   if(fc && fc>120) motivos.push(`FC ${fc} bpm > 120`);
+   if(sat && sat<90) motivos.push(`SatO₂ ${sat}% < 90%`);
+
+   return {
+     grau: motivos.length ? 'GRAVE' : 'LEVE–MODERADA',
+     motivos: motivos
+   };
+ }
+
+ // <6 anos: manter exatamente os operadores descritos na lógica local já incorporada.
+ if(c('fala')) motivos.push('dificuldade para falar/alimentar-se');
+ if(c('musculo')) motivos.push('musculatura acessória/retrações');
+ if(c('cianose')) motivos.push('cianose central');
+ if(fr && fr>40) motivos.push(`FR ${fr} irpm > 40`);
+ if(sat && sat<92) motivos.push(`SatO₂ ${sat}% < 92%`);
+ if(fc){
+   if(a<4 && fc>180) motivos.push(`FC ${fc} bpm > 180`);
+   if(a>=4 && fc>150) motivos.push(`FC ${fc} bpm > 150`);
+ }
+
+ return {
+   grau: motivos.length ? 'GRAVE–AMEAÇA À VIDA' : 'LEVE–MODERADA',
+   motivos: motivos
+ };
+}
+function classificar(){ return classificarDetalhada().grau; }
+function ci(){return ciAltaTexto();}
+function calcular(){
+ if(!n('idade')||!n('peso')){ $('erro').style.display='block';$('erro').textContent='Preencha idade e peso.';return}
+ $('erro').style.display='none'; let a=age(),p=n('peso'),cl=classificarDetalhada(),g=cl.grau; E={a,p,g,motivos:cl.motivos};
+ $('saida').style.display='block';
+ let criterios = cl.motivos.length
+   ? `<div class="box ${g.includes('GRAVE')||g.includes('AMEAÇA')?'dangerbox':'infobox'}"><b>Critérios que acionaram a classificação:</b><br>${cl.motivos.map(x=>'• '+x).join('<br>')}</div>`
+   : `<div class="box infobox"><b>Nenhum critério numérico/clínico de gravidade marcado.</b><br>As fronteiras são interpretadas literalmente: por exemplo, FR &gt; 30 significa que FR = 30 NÃO aciona gravidade; apenas valores acima de 30.</div>`;
+ $('resumo').innerHTML=`<span class="badge">${ageTxt()}</span><span class="badge">${p} kg</span><span class="badge ${g.includes('GRAVE')||g.includes('AMEAÇA')?'danger':'warn'}">${g}</span>${criterios}`;
+ let sb=puffs(p,a), pr=pred(p,a), m=mg(p), ip=ipra(p);
+ $('alerta').innerHTML=(a<6?'<div class="box infobox"><b>&lt;6 anos:</b> no HCA, crise leve–moderada NÃO recebe prednisolona obrigatoriamente na 1ª hora; o corticoide sistêmico entra na 2ª hora. Se grave/ameaça à vida, entra na 1ª hora.</div>':'<div class="box infobox"><b>≥6 anos:</b> o protocolo HCA inclui prednisolona já na 1ª hora, inclusive no grupo leve–moderado.</div>')
+ + `<div class="box infobox"><b>DOSES CALCULADAS PARA ${p} kg</b><br>
+ Salbutamol spray: <b>${sb} jatos/dose</b> pelo macete 1 jato/3 kg.<br>
+ Salbutamol nebulização 5 mg/mL: <b>${salbNeb(p,a).texto}</b>.<br>
+ Ipratrópio 0,25 mg/mL: <b>${ip.g} gotas/dose</b> + SF 0,9% 3–5 mL; spray 20 mcg/jato: <b>${ip.s} jatos/dose</b>.<br>
+ Prednisolona: <b>${predTexto(pr)}</b>.<br>
+ Metilprednisolona EV: <b>${metil(p).dose12} mg 12/12h = ${metil(p).ml} mL/dose</b> após reconstituir 125 mg em 2 mL (62,5 mg/mL); diluir em SF 0,9% 20–50 mL e infundir em 30 min. Macete do guia: ${metil(p).macete} mL 12/12h.<br>
+ MgSO₄ EV: <b>${m.mg} mg (${m.g} g)</b>; 10% = <b>${m.m10} mL</b>; 50% = <b>${m.m50} mL</b>; SF 0,9% 50–100 mL em 20 min.<br>
+ MgSO₄ nebulizado HCA: <b>150 mg + SF 0,9% 3 mL</b> = 1,5 mL do 10% OU 0,3 mL do 50%; até 3x; maior benefício citado em &lt;6 anos.<br>
+ <b>Oxigênio:</b> ${alvoO2(a)}</div>`;
+ $('memCalc').textContent=memoriaCalculo(p,a);
+ $('rx1').textContent=rx1(); $('rxAlta').textContent=alta(); $('rxInt').textContent=internacao(); $('rx2').textContent='Marque a resposta após a 1ª hora.';$('rx3').textContent='Marque a resposta após a 2ª hora.';
+}
+function rx1(){
+ let {a,p,g}=E, grave=g.includes('GRAVE')||g.includes('AMEAÇA'), ip=ipra(p), pr=pred(p,a), sb=puffs(p,a), linhas=[];
+ if(grave) linhas.push('1. Leito de vermelha e monitorização contínua.');
+ linhas.push((linhas.length+1)+'. '+sabaTexto(p,a));
+ if(grave) linhas.push((linhas.length+1)+`. Brometo de ipratrópio: considerar/associar junto ao salbutamol por 1 ciclo de 20/20 min. Nebulização 0,25 mg/mL: ${ip.g} gotas + SF 0,9% 3–5 mL por dose; alternativa spray 20 mcg/jato: ${ip.s} jatos/dose.`);
+ else linhas.push((linhas.length+1)+'. Considerar brometo de ipratrópio conforme resposta clínica.');
+ if(a>=6 || grave){
+   if(c('semvo')) { let mt=metil(p); linhas.push((linhas.length+1)+`. Via oral impossível: Metilprednisolona 125 mg/frasco — ${mt.dose} mg/kg/dia em 2 doses = ${mt.dose12} mg EV 12/12h. Reconstituir 125 mg em 2 mL (62,5 mg/mL): aspirar ${mt.ml} mL/dose, diluir em SF 0,9% 20–50 mL e infundir em 30 min. Macete do guia: 0,01 × peso = ${mt.macete} mL 12/12h. Máx. 60 mg/dose.`); }
+   else linhas.push((linhas.length+1)+`. Prednisolona VO: ${predTexto(pr)} AGORA. O protocolo admite 1–2 mg/kg/dia na crise.`);
+ } else linhas.push((linhas.length+1)+'. Prednisolona: NÃO iniciar obrigatoriamente na 1ª hora pelo fluxograma HCA para <6 anos leve–moderado; reavaliar e iniciar na 2ª hora.');
+ linhas.push((linhas.length+1)+'. Oxigênio: '+alvoO2(a));
+ linhas.push((linhas.length+1)+'. '+ci());
+ if(grave){let m=mg(p); linhas.push((linhas.length+1)+`. Se manutenção do desconforto/refratariedade: considerar MgSO₄ EV 50 mg/kg = ${m.mg} mg (${m.g} g; máx. 2 g). MgSO₄ 10%: ${m.m10} mL OU 50%: ${m.m50} mL; diluir em SF 0,9% 50 mL e infundir em ~30 min.`)}
+ linhas.push((linhas.length+1)+'. Reavaliar ao final da 1ª hora.');
+ return linhas.join('\n');
+}
+function hora2(){
+ let r=document.querySelector('input[name="r1"]:checked');if(!r){alert('Marque a resposta.');return}
+ let {a,p}=E, ip=ipra(p),pr=pred(p,a),m=mg(p),sb=puffs(p,a),t='';
+ if(r.value==='boa') t='Boa resposta após 1ª hora:\n1. Confirmar melhora, ausência de desconforto e SatO₂ >94%.\n2. Se estável e com condições domiciliares, avaliar alta.\n3. Usar a aba ALTA: salbutamol + corticoide inalatório controlador + prednisolona por 3–5 dias, conforme protocolo HCA.';
+ else if(r.value==='parcial'){
+   t='Resposta parcial — 2ª hora:\n1. Salbutamol spray 100 mcg/jato: '+sb+' jatos com M+E a cada 20 minutos por mais 1 hora.\n';
+   if(a<6) t+='2. Prednisolona VO: '+predTexto(pr)+' AGORA — neste grupo leve–moderado, entra na 2ª hora pelo fluxograma HCA.\n3. Considerar brometo de ipratrópio: '+ip.g+' gotas + SF 0,9% 3–5 mL por dose, se indicado.\n';
+   else t+='2. Considerar brometo de ipratrópio: '+ip.g+' gotas + SF 0,9% 3–5 mL por dose, se ainda indicado.\n3. Manter corticoide sistêmico já iniciado.\n';
+   t+='4. Manter/ajustar O₂ se necessário e reavaliar ao fim da 2ª hora.';
+ } else t='Piora / gravidade — 2ª hora:\n1. Tratar como grave/ameaça à vida; leito de vermelha e monitorização.\n2. Salbutamol em ciclo 20/20 min conforme faixa do protocolo.\n3. Associar ipratrópio se ainda no ciclo inicial indicado.\n4. Garantir corticoide sistêmico.\n5. Considerar MgSO₄ EV: '+m.mg+' mg ('+m.g+' g; máx. 2 g), se manutenção do desconforto.\n6. Considerar UTI e terbutalina EV conforme protocolo/local.';
+ $('rx2').textContent=t;
+}
+function hora3(){
+ let r=document.querySelector('input[name="r2"]:checked');if(!r){alert('Marque a resposta.');return}
+ let {a,p}=E,sb=puffs(p,a),t='';
+ if(r.value==='boa') t='Boa resposta após 2ª hora:\n1. Observar estabilidade.\n2. Se sem desconforto, SatO₂ >94% e condições domiciliares adequadas, avaliar alta.\n3. Usar a aba ALTA.';
+ else if(r.value==='parcial') t='3ª hora — ainda sintomático, estável:\n1. Salbutamol '+sb+' jatos com M+E a cada 20 minutos por mais 1 hora.\n2. Reavaliar continuamente.\n3. Em caso de piora, seguir protocolo de grave.\n4. Considerar internação conforme evolução.';
+ else t='Piora / refratariedade:\n1. Considerar internação/UTI.\n2. Monitorização contínua e suporte.\n3. Considerar terbutalina EV e altas doses de corticoide inalatório conforme protocolo/local.\n4. MgSO₄ se indicado e ainda não realizado.';
+ $('rx3').textContent=t;
+}
+function alta(){
+ let {a,p}=E,pr=pred(p,a,1);
+ return `CRITÉRIOS ANTES DA ALTA
+- Melhora dos sintomas.
+- Ausência de desconforto respiratório.
+- SatO₂ > 94%.
+- Condições adequadas de tratamento em domicílio.
+
+PRESCRIÇÃO/ORGANIZAÇÃO DA ALTA — HCA
+1. Salbutamol spray 100 mcg/jato: inalar 4–6 jatos com máscara + espaçador de 4/4h a 6/6h por 5 dias.
+2. Prednisolona VO: ${predTexto(pr)}, 1x/dia por 3–5 dias.
+3. ${ciAltaTexto()}
+   Manter corticoide inalatório controlador por 8–12 semanas conforme protocolo HCA.
+4. Checar técnica com espaçador, adesão e higiene oral após CI.
+5. Reavaliar em 24–48 horas conforme HCA; GINA recomenda seguimento pediátrico precoce em 1–2 dias úteis.
+6. Encaminhar ao especialista, especialmente após internação ou exacerbações recorrentes.
+
+IMPORTANTE: prednisolona trata a exacerbação atual e termina em 3–5 dias; o corticoide inalatório é a medicação de controle e permanece por 8–12 semanas no protocolo HCA.`;
+}
+function internacao(){
+ let {a,p}=E,pr=pred(p,a,1),ip=ipra(p);
+ return `CONSIDERAR INTERNAÇÃO se persistência de desconforto/hipoxemia, piora ou necessidade frequente de broncodilatador.
+
+EXAMES DO PROTOCOLO
+- Hemograma: pouco valor.
+- Eletrólitos, com atenção ao K+.
+- Radiografia de tórax.
+
+BASE DE PRESCRIÇÃO/OBSERVAÇÃO
+1. Monitorização e suporte conforme gravidade.
+2. ${sabaTexto(p,a)}
+3. Ipratrópio: ${ip.g} gotas/dose da apresentação 0,25 mg/mL + SF 0,9% 3–5 mL; pelo HCA, 1 ciclo 20/20 min junto ao salbutamol.
+4. Prednisolona: ${predTexto(pr)}; protocolo admite 1–2 mg/kg/dia na crise.
+5. Se VO impossível: Metilprednisolona EV — ${metil(p).dose12} mg 12/12h = ${metil(p).ml} mL/dose após reconstituir 125 mg em 2 mL; diluir em SF 0,9% 20–50 mL e infundir em 30 min.
+6. ${ciAltaTexto()}
+7. Oxigênio: ${alvoO2(a)}
+8. Individualizar hidratação, VNI/UTI e terapias de resgate conforme evolução.`;
+}
+function aba(id,b){document.querySelectorAll('.painel').forEach(x=>x.style.display='none');$(id).style.display='block';document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+function copiar(id){let t=$(id).textContent;if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>alert('Copiado!'));else alert('Copie manualmente.')}
+</script>
+</body></html>
