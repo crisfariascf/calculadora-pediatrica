@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GECA Pediátrica — Calculadora FINAL SBP 2023</title>
+<title>GECA Pediátrica — SBP 2023 + Medicações RFOFOS 2026</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--blue:#175cd3;--green:#067647;--yellow:#b54708;--red:#b42318;--line:#d0d5dd}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
@@ -24,8 +24,8 @@ label{font-size:13px;font-weight:650;display:block;margin:9px 0 5px}input,select
 </head>
 <body><div class="wrap">
 <div class="hero">
-<h1>GECA / Diarreia Aguda Pediátrica — SBP 2023</h1>
-<p><b>Base principal e exclusiva do fluxo clínico:</b> Guia Prático de Atualização SBP — Diarreia Aguda Infecciosa, nº 74, junho de 2023. O protocolo local HCA é usado somente como informação institucional complementar de apresentações/diluições, sem substituir o fluxo SBP 2023.</p>
+<h1>GECA / Diarreia Aguda Pediátrica — SBP 2023 + RFOFOS 2026</h1>
+<p><b>Base principal e exclusiva do fluxo clínico:</b> Guia Prático de Atualização SBP — Diarreia Aguda Infecciosa, nº 74, junho de 2023. Para apresentações, regras práticas e medicações de apoio, usa RFOFOS 2026.</p>
 <p>Diarreia aguda: mudança do hábito intestinal com ≥3 evacuações menos consistentes/líquidas ao dia e duração de até 14 dias. O eixo da conduta é <b>hidratação + alimentação + zinco quando indicado</b>.</p>
 </div>
 
@@ -57,10 +57,22 @@ label{font-size:13px;font-weight:650;display:block;margin:9px 0 5px}input,select
 <h2>4) Apresentações disponíveis</h2>
 <label>Dipirona</label><select id="dipConc"><option value="500">Gotas 500 mg/mL (20 gotas/mL)</option><option value="50">Solução/xarope 50 mg/mL</option></select>
 <label>Dose de dipirona para cálculo</label><select id="dipDose"><option value="10">10 mg/kg/dose</option><option value="15" selected>15 mg/kg/dose</option><option value="20">20 mg/kg/dose</option></select>
+<label>Paracetamol</label><select id="paraConc"><option value="200">Gotas 200 mg/mL</option><option value="32">Solução/xarope 32 mg/mL</option></select>
+<label>Butilbrometo de escopolamina</label><select id="escoConc"><option value="10">Gotas 10 mg/mL — 0,5 mg/gota</option></select>
 <label>Ondansetrona solução oral</label><select id="ondaConc"><option value="0.8">4 mg/5 mL (0,8 mg/mL)</option><option value="1">1 mg/mL</option></select>
 <label>Zinco solução</label><select id="zincoConc"><option value="4">4 mg/mL</option><option value="4">2 mg/0,5 mL (= 4 mg/mL)</option></select>
 <label>Azitromicina suspensão</label><select id="aziConc"><option value="40">200 mg/5 mL</option><option value="20">100 mg/5 mL</option></select>
-<p class="small">Ondansetrona é calculada como <b>dose única no Plano B com vômitos persistentes</b>, conforme o guia. Não é gerada como uso rotineiro domiciliar.</p>
+<label>Repositor de flora / probiótico</label><select id="probOpt">
+<option value="nenhum">Não incluir automaticamente</option>
+<option value="repoplor">Repoflor/Floratil — S. boulardii 200 mg 12/12h</option>
+<option value="colidis">Colidis/Provance — L. reuteri 1x/dia</option>
+<option value="florax">Florax — 1 flaconete 12/12h</option>
+</select>
+<label>Racecadotrila</label><select id="raceOpt">
+<option value="nao">Não incluir automaticamente</option>
+<option value="sim">Incluir se ≥3 meses — 1,5 mg/kg/dose 8/8h</option>
+</select>
+<p class="small">Medicações de apoio baseadas no RFOFOS 2026. Ondansetrona continua vinculada ao guia SBP/MS: dose única se vômitos persistentes no Plano B. Probiótico e racecadotrila são coadjuvantes, não substituem SRO.</p>
 </div>
 
 <div class="card full">
@@ -68,7 +80,8 @@ label{font-size:13px;font-weight:650;display:block;margin:9px 0 5px}input,select
 <div id="saida" class="hide">
 <h2 style="margin-top:18px">Resultado</h2><div id="badges"></div><div id="resumo"></div>
 <h3>Conduta adaptada</h3><div id="conduta"></div>
-<h3>Prescrição gerada</h3><div id="rx" class="rx"></div>
+<h3>Prescrição gerada no PA / unidade</h3><div id="rx" class="rx"></div>
+<h3>Prescrição para casa — alta</h3><div id="rxCasa" class="rx"></div>
 <h3>Orientações de alta / responsável</h3><div id="orient" class="rx"></div>
 <h3>Memória de cálculo e cuidados por idade/peso</h3><div id="mem" class="rx"></div>
 </div>
@@ -159,6 +172,37 @@ function dipirona(w){
  let dose=Number($('dipDose').value),conc=Number($('dipConc').value);
  let mg=round(w*dose,0),ml=round(mg/conc,2);
  return {dose,mg,ml,gotas:conc===500?Math.max(1,Math.round(ml*20)):null};
+}
+function paracetamol(w){
+ let dose=15, conc=Number($('paraConc').value);
+ let mg=round(w*dose,0), ml=round(mg/conc,2);
+ let gotas=conc===200?Math.min(35,Math.max(1,Math.round(w))):null;
+ return {dose,mg,ml,gotas};
+}
+function escopolamina(m,w){
+ // RFOFOS 2026 cita escopolamina 10 mg/mL gotas como 20-40 gotas em contexto de sialorreia/NBZ.
+ // Para GECA/cólica, deixamos como opção de apoio com alerta clínico, sem forçar em lactentes.
+ if(m<24) return {mg:null,gotas:null,txt:'não gerar automaticamente em <2 anos; avaliar caso a caso'};
+ if(m<144) return {mg:10,gotas:20,txt:'10 mg = 20 gotas de 10 mg/mL, se cólica importante e sem sinais de abdome agudo'};
+ return {mg:10,gotas:20,txt:'10–20 mg = 20–40 gotas de 10 mg/mL; sugestão inicial 20 gotas'};
+}
+function probioticoTexto(m){
+ let opt=$('probOpt')?$('probOpt').value:'nenhum';
+ if(opt==='nenhum') return null;
+ if(opt==='repoplor'){
+   if(m<12) return 'Repoflor/Floratil (S. boulardii): RFOFOS cita a partir de 1 ano. Não gerar automaticamente para <1 ano. Obs.: não usar Floratil se APLV/traços de leite.';
+   return 'Repoflor/Floratil (S. boulardii) sachê/cápsula 200 mg: administrar 1 unidade VO de 12/12h por 3–5 dias. Diluir sachê em 50–100 mL de água. Não usar Floratil se APLV/traços de leite.';
+ }
+ if(opt==='colidis') return 'Colidis gotas ou Provance/Provance Mini (L. reuteri): 5 gotas VO 1x/dia OU 1 comprimido mastigável 1x/dia OU 1 sachê diluído em 10 mL de água 1x/dia, por 5–7 dias. Não diluir em líquido quente.';
+ if(opt==='florax') return 'Florax flaconete 5 mL: administrar 1 flaconete VO de 12/12h por 3–5 dias. RFOFOS: pode ser usado em APLV.';
+ return null;
+}
+function racecadotrilaTexto(m,w){
+ if(!$('raceOpt') || $('raceOpt').value!=='sim') return null;
+ if(m<3) return 'Racecadotrila: não usar em menores de 3 meses.';
+ let mg=round(1.5*w,0);
+ let sach = mg<=10?'sachê 10 mg':mg<=30?'sachê 30 mg':'comprimido 100 mg ou associação de sachês conforme dose';
+ return `Racecadotrila: ${mg} mg VO de 8/8h (1,5 mg/kg/dose), usar ${sach}; suspender assim que cessar a diarreia. Máximo em adultos: 400 mg/dia.`;
 }
 function zinco(m){
  if(m>=60)return null;
@@ -254,6 +298,78 @@ function calcular(){
  }
  $('rx').textContent=rx.join('\n\n');
 
+ let casa=[], c=1, sroCasa=m<12?'50 a 100 mL':m<=120?'100 a 200 mL':'volume tolerado';
+ const addCasa=t=>casa.push(`${c++}. ${t}`);
+
+ addCasa(`SAIS DE REIDRATAÇÃO ORAL (SRO) — VO.
+Oferecer ${sroCasa} após cada evacuação diarreica ou vômito.
+Preferir solução adequada para prevenção da desidratação no domicílio; se estiver tratando desidratação, usar SRO de 75–90 mmol/L conforme serviço. Preparar o sachê conforme orientação do fabricante.`);
+
+ let zCasa=zinco(m);
+ if(zCasa){
+   addCasa(`ZINCO — Biozinc/Unizinco 4 mg/mL — VO, 1x/dia, por 10 a 14 dias.
+Administrar ${fmt(zCasa/4,1)} mL (${zCasa} mg) VO 1x/dia.
+Regra RFOFOS: <6 meses = 2,5 mL; >6 meses = 5 mL.`);
+ }
+
+ let dCasa=dipirona(w), pCasa=paracetamol(w);
+ if(m<3 || w<5){
+   addCasa(`ANTITÉRMICO/ANALGÉSICO — paciente <3 meses ou <5 kg: não gerar dose automática. Usar avaliação médica e protocolo do serviço.`);
+ } else {
+   let dipTxt=$('dipConc').value==='500'
+     ? `Dipirona gotas 500 mg/mL: ${dCasa.gotas} gotas VO de 6/6h se febre ou dor (${dCasa.mg} mg/dose, ${dCasa.dose} mg/kg/dose).`
+     : `Dipirona solução/xarope 50 mg/mL: ${fmt(dCasa.ml,1)} mL VO de 6/6h se febre ou dor (${dCasa.mg} mg/dose, ${dCasa.dose} mg/kg/dose).`;
+   let paraTxt=$('paraConc').value==='200'
+     ? `Paracetamol gotas 200 mg/mL: ${pCasa.gotas} gotas VO de 6/6h se febre ou dor.`
+     : `Paracetamol solução/xarope 32 mg/mL: ${fmt(pCasa.ml,1)} mL VO de 6/6h se febre ou dor (${pCasa.mg} mg/dose).`;
+   addCasa(`SE FEBRE OU DOR — escolher UMA opção, conforme alergia/contraindicação/disponibilidade:
+A) ${dipTxt}
+OU
+B) ${paraTxt}
+Não usar os dois juntos de rotina.`);
+ }
+
+ let es=escopolamina(m,w);
+ if(es.gotas){
+   addCasa(`BUTILBROMETO DE ESCOPOLAMINA gotas 10 mg/mL — VO, apenas se cólica abdominal importante e SEM sinais de abdome agudo.
+Administrar ${es.gotas} gotas (${es.mg} mg) por dose, se necessário.
+Observação: ${es.txt}. Evitar uso contínuo/prolongado; não usar se suspeita de íleo, abdome agudo, retenção urinária, glaucoma de ângulo fechado ou contraindicação anticolinérgica.`);
+ } else {
+   addCasa(`BUTILBROMETO DE ESCOPOLAMINA — não gerado automaticamente para esta idade. ${es.txt}.`);
+ }
+
+ if((yes('vomPersist')||vo==='baixa') && plano!=='C'){
+   let od=ondaDose(m,w),oc=Number($('ondaConc').value);
+   if(od){
+     let cp = od===4?'1 comprimido de 4 mg':od===8?'1 comprimido de 8 mg ou 2 comprimidos de 4 mg':'½ comprimido de 4 mg se apresentação permitir fracionamento';
+     addCasa(`ONDANSETRONA — usar somente se vômitos persistentes impedirem hidratação oral; dose única e reavaliar.
+Solução oral ${oc===0.8?'4 mg/5 mL':'1 mg/mL'}: ${fmt(od/oc,1)} mL VO, dose única (${od} mg).
+Comprimido: ${cp}.
+Após 10–15 minutos, reiniciar SRO em pequenos goles. Retornar se vômitos persistirem ou houver sinais de desidratação/prostração.`);
+   } else {
+     addCasa(`ONDANSETRONA — <6 meses: não gerar dose domiciliar automática; reavaliar no serviço.`);
+   }
+ }
+
+ let prob=probioticoTexto(m);
+ if(prob) addCasa(`REPOSITOR DE FLORA / PROBIÓTICO — opcional, coadjuvante.
+${prob}`);
+
+ let race=racecadotrilaTexto(m,w);
+ if(race) addCasa(`RACECADOTRILA — opcional, coadjuvante; não substitui SRO.
+${race}`);
+
+ if(asp==='disenteria'||asp==='colera'){
+   casa.push(`\nANTIBIÓTICO: a prescrição domiciliar só deve sair se houver indicação clínica marcada e via oral segura. Ver a prescrição do PA/unidade acima para o cálculo por peso/idade da tabela SBP/MS 2023.`);
+ }
+
+ casa.push(`\nREPOUSO / CUIDADOS GERAIS
+• Repouso relativo enquanto febril, prostrado ou com muitas evacuações.
+• Manter alimentação habitual e aleitamento materno. Não fazer “repouso intestinal” prolongado.
+• Evitar refrigerantes, sucos industrializados/muito açucarados e alimentos muito gordurosos.
+• Retorno imediato se sinais de alarme.`);
+ $('rxCasa').textContent=casa.join('\n\n');
+
  let orient=`ALTA / DOMICÍLIO
 • Manter aleitamento materno e alimentação habitual. Não diluir leite/fórmula de rotina.
 • Oferecer líquidos em quantidade maior que a habitual e SRO após cada evacuação.
@@ -304,6 +420,13 @@ PLANO C — CONFERÊNCIA POR IDADE
 • Manutenção Holliday-Segar do quadro do MS/SBP = ${fmt(holliday(w),0)} mL/24 h (máx. 2.000 mL na tabela).
 • Reposição inicial = 50 mL/kg/dia = ${fmt(50*w,0)} mL/dia, reajustar às perdas.
 • KCl 10% da tabela: 2 mL/100 mL da manutenção. Só adicionar após avaliar diurese/eletrólitos e conforme rotina institucional.
+
+BASE RFOFOS 2026 — MEDICAÇÕES DE APOIO
+• SRO Plano A: <1 ano 50–100 mL após cada vômito/evacuação; 1–10 anos 100–200 mL; >10 anos, volume tolerado.
+• Zinco Biozinc/Unizinco: 4 mg/mL. <6 meses = 2,5 mL/dia; >6 meses = 5 mL/dia; 10–14 dias.
+• Probióticos: Repoflor/Floratil 200 mg 12/12h por 3–5 dias a partir de 1 ano; L. reuteri 1x/dia por 5–7 dias; Florax 1 flaconete 12/12h.
+• Racecadotrila: 1,5 mg/kg/dose 8/8h, não usar <3 meses, suspender ao cessar diarreia.
+• Escopolamina em GECA fica como sintomático opcional e com alerta de abdome agudo.
 
 ANTIBIÓTICO
 • Não usar de rotina na GECA aquosa.
