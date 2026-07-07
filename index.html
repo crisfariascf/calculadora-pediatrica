@@ -1,15 +1,33 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PediCalc — Calculadoras Pediátricas</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadoras Pediátricas</title>
 <style>
-:root{--bg:#f8f5ff;--card:#fff;--text:#251b35;--muted:#746883;--pri:#7c3aed;--border:#eadff7;--shadow:0 12px 32px rgba(90,42,160,.10)}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,#efe7ff 0,#f8f5ff 32%,#eefaff 100%);color:var(--text)}
-.wrap{max-width:1120px;margin:auto;padding:22px}header{padding:34px 0 18px}.badge{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;color:#5b21b6;font-weight:800;font-size:13px;box-shadow:var(--shadow)}
-h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:18px 0 18px;color:#4c1d95}.topbar{display:grid;grid-template-columns:1fr 190px;gap:12px;margin:20px 0 6px}input,select{width:100%;border:1px solid var(--border);border-radius:18px;padding:14px 16px;font:inherit;background:#fff;color:var(--text);box-shadow:0 6px 18px rgba(90,42,160,.05)}
-.section{margin:28px 0}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}.section-title h2{font-size:20px;margin:0;color:#4c1d95}.count{font-size:13px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}.card{position:relative;display:flex;flex-direction:column;gap:10px;min-height:168px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:26px;padding:18px;text-decoration:none;color:inherit;box-shadow:var(--shadow);overflow:hidden;transition:.15s transform,.15s box-shadow}.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(90,42,160,.16)}.card:before{content:"";position:absolute;inset:auto -30px -45px auto;width:130px;height:130px;border-radius:50%;background:var(--accent,#7c3aed);opacity:.12}.icon{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:color-mix(in srgb,var(--accent,#7c3aed) 14%,white);font-size:25px}.card h3{font-size:20px;margin:0;color:#27133f}.card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}.tags{margin-top:auto;display:flex;flex-wrap:wrap;gap:7px}.tag{font-size:12px;background:#f5f3ff;color:#5b21b6;border-radius:999px;padding:5px 9px}.empty{padding:18px;border:1px dashed #c4b5fd;border-radius:22px;color:#6b5d79;background:rgba(255,255,255,.62);font-size:14px}@media(max-width:720px){.wrap{padding:16px}.topbar{grid-template-columns:1fr}.card{min-height:150px}}
+:root{--bg:#f8f5ff;--card:#fff;--text:#251b35;--muted:#746883;--border:#eadff7;--shadow:0 12px 32px rgba(90,42,160,.10)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top left,#efe7ff 0,#f8f5ff 32%,#eefaff 100%);color:var(--text)}
+.wrap{max-width:1120px;margin:auto;padding:22px}
+header{padding:34px 0 20px}
+.badge{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 12px;color:#5b21b6;font-weight:700;font-size:13px;box-shadow:var(--shadow)}
+h1{font-size:clamp(32px,6vw,58px);line-height:1.02;margin:18px 0;color:#4c1d95}
+.topbar{display:grid;grid-template-columns:1fr 190px;gap:12px;margin:20px 0}
+input,select{width:100%;border:1px solid var(--border);border-radius:18px;padding:14px 16px;font:inherit;background:#fff;color:var(--text);box-shadow:0 6px 18px rgba(90,42,160,.05)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}
+.section-title h2{font-size:20px;margin:0;color:#4c1d95}
+#count{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}
+.card{position:relative;display:flex;flex-direction:column;gap:10px;min-height:176px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:26px;padding:18px;text-decoration:none;color:inherit;box-shadow:var(--shadow);overflow:hidden;transition:.15s transform,.15s box-shadow}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(90,42,160,.16)}
+.card:before{content:"";position:absolute;inset:auto -30px -45px auto;width:130px;height:130px;border-radius:50%;background:var(--accent,#7c3aed);opacity:.12}
+.icon{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:color-mix(in srgb,var(--accent,#7c3aed) 14%,white);font-size:25px}
+.card h3{font-size:20px;margin:0;color:#27133f}
+.card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+.tags{margin-top:auto;display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-size:12px;background:#f5f3ff;color:#5b21b6;border-radius:999px;padding:5px 9px}
+.empty{padding:18px;border:1px dashed #c4b5fd;border-radius:22px;color:#6b5d79;background:rgba(255,255,255,.62)}
+@media(max-width:720px){.wrap{padding:16px}.topbar{grid-template-columns:1fr}.card{min-height:150px}}
 </style>
 </head>
 <body>
@@ -18,49 +36,49 @@ h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:18px 0 18px;color:#4c1
   <div class="badge">🩺 PediCalc offline</div>
   <h1>Calculadoras Pediátricas</h1>
   <div class="topbar">
-    <input id="search" placeholder="Buscar: asma, crupe, FSSL, ITU, otite, diarreia, RFOFOS..." autofocus>
+    <input id="search" placeholder="Buscar calculadora ou protocolo..." autofocus>
     <select id="filter">
       <option value="">Todos</option>
-      <option>Medicações</option>
       <option>Calculadora</option>
-      <option>Respiratório</option>
-      <option>Infecções</option>
-      <option>Gastrointestinal</option>
+      <option>Protocolo</option>
+      <option>Medicações</option>
     </select>
   </div>
 </header>
 
-<div id="content"></div>
+<div class="section-title"><h2>Módulos</h2><span id="count"></span></div>
+<div class="grid" id="grid"></div>
 </div>
 
 <script>
 const modules=[
- {title:'Medicações / RFOFOS',desc:'Busca de medicamentos, doses, apresentações, diluições, alertas e cálculo por peso.',href:'rfofos.html',icon:'💊',type:'Medicações',group:'Medicações',tags:['RFOFOS','Doses','EV'],accent:'#7c3aed'},
- {title:'Cálculos Gerais',desc:'Dipirona, paracetamol, ibuprofeno, hidratação, prescrições e cálculos rápidos por peso.',href:'calculos-gerais.html',icon:'🧮',type:'Calculadora',group:'Utilidades',tags:['Peso','Dose','mL'],accent:'#06b6d4'},
- {title:'Asma',desc:'Classificação, salbutamol, ipratrópio, corticoide, magnésio, alta e reavaliação.',href:'asma.html',icon:'🫁',type:'Respiratório',group:'Respiratório',tags:['Puffs','PA','Conduta'],accent:'#10b981'},
- {title:'Crupe',desc:'Westley, dexametasona, epinefrina nebulizada e critérios de observação/alta.',href:'crupe.html',icon:'😮‍💨',type:'Respiratório',group:'Respiratório',tags:['Westley','Dexa','NBZ'],accent:'#f59e0b'},
- {title:'Pneumonia',desc:'PAC complicada e não complicada, antibióticos e critérios de internação.',href:'pneumonia.html',icon:'🩻',type:'Respiratório',group:'Respiratório',tags:['PAC','ATB','Internação'],accent:'#6366f1'},
- {title:'Febre sem Sinais Localizatórios',desc:'Fluxograma por idade, exames, risco de ITU, ceftriaxona e seguimento.',href:'fssl.html',icon:'🌡️',type:'Infecções',group:'Infecções',tags:['FSSL','Febre','ITU'],accent:'#ef4444'},
- {title:'Infecção do Trato Urinário',desc:'Investigação, coleta, tratamento VO/EV, apresentações e cálculo por peso.',href:'itu.html',icon:'🧫',type:'Infecções',group:'Infecções',tags:['ITU','Urina','ATB'],accent:'#14b8a6'},
- {title:'Otite Média Aguda',desc:'Critérios diagnósticos, analgesia, observação versus antibiótico e dose por peso.',href:'oma.html',icon:'👂',type:'Infecções',group:'Infecções',tags:['OMA','Otite','Amoxicilina'],accent:'#ec4899'},
- {title:'Diarreia / GECA',desc:'Planos A, B e C, SRO, ondansetrona, zinco, hidratação e prescrição para casa.',href:'diarreia.html',icon:'💧',type:'Gastrointestinal',group:'Gastrointestinal',tags:['GECA','SRO','Zinco'],accent:'#0ea5e9'},
- {title:'Dor Abdominal',desc:'Sinais de alarme, fluxograma, analgesia, investigação e encaminhamento.',href:'dor-abdominal.html',icon:'🤕',type:'Gastrointestinal',group:'Gastrointestinal',tags:['Dor','Alarme','Fluxo'],accent:'#a855f7'}
+ {title:'Cálculos Gerais',desc:'Doses e cálculos rápidos por peso.',href:'calculos-gerais.html',icon:'🧮',type:'Calculadora',tags:['Peso','Dose','mL'],accent:'#06b6d4'},
+ {title:'Asma',desc:'Classificação, tratamento, reavaliação e alta.',href:'asma.html',icon:'🫁',type:'Protocolo',tags:['Salbutamol','Puffs','Conduta'],accent:'#10b981'},
+ {title:'Crupe',desc:'Westley, dexametasona e epinefrina nebulizada.',href:'crupe.html',icon:'😮‍💨',type:'Protocolo',tags:['Westley','Dexa','NBZ'],accent:'#f59e0b'},
+ {title:'Diarreia / GECA',desc:'Planos A, B e C, hidratação e prescrição.',href:'diarreia.html',icon:'💧',type:'Protocolo',tags:['SRO','Zinco','Hidratação'],accent:'#0ea5e9'},
+ {title:'Febre sem Sinais Localizatórios',desc:'Fluxograma por idade, exames e conduta.',href:'fssl.html',icon:'🌡️',type:'Protocolo',tags:['FSSL','Febre','Fluxograma'],accent:'#ef4444'},
+ {title:'Infecção do Trato Urinário',desc:'Investigação, tratamento VO/EV e cálculo por peso.',href:'itu.html',icon:'🧫',type:'Protocolo',tags:['ITU','Urina','ATB'],accent:'#14b8a6'},
+ {title:'Otite Média Aguda',desc:'Diagnóstico, analgesia e antibioticoterapia.',href:'oma.html',icon:'👂',type:'Protocolo',tags:['OMA','Amoxicilina','ATB'],accent:'#ec4899'},
+ {title:'Pneumonia',desc:'PAC, gravidade, internação e antibioticoterapia.',href:'pneumonia.html',icon:'🩻',type:'Protocolo',tags:['PAC','ATB','Internação'],accent:'#6366f1'},
+ {title:'Medicações — RFOFOS',desc:'Busca de medicações, doses, vias, diluições e cálculos.',href:'rfofos.html',icon:'💊',type:'Medicações',tags:['RFOFOS','Doses','Diluição'],accent:'#7c3aed'},
+ {title:'Urticária',desc:'Avaliação, tratamento e diferenciação de anafilaxia.',href:'urticaria.html',icon:'🌿',type:'Protocolo',tags:['Alergia','Anafilaxia','Anti-histamínico'],accent:'#f97316'},
+ {title:'Dengue',desc:'Classificação, sinais de alarme e hidratação.',href:'dengue.html',icon:'🩸',type:'Protocolo',tags:['Hidratação','Alarme','Classificação'],accent:'#e11d48'},
+ {title:'Violência Sexual',desc:'Atendimento inicial, profilaxias e seguimento.',href:'violencia-sexual.html',icon:'🛡️',type:'Protocolo',tags:['PEP','Profilaxia','Seguimento'],accent:'#8b5cf6'},
+ {title:'Cetoacidose Diabética',desc:'Gravidade, hidratação, insulina e eletrólitos.',href:'cad.html',icon:'🩸',type:'Protocolo',tags:['CAD','Insulina','Eletrólitos'],accent:'#dc2626'},
+ {title:'Constipação',desc:'Avaliação, desimpactação, manutenção e orientações.',href:'constipacao.html',icon:'🟤',type:'Protocolo',tags:['Desimpactação','Manutenção','Alarme'],accent:'#d97706'}
 ];
-const groupOrder=['Medicações','Utilidades','Respiratório','Infecções','Gastrointestinal'];
-const content=document.getElementById('content'), search=document.getElementById('search'), filter=document.getElementById('filter');
-function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function card(m){return `<a class="card" href="${m.href}" style="--accent:${m.accent}"><div class="icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p><div class="tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a>`}
+
+const grid=document.getElementById('grid'),search=document.getElementById('search'),filter=document.getElementById('filter'),count=document.getElementById('count');
+function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
 function render(){
- const q=norm(search.value), f=filter.value;
- const arr=modules.filter(m=>(!f||m.type===f) && (!q||norm(m.title+' '+m.desc+' '+m.type+' '+m.group+' '+m.tags.join(' ')).includes(q)));
- if(!arr.length){content.innerHTML='<div class="empty">Nenhum módulo encontrado.</div>';return}
- content.innerHTML=groupOrder.map(g=>{
-   const items=arr.filter(m=>m.group===g);
-   if(!items.length)return '';
-   return `<section class="section"><div class="section-title"><h2>${g}</h2><span class="count">${items.length} módulo(s)</span></div><div class="grid">${items.map(card).join('')}</div></section>`;
- }).join('');
+ const q=norm(search.value),f=filter.value;
+ const arr=modules.filter(m=>(!f||m.type===f)&&(!q||norm(m.title+' '+m.desc+' '+m.type+' '+m.tags.join(' ')).includes(q)));
+ count.textContent=arr.length+' módulo(s)';
+ grid.innerHTML=arr.map(m=>`<a class="card" href="${m.href}" style="--accent:${m.accent}"><div class="icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p><div class="tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a>`).join('')||'<div class="empty">Nenhum módulo encontrado.</div>';
 }
-search.addEventListener('input',render);filter.addEventListener('input',render);render();
+search.addEventListener('input',render);
+filter.addEventListener('input',render);
+render();
 </script>
 </body>
 </html>
