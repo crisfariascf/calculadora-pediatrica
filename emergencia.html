@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>PA Pediátrico — Calculadora Rápida</title>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--text:#17202a;--muted:#667085;--primary:#2563eb;--primary2:#1d4ed8;
+  --danger:#dc2626;--warn:#d97706;--ok:#059669;--border:#e5e7eb;--soft:#eff6ff;
+  --soft-danger:#fef2f2;--soft-ok:#ecfdf5;--soft-warn:#fffbeb;--shadow:0 10px 25px rgba(15,23,42,.08)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#f8fbff 0%,#eef4ff 100%);color:var(--text)}
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 14px}
+.topbar{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between}
+h1{font-size:18px;margin:0;line-height:1.15}.sub{color:var(--muted);font-size:12px;margin-top:2px}
+main{max-width:1180px;margin:0 auto;padding:14px}.grid{display:grid;grid-template-columns:330px 1fr;gap:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}header{position:relative}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:14px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:520px){.row,.row3{grid-template-columns:1fr}}
+label{display:block;font-weight:700;font-size:12px;color:#344054;margin:8px 0 4px}
+input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:10px 11px;font-size:15px;background:#fff;color:var(--text);outline:none}
+button{border:0;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer;background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.20)}
+button.secondary{background:#f2f4f7;color:#344054;box-shadow:none;border:1px solid var(--border)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tab{background:#fff;color:#344054;border:1px solid var(--border);box-shadow:none;padding:9px 10px;font-size:13px}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2ff;color:#3730a3;margin:3px 4px 3px 0}
+.pill.red{background:var(--soft-danger);color:#991b1b}.pill.ok{background:var(--soft-ok);color:#065f46}.pill.warn{background:var(--soft-warn);color:#92400e}
+.muted{color:var(--muted);font-size:13px}.box{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fbfdff;margin:10px 0}
+.box.blue{background:var(--soft);border-color:#bfdbfe}.box.red{background:var(--soft-danger);border-color:#fecaca}.box.ok{background:var(--soft-ok);border-color:#bbf7d0}.box.warn{background:var(--soft-warn);border-color:#fde68a}
+.box.sed{background:#f5f3ff;border-color:#ddd6fe}.box.sed .dose{color:#6d28d9}
+.box.bnm{background:#fef2f2;border-color:#fecaca}.box.bnm .dose{color:#b91c1c}
+.box.via{background:#ecfeff;border-color:#a5f3fc}.box.via .dose{color:#0e7490}
+.box.pre{background:#f0fdf4;border-color:#bbf7d0}.box.pre .dose{color:#047857}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.legend span{font-size:11px;font-weight:900;border-radius:999px;padding:5px 8px;border:1px solid var(--border)}
+.legend .sed{background:#f5f3ff;color:#6d28d9;border-color:#ddd6fe}
+.legend .bnm{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.legend .via{background:#ecfeff;color:#0e7490;border-color:#a5f3fc}
+.legend .pre{background:#f0fdf4;color:#047857;border-color:#bbf7d0}
+.result-title{font-weight:900;margin:0 0 6px;color:#111827}.dose{font-size:18px;font-weight:950;color:var(--primary2)}
+.prep{font-size:12px;color:#475467;margin-top:4px;line-height:1.35}.macete{font-size:11px;color:#667085;margin-top:4px;font-style:italic;line-height:1.25}
+.hide{display:none!important}.footer-note{font-size:12px;color:#667085;line-height:1.35}.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.copyarea{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;background:#0b1220;color:#e5e7eb;border-radius:14px;padding:12px;overflow:auto;max-height:460px}
+</style>
+</head>
+<body>
+<header><div class="topbar"><div><h1>PA Pediátrico — Calculadora Rápida</h1><div class="sub">Agora com dose em mg + volume em mL + diluição/preparo quando aplicável</div></div><button class="secondary" onclick="window.print()">Imprimir</button></div></header>
+<main><div class="grid">
+<aside>
+<div class="card"><h2>👶 Dados do paciente</h2>
+<div class="row"><div><label>Peso (kg)</label><input id="peso" type="number" step="0.1" min="0" value="20" oninput="calcAll()"></div><div><label>Idade</label><input id="idade" type="number" step="0.1" min="0" value="6" oninput="calcAll()"></div></div>
+<div class="row"><div><label>Unidade da idade</label><select id="idadeUnid" onchange="calcAll()"><option value="anos">anos</option><option value="meses">meses</option><option value="dias">dias</option></select></div><div><label>Sexo</label><select id="sexo" onchange="calcAll()"><option>Não informado</option><option>Masculino</option><option>Feminino</option></select></div></div>
+<div class="row3"><div><label>SatO₂ (%)</label><input id="sat" type="number" oninput="calcAll()" placeholder="ex: 95"></div><div><label>FC</label><input id="fc" type="number" oninput="calcAll()" placeholder="bpm"></div><div><label>FR</label><input id="fr" type="number" oninput="calcAll()" placeholder="irpm"></div></div>
+<div class="row3"><div><label>PAS</label><input id="pas" type="number" oninput="calcAll()" placeholder="mmHg"></div><div><label>Glicemia</label><input id="dx" type="number" oninput="calcAll()" placeholder="mg/dL"></div><div><label>Temp.</label><input id="temp" type="number" step="0.1" oninput="calcAll()" placeholder="°C"></div></div>
+<div class="quick-actions"><button class="secondary" onclick="setPeso(5)">5 kg</button><button class="secondary" onclick="setPeso(10)">10 kg</button><button class="secondary" onclick="setPeso(15)">15 kg</button><button class="secondary" onclick="setPeso(20)">20 kg</button><button class="secondary" onclick="setPeso(30)">30 kg</button></div>
+</div>
+<div class="card"><h2>📊 Interpretação rápida</h2><div id="vitals"></div></div>
+<div class="card"><h2>⚠️ Aviso</h2><div class="footer-note">Ferramenta de apoio. Sempre conferir apresentação disponível, dose máxima, protocolo local, alergias, função renal/hepática, contraindicações e contexto clínico. Em emergência, priorizar ABCDE e reavaliação.</div></div>
+</aside>
+<section><div class="card">
+<div class="tabs">
+<button class="tab active" onclick="showTab('anafilaxia',this)">Anafilaxia</button><button class="tab" onclick="showTab('pcr',this)">PCR</button><button class="tab" onclick="showTab('choque',this)">Choque/Sepse</button><button class="tab" onclick="showTab('hipoglicemia',this)">Hipoglicemia</button><button class="tab" onclick="showTab('convulsao',this)">Convulsão</button><button class="tab" onclick="showTab('asma',this)">Asma</button><button class="tab" onclick="showTab('crupe',this)">Crupe</button><button class="tab" onclick="showTab('desidratacao',this)">Desidratação</button><button class="tab" onclick="showTab('cad',this)">CAD</button><button class="tab" onclick="showTab('iot',this)">IOT</button><button class="tab" onclick="showTab('dor',this)">Dor/Febre</button><button class="tab" onclick="showTab('prescricao',this)">Prescrição</button>
+</div>
+<div id="anafilaxia" class="module"><h2>🚨 Anafilaxia</h2><div id="anafilaxiaOut"></div></div>
+<div id="pcr" class="module hide"><h2>🫀 PCR Pediátrica</h2><label>Ritmo</label><select id="ritmo" onchange="calcAll()"><option value="nao">Não chocável: assistolia/AESP</option><option value="sim">Chocável: FV/TV sem pulso</option></select><div id="pcrOut"></div></div>
+<div id="choque" class="module hide"><h2>🩸 Choque / Sepse</h2><label>Perfil</label><select id="choqueTipo" onchange="calcAll()"><option value="hipovolemico">Hipovolêmico/desidratado</option><option value="septico">Sepse/choque séptico</option><option value="frio">Choque frio/baixo débito</option><option value="quente">Choque quente/vasodilatado</option><option value="cardio">Suspeita cardiogênico</option></select><div id="choqueOut"></div></div>
+<div id="hipoglicemia" class="module hide"><h2>🍬 Hipoglicemia</h2><div id="hipoOut"></div></div>
+<div id="convulsao" class="module hide"><h2>⚡ Convulsão / Estado de Mal</h2><div id="convOut"></div></div>
+<div id="asma" class="module hide"><h2>🫁 Asma Exacerbada</h2><label>Gravidade</label><select id="asmaGrav" onchange="calcAll()"><option value="leve">Leve</option><option value="moderada">Moderada</option><option value="grave">Grave</option></select><div id="asmaOut"></div></div>
+<div id="crupe" class="module hide"><h2>🗣️ Crupe</h2><label>Gravidade</label><select id="crupeGrav" onchange="calcAll()"><option value="leve">Leve</option><option value="moderado">Moderado</option><option value="grave">Grave</option></select><div id="crupeOut"></div></div>
+<div id="desidratacao" class="module hide"><h2>💧 Desidratação / Diarreia</h2><label>Plano</label><select id="planoDes" onchange="calcAll()"><option value="a">Plano A</option><option value="b">Plano B</option><option value="c">Plano C</option></select><div id="desOut"></div></div>
+<div id="cad" class="module hide"><h2>🧪 CAD</h2><div class="row"><div><label>Desidratação estimada</label><select id="cadDes" onchange="calcAll()"><option value="5">5%</option><option value="7.5">7,5%</option><option value="10">10%</option></select></div><div><label>Insulina</label><select id="cadIns" onchange="calcAll()"><option value="0.05">0,05 U/kg/h</option><option value="0.1">0,1 U/kg/h</option></select></div></div><div id="cadOut"></div></div>
+<div id="iot" class="module hide"><h2>🫁 IOT Sequência Rápida</h2><div id="iotOut"></div></div>
+<div id="dor" class="module hide"><h2>🌡️ Dor / Febre</h2><div id="dorOut"></div></div>
+<div id="prescricao" class="module hide"><h2>📝 Prescrição rápida</h2><label>Cenário</label><select id="prescTipo" onchange="calcAll()"><option value="anafilaxia">Anafilaxia</option><option value="pcr">PCR</option><option value="choque">Choque/Sepse</option><option value="convulsao">Convulsão</option><option value="asma">Asma grave</option><option value="crupe">Crupe</option><option value="cad">CAD</option><option value="iot">IOT</option></select><div class="quick-actions"><button onclick="copyPresc()">Copiar prescrição</button></div><div id="prescOut" class="copyarea"></div></div>
+</div></section></div></main>
+
+<script>
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+function val(id){return document.getElementById(id).value}
+function fmt(x,d=1){if(!isFinite(x))return"—";let v=Number(x);if(Math.abs(v-Math.round(v))<.0001)return String(Math.round(v));return v.toFixed(d).replace(".",",")}
+function ml(x){return fmt(x,2)+" mL"} function mg(x){return fmt(x,1)+" mg"} function mcg(x){return fmt(x,1)+" mcg"}
+function clamp(x,min,max){return Math.max(min,Math.min(max,x))}
+function idadeAnos(){const i=n("idade"),u=val("idadeUnid");return u==="anos"?i:u==="meses"?i/12:i/365}
+function idadeMeses(){const i=n("idade"),u=val("idadeUnid");return u==="anos"?i*12:u==="meses"?i:i/30.4}
+function setPeso(p){document.getElementById("peso").value=p;calcAll()}
+function showTab(id,btn){document.querySelectorAll(".module").forEach(m=>m.classList.add("hide"));document.getElementById(id).classList.remove("hide");document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");calcAll()}
+function medCard(title,main,prep="",macete="",cls="blue"){return `<div class="box ${cls}"><div class="result-title">${title}</div><div class="dose">${main}</div>${prep?`<div class="prep">${prep}</div>`:""}${macete?`<div class="macete">${macete}</div>`:""}</div>`}
+function vitals(){
+ const age=idadeAnos(),months=idadeMeses(),p=n("peso"),pas=n("pas"),sat=n("sat"),dx=n("dx");
+ let pasMin=months<1?60:months<12?70:age<10?70+2*Math.floor(age):90;
+ let out=`<span class="pill">Peso: ${fmt(p)} kg</span><span class="pill">Idade: ${fmt(age,1)} anos</span><span class="pill warn">PAS mínima: ${fmt(pasMin)} mmHg</span>`;
+ if(pas){out+=pas<pasMin?`<div class="box red"><b>Hipotensão provável:</b> PAS ${pas} menor que ${fmt(pasMin)} mmHg.</div>`:`<div class="box ok"><b>PAS acima do mínimo estimado.</b> Não exclui choque compensado.</div>`}
+ if(sat&&sat<92)out+=`<div class="box red"><b>SatO₂ baixa:</b> iniciar O₂ e avaliar insuficiência respiratória.</div>`;else if(sat&&sat<94)out+=`<div class="box warn"><b>SatO₂ limítrofe:</b> considerar O₂ conforme quadro.</div>`;
+ if(dx&&dx<70)out+=`<div class="box red"><b>Hipoglicemia:</b> tratar e repetir glicemia em 15 min.</div>`;
+ return out
+}
+function calcAnafilaxia(){
+ const p=n("peso"),epiIM=Math.min(.01*p,p>50?.5:.3),vol20=20*p,vol30=30*p,salb=Math.min(Math.max(Math.ceil(p/2),2),10),epiBIC=.1*p*60/10;
+ const difMg=Math.min(1*p,50),difMl=difMg/50,metMg=Math.min(1*p,125),metMl=metMg/62.5,faixa=p<10?`${ml(.01*p)} IM`:p<25?"0,15 mL IM":p<=50?"0,3 mL IM":"0,5 mL IM";
+ return `
+ ${medCard("Epinefrina 1 mg/mL IM",`${ml(epiIM)} IM agora`,`Aplicar na face anterolateral da coxa. Repetir a cada 5–15 min se resposta insatisfatória. Dose por faixa: ${faixa}.`,`Macete: 0,01 mL/kg. Máx. 0,3 mL até 50 kg; 0,5 mL se >50 kg.`,"red")}
+ ${medCard("SF 0,9% ou Ringer Lactato",`${fmt(vol20)} mL EV rápido`,`Se má perfusão/hipotensão. Reavaliar após cada etapa. Máximo sugerido na 1ª hora: ${fmt(vol30)} mL.`,`Macete: 20 × peso = volume em mL.`,"blue")}
+ ${medCard("Salbutamol spray 100 mcg/jato",`${salb} jatos`,`Com espaçador se broncoespasmo. Repetir a cada 20 min até 3 vezes.`,`Macete: 1 jato/2 kg, máximo 10 jatos.`,"warn")}
+ ${medCard("Difenidramina 50 mg/mL EV",`${mg(difMg)} = ${ml(difMl)}`,`Diluir em SF 0,9% 50 mL e infundir EV em 15–30 min. Adjuvante se urticária/prurido residual.`,`Macete: mL = peso × 0,02; máximo 1 mL.`,"blue")}
+ ${medCard("Metilprednisolona 125 mg/fr EV",`${mg(metMg)} = ${ml(metMl)}`,`Reconstituir em 2 mL: 62,5 mg/mL. Diluir a dose em SF 0,9% 20–50 mL e infundir em 30 min.`,`Macete para 1 mg/kg: mL = peso × 0,016.`,"blue")}
+ ${medCard("Epinefrina EV em BIC — se refratária",`${fmt(epiBIC,1)} mL/h`,`Preparar: adrenalina 1 mg/mL, 1 mL + SF 0,9% 100 mL = 10 mcg/mL. Dose inicial 0,1 mcg/kg/min.`,`Macete nessa diluição: para 0,1 mcg/kg/min = 0,6 × peso em mL/h.`,"red")}
+ <div class="box red"><b>Essencial:</b> anti-H1 e corticoide são adjuvantes. Não atrasar adrenalina IM.</div>`
+}
+function calcPCR(){
+ const p=n("peso"),choque1=2*p,choque2=4*p,choqueMax=10*p,adMg=.01*p,adMl=.1*p,amioMg=5*p,amioMl=amioMg/50,lidoMg=1*p,lidoMl=lidoMg/20,ritmo=val("ritmo");
+ let rhythm=ritmo==="sim"?medCard("Ritmo chocável",`${fmt(choque1)} J → ${fmt(choque2)} J → até ${fmt(choqueMax)} J`,`Retomar compressões imediatamente após choque.`,`Macete: 2 J/kg, depois 4 J/kg.`, "red"):medCard("Ritmo não chocável","RCP + adrenalina precoce","Assistolia/AESP: checar causas reversíveis e qualidade da RCP.","", "red");
+ return `
+ ${rhythm}
+ ${medCard("Adrenalina PCR — solução 0,1 mg/mL",`${mg(adMg)} = ${ml(adMl)} EV/IO`,`Repetir a cada 3–5 min. Se tiver ampola 1 mg/mL, diluir 1 mL + 9 mL SF/AD = 0,1 mg/mL.`,`Macete: 0,1 mL/kg da solução 1:10.000.`,"blue")}
+ ${medCard("Amiodarona 50 mg/mL",`${mg(amioMg)} = ${ml(amioMl)} EV/IO`,`Se FV/TV sem pulso refratária. Pode repetir conforme protocolo.`,`Macete: 5 mg/kg = peso × 0,1 mL.`,"warn")}
+ ${medCard("Lidocaína 20 mg/mL",`${mg(lidoMg)} = ${ml(lidoMl)} EV/IO`,`Alternativa à amiodarona. Conferir concentração disponível.`,`Macete se 20 mg/mL: peso × 0,05 mL.`,"warn")}
+ <div class="box"><b>RCP:</b> compressões 100–120/min. Sem via aérea avançada: 30:2 se 1 socorrista; 15:2 se 2. Com via aérea avançada: ventilação a cada 2–3 s.</div>`
+}
+function calcChoque(){
+ const p=n("peso"),tipo=val("choqueTipo"),bol10=10*p,bol20=20*p,max60=60*p;
+ const noraMlH005=.05*p*60/16,adrMlH005=.05*p*60/10,dopaMlH=5*p*60/1600;
+ let extra="";
+ if(tipo==="cardio")extra=`<div class="box red"><b>Suspeita cardiogênico:</b> cuidado com volume. Considerar bolus menores 5–10 mL/kg com reavaliação.</div>`;
+ if(tipo==="septico")extra=`<div class="box warn"><b>Sepse:</b> antibiótico precoce, culturas se não atrasar, lactato se disponível.</div>`;
+ if(tipo==="frio")extra=`<div class="box blue"><b>Choque frio:</b> considerar adrenalina/inotrópico se refratário a volume.</div>`;
+ if(tipo==="quente")extra=`<div class="box blue"><b>Choque quente:</b> considerar noradrenalina se hipotensão refratária.</div>`;
+ return `
+ ${medCard("Cristaloide",`${fmt(bol10)}–${fmt(bol20)} mL EV rápido`,`SF 0,9% ou Ringer Lactato 10–20 mL/kg. Em choque séptico, pode chegar a ${fmt(max60)} mL na 1ª hora se sem sobrecarga.`,`Macete: 10–20 × peso = mL.`, "blue")}
+ ${extra}
+ ${medCard("Noradrenalina — exemplo 16 mcg/mL",`${fmt(noraMlH005,1)} mL/h para 0,05 mcg/kg/min`,`Exemplo de preparo: noradrenalina 4 mg/4 mL, 1 ampola em SG5% até 250 mL ≈ 16 mcg/mL. Ajustar ao protocolo local.`,`Macete nessa diluição: mL/h = dose × peso × 3,75.`, "warn")}
+ ${medCard("Adrenalina BIC — solução 10 mcg/mL",`${fmt(adrMlH005,1)} mL/h para 0,05 mcg/kg/min`,`Preparo: adrenalina 1 mg/mL, 1 mL + SF 0,9% 100 mL = 10 mcg/mL.`,`Macete nessa diluição: para 0,05 mcg/kg/min = 0,3 × peso em mL/h.`, "warn")}
+ ${medCard("Dopamina — exemplo 1600 mcg/mL",`${fmt(dopaMlH,1)} mL/h para 5 mcg/kg/min`,`Exemplo: dopamina 400 mg em SG5% até 250 mL = 1600 mcg/mL. Ajustar à concentração local.`,`Macete: mL/h = dose × peso × 60 ÷ concentração.`, "warn")}
+ <div class="box"><b>Reavaliar:</b> FC, PA/PAM, TEC, pulsos, extremidades, ausculta pulmonar, hepatomegalia, consciência, diurese e lactato se disponível.</div>`
+}
+function calcHipo(){
+ const p=n("peso");
+ return `
+ ${medCard("Glicose 10%",`${fmt(5*p)} mL EV`,`Bolus EV. Repetir glicemia em 15 min.`,`Macete: 5 mL/kg.`,"red")}
+ ${medCard("Glicose 25%",`${fmt(2*p)}–${fmt(4*p)} mL EV`,`Usar conforme protocolo local/acesso. Repetir DX em 15 min.`,`Macete: 2–4 mL/kg.`,"warn")}
+ ${medCard("Glicose 50%",`${fmt(1*p)} mL EV`,`Mais comum em adolescentes/serviço específico. Evitar em crianças pequenas pela osmolaridade quando possível.`,`Macete: 1 mL/kg da G50% = 0,5 g/kg.`,"warn")}
+ <div class="box"><b>Após correção:</b> manter oferta de glicose se risco de recorrência e liberar dieta se seguro.</div>`
+}
+function calcConv(){
+ const p=n("peso"),midaMg=Math.min(.2*p,10),midaMl=midaMg/5,diazMg=Math.min(.25*p,10),diazMl=diazMg/5,diazRetalMg=.5*p,diazRetalMl=diazRetalMg/5,fenMg=Math.min(20*p,1000),fenMl=fenMg/50,fenoMg=20*p,fenoMl=fenoMg/100;
+ return `
+ ${medCard("Midazolam 5 mg/mL",`${mg(midaMg)} = ${ml(midaMl)}`,`EV puro, sem diluir; ou IN/bucal/IM conforme acesso. Máx. 10 mg = 2 mL.`,`Macete: peso × 0,04 mL.`,"red")}
+ ${medCard("Diazepam 5 mg/mL EV",`${mg(diazMg)} = ${ml(diazMl)}`,`Administrar EV lento, sem diluir ou diluído em pequeno volume conforme rotina local. Máx. 10 mg = 2 mL.`,`Macete para 0,25 mg/kg: peso × 0,05 mL.`,"blue")}
+ ${medCard("Diazepam 5 mg/mL retal",`${mg(diazRetalMg)} = ${ml(diazRetalMl)}`,`Se sem acesso e sem midazolam IN/bucal.`,`Macete: peso × 0,1 mL.`,"blue")}
+ ${medCard("Fenitoína 50 mg/mL EV",`${mg(fenMg)} = ${ml(fenMl)}`,`Diluir somente em SF 0,9%. Não diluir em SG. Infundir com monitorização cardíaca/PA.`,`Macete: 20 mg/kg = peso × 0,4 mL.`,"warn")}
+ ${medCard("Fenobarbital 100 mg/mL EV",`${mg(fenoMg)} = ${ml(fenoMl)}`,`Infundir lentamente, monitorando sedação e respiração. Conferir apresentação local.`,`Macete se 100 mg/mL: peso × 0,2 mL.`,"warn")}
+ <div class="box"><b>Timer:</b> 0–5 min ABC + glicemia; 5 min benzo; 10 min repetir se necessário; 15–20 min segunda linha.</div>`
+}
+function calcAsma(){
+ const p=n("peso"),grav=val("asmaGrav"),age=idadeAnos();
+ let jatos=grav==="grave"?Math.min(Math.max(Math.ceil(p/3),2),10):grav==="moderada"?clamp(Math.ceil(p/3),2,10):clamp(Math.ceil(p/3),2,6);
+ let ipra=age<6?"8–20 gotas":age<12?"20 gotas":"40 gotas";
+ const predMin=Math.min(1*p,age<=2?20:age<=5?30:40),predMax=Math.min(2*p,age<=2?20:age<=5?30:40),metMg=Math.min(1*p,60),metMl=metMg/62.5,dexaMg=Math.min(.6*p,16),dexaMl=dexaMg/4,magMg=Math.min(50*p,2000),magMl=magMg/500;
+ return `
+ ${medCard("Salbutamol spray 100 mcg/jato",`${jatos} jatos`,`Com espaçador. Repetir a cada 20 min por 3 doses; depois conforme reavaliação.`,`Macete: 1 jato a cada 3 kg; mínimo 2, máximo 10 jatos.`,"red")}
+ ${medCard("Ipratrópio 0,25 mg/mL nebulização",`${ipra}`,`Nebulizar com SF 0,9% até volume final de 3 mL, a cada 20 min por 3 vezes na 1ª hora; O₂ 6–8 L/min.`,`Macete: <6a 8–20 gotas; 6–12a 20 gotas; >12a 40 gotas.`,"warn")}
+ ${medCard("Prednisolona 3 mg/mL VO",`${mg(predMin)}–${mg(predMax)} ao dia = ${ml(predMin/3)}–${ml(predMax/3)} ao dia`,`Dose 1–2 mg/kg/dia por 3–5 dias. Pode dividir em 2 tomadas. Máx. por idade: 0–2a 20 mg/dia; 3–5a 30 mg/dia; 6–11a 40 mg/dia.`,`Macete com 3 mg/mL: mL/dia = dose mg ÷ 3.`,"blue")}
+ ${medCard("Metilprednisolona 125 mg/fr EV",`${mg(metMg)} = ${ml(metMl)}`,`Reconstituir em 2 mL: 62,5 mg/mL. Diluir em SF 0,9% 20–50 mL e infundir EV em 30 min.`,`Macete para 1 mg/kg: peso × 0,016 mL.`,"blue")}
+ ${medCard("Dexametasona 4 mg/mL",`${mg(dexaMg)} = ${ml(dexaMl)}`,`Dose 0,6 mg/kg; ajustar conforme protocolo.`,`Macete com 4 mg/mL: peso × 0,15 mL.`,"blue")}
+ ${medCard("Sulfato de magnésio 50% EV",`${mg(magMg)} = ${ml(magMl)}`,`Dose 50 mg/kg, máximo 2 g. Diluir em SF 0,9% ou SG 5% e infundir em 20–30 min.`,`Macete se 50% = 500 mg/mL: mL = dose ÷ 500.`,"warn")}
+ <div class="box"><b>Reavaliar em 1 hora:</b> SatO₂, tiragem, fala, ausculta, FR, FC e necessidade de O₂.</div>`
+}
+function calcCrupe(){
+ const p=n("peso"),grav=val("crupeGrav"),doseKg=grav==="leve"?.15:grav==="moderado"?.3:.6,dexaMg=doseKg*p,dexaMl=dexaMg/4,epiMl=Math.min(.5*p,5);
+ return `
+ ${medCard("Dexametasona 4 mg/mL",`${mg(dexaMg)} = ${ml(dexaMl)}`,`Dose selecionada: ${doseKg} mg/kg. Via VO/IM/EV conforme cenário.`,`Macete com 4 mg/mL: mL = dose mg ÷ 4. Para 0,6 mg/kg: peso × 0,15 mL.`,"blue")}
+ ${grav==="leve"?`<div class="box ok"><b>Crupe leve:</b> geralmente dexametasona + observação/orientações.</div>`:medCard("Adrenalina 1 mg/mL nebulizada",`${ml(epiMl)} em NBZ`,`Nebulizar; pode completar com SF 0,9% se necessário conforme aparelho/protocolo. Observar 2–3 h após nebulização.`,`Macete: 0,5 mL/kg, máximo 5 mL.`,"red")}
+ <div class="box"><b>Atenção:</b> estridor em repouso, tiragem importante, hipoxemia, sonolência ou exaustão = sala vermelha e avaliação de via aérea.</div>`
+}
+function calcDes(){
+ const p=n("peso"),plano=val("planoDes"),b1=50*p,b2=100*p,bol=20*p,zinco=idadeMeses()<6?"10 mg/dia":"20 mg/dia";let body="";
+ if(plano==="a")body=medCard("Plano A","SRO após evacuações/vômitos","Manter alimentação, orientar sinais de alarme e retorno.","","ok");
+ if(plano==="b")body=medCard("Plano B",`${fmt(b1)}–${fmt(b2)} mL em 4 horas`,`SRO 50–100 mL/kg em 4 h. Reavaliar hidratação, vômitos e diurese.`,`Macete: 50–100 × peso = volume total em 4 h.`,"blue");
+ if(plano==="c")body=medCard("Plano C / choque",`${fmt(bol)} mL EV rápido`,`SF 0,9% ou RL 20 mL/kg, reavaliando. Ajustar em lactentes/cardiopatas/protocolo local.`,`Macete: 20 × peso = mL.`,"red");
+ return `${body}${medCard("Zinco",zinco,"Por 10–14 dias em diarreia aguda, conforme idade.","<6 meses: 10 mg/dia; ≥6 meses: 20 mg/dia.","warn")}`
+}
+function calcCAD(){
+ const p=n("peso"),perc=parseFloat(val("cadDes")),ins=parseFloat(val("cadIns")),def=perc/100*p*1000,insUh=ins*p;
+ return `
+ ${medCard("Déficit hídrico estimado",`${fmt(def)} mL`,`${perc}% de desidratação. Usar como estimativa e ajustar ao protocolo local.`,`Macete: % × peso × 1000.`,"blue")}
+ ${medCard("Insulina regular EV",`${fmt(insUh,2)} U/h`,`Dose ${ins} U/kg/h. Não fazer bolus. Iniciar após avaliação de K+ e reposição inicial.`,`Macete: dose × peso = U/h.`,"red")}
+ ${medCard("Insulina regular 100 U/mL — volume puro",`${ml(insUh/100)} por hora`,`Esse é o volume puro equivalente; na prática deve ser diluído em bomba conforme protocolo da unidade.`,`Macete: U/h ÷ 100 = mL/h puro, mas não correr puro.`, "warn")}
+ <div class="box"><b>Reavaliar na 1ª hora:</b> glicemia, perfusão, consciência, K+, sódio corrigido e diurese.</div>`
+}
+function calcIOT(){
+ const p=n("peso"),age=idadeAnos(),months=idadeMeses();
+ const tC=age>=1?age/4+3.5:(months<1?3.0:3.5);
+ const tS=age>=1?age/4+4:(months<1?3.5:4.0);
+ const profOral=tC*3;
+ const profNasal=age>=1?age/2+15:profOral+2;
+ let laminaTipo="reta Miller", laminaTam="0";
+ if(months<1){laminaTipo="reta Miller"; laminaTam="0";}
+ else if(months<12){laminaTipo="reta Miller"; laminaTam="1";}
+ else if(age<2){laminaTipo="reta Miller ou curva Macintosh"; laminaTam="1";}
+ else if(age<6){laminaTipo="curva Macintosh ou reta Miller"; laminaTam="2";}
+ else if(age<12){laminaTipo="curva Macintosh"; laminaTam="2–3";}
+ else {laminaTipo="curva Macintosh"; laminaTam="3";}
+ const mascara = months<1?"RN/0":months<12?"lactente/1":age<6?"criança pequena/2":age<12?"criança/3":"adolescente/4";
+ const fioGuia = tC<4?"2,5–3,0 mm":tC<5.5?"3,0–4,0 mm":"4,0–5,0 mm";
+ const sondaAsp = tC<=3.5?"6–8 Fr":tC<=5?"8–10 Fr":"10–12 Fr";
+ const ket1=p,ket2=2*p,eto=.3*p,mida=.1*p,fent=p,roc=p,succ=1.5*p,atrop=Math.max(.02*p,.1);
+ return `
+ <div class="legend"><span class="via">Via aérea/equipamentos</span><span class="pre">Pré-medicação</span><span class="sed">Sedativos/analgesia</span><span class="bnm">Bloqueadores neuromusculares</span></div>
+ ${medCard("Tubo orotraqueal aproximado",`Com cuff ${fmt(tC,1)} | Sem cuff ${fmt(tS,1)}`,`Profundidade oral aproximada: ${fmt(profOral,1)} cm no lábio. Profundidade nasal aproximada: ${fmt(profNasal,1)} cm. Confirmar por capnografia, expansibilidade, ausculta e RX quando possível.`,`Cuff = idade/4 + 3,5; sem cuff = idade/4 + 4; posição oral ≈ 3 × diâmetro interno do tubo.`, "via")}
+ ${medCard("Lâmina de laringoscópio",`${laminaTipo} nº ${laminaTam}`,`Sugestão por faixa etária. Separar também uma lâmina/tubo acima e abaixo do estimado.`, `RN: Miller 0; lactente: Miller 1; 1–2a: Miller/Mac 1; 2–6a: Mac/Miller 2; 6–12a: Mac 2–3; adolescente: Mac 3.`, "via")}
+ ${medCard("Máscara, fio-guia e aspiração",`Máscara ${mascara} | fio-guia ${fioGuia} | sonda ${sondaAsp}`,`Preparar BVM com reservatório, fonte de O₂, aspirador funcionante, seringa para cuff, fixação do tubo e capnografia se disponível.`, `Sempre deixar material alternativo: cânula orofaríngea/nasofaríngea, dispositivo supraglótico e plano de via aérea difícil.`, "via")}
+ ${medCard("Atropina 0,25 mg/mL — se indicada",`${mg(atrop)} = ${ml(atrop/.25)}`,`Pré-medicação. Dose 0,02 mg/kg; mínimo 0,1 mg. Considerar em lactentes, bradicardia ou uso de succinilcolina.`, `Macete: peso × 0,08 mL; respeitar mínimo.`, "pre")}
+ ${medCard("Fentanil 50 mcg/mL",`${mcg(fent)} = ${ml(fent/50)}`,`Analgesia/atenuação de resposta. Dose 1 mcg/kg EV; pode titular conforme cenário/hemodinâmica.`, `Macete: peso × 0,02 mL para 1 mcg/kg.`, "sed")}
+ ${medCard("Cetamina 50 mg/mL",`${mg(ket1)}–${mg(ket2)} = ${ml(ket1/50)}–${ml(ket2/50)}`,`Sedativo. Dose 1–2 mg/kg EV. Boa opção em broncoespasmo/instabilidade, mas avaliar contexto.`, `Macete: 1 mg/kg = peso × 0,02 mL; 2 mg/kg = peso × 0,04 mL.`, "sed")}
+ ${medCard("Etomidato 2 mg/mL",`${mg(eto)} = ${ml(eto/2)}`,`Sedativo. Dose 0,3 mg/kg EV.`, `Macete: peso × 0,15 mL.`, "sed")}
+ ${medCard("Midazolam 5 mg/mL",`${mg(mida)} = ${ml(mida/5)}`,`Sedativo/amnésico. Dose 0,1 mg/kg EV; titular com cuidado se instabilidade respiratória/hemodinâmica.`, `Macete: peso × 0,02 mL.`, "sed")}
+ ${medCard("Rocurônio 10 mg/mL",`${mg(roc)} = ${ml(roc/10)}`,`Bloqueador neuromuscular. Dose 1 mg/kg EV.`, `Macete: peso × 0,1 mL.`, "bnm")}
+ ${medCard("Succinilcolina 20 mg/mL",`${mg(succ)} = ${ml(succ/20)}`,`Bloqueador neuromuscular. Dose 1–2 mg/kg EV. Atenção a contraindicações: hiperK, queimadura/trauma tardio, doença neuromuscular, história de hipertermia maligna etc.`, `Macete para 1,5 mg/kg: peso × 0,075 mL.`, "bnm")}
+ <div class="box red"><b>Pós-IOT:</b> confirmar posição, fixar tubo, capnografia se disponível, RX, analgesia/sedação contínua, ventilação adequada e reavaliar hemodinâmica.</div>`
+}
+function calcDor(){
+ const p=n("peso"),dip=15*p,para=15*p,ibu=10*p,onda=Math.min(.15*p,8);
+ return `
+ ${medCard("Dipirona 500 mg/mL injetável",`${mg(dip)} = ${ml(dip/500)}`,`EV: diluir em SF 0,9% para formar 10–20 mL e administrar lento. IM: sem diluir.`,`Macete EV/IM: peso × 0,02 a 0,03 mL.`,"blue")}
+ ${medCard("Dipirona 500 mg/mL gotas",`${fmt(.4*p)}–${fmt(.6*p)} gotas`,`VO se dor/febre, conforme intervalo do serviço.`,`Macete em gotas: peso × 0,4 a 0,6. Evitar 1 gota/kg para não superdosar.`,"blue")}
+ ${medCard("Paracetamol 200 mg/mL gotas",`${mg(para)} ≈ ${fmt(Math.min(p,35))} gotas`,`Dose 10–15 mg/kg/dose a cada 4–6 h. Máx. usual 35 gotas/dose.`,`Macete: 1 gota/kg, máximo 35 gotas/dose.`,"blue")}
+ ${medCard("Ibuprofeno 100 mg/5 mL",`${mg(ibu)} = ${ml(ibu/20)}`,`Dose 5–10 mg/kg/dose. Evitar em desidratação, doença renal, sangramento e lactentes pequenos.`,`Macete com 100 mg/5 mL: 10 mg/kg = peso × 0,5 mL.`,"warn")}
+ ${medCard("Ondansetrona 2 mg/mL EV",`${mg(onda)} = ${ml(onda/2)}`,`Dose 0,15 mg/kg/dose, máx. usual 8 mg. Administrar EV lento.`,`Macete: peso × 0,075 mL.`,"warn")}
+ ${medCard("Ondansetrona 4 mg/5 mL VO",`${mg(onda)} = ${ml(onda/0.8)}`,`Solução oral 0,8 mg/mL. Útil se vômitos e sem necessidade EV.`,`Macete: dose mg ÷ 0,8 = mL.`,"warn")}`
+}
+function prescricao(){
+ const p=n("peso"),tipo=val("prescTipo");let text="";
+ if(tipo==="anafilaxia"){const epi=Math.min(.01*p,p>50?.5:.3),dif=Math.min(p,50),met=Math.min(p,125),salb=Math.min(Math.max(Math.ceil(p/2),2),10);text=`ANAFILAXIA — ${fmt(p)} kg
+1. ABCDE + monitorização + acesso venoso.
+2. Epinefrina 1 mg/mL: ${ml(epi)} IM agora na coxa. Repetir 5–15 min se necessário. Macete: 0,01 mL/kg.
+3. SF 0,9% ou RL: ${fmt(20*p)} mL EV rápido se má perfusão/hipotensão.
+4. Salbutamol spray: ${salb} jatos com espaçador se broncoespasmo.
+5. Difenidramina 50 mg/mL: ${mg(dif)} = ${ml(dif/50)} EV. Diluir em SF 0,9% 50 mL e correr em 15–30 min.
+6. Metilprednisolona 125 mg/fr: ${mg(met)} = ${ml(met/62.5)} EV. Reconstituir em 2 mL; diluir em SF 20–50 mL e correr em 30 min.`}
+ if(tipo==="pcr"){text=`PCR PEDIÁTRICA — ${fmt(p)} kg
+1. RCP de alta qualidade + O₂ + monitor/desfibrilador + acesso EV/IO.
+2. Adrenalina 0,1 mg/mL: ${mg(.01*p)} = ${ml(.1*p)} EV/IO a cada 3–5 min.
+3. Se chocável: ${fmt(2*p)} J → ${fmt(4*p)} J.
+4. Amiodarona 50 mg/mL: ${mg(5*p)} = ${ml(5*p/50)} EV/IO se FV/TV refratária.`}
+ if(tipo==="choque"){text=`CHOQUE/SEPSE — ${fmt(p)} kg
+1. ABCDE + monitorização + 2 acessos EV/IO + glicemia.
+2. SF 0,9% ou RL: ${fmt(10*p)}–${fmt(20*p)} mL EV rápido. Reavaliar.
+3. Se sepse: ATB precoce conforme foco/protocolo.
+4. Se refratário: vasoativo conforme perfil e concentração do serviço.`}
+ if(tipo==="convulsao"){const mid=Math.min(.2*p,10),diaz=Math.min(.25*p,10),fen=Math.min(20*p,1000);text=`CONVULSÃO — ${fmt(p)} kg
+1. ABCDE + O₂ se necessário + glicemia capilar.
+2. Midazolam 5 mg/mL: ${mg(mid)} = ${ml(mid/5)} EV/IN/bucal/IM. Máx. 10 mg.
+3. Alternativa: Diazepam 5 mg/mL: ${mg(diaz)} = ${ml(diaz/5)} EV lento. Máx. 10 mg.
+4. Se persistir: Fenitoína 50 mg/mL: ${mg(fen)} = ${ml(fen/50)} EV. Diluir somente em SF 0,9% e monitorizar.`}
+ if(tipo==="asma"){const j=Math.min(Math.max(Math.ceil(p/3),2),10),pred=Math.min(2*p,40),mag=Math.min(50*p,2000);text=`ASMA GRAVE — ${fmt(p)} kg
+1. O₂ + monitorização.
+2. Salbutamol spray: ${j} jatos com espaçador, 20/20 min até 3 ciclos.
+3. Ipratrópio 0,25 mg/mL: nebulizar com SF até 3 mL, 20/20 min por 3 vezes.
+4. Prednisolona 3 mg/mL: ${mg(pred)} = ${ml(pred/3)} VO ao dia.
+5. Sulfato de magnésio 50%: ${mg(mag)} = ${ml(mag/500)} EV, diluir e correr em 20–30 min.`}
+ if(tipo==="crupe"){const d=.6*p,epi=Math.min(.5*p,5);text=`CRUPE — ${fmt(p)} kg
+1. Manter criança calma + O₂ se hipoxemia.
+2. Dexametasona 4 mg/mL: ${mg(d)} = ${ml(d/4)} VO/IM/EV. Macete: peso × 0,15 mL.
+3. Adrenalina 1 mg/mL: ${ml(epi)} nebulizada. Observar 2–3 h.`}
+ if(tipo==="cad"){const perc=parseFloat(val("cadDes")),ins=parseFloat(val("cadIns"));text=`CAD — ${fmt(p)} kg
+1. ABCDE + monitorização + acesso EV + glicemia seriada.
+2. Déficit estimado ${perc}%: ${fmt(perc/100*p*1000)} mL.
+3. Insulina regular: ${fmt(ins*p,2)} U/h (${ins} U/kg/h), sem bolus, após K+.
+4. Volume/eletrólitos conforme protocolo local. Reavaliar glicemia, perfusão, consciência, K+, Na corrigido e diurese.`}
+ if(tipo==="iot"){const age=idadeAnos(),months=idadeMeses(),tC=age>=1?age/4+3.5:(months<1?3.0:3.5),tS=age>=1?age/4+4:(months<1?3.5:4.0),prof=tC*3;let laminaTipo="reta Miller",laminaTam="0";if(months<1){laminaTipo="reta Miller";laminaTam="0"}else if(months<12){laminaTipo="reta Miller";laminaTam="1"}else if(age<2){laminaTipo="reta Miller ou curva Macintosh";laminaTam="1"}else if(age<6){laminaTipo="curva Macintosh ou reta Miller";laminaTam="2"}else if(age<12){laminaTipo="curva Macintosh";laminaTam="2–3"}else{laminaTipo="curva Macintosh";laminaTam="3"};text=`IOT SEQUÊNCIA RÁPIDA — ${fmt(p)} kg
+1. Preparar material: TET com cuff ${fmt(tC,1)} / sem cuff ${fmt(tS,1)}. Separar um tamanho acima e abaixo.
+2. Profundidade oral estimada: ${fmt(prof,1)} cm no lábio. Confirmar com capnografia, ausculta e RX.
+3. Lâmina sugerida: ${laminaTipo} nº ${laminaTam}.
+4. Pré-medicação se indicada: Atropina 0,25 mg/mL: ${mg(Math.max(.02*p,.1))} = ${ml(Math.max(.02*p,.1)/.25)} EV.
+5. Sedativos/analgesia:
+   - Fentanil 50 mcg/mL: ${mcg(p)} = ${ml(p/50)} EV.
+   - Cetamina 50 mg/mL: ${mg(p)}–${mg(2*p)} = ${ml(p/50)}–${ml(2*p/50)} EV.
+   - Etomidato 2 mg/mL: ${mg(.3*p)} = ${ml(.3*p/2)} EV.
+6. Bloqueador neuromuscular:
+   - Rocurônio 10 mg/mL: ${mg(p)} = ${ml(p/10)} EV.
+   - Alternativa: Succinilcolina 20 mg/mL: ${mg(1.5*p)} = ${ml(1.5*p/20)} EV, se sem contraindicações.
+7. Pós-IOT: confirmar posição, fixar tubo, capnografia/RX, sedação contínua e reavaliar hemodinâmica.`}
+ return text
+}
+function calcAll(){
+ document.getElementById("vitals").innerHTML=vitals();document.getElementById("anafilaxiaOut").innerHTML=calcAnafilaxia();document.getElementById("pcrOut").innerHTML=calcPCR();document.getElementById("choqueOut").innerHTML=calcChoque();document.getElementById("hipoOut").innerHTML=calcHipo();document.getElementById("convOut").innerHTML=calcConv();document.getElementById("asmaOut").innerHTML=calcAsma();document.getElementById("crupeOut").innerHTML=calcCrupe();document.getElementById("desOut").innerHTML=calcDes();document.getElementById("cadOut").innerHTML=calcCAD();document.getElementById("iotOut").innerHTML=calcIOT();document.getElementById("dorOut").innerHTML=calcDor();document.getElementById("prescOut").textContent=prescricao()
+}
+function copyPresc(){navigator.clipboard.writeText(document.getElementById("prescOut").textContent).then(()=>alert("Prescrição copiada!"))}
+calcAll();
+</script>
+</body></html>
