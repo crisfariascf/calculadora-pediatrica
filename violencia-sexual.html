@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora — Violência Sexual Pediátrica</title>
+<style>
+  :root{
+    --bg:#f3f7f1; --card:#ffffff; --green:#5ca83f; --green2:#dff0d8;
+    --dark:#173b24; --muted:#64748b; --danger:#b91c1c; --warn:#b45309; --blue:#1d4ed8;
+    --line:#dbe7d5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial, Helvetica, sans-serif;background:linear-gradient(180deg,#eef7ea,#fff);color:#17261b}
+  header{background:linear-gradient(135deg,#69b845,#3f8f31);color:white;padding:20px 16px;border-bottom:4px solid #2e6f25}
+  header h1{margin:0;font-size:1.35rem}
+  header p{margin:8px 0 0;opacity:.95;line-height:1.35}
+  main{max-width:1100px;margin:0 auto;padding:14px}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:850px){.grid{grid-template-columns:360px 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 4px 16px rgba(20,80,20,.07)}
+  h2{font-size:1.05rem;margin:0 0 12px;color:var(--dark)}
+  h3{font-size:.98rem;margin:14px 0 8px;color:var(--dark)}
+  label{display:block;font-weight:700;font-size:.86rem;margin:10px 0 5px;color:#233b2a}
+  input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd5c0;border-radius:10px;font-size:1rem;background:white}
+  textarea{min-height:72px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}
+  .primary{background:#3f8f31;color:white;width:100%;margin-top:12px}
+  .secondary{background:#e5f3df;color:#234d20}
+  .danger{background:#fee2e2;color:#991b1b}
+  .pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.78rem;font-weight:700;margin:2px;background:#eef2ff;color:#243c8f}
+  .alert{padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.35}
+  .red{background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca}
+  .yellow{background:#fef3c7;color:#78350f;border:1px solid #fde68a}
+  .green{background:#dcfce7;color:#14532d;border:1px solid #bbf7d0}
+  .blue{background:#dbeafe;color:#1e3a8a;border:1px solid #bfdbfe}
+  .muted{color:var(--muted);font-size:.88rem;line-height:1.4}
+  .resultBox{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;background:#fbfdf9}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.9rem}
+  th,td{border:1px solid #d9e7d2;padding:8px;vertical-align:top;text-align:left}
+  th{background:#e5f3df;color:#183b1c}
+  .dose{font-weight:800;color:#123b18}
+  .small{font-size:.82rem}
+  .copyArea{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:12px;padding:12px;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:.82rem;line-height:1.45}
+  details{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;margin:8px 0}
+  summary{font-weight:800;color:#234d20;cursor:pointer}
+  .footer{font-size:.78rem;color:#64748b;margin-top:12px;line-height:1.35}
+</style>
+</head>
+<body>
+<header>
+  <h1>Calculadora — Abordagem terapêutica ao paciente pediátrico vítima de violência sexual</h1>
+  <p>Baseada no protocolo local HCA, versão 001 — Julho/2022. Uso como apoio ao atendimento, sem substituir avaliação clínica, infectologia, ginecologia, serviço social, psicologia e fluxos legais.</p>
+</header>
+
+<main class="grid">
+  <section class="card">
+    <h2>Dados do paciente e exposição</h2>
+
+    <div class="row">
+      <div>
+        <label>Idade</label>
+        <input id="idade" type="number" min="0" step="0.1" placeholder="Ex.: 8">
+      </div>
+      <div>
+        <label>Unidade</label>
+        <select id="idadeUn">
+          <option value="anos">anos</option>
+          <option value="meses">meses</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Peso (kg)</label>
+    <input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 22">
+
+    <label>Sexo biológico / risco gestacional</label>
+    <select id="sexo">
+      <option value="f">Feminino / útero presente</option>
+      <option value="m">Masculino</option>
+      <option value="outro">Outro / avaliar individualmente</option>
+    </select>
+
+    <label>Menarca / potencial gestacional?</label>
+    <select id="menarca">
+      <option value="nao">Não / pré-púbere</option>
+      <option value="sim">Sim</option>
+      <option value="desconhecido">Desconhecido</option>
+    </select>
+
+    <label>Tempo desde a violência/exposição</label>
+    <select id="tempo">
+      <option value="ate72">≤ 72 horas</option>
+      <option value="72a120">72–120 horas</option>
+      <option value="maior120">&gt; 120 horas</option>
+      <option value="cronico">Crônico/repetido/sem episódio agudo definido</option>
+      <option value="desconhecido">Desconhecido</option>
+    </select>
+
+    <label>Tipo de exposição</label>
+    <select id="exposicao">
+      <option value="penetracao">Penetração anal ou vaginal / risco mucoso</option>
+      <option value="oral">Contato oral/genital</option>
+      <option value="sem_penetracao">Sem penetração/sem contato mucoso claro</option>
+      <option value="desconhecido">Desconhecido</option>
+    </select>
+
+    <label>Preservativo durante todo o crime sexual?</label>
+    <select id="preservativo">
+      <option value="nao">Não / rompeu / não sabe</option>
+      <option value="sim">Sim, durante todo o evento</option>
+    </select>
+
+    <label>Agressor HBsAg</label>
+    <select id="hbsag">
+      <option value="desconhecido">Desconhecido</option>
+      <option value="positivo">Positivo</option>
+      <option value="negativo">Negativo</option>
+    </select>
+
+    <label>Vacinação Hepatite B da vítima</label>
+    <select id="vacinaHB">
+      <option value="completa">Completa</option>
+      <option value="incompleta">Incompleta/não vacinada</option>
+      <option value="desconhecido">Desconhecida</option>
+    </select>
+
+    <label>Lesões graves e/ou risco de revitimização?</label>
+    <select id="lesaoRisco">
+      <option value="nao">Não</option>
+      <option value="sim">Sim</option>
+    </select>
+
+    <label>Sinais diretos/indiretos observados</label>
+    <textarea id="sinais" placeholder="Ex.: sangramento vaginal, fissura anal, medo de pessoa específica..."></textarea>
+
+    <button class="primary" onclick="calcular()">Calcular conduta e prescrição</button>
+    <button class="secondary" onclick="limpar()" style="width:100%;margin-top:8px;">Limpar</button>
+  </section>
+
+  <section class="card">
+    <h2>Resultado</h2>
+    <div id="resultado" class="muted">
+      Preencha os dados e clique em calcular.
+    </div>
+  </section>
+</main>
+
+<script>
+function num(id){return parseFloat(document.getElementById(id).value.replace(',','.'))}
+function val(id){return document.getElementById(id).value}
+function round(x, casas=1){return Math.round(x*Math.pow(10,casas))/Math.pow(10,casas)}
+function mgml(mg, conc){return round(mg/conc,1)}
+function idadeAnos(){
+  const i=num('idade'); if(isNaN(i)) return NaN;
+  return val('idadeUn')==='meses'? i/12 : i;
+}
+function fmtDose(x, unidade='mg'){ return `${round(x,1)} ${unidade}`; }
+function simNao(b){return b?'Sim':'Não'}
+function alerta(classe, txt){return `<div class="alert ${classe}">${txt}</div>`}
+
+function calcular(){
+  const peso=num('peso'), idade=idadeAnos();
+  const tempo=val('tempo'), exposicao=val('exposicao'), preservativo=val('preservativo');
+  const sexo=val('sexo'), menarca=val('menarca'), hbsag=val('hbsag'), vacinaHB=val('vacinaHB'), lesaoRisco=val('lesaoRisco');
+  const sinais=document.getElementById('sinais').value.trim();
+  if(isNaN(peso)||peso<=0||isNaN(idade)||idade<0){
+    document.getElementById('resultado').innerHTML=alerta('red','Informe idade e peso válidos.');
+    return;
+  }
+
+  const agudo = (tempo==='ate72' || tempo==='72a120' || tempo==='desconhecido');
+  const hivInd = (tempo==='ate72') && (exposicao==='penetracao' || exposicao==='desconhecido');
+  const istNaoViral = agudo && preservativo!=='sim' && tempo!=='cronico';
+  const anticoncepcao = (sexo==='f' || sexo==='outro') && (menarca==='sim'||menarca==='desconhecido') && (tempo==='ate72'||tempo==='72a120'||tempo==='desconhecido');
+
+  let html='';
+  html += alerta('blue','Atendimento deve envolver acolhimento, anamnese/exame físico detalhado, exames, profilaxias quando indicadas, farmácia, psicologia, serviço social e acionamento de rede de proteção conforme fluxo local.');
+  if(lesaoRisco==='sim') html += alerta('red','Fluxo de internação: lesões graves e/ou risco de revitimização → considerar internação hospitalar.');
+  else html += alerta('green','Sem lesões graves e/ou risco de revitimização informado → seguimento ambulatorial/infectologia, sem esquecer notificação e rede de proteção.');
+
+  html += `<div class="resultBox"><h3>1) Exames iniciais sugeridos no protocolo</h3>
+  <div class="pill">Hemograma completo</div><div class="pill">β-HCG/teste de gravidez se aplicável</div><div class="pill">HIV</div><div class="pill">Sífilis</div><div class="pill">Hepatite B</div><div class="pill">Hepatite C</div><div class="pill">Urina tipo I</div><div class="pill">Função renal/hepática se ARV</div>
+  <p class="muted">Considerar USG pélvica/abdome total se suspeita de derrame cavitário/lesão.</p></div>`;
+
+  html += `<div class="resultBox"><h3>2) Profilaxia ISTs não virais</h3>`;
+  if(!istNaoViral){
+    html += alerta('yellow','Profilaxia não viral pode NÃO estar indicada pelo protocolo quando exposição é crônica/repetida ou houve preservativo durante todo o evento. Reavaliar se houver dúvida, evento agudo ou falha de preservativo.');
+  } else {
+    const penUI = Math.min(50000*peso,2400000);
+    const cef = peso < 45 ? 250 : 500; // operacional para faixa 250-500 mg
+    const azitro = Math.min(20*peso,1000);
+    const metroDia = Math.min(15*peso,2000);
+    const metroDose = metroDia/3;
+    html += `<table><tr><th>Medicação</th><th>Dose calculada</th><th>Como prescrever</th></tr>
+      <tr><td>Penicilina G Benzatina</td><td class="dose">${Math.round(penUI).toLocaleString('pt-BR')} UI IM</td><td>Dose única. Máximo 2.400.000 UI.</td></tr>
+      <tr><td>Ceftriaxona</td><td class="dose">${cef} mg IM</td><td>Dose única. Protocolo: 250 a 500 mg IM.</td></tr>
+      <tr><td>Azitromicina</td><td class="dose">${fmtDose(azitro)}</td><td>VO, dose única. Se suspensão 200 mg/5 mL: ${mgml(azitro,40)} mL.</td></tr>
+      <tr><td>Metronidazol</td><td class="dose">${fmtDose(metroDia)}/dia = ${fmtDose(metroDose)} 8/8h</td><td>VO por 7 dias. Se suspensão 40 mg/mL: ${mgml(metroDose,40)} mL por dose.</td></tr>
+    </table>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="resultBox"><h3>3) Hepatite B</h3>`;
+  let hbtxt='';
+  if(hbsag==='negativo' && vacinaHB==='completa') hbtxt='Agressor HBsAg negativo + vítima completamente imunizada: protocolo informa que não há conduta específica.';
+  else if(vacinaHB==='incompleta' || vacinaHB==='desconhecido') hbtxt='Vítima não vacinada, incompleta ou desconhecida: aplicar 1ª dose da vacina e completar esquema 0–1–6 meses.';
+  else hbtxt='Vítima com vacina completa e agressor HBsAg positivo/desconhecido: checar sorologia/anti-HBs e discutir necessidade conforme infectologia/fluxo local.';
+  html += alerta('blue', hbtxt);
+  if(hbsag==='positivo'){
+    const imuno = round(0.06*peso,2);
+    html += alerta('yellow', `Agressor HBsAg positivo + vítima suscetível: gamaglobulina hiperimune anti-HB ${imuno} mL IM (0,06 mL/kg), preferencialmente até 48h; protocolo informa ausência de eficácia após 1–2 semanas.`);
+  }
+  html += `</div>`;
+
+  html += `<div class="resultBox"><h3>4) Profilaxia HIV/PEP</h3>`;
+  if(!hivInd){
+    html += alerta('yellow','PEP HIV não ficou automaticamente indicada: protocolo prioriza casos agudos com penetração anal/vaginal e início ideal até 72h. Se exposição desconhecida ou alto risco, discutir imediatamente com infectologia.');
+  } else {
+    html += alerta('red','PEP HIV indicada pelo critério do protocolo: caso agudo com penetração anal/vaginal e ≤72h. Manter 4 semanas ininterruptas e seguir com infectologia.');
+    let esquema='';
+    if(idade < 2) esquema='AZT solução oral + Lamivudina solução oral + Raltegravir granulado';
+    else if(idade <= 12) esquema='AZT solução oral + Lamivudina solução oral + Raltegravir comprimido';
+    else esquema='Tenofovir + Lamivudina + Dolutegravir';
+    html += `<p><b>Esquema por faixa etária:</b> ${esquema}</p>`;
+    let arvs=[];
+    const lam = Math.min(4*peso,150);
+    arvs.push(['Lamivudina', `${fmtDose(lam)} 12/12h`, 'Máx. 150 mg por dose. Se solução 10 mg/mL: '+mgml(lam,10)+' mL por dose.']);
+    let azt;
+    if(peso <=4) azt=4*peso;
+    else if(peso<9) azt=12*peso;
+    else if(peso<30) azt=9*peso;
+    else azt=300;
+    arvs.push(['Zidovudina (AZT)', `${fmtDose(azt)} 12/12h`, 'Se solução 10 mg/mL: '+mgml(azt,10)+' mL por dose.']);
+    if(idade <=12){
+      let ralTxt='Não calculável: protocolo inicia faixas a partir de 14 kg; discutir se <14 kg.';
+      if(peso>=14 && peso<20) ralTxt='100 mg 12/12h';
+      else if(peso>=20 && peso<28) ralTxt='150 mg 12/12h';
+      else if(peso>=28 && peso<40) ralTxt='200 mg 12/12h';
+      else if(peso>=40) ralTxt='300 mg 12/12h';
+      arvs.push(['Raltegravir', ralTxt, 'Conforme faixas de peso do protocolo.']);
+    } else {
+      arvs.push(['Tenofovir + Lamivudina + Dolutegravir', 'Conforme apresentação disponível/adulto', 'Acima de 12 anos no protocolo. Checar contraindicações e função renal/hepática.']);
+    }
+    html += `<table><tr><th>ARV</th><th>Dose</th><th>Observação</th></tr>`+arvs.map(r=>`<tr><td>${r[0]}</td><td class="dose">${r[1]}</td><td>${r[2]}</td></tr>`).join('')+`</table>`;
+    html += alerta('blue','Seguimento laboratorial: sorologias com 6, 12 e 24 semanas; repetir hemograma, glicemia, ureia, creatinina, AST e ALT com 4 e 12 semanas do início da profilaxia.');
+  }
+  html += `</div>`;
+
+  html += `<div class="resultBox"><h3>5) Anticoncepção de emergência</h3>`;
+  if(anticoncepcao){
+    html += alerta('yellow','Considerar anticoncepção de emergência e avaliação da ginecologia.');
+    html += `<p><b>Levonorgestrel 0,75 mg:</b> 1 comprimido VO a cada 12h por 2 doses <b>OU</b> 2 comprimidos VO em dose única.</p>`;
+  } else {
+    html += alerta('green','Anticoncepção de emergência não ficou indicada pelos dados preenchidos. Reavaliar se paciente pós-menarca, tempo compatível ou dados incertos.');
+  }
+  html += `</div>`;
+
+  html += `<div class="resultBox"><h3>6) Notificação, proteção e encaminhamentos</h3>
+  <ul>
+    <li>Notificação SINAN.</li>
+    <li>Delegacia de Polícia e Instituto Médico Legal conforme fluxo local.</li>
+    <li>Acionar Conselho Tutelar.</li>
+    <li>Acolhimento à vítima e família/cuidador não infrator pela Psicologia e Serviço Social.</li>
+    <li>Seguimento com Infectologia; Ginecologia quando aplicável.</li>
+  </ul></div>`;
+
+  if(sinais){
+    html += `<div class="resultBox"><h3>Sinais registrados</h3><p>${sinais.replaceAll('<','&lt;').replaceAll('>','&gt;')}</p></div>`;
+  }
+
+  const prescricao = gerarPrescricao(peso, idade, istNaoViral, hivInd, anticoncepcao, hbsag, vacinaHB, sexo, menarca);
+  html += `<details open><summary>Prescrição/conduta resumida para copiar</summary><div class="copyArea">${prescricao}</div></details>`;
+  html += `<div class="footer">Atenção: doses em mL dependem da concentração disponível na farmácia. Conferir alergias, contraindicações, função renal/hepática, idade mínima de formulações, interações e protocolos atualizados. Em violência sexual pediátrica, preservar acolhimento, sigilo, segurança e cadeia de cuidado.</div>`;
+  document.getElementById('resultado').innerHTML=html;
+}
+
+function gerarPrescricao(peso, idade, ist, hiv, anticon, hbsag, vacinaHB, sexo, menarca){
+  let linhas=[];
+  linhas.push('CONDUTA — VIOLÊNCIA SEXUAL PEDIÁTRICA');
+  linhas.push(`Peso: ${peso} kg | Idade: ${round(idade,2)} anos`);
+  linhas.push('');
+  linhas.push('1. Acolhimento multiprofissional, anamnese e exame físico completo, com registro detalhado.');
+  linhas.push('2. Solicitar: hemograma, teste de gravidez se aplicável, HIV, VDRL/sífilis, hepatites B/C, urina tipo I; função renal/hepática se uso de ARV.');
+  linhas.push('3. Notificação SINAN + acionar Conselho Tutelar + fluxo legal local/IML/Delegacia conforme indicação.');
+  if(ist){
+    const penUI = Math.min(50000*peso,2400000);
+    const cef = peso < 45 ? 250 : 500;
+    const azitro = Math.min(20*peso,1000);
+    const metroDia = Math.min(15*peso,2000);
+    const metroDose = metroDia/3;
+    linhas.push('');
+    linhas.push('PROFILAXIA IST NÃO VIRAL:');
+    linhas.push(`- Penicilina G Benzatina ${Math.round(penUI).toLocaleString('pt-BR')} UI IM, dose única.`);
+    linhas.push(`- Ceftriaxona ${cef} mg IM, dose única.`);
+    linhas.push(`- Azitromicina ${round(azitro,1)} mg VO, dose única. Se suspensão 200 mg/5 mL: ${mgml(azitro,40)} mL.`);
+    linhas.push(`- Metronidazol ${round(metroDose,1)} mg VO 8/8h por 7 dias. Se suspensão 40 mg/mL: ${mgml(metroDose,40)} mL/dose.`);
+  }
+  if(vacinaHB==='incompleta' || vacinaHB==='desconhecido'){
+    linhas.push('');
+    linhas.push('HEPATITE B:');
+    linhas.push('- Aplicar vacina Hepatite B hoje e completar esquema 0–1–6 meses.');
+  }
+  if(hbsag==='positivo'){
+    linhas.push(`- Se vítima suscetível: gamaglobulina hiperimune anti-HB ${round(0.06*peso,2)} mL IM.`);
+  }
+  if(hiv){
+    linhas.push('');
+    linhas.push('PEP HIV — 28 dias, discutir/seguir com infectologia:');
+    if(idade<2) linhas.push('- Esquema: AZT solução oral + Lamivudina solução oral + Raltegravir granulado.');
+    else if(idade<=12) linhas.push('- Esquema: AZT solução oral + Lamivudina solução oral + Raltegravir comprimido.');
+    else linhas.push('- Esquema: Tenofovir + Lamivudina + Dolutegravir.');
+    const lam=Math.min(4*peso,150);
+    let azt = peso<=4 ? 4*peso : (peso<9 ? 12*peso : (peso<30 ? 9*peso : 300));
+    linhas.push(`- Lamivudina ${round(lam,1)} mg VO 12/12h. Se solução 10 mg/mL: ${mgml(lam,10)} mL/dose.`);
+    linhas.push(`- Zidovudina/AZT ${round(azt,1)} mg VO 12/12h. Se solução 10 mg/mL: ${mgml(azt,10)} mL/dose.`);
+    if(idade<=12){
+      let ral='discutir se <14 kg';
+      if(peso>=14&&peso<20) ral='100 mg VO 12/12h';
+      else if(peso>=20&&peso<28) ral='150 mg VO 12/12h';
+      else if(peso>=28&&peso<40) ral='200 mg VO 12/12h';
+      else if(peso>=40) ral='300 mg VO 12/12h';
+      linhas.push(`- Raltegravir: ${ral}.`);
+    }
+    linhas.push('- Sorologias em 6, 12 e 24 semanas; repetir hemograma, glicemia, ureia, creatinina, AST/ALT em 4 e 12 semanas.');
+  }
+  if(anticon){
+    linhas.push('');
+    linhas.push('ANTICONCEPÇÃO DE EMERGÊNCIA:');
+    linhas.push('- Levonorgestrel 0,75 mg: 1 comprimido VO 12/12h por 2 doses OU 2 comprimidos VO dose única; solicitar avaliação da ginecologia.');
+  }
+  linhas.push('');
+  linhas.push('OBS.: conferir alergias, concentrações disponíveis, contraindicações e necessidade de internação por lesões graves/risco de revitimização.');
+  return linhas.join('\n');
+}
+
+function limpar(){
+  document.querySelectorAll('input,textarea').forEach(e=>e.value='');
+  document.getElementById('resultado').innerHTML='Preencha os dados e clique em calcular.';
+}
+</script>
+</body>
+</html>
