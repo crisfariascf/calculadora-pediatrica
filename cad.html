@@ -49,7 +49,7 @@
       <div class="row3">
         <div><label>HGT atual</label><input id="hgt" type="number" min="0" step="1" placeholder="mg/dL"></div>
         <div><label>Queda do HGT na última hora</label><input id="queda" type="number" min="0" step="1" placeholder="mg/dL"></div>
-        <div><label>Desidratação estimada</label><select id="desid"><option value="5">5%</option><option value="7.5">7,5%</option><option value="10">10%</option></select><div class="hint">Máximo de perdas: 10% do peso.</div></div>
+        <div><label>Desidratação estimada</label><select id="desid"><option value="5">5% — saliva espessa, filme lacrimal presente</option><option value="7.5">7,5% — mucosa seca, ausência de filme lacrimal</option><option value="10">10% — perdas máximas pelo protocolo</option></select><div class="hint">5%: saliva espessa + filme lacrimal presente. 7,5%: mucosa seca + ausência de filme lacrimal. Máximo de perdas: 10% do peso.</div></div>
       </div>
       <div class="row3">
         <div><label>pH venoso</label><input id="ph" type="number" step="0.01" placeholder="Ex.: 7.12"></div>
@@ -71,7 +71,30 @@
         <option value="g5">SF 0,9% + SG 50% 1 mL para cada 10 mL de SF (glicose final 5%)</option>
         <option value="g75">SF 0,9% + SG 50% 1,5 mL para cada 10 mL de SF (glicose final 7,5%)</option>
       </select>
-      <button class="primary" onclick="calc()">Calcular conduta</button>
+      <div class="alert info small" style="margin-top:12px">
+        <b>Estimativa clínica de desidratação:</b><br>
+        • <b>5%</b>: saliva espessa, filme lacrimal presente.<br>
+        • <b>7,5%</b>: mucosa seca, ausência de filme lacrimal.<br>
+        • <b>10%</b>: usar como teto de reposição de perdas no protocolo; se choque, priorizar expansão e protocolo de choque.
+      </div>
+      <h2 style="margin-top:18px">Reavaliação da 1ª hora / próxima checagem</h2>
+      <div class="hint">Preencha depois da expansão inicial ou a cada hora para a calculadora comparar a evolução e sugerir mudança do soro/insulina.</div>
+      <div class="row3">
+        <div><label>HGT reavaliado</label><input id="hgtRe" type="number" min="0" step="1" placeholder="mg/dL"></div>
+        <div><label>pH reavaliado</label><input id="phRe" type="number" step="0.01" placeholder="Ex.: 7.18"></div>
+        <div><label>BIC reavaliado</label><input id="bicRe" type="number" step="0.1" placeholder="mEq/L"></div>
+      </div>
+      <div class="row3">
+        <div><label>K reavaliado</label><input id="kRe" type="number" step="0.1" placeholder="mEq/L"></div>
+        <div><label>Desidratação reavaliada</label><select id="desidRe"><option value="">não informado</option><option value="5">5% — saliva espessa/filme presente</option><option value="7.5">7,5% — mucosa seca/sem filme</option><option value="10">10% — ainda importante</option></select></div>
+        <div><label>Estado neurológico</label><select id="neuroRe"><option value="estavel">estável</option><option value="piorou">piorou / alerta</option></select></div>
+      </div>
+      <div class="checks">
+        <label class="check"><input id="vomitosCefaleia" type="checkbox"><span>Na reavaliação: vômitos frequentes, cefaleia, letargia, bradicardia inapropriada, aumento de PA ou alteração de pares cranianos.</span></label>
+        <label class="check"><input id="diureseOk" type="checkbox"><span>Diurese presente/adequada antes de manter potássio na solução.</span></label>
+      </div>
+
+      <button class="primary" onclick="calc()">Calcular / reavaliar conduta</button>
       <button class="ghost" onclick="limpar()">Limpar</button>
     </div>
   </section>
@@ -81,7 +104,8 @@
 </main>
 <div class="footer">Ferramenta de apoio. Não substitui avaliação médica, PALS, prescrição institucional, julgamento clínico ou discussão com UTI/endocrinologia. Conferir eletrólitos, osmolaridade efetiva, diurese, estado neurológico e bomba de infusão antes de prescrever.</div>
 <script>
-const q=id=>document.getElementById(id); const num=id=>{const v=parseFloat(q(id).value.replace(',','.')); return isNaN(v)?null:v};
+const q=id=>document.getElementById(id);
+const num=id=>{const el=q(id); if(!el) return null; const v=parseFloat(String(el.value).replace(',','.')); return isNaN(v)?null:v};
 function fmt(n,d=1){ if(n===null||isNaN(n)) return '—'; return Number(n).toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d}); }
 function fmt0(n){ if(n===null||isNaN(n)) return '—'; return Math.round(n).toLocaleString('pt-BR'); }
 function sev(ph,bic){
@@ -92,44 +116,80 @@ function sev(ph,bic){
 }
 function holliday(p){ if(p<=0)return 0; if(p<=10)return 100*p; if(p<=20)return 1000+50*(p-10); return 1500+20*(p-20); }
 function kCond(k,vol){
-  if(k===null) return {txt:'Informar potássio para definir KCl.', conc:0, ml:0, alerta:'Coletar K antes da reposição; se K ≥ 5,5, adiar K; se K < 3, repor rapidamente antes/ao mesmo tempo conforme avaliação.'};
+  if(k===null) return {txt:'Informar potássio para definir KCl.', conc:0, ml:0, alerta:'Coletar K antes da reposição; se K ≥ 5,5, adiar K; se K < 3, repor rapidamente e reavaliar.'};
   if(k>=5.5) return {txt:'K ≥ 5,5: adiar KCl até próxima aferição.', conc:0, ml:0, alerta:'Reavaliar K seriado antes de adicionar potássio ao soro.'};
-  if(k<3) return {txt:'K < 3: reposição rápida 0,5 mEq/kg/h e reavaliar.', conc:null, ml:null, alerta:'Atenção: hipocalemia importante. Não iniciar/continuar insulina sem corrigir conforme protocolo local e avaliação médica.'};
+  if(k<3) return {txt:'K < 3: reposição rápida 0,5 mEq/kg/h e reavaliar.', conc:null, ml:null, alerta:'Hipocalemia importante. Evitar iniciar/continuar insulina antes de corrigir K, conforme protocolo local e avaliação médica.'};
   const conc = k<4.5 ? 40 : 20; const ml = (vol/1000*conc)/2.5; return {txt:`Adicionar KCl 19,1% ${conc} mEq/L`, conc, ml, alerta:''};
 }
 function glicose(tipo,vol){ if(tipo==='g5') return {sg:vol/10, label:'SG 50% 1 mL/10 mL de SF → glicose final ~5%'}; if(tipo==='g75') return {sg:vol*1.5/10, label:'SG 50% 1,5 mL/10 mL de SF → glicose final ~7,5%'}; return {sg:0,label:'Sem glicose no soro'}; }
+function desidLabel(v){ if(v===5) return '5%: saliva espessa, filme lacrimal presente'; if(v===7.5) return '7,5%: mucosa seca, ausência de filme lacrimal'; if(v===10) return '10%: perda máxima do protocolo / desidratação importante'; return '—'; }
+function trend(a,b,unit=''){
+  if(a===null||b===null) return '—'; const d=b-a; const sinal=d>0?'+':''; return `${fmt(a,unit==='pH'?2:1)} → ${fmt(b,unit==='pH'?2:1)} (${sinal}${fmt(d,unit==='pH'?2:1)}${unit && unit!=='pH'?' '+unit:''})`;
+}
 function calc(){
-  const p=num('peso'), idade=num('idade'), idadeUn=q('idadeUn').value, hgt=num('hgt'), queda=num('queda'), ph=num('ph'), bic=num('bic'), be=num('be'), k=num('k'), desid=num('desid'), expKg=num('exp');
-  const choque=q('choque').checked, ureiaCreat=q('ureiaCreat').checked, cetonas=q('cetonas').checked, tipo=q('tipoSoro').value;
+  const p=num('peso'), idade=num('idade'), idadeUn=q('idadeUn').value, hgt=num('hgt'), quedaInformada=num('queda'), ph=num('ph'), bic=num('bic'), be=num('be'), k=num('k'), desid=num('desid'), expKg=num('exp');
+  const hgtRe=num('hgtRe'), phRe=num('phRe'), bicRe=num('bicRe'), kRe=num('kRe'), desidReVal=q('desidRe').value?parseFloat(q('desidRe').value):null, neuroRe=q('neuroRe').value;
+  const choque=q('choque').checked, ureiaCreat=q('ureiaCreat').checked, cetonas=q('cetonas').checked, tipo=q('tipoSoro').value, vomitosCefaleia=q('vomitosCefaleia').checked, diureseOk=q('diureseOk').checked;
   if(!p || p<=0){ q('out').innerHTML='<div class="card"><div class="alert danger">Informe um peso válido para calcular.</div></div>'; return; }
-  const s=sev(ph,bic); const criterios=[];
+
+  const s=sev(ph,bic), sRe=sev(phRe,bicRe);
+  const criterios=[];
   if(hgt!==null && hgt>200) criterios.push('<span class="pill ok">Glicemia > 200</span>'); else criterios.push('<span class="pill warn">Glicemia não confirma/ausente</span>');
   if((ph!==null && ph<7.3)||(bic!==null && bic<18)) criterios.push('<span class="pill ok">pH < 7,3 ou BIC < 18</span>'); else criterios.push('<span class="pill warn">Acidose não confirma/ausente</span>');
   criterios.push(cetonas?'<span class="pill ok">Cetonas positivas</span>':'<span class="pill warn">Cetonas não marcadas</span>');
   const cadProvavel=(hgt!==null&&hgt>200)&&(((ph!==null&&ph<7.3)||(bic!==null&&bic<18)))&&cetonas;
-  const expVol=p*expKg; const expTxt=choque ? `SF 0,9% ${fmt0(p*20)} mL EV em 20 min, reavaliar e seguir protocolo de choque.` : `SF 0,9% ${fmt0(expVol)} mL EV em 1 hora (${expKg} mL/kg).`;
-  const perdaBruta=p*10*Math.min(desid,10); const perdas=Math.max(perdaBruta-expVol,0); const bloco=perdas/4; const kh=kCond(k,bloco); const gl=glicose(tipo,bloco);
-  const insDose=(tipo==='g75' && (queda!==null&&queda>0))?0.05:0.1; const insSc=p*insDose; const insEvRate=p*insDose;
+
+  const expVol=p*expKg;
+  const expTxt=choque ? `SF 0,9% ${fmt0(p*20)} mL EV em 20 min, reavaliar e seguir protocolo de choque.` : `SF 0,9% ${fmt0(expVol)} mL EV em 1 hora (${expKg} mL/kg).`;
+  const perdaBruta=p*10*Math.min(desid,10); const perdas=Math.max(perdaBruta-expVol,0); const bloco=perdas/4;
+  const kUsado = kRe!==null ? kRe : k; const kh=kCond(kUsado,bloco); const gl=glicose(tipo,bloco);
+
+  const quedaCalculada = (hgt!==null && hgtRe!==null) ? (hgt-hgtRe) : null;
+  const quedaHora = quedaCalculada!==null ? quedaCalculada : quedaInformada;
+  const quedaRapida = quedaHora!==null && quedaHora>100;
+  const hgtMenor250 = (hgtRe!==null ? hgtRe : hgt)!==null && (hgtRe!==null ? hgtRe : hgt)<250;
+  const acidoseMelhorou = ((ph!==null&&phRe!==null&&phRe>ph) || (bic!==null&&bicRe!==null&&bicRe>bic));
+  const acidosePiorou = ((ph!==null&&phRe!==null&&phRe<ph) || (bic!==null&&bicRe!==null&&bicRe<bic));
+  const hidratacaoMelhorou = desidReVal!==null && desidReVal<desid;
+  const hidratacaoIgualPior = desidReVal!==null && desidReVal>=desid;
+
+  let proximoSoro='Manter SF 0,9% conforme perdas e eletrólitos.';
+  if((hgtMenor250 || quedaRapida) && tipo==='sf') proximoSoro='Trocar para SF 0,9% + SG 50% 1 mL/10 mL de SF (glicose final ~5%) e manter o mesmo volume.';
+  else if(quedaRapida && tipo==='g5') proximoSoro='Como manteve queda importante com glicose 5%, trocar para SF 0,9% + SG 50% 1,5 mL/10 mL de SF (glicose final ~7,5%).';
+  else if(quedaRapida && tipo==='g75') proximoSoro='Já está com glicose 7,5% e segue caindo rápido: manter glicose 7,5%, reavaliar oferta glicídica e reduzir insulina para 0,05 UI/kg/h ou SC 1/1h conforme protocolo.';
+  else if(tipo==='g75') proximoSoro='Manter glicose 7,5% se ainda necessária; se glicemia estabilizar, seguir reavaliação horária.';
+  else if(tipo==='g5') proximoSoro='Manter glicose 5% se HGT <250 ou queda controlada; se nova queda importante, subir para 7,5%.';
+
+  let insDose=0.1, motivoIns='Dose padrão: 0,1 UI/kg após a primeira hora de expansão.';
+  if(kUsado!==null && kUsado<3){ insDose=0; motivoIns='K < 3: priorizar reposição rápida de K; não iniciar/segurar insulina até reavaliar, conforme protocolo local.'; }
+  else if(tipo==='g75' && quedaRapida){ insDose=0.05; motivoIns='Reduzir para 0,05 UI/kg porque já está com glicose 7,5% e persiste queda glicêmica.'; }
+  const insSc=p*insDose; const insEvRate=p*insDose;
+
   const manitolMin=p*0.5, manitolMax=p*1, manitol20Min=manitolMin/0.2, manitol20Max=manitolMax/0.2;
   const nacl3min=p*5, nacl3max=p*10; const nacl20min=nacl3min/6.7, adMin=nacl3min-nacl20min; const nacl20max=nacl3max/6.7, adMax=nacl3max-nacl20max;
   const bicTotal=(be!==null && be<0)?0.3*Math.abs(be)*p:null; const bicOne=bicTotal?bicTotal/3:null;
-  const manutDia=holliday(p); const manutHora=manutDia/24; const kManutMl=(manutDia/1000*40)/2.5;
-  const naManutMEq=manutDia/1000*136; const basal=p*0.5; const ddt=p*1;
-  let presc=`EXPANSÃO INICIAL\n${expTxt}\n\nREPOSIÇÃO DE PERDAS (após expansão, em blocos de 2h)\nPerda estimada: ${fmt0(perdaBruta)} mL (${desid}% do peso).\nDescontando expansão: ${fmt0(perdas)} mL em 8h = ${fmt0(bloco)} mL a cada 2h.\n`;
-  if(perdas>0){ presc += `\nPrescrição por bloco de 2h:\nSF 0,9% ${fmt0(bloco)} mL`; if(gl.sg>0) presc += ` + SG 50% ${fmt(gl.sg,1)} mL`; if(kh.ml>0) presc += ` + KCl 19,1% ${fmt(kh.ml,1)} mL (${kh.conc} mEq/L)`; presc += ` EV em BIC por 2 horas. Repetir 4 blocos e reavaliar hidratação.\n`; }
-  presc += `\nINSULINA\nIniciar 1h após expansão inicial, junto com reposição de perdas.\nRegular SC: ${fmt(insSc,1)} UI SC 1/1h (${insDose} UI/kg).\nSe grave/UTI EV: preparar Regular 1,2 mL + SF 0,9% 118,8 mL; desprezar 50 mL; trocar solução a cada 6h; correr a ${fmt(insEvRate,1)} mL/h (${insDose} UI/kg/h).\n`;
-  if(bicOne) presc += `\nBICARBONATO, APENAS SE INDICADO\nDéficit calculado: ${fmt(bicTotal,1)} mEq; fazer 1/3 em 1h = ${fmt(bicOne,1)} mEq. Se usar NaHCO₃ 8,4%: ${fmt(bicOne,1)} mL em 1h.\n`;
-  presc += `\nEDEMA CEREBRAL, SE SUSPEITA CLÍNICA\nManitol: ${fmt(manitolMin,1)}–${fmt(manitolMax,1)} g EV em 30 min. Se manitol 20%: ${fmt(manitol20Min,1)}–${fmt(manitol20Max,1)} mL.\nOU NaCl 3%: ${fmt0(nacl3min)}–${fmt0(nacl3max)} mL EV em 30 min. Para preparar com NaCl 20% + AD:\n- dose 5 mL/kg: NaCl 20% ${fmt(nacl20min,1)} mL + AD ${fmt(adMin,1)} mL\n- dose 10 mL/kg: NaCl 20% ${fmt(nacl20max,1)} mL + AD ${fmt(adMax,1)} mL`;
+  const manutDia=holliday(p); const manutHora=manutDia/24; const kManutMl=(manutDia/1000*40)/2.5; const naManutMEq=manutDia/1000*136; const basal=p*0.5; const ddt=p*1;
   let internar = s.score===3 || ureiaCreat;
+
+  let presc=`EXPANSÃO INICIAL\n${expTxt}\n\nREAVALIAÇÃO APÓS 1ª HORA\n- Reavaliar HGT, sinais vitais, Glasgow, hidratação, K e gasometria.\n- Se HGT caiu >100 mg/dL/h ou HGT <250 mg/dL: acrescentar glicose ao soro.\n- Se persistir queda com glicose 5%: subir para glicose 7,5%.\n- Se persistir queda com glicose 7,5%: reduzir insulina para 0,05 UI/kg.\n\nREPOSIÇÃO DE PERDAS (após expansão, em blocos de 2h)\nPerda estimada: ${fmt0(perdaBruta)} mL (${desid}% do peso — ${desidLabel(desid)}).\nDescontando expansão: ${fmt0(perdas)} mL em 8h = ${fmt0(bloco)} mL a cada 2h.\n`;
+  if(perdas>0){ presc += `\nPrescrição por bloco de 2h:\nSF 0,9% ${fmt0(bloco)} mL`; if(gl.sg>0) presc += ` + SG 50% ${fmt(gl.sg,1)} mL`; if(kh.ml>0) presc += ` + KCl 19,1% ${fmt(kh.ml,1)} mL (${kh.conc} mEq/L)`; presc += ` EV em BIC por 2 horas. Repetir em blocos e reavaliar a cada etapa.\n`; }
+  presc += `\nINSULINA\nIniciar 1h após expansão inicial, junto com reposição de perdas.\n${motivoIns}\n`;
+  if(insDose>0){ presc += `Regular SC: ${fmt(insSc,1)} UI SC 1/1h (${insDose} UI/kg).\nSe grave/UTI EV: Regular 1,2 mL + SF 0,9% 118,8 mL; desprezar 50 mL; trocar a solução a cada 6h; correr a ${fmt(insEvRate,1)} mL/h (${insDose} UI/kg/h).\n`; }
+  else { presc += `Insulina temporariamente suspensa/não iniciada até correção do K, conforme avaliação.\n`; }
+  if(bicOne) presc += `\nBICARBONATO, APENAS SE INDICADO\nIndicações: hipercalemia grave ou pH < 6,9 com contratilidade cardíaca comprometida.\nDéficit calculado: ${fmt(bicTotal,1)} mEq; fazer 1/3 em 1h = ${fmt(bicOne,1)} mEq. Se NaHCO₃ 8,4%: ${fmt(bicOne,1)} mL em 1h.\n`;
+  presc += `\nEDEMA CEREBRAL, SE SUSPEITA CLÍNICA\nManitol: ${fmt(manitolMin,1)}–${fmt(manitolMax,1)} g EV em 30 min. Se manitol 20%: ${fmt(manitol20Min,1)}–${fmt(manitol20Max,1)} mL.\nOU NaCl 3%: ${fmt0(nacl3min)}–${fmt0(nacl3max)} mL EV em 30 min. Para preparar com NaCl 20% + AD:\n- dose 5 mL/kg: NaCl 20% ${fmt(nacl20min,1)} mL + AD ${fmt(adMin,1)} mL\n- dose 10 mL/kg: NaCl 20% ${fmt(nacl20max,1)} mL + AD ${fmt(adMax,1)} mL\nElevar cabeceira a 30°. Não aguardar neuroimagem se critérios clínicos.`;
+
   let html=`<div class="card"><h2 class="section-title">Resumo <span class="badge">CAD</span></h2>${criterios.join(' ')}<div class="alert ${cadProvavel?'ok':'warn'}">${cadProvavel?'Critérios compatíveis com CAD.':'Critérios de CAD incompletos nos dados informados; confira glicemia, gasometria e cetonas.'}</div><div class="big">${s.name}</div><div class="muted small">Leve: pH 7,2–7,3 e/ou BIC 10–18 · Moderada: pH 7,1–7,2 e/ou BIC 5–9 · Grave: pH &lt; 7,1 e/ou BIC &lt; 5. A calculadora usa a pior classificação disponível.</div>${internar?'<div class="alert danger"><b>Indicação de UTI pelo protocolo:</b> CAD grave e/ou ureia/creatinina alterados.</div>':'<div class="alert info">Avaliar internação conforme gravidade clínica, hidratação, eletrólitos, capacidade de monitorização e protocolo institucional.</div>'}</div>`;
-  const sugGlic=(hgt!==null&&hgt<250)||(queda!==null&&queda>100);
-  html+=`<div class="result-grid"><div class="card"><h2>Hidratação</h2><table><tr><th>Etapa</th><th>Cálculo</th></tr><tr><td>Expansão</td><td>${expTxt}</td></tr><tr><td>Perdas estimadas</td><td>${fmt0(perdaBruta)} mL</td></tr><tr><td>Perdas após desconto da expansão</td><td>${fmt0(perdas)} mL em 8h</td></tr><tr><td>Bloco de 2h</td><td>${fmt0(bloco)} mL por bloco</td></tr><tr><td>Glicose no soro</td><td>${gl.label}${sugGlic?'<br><b>Indicado considerar glicose:</b> HGT &lt; 250 ou queda &gt;100 mg/dL/h.':''}</td></tr></table>${kh.alert?`<div class="alert warn">${kh.alert}</div>`:''}</div><div class="card"><h2>Potássio e manutenção</h2><table><tr><th>Item</th><th>Resultado</th></tr><tr><td>Conduta K</td><td>${kh.txt}</td></tr><tr><td>KCl por bloco</td><td>${kh.ml>0?fmt(kh.ml,1)+' mL de KCl 19,1%':'—'}</td></tr><tr><td>Manutenção Holliday 100%</td><td>${fmt0(manutDia)} mL/dia ≈ ${fmt(manutHora,1)} mL/h</td></tr><tr><td>Meta Na manutenção</td><td>136 mEq/L ≈ ${fmt(naManutMEq,1)} mEq/dia</td></tr><tr><td>K manutenção</td><td>40 mEq/L ≈ ${fmt(kManutMl,1)} mL/dia de KCl 19,1%</td></tr></table></div></div>`;
+
+  html+=`<div class="card"><h2>Reavaliação e ajustes da próxima hora</h2><table><tr><th>Parâmetro</th><th>Evolução</th><th>Interpretação</th></tr><tr><td>HGT</td><td>${hgt!==null&&hgtRe!==null?`${fmt0(hgt)} → ${fmt0(hgtRe)} mg/dL (${quedaCalculada>=0?'queda':'aumento'} ${fmt0(Math.abs(quedaCalculada))})`:quedaInformada!==null?`queda informada: ${fmt0(quedaInformada)} mg/dL/h`:'—'}</td><td>${quedaRapida?'<b>Queda >100 mg/dL/h:</b> ajustar glicose no soro.':hgtMenor250?'<b>HGT <250:</b> acrescentar glicose ao soro.':'Queda controlada ou dados insuficientes.'}</td></tr><tr><td>pH</td><td>${trend(ph,phRe,'pH')}</td><td>${acidoseMelhorou?'Tendência de melhora.':acidosePiorou?'Piora/sem resposta adequada: revisar hidratação, insulina, infecção, eletrólitos e discutir UTI.':'Sem comparação informada.'}</td></tr><tr><td>BIC</td><td>${trend(bic,bicRe,'mEq/L')}</td><td>${bicRe!==null && bicRe>15 && phRe!==null && phRe>7.3?'Critério de resolução atingido.':acidoseMelhorou?'Tendência de melhora.':'Acompanhar gasometria 2/2h.'}</td></tr><tr><td>Desidratação</td><td>${desidLabel(desid)}${desidReVal!==null?' → '+desidLabel(desidReVal):''}</td><td>${hidratacaoMelhorou?'Melhorou hidratação.':hidratacaoIgualPior?'Persistência de desidratação: ao fim dos blocos, considerar repor mais 2–3% do peso e reavaliar.':'Reavaliar clinicamente ao fim de cada bloco.'}</td></tr><tr><td>Potássio usado</td><td>${kUsado!==null?fmt(kUsado,1)+' mEq/L':'—'}</td><td>${kh.txt}${diureseOk?' · diurese marcada como presente.':' · confirmar diurese e K seriado.'}</td></tr><tr><td>Soro agora</td><td>${gl.label}</td><td>${proximoSoro}</td></tr><tr><td>Insulina agora</td><td>${insDose>0?`${insDose} UI/kg → ${fmt(insSc,1)} UI SC 1/1h ou ${fmt(insEvRate,1)} mL/h EV se grave/UTI`:'Segurar até K corrigir'}</td><td>${motivoIns}</td></tr></table>${(neuroRe==='piorou'||vomitosCefaleia)?'<div class="alert danger"><b>Alerta para edema cerebral:</b> piora neurológica/sintomas marcados. Tratar clinicamente se critérios, elevar cabeceira, manitol ou NaCl 3%, UTI. Não aguardar neuroimagem se quadro típico.</div>':''}</div>`;
+
+  html+=`<div class="result-grid"><div class="card"><h2>Hidratação</h2><table><tr><th>Etapa</th><th>Cálculo</th></tr><tr><td>Expansão</td><td>${expTxt}</td></tr><tr><td>Estimativa clínica</td><td>${desidLabel(desid)}</td></tr><tr><td>Perdas estimadas</td><td>${fmt0(perdaBruta)} mL</td></tr><tr><td>Perdas após desconto da expansão</td><td>${fmt0(perdas)} mL em 8h</td></tr><tr><td>Bloco de 2h</td><td>${fmt0(bloco)} mL por bloco</td></tr><tr><td>Glicose no soro</td><td>${gl.label}${(hgtMenor250||quedaRapida)?'<br><b>Indicado considerar glicose/ajuste:</b> HGT &lt; 250 ou queda &gt;100 mg/dL/h.':''}</td></tr></table>${kh.alert?`<div class="alert warn">${kh.alert}</div>`:''}</div><div class="card"><h2>Potássio e manutenção</h2><table><tr><th>Item</th><th>Resultado</th></tr><tr><td>Conduta K</td><td>${kh.txt}</td></tr><tr><td>KCl por bloco</td><td>${kh.ml>0?fmt(kh.ml,1)+' mL de KCl 19,1%':'—'}</td></tr><tr><td>Manutenção Holliday 100%</td><td>${fmt0(manutDia)} mL/dia ≈ ${fmt(manutHora,1)} mL/h</td></tr><tr><td>Meta Na manutenção</td><td>136 mEq/L ≈ ${fmt(naManutMEq,1)} mEq/dia</td></tr><tr><td>K manutenção</td><td>40 mEq/L ≈ ${fmt(kManutMl,1)} mL/dia de KCl 19,1%</td></tr></table></div></div>`;
   html+=`<div class="card"><h2>Prescrição sugerida para conferência</h2><div class="presc">${presc}</div></div>`;
-  html+=`<div class="result-grid"><div class="card"><h2>Monitorização</h2><ul><li>Sinais vitais 1/1h.</li><li>Avaliação neurológica 1/1h com Glasgow.</li><li>HGT capilar 1/1h.</li><li>Gasometria venosa 2/2h.</li><li>Observar cefaleia, vômitos frequentes, bradicardia inapropriada, aumento de PA, queda de saturação, paresia de nervos cranianos.</li></ul></div><div class="card"><h2>Resolução / transição</h2><div class="alert ok">Encerrar protocolo quando pH &gt; 7,3 e BIC &gt; 15.</div><table><tr><th>Esquema inicial se primodescompensação</th><th>Dose</th></tr><tr><td>Dose diária total</td><td>${fmt(ddt,1)} UI/dia</td></tr><tr><td>Glargina</td><td>${fmt(basal,1)} UI pela manhã</td></tr><tr><td>NPH total</td><td>${fmt(basal,1)} UI/dia: 50% manhã (${fmt(basal*0.5,1)} UI), 25% almoço (${fmt(basal*0.25,1)} UI), 25% 22h (${fmt(basal*0.25,1)} UI)</td></tr><tr><td>Bolus</td><td>Regular 30 min antes ou Novorapid 15 min antes das refeições.</td></tr></table></div></div>`;
+  html+=`<div class="result-grid"><div class="card"><h2>Monitorização minuciosa</h2><ul><li><b>Primeira hora:</b> expansão com SF 0,9%; não iniciar insulina antes de 1h.</li><li><b>Após 1h:</b> iniciar insulina + reposição de perdas; reavaliar HGT, K, Glasgow, hidratação e sinais vitais.</li><li>Sinais vitais 1/1h.</li><li>Avaliação neurológica 1/1h com Glasgow.</li><li>HGT capilar 1/1h.</li><li>Gasometria venosa 2/2h.</li><li>Observar cefaleia, vômitos frequentes, bradicardia inapropriada, aumento de PA, queda de saturação, paresia de nervos cranianos.</li></ul></div><div class="card"><h2>Resolução / transição</h2><div class="alert ${phRe!==null&&bicRe!==null&&phRe>7.3&&bicRe>15?'ok':'info'}">Encerrar protocolo quando pH &gt; 7,3 e BIC &gt; 15.</div><table><tr><th>Esquema inicial se primodescompensação</th><th>Dose</th></tr><tr><td>Dose diária total</td><td>${fmt(ddt,1)} UI/dia</td></tr><tr><td>Glargina</td><td>${fmt(basal,1)} UI pela manhã</td></tr><tr><td>NPH total</td><td>${fmt(basal,1)} UI/dia: 50% manhã (${fmt(basal*0.5,1)} UI), 25% almoço (${fmt(basal*0.25,1)} UI), 25% 22h (${fmt(basal*0.25,1)} UI)</td></tr><tr><td>Bolus</td><td>Regular 30 min antes ou Novorapid 15 min antes das refeições.</td></tr><tr><td>HGT após transição</td><td>Antes e 2h após café; antes e 2h após almoço; antes do jantar; 22h; 3h.</td></tr></table></div></div>`;
   html+=`<div class="card"><h2>Checklist inicial</h2><div class="alert info">PALS, peso, estimativa de desidratação, Glasgow, 2 acessos venosos periféricos, hemograma, ionograma, ureia, creatinina, gasometria venosa e urina 1.</div></div>`;
   q('out').innerHTML=html; window.scrollTo({top:0,behavior:'smooth'});
 }
-function limpar(){ ['peso','idade','hgt','queda','ph','bic','be','k'].forEach(id=>q(id).value=''); q('out').innerHTML=''; }
+function limpar(){ ['peso','idade','hgt','queda','ph','bic','be','k','hgtRe','phRe','bicRe','kRe'].forEach(id=>{if(q(id))q(id).value=''}); q('desidRe').value=''; q('out').innerHTML=''; }
 </script>
 </body>
 </html>
