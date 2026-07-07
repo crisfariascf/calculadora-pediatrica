@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora Dengue Pediátrica</title>
+<style>
+:root{
+  --bg:#f8fafc;--card:#ffffff;--ink:#162033;--muted:#64748b;--line:#e2e8f0;
+  --blue:#0ea5e9;--green:#16a34a;--yellow:#eab308;--red:#dc2626;--purple:#7c3aed;--orange:#f97316;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef8ff,#f8fafc 260px);color:var(--ink)}
+.wrap{max-width:1180px;margin:auto;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.back{color:#0369a1;text-decoration:none;font-weight:800;background:#e0f2fe;padding:9px 12px;border-radius:999px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;background:#eef2ff;color:#3730a3;font-weight:800;font-size:12px}
+h1{font-size:34px;margin:12px 0 4px;letter-spacing:-.03em}
+.hint{color:var(--muted);line-height:1.45;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 10px 25px rgba(15,23,42,.06)}
+.card h2{font-size:19px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+label{display:block;font-size:13px;font-weight:800;color:#334155;margin:9px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:13px;background:#fff;padding:11px 12px;font-size:15px;color:var(--ink)}
+textarea{min-height:230px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.45;white-space:pre-wrap}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:14px;padding:10px;background:#f8fafc;font-size:13px;font-weight:700;color:#334155;margin:0}
+.check input{width:auto;margin-top:2px}
+.btns{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+button{border:0;border-radius:14px;padding:11px 14px;font-weight:900;cursor:pointer;background:#0f172a;color:white}
+button.sec{background:#e2e8f0;color:#0f172a}
+button.green{background:#16a34a}
+.summary{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.pill{border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900;background:#e2e8f0;color:#334155}
+.pill.a{background:#dbeafe;color:#1d4ed8}.pill.b{background:#dcfce7;color:#166534}.pill.c{background:#fef3c7;color:#92400e}.pill.d{background:#fee2e2;color:#991b1b}
+.result{border-radius:18px;padding:13px;margin:10px 0;background:#f8fafc;border:1px solid var(--line);line-height:1.45}
+.result b{color:#0f172a}.dangerBox{border-color:#fecaca;background:#fff1f2}.warnBox{border-color:#fde68a;background:#fffbeb}.okBox{border-color:#bbf7d0;background:#f0fdf4}.blueBox{border-color:#bae6fd;background:#f0f9ff}
+.kv{display:grid;grid-template-columns:180px 1fr;gap:8px;border-bottom:1px dashed #e2e8f0;padding:7px 0;font-size:14px}
+.kv:last-child{border-bottom:0}.small{font-size:12px;color:var(--muted);line-height:1.45}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media(max-width:850px){.grid,.row{grid-template-columns:1fr}.checks{grid-template-columns:1fr}h1{font-size:28px}.wrap{padding:14px}.kv{grid-template-columns:1fr}}
+@media print{body{background:white}.top,.btns,.inputCard{display:none}.card{box-shadow:none;break-inside:avoid}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a class="back" href="index.html">← Início</a><span class="badge">🦟 Dengue pediátrica • offline</span></div>
+  <h1>Calculadora de Dengue — Criança</h1>
+  <p class="hint">Classifica grupo A/B/C/D, calcula hidratação por peso, sugere conduta e gera prescrição/orientação domiciliar quando o caso for ambulatorial. Base: Ministério da Saúde, Dengue: diagnóstico e manejo clínico, 6ª ed. 2024.</p>
+
+  <div class="grid">
+    <div class="card inputCard">
+      <h2>1) Dados da criança</h2>
+      <div class="row">
+        <div><label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 18"></div>
+        <div><label>Idade</label><input id="idade" type="number" min="0" step="1" placeholder="Ex.: 4"></div>
+        <div><label>Unidade</label><select id="idadeUn"><option value="anos">anos</option><option value="meses">meses</option><option value="dias">dias</option></select></div>
+      </div>
+      <div class="row">
+        <div><label>Dia de doença</label><input id="dia" type="number" min="1" step="1" placeholder="1 a 10"></div>
+        <div><label>Temperatura máx. (°C)</label><input id="temp" type="number" min="34" max="43" step="0.1" placeholder="Opcional"></div>
+        <div><label>Diurese</label><select id="diurese"><option value="normal">Normal</option><option value="reduzida">Reduzida/oligúria</option><option value="semInfo">Sem informação</option></select></div>
+      </div>
+
+      <h2 style="margin-top:18px">2) Suspeita e sintomas</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="febre" checked> Febre atual ou recente</label>
+        <label class="check"><input type="checkbox" id="semFoco" checked> Sem foco infeccioso aparente</label>
+        <label class="check"><input type="checkbox" id="nausea"> Náuseas/vômitos</label>
+        <label class="check"><input type="checkbox" id="exantema"> Exantema</label>
+        <label class="check"><input type="checkbox" id="mialgia"> Mialgia/artralgia/prostração</label>
+        <label class="check"><input type="checkbox" id="cefaleia"> Cefaleia/dor retro-orbitária</label>
+        <label class="check"><input type="checkbox" id="petequias"> Petéquias/prova do laço positiva</label>
+        <label class="check"><input type="checkbox" id="leucopenia"> Leucopenia</label>
+      </div>
+
+      <h2 style="margin-top:18px">3) Grupo B — condições especiais / sangramento de pele</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="lactente"> Lactente &lt; 24 meses</label>
+        <label class="check"><input type="checkbox" id="comorb"> Comorbidade/condição especial</label>
+        <label class="check"><input type="checkbox" id="riscoSocial"> Risco social/dificuldade de retorno</label>
+        <label class="check"><input type="checkbox" id="sangPele"> Sangramento espontâneo de pele ou prova do laço positiva</label>
+      </div>
+
+      <h2 style="margin-top:18px">4) Sinais de alarme — Grupo C</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="dorAbd"> Dor abdominal intensa e contínua</label>
+        <label class="check"><input type="checkbox" id="vomPersist"> Vômitos persistentes</label>
+        <label class="check"><input type="checkbox" id="liquidos"> Ascite/derrame pleural/pericárdico</label>
+        <label class="check"><input type="checkbox" id="hipotPost"> Hipotensão postural/lipotimia</label>
+        <label class="check"><input type="checkbox" id="hepatomeg"> Hepatomegalia &gt; 2 cm</label>
+        <label class="check"><input type="checkbox" id="sangMucosa"> Sangramento de mucosa</label>
+        <label class="check"><input type="checkbox" id="letargia"> Letargia/irritabilidade</label>
+        <label class="check"><input type="checkbox" id="htoProg"> Hematócrito progressivo/hemoconcentração</label>
+      </div>
+
+      <h2 style="margin-top:18px">5) Gravidade / choque — Grupo D</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="choque"> Choque: TEC &gt;2s, extremidades frias, pulso fino, PA convergente/hipotensão</label>
+        <label class="check"><input type="checkbox" id="desconforto"> Desconforto respiratório por extravasamento/sobrecarga</label>
+        <label class="check"><input type="checkbox" id="sangGrave"> Sangramento grave</label>
+        <label class="check"><input type="checkbox" id="orgao"> Disfunção grave de órgão/SNC/miocardite/hepatite grave</label>
+      </div>
+
+      <h2 style="margin-top:18px">6) Apresentações para receita</h2>
+      <div class="row">
+        <div><label>Dipirona</label><select id="dipAp"><option value="gotas">Gotas 500 mg/mL</option><option value="sol">Solução 50 mg/mL</option></select></div>
+        <div><label>Paracetamol</label><select id="parAp"><option value="gotas">Gotas 200 mg/mL</option><option value="sol32">Solução 32 mg/mL</option></select></div>
+        <div><label>Escolha na receita</label><select id="antitermico"><option value="ambos">Dipirona OU paracetamol</option><option value="dip">Dipirona</option><option value="para">Paracetamol</option></select></div>
+      </div>
+      <div class="btns">
+        <button onclick="calcular()">Calcular</button>
+        <button class="sec" onclick="limpar()">Limpar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Resultado</h2>
+      <div id="resumo" class="summary"><span class="pill">Preencha os dados e calcule</span></div>
+      <div id="alertas"></div>
+      <div id="conduta"></div>
+      <div id="hidratacao"></div>
+      <div class="btns">
+        <button class="green" onclick="copiar('rx')">Copiar prescrição</button>
+        <button class="sec" onclick="window.print()">Imprimir</button>
+      </div>
+      <label>Prescrição / orientação para casa</label>
+      <textarea id="rx" readonly placeholder="Será gerada aqui quando clicar em Calcular."></textarea>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>Referência rápida</h2>
+    <div class="grid">
+      <div class="result blueBox">
+        <b>Suspeita em criança:</b> febre aguda de 2–7 dias sem foco aparente, especialmente em área com transmissão; ou febre + manifestações como náuseas/vômitos, exantema, mialgia/artralgia, cefaleia/dor retro-orbitária, petéquias/prova do laço positiva ou leucopenia.
+      </div>
+      <div class="result warnBox">
+        <b>Fase crítica:</b> costuma começar na defervescência, entre 3º e 7º dia. O retorno deve ser no dia da melhora da febre; se não houver melhora, retornar no 5º dia de doença.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const yes=id=>$(id).checked;
+const num=id=>{let v=parseFloat($(id).value);return isNaN(v)?0:v}
+const fmt=(x,d=0)=>Number(x).toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d});
+const ceil=x=>Math.ceil(x);
+function meses(){
+  const v=num('idade'), u=$('idadeUn').value;
+  if(u==='dias') return v/30.4375;
+  if(u==='meses') return v;
+  return v*12;
+}
+function idadeTxt(){let m=meses(); if(m<1) return `${fmt(m*30.4375,0)} dias`; if(m<24) return `${fmt(m,0)} meses`; return `${fmt(m/12,1)} anos`}
+function suspeita(){
+  const sintomas=['nausea','exantema','mialgia','cefaleia','petequias','leucopenia'].filter(yes).length;
+  return yes('febre') && (yes('semFoco') || sintomas>=2);
+}
+function grupo(){
+  if(['choque','desconforto','sangGrave','orgao'].some(yes)) return 'D';
+  if(['dorAbd','vomPersist','liquidos','hipotPost','hepatomeg','sangMucosa','letargia','htoProg'].some(yes)) return 'C';
+  if(['lactente','comorb','riscoSocial','sangPele'].some(yes) || meses()<24) return 'B';
+  return 'A';
+}
+function hidrVO(p){
+  let total = p<=10 ? 130*p : (p<=20 ? 100*p : 80*p);
+  let sro=total/3, outros=total*2/3, inicio=total/3;
+  return {total,sro,outros,inicio};
+}
+function dipirona(p){
+  let mg=10*p; // Ministério da Saúde Dengue: 10 mg/kg/dose
+  return {mg, gotas:ceil(mg/25), mlSol:mg/50, mlInj:mg/500};
+}
+function paracetamol(p){
+  let mg=10*p;
+  return {mg, gotas:ceil(mg/10), ml32:mg/32};
+}
+function listarMarcados(ids, nomes){return ids.filter(id=>yes(id)).map(id=>nomes[id])}
+const nomes={
+  dorAbd:'dor abdominal intensa e contínua', vomPersist:'vômitos persistentes', liquidos:'acúmulo de líquidos', hipotPost:'hipotensão postural/lipotimia', hepatomeg:'hepatomegalia >2 cm', sangMucosa:'sangramento de mucosa', letargia:'letargia/irritabilidade', htoProg:'aumento progressivo do hematócrito',
+  choque:'choque/hipoperfusão', desconforto:'desconforto respiratório', sangGrave:'sangramento grave', orgao:'disfunção grave de órgão',
+  lactente:'lactente <24 meses', comorb:'comorbidade/condição especial', riscoSocial:'risco social', sangPele:'sangramento de pele/prova do laço positiva'
+}
+function calcular(){
+  const p=num('peso'), m=meses(), g=grupo(), dia=num('dia');
+  if(!p || p<=0 || !m && $('idade').value===''){alert('Preencha peso e idade.');return}
+  const h=hidrVO(p), d=dipirona(p), par=paracetamol(p);
+  $('resumo').innerHTML=`<span class="pill">👶 ${idadeTxt()}</span><span class="pill">⚖️ ${fmt(p,1)} kg</span><span class="pill ${g.toLowerCase()}">Grupo ${g}</span><span class="pill">${suspeita()?'Suspeita compatível':'Suspeita incompleta'}</span>${dia?`<span class="pill">D${dia}</span>`:''}`;
+  let alerts=[];
+  if(!suspeita()) alerts.push('Quadro não fecha automaticamente critério de suspeita: revisar foco infeccioso e diagnóstico diferencial.');
+  if(m<3) alerts.push('Menor de 3 meses: avaliar com maior cautela; febre nessa idade costuma exigir investigação ampliada.');
+  if(dia>=3 && dia<=7) alerts.push('Entre D3–D7 / defervescência: maior risco de fase crítica e surgimento de sinais de alarme.');
+  if(g==='C'||g==='D') alerts.push('Não gerar alta simples: necessita hidratação venosa, monitorização e reavaliação seriada conforme grupo.');
+  alerts.push('Evitar AAS, ibuprofeno/anti-inflamatórios e corticoide na suspeita de dengue.');
+  $('alertas').innerHTML=alerts.map(a=>`<div class="result ${a.includes('Não gerar')||a.includes('Menor')?'dangerBox':'warnBox'}">⚠️ ${a}</div>`).join('');
+
+  let cond='';
+  if(g==='A'){
+    cond=`<div class="result okBox"><b>Grupo A — ambulatorial.</b><br>Sem sinais de alarme, sem condição especial/risco social/comorbidade. Exames a critério médico. Hidratação oral, repouso, antitérmico permitido e retorno no dia da melhora da febre ou no 5º dia se não houver defervescência.</div>`;
+  }else if(g==='B'){
+    let b=listarMarcados(['lactente','comorb','riscoSocial','sangPele'],nomes).join('; ') || 'lactente <24 meses por idade';
+    cond=`<div class="result warnBox"><b>Grupo B — observação até hemograma/reavaliação.</b><br>Motivos: ${b}. Hemograma completo obrigatório. Manter hidratação oral enquanto aguarda. Se hematócrito normal e sem alarme: alta com reavaliação clínica/laboratorial diária até 48h após queda da febre. Se hemoconcentração ou alarme: conduzir como Grupo C.</div>`;
+  }else if(g==='C'){
+    let c=listarMarcados(['dorAbd','vomPersist','liquidos','hipotPost','hepatomeg','sangMucosa','letargia','htoProg'],nomes).join('; ');
+    cond=`<div class="result dangerBox"><b>Grupo C — sinais de alarme, sem gravidade.</b><br>Sinais marcados: ${c}. Iniciar SF 0,9% 10 mL/kg na 1ª hora imediatamente, internação/observação até estabilização por no mínimo 48h, hemograma + albumina + transaminases e reavaliação clínica em 1h / hematócrito em até 2h.</div>`;
+  }else{
+    let dg=listarMarcados(['choque','desconforto','sangGrave','orgao'],nomes).join('; ');
+    cond=`<div class="result dangerBox"><b>Grupo D — dengue grave/emergência.</b><br>Critérios marcados: ${dg}. Leito de emergência/UTI, monitorização e expansão rápida com SF 0,9% 20 mL/kg em até 20 min, reavaliando continuamente. Se resposta adequada, seguir como Grupo C.</div>`;
+  }
+  $('conduta').innerHTML=cond;
+
+  let hid='';
+  if(g==='A'||g==='B'){
+    hid=`<div class="result blueBox"><b>Hidratação oral calculada</b>
+      <div class="kv"><b>Total/dia</b><span>${fmt(h.total,0)} mL/dia</span></div>
+      <div class="kv"><b>SRO</b><span>${fmt(h.sro,0)} mL/dia (1/3)</span></div>
+      <div class="kv"><b>Outros líquidos</b><span>${fmt(h.outros,0)} mL/dia (água, suco, chá, água de coco etc.)</span></div>
+      <div class="kv"><b>Primeiras 4–6h</b><span>${fmt(h.inicio,0)} mL nas primeiras 4–6 horas</span></div>
+      <div class="small">Manter durante todo o período febril e por 24–48h após a febre baixar.</div>
+    </div>`;
+  }else if(g==='C'){
+    hid=`<div class="result blueBox"><b>Hidratação EV — Grupo C</b>
+      <div class="kv"><b>1ª hora</b><span>SF 0,9% ${fmt(10*p,0)} mL EV em 1 hora (10 mL/kg)</span></div>
+      <div class="kv"><b>2ª hora</b><span>SF 0,9% ${fmt(10*p,0)} mL EV em 1 hora, até hematócrito (total máximo da expansão: ${fmt(20*p,0)} mL em 2h)</span></div>
+      <div class="kv"><b>Manutenção se melhora</b><span>SF 0,9% ${fmt(25*p,0)} mL em 6h; depois ${fmt(25*p,0)} mL em 8h</span></div>
+    </div>`;
+  }else{
+    hid=`<div class="result blueBox"><b>Expansão rápida — Grupo D</b>
+      <div class="kv"><b>Imediato</b><span>SF 0,9% ${fmt(20*p,0)} mL EV em até 20 minutos (20 mL/kg)</span></div>
+      <div class="kv"><b>Reavaliação</b><span>Clínica a cada 15–30 min e hematócrito em 2h; repetir conforme resposta e protocolo.</span></div>
+    </div>`;
+  }
+  $('hidratacao').innerHTML=hid;
+
+  $('rx').value=gerarRX(p,m,g,h,d,par,dia);
+}
+function gerarRX(p,m,g,h,d,par,dia){
+  let linhas=[];
+  linhas.push('PRESCRIÇÃO / ORIENTAÇÕES — DENGUE PEDIÁTRICA');
+  linhas.push(`Peso: ${fmt(p,1)} kg | Idade: ${idadeTxt()} | Grupo: ${g}${dia?` | Dia de doença: D${dia}`:''}`);
+  linhas.push('');
+  if(g==='C'||g==='D'){
+    linhas.push('ATENÇÃO: paciente classificado como Grupo '+g+'. Não é caso para prescrição domiciliar simples.');
+    if(g==='C'){
+      linhas.push(`1. Iniciar SF 0,9% ${fmt(10*p,0)} mL EV na 1ª hora e manter observação/internação, com reavaliação clínica e laboratorial seriada.`);
+    }else{
+      linhas.push(`1. Iniciar SF 0,9% ${fmt(20*p,0)} mL EV em até 20 minutos, monitorização contínua e condução em emergência/UTI.`);
+    }
+    linhas.push('2. Prescrever antitérmico permitido se febre/dor, evitando AAS, AINEs e corticoide.');
+    linhas.push('3. Notificar caso suspeito e preencher cartão de acompanhamento.');
+    return linhas.join('\n');
+  }
+  linhas.push('1. Dieta conforme aceitação. Manter aleitamento materno, se aplicável.');
+  linhas.push(`2. Hidratação oral: ingerir META de ${fmt(h.total,0)} mL/dia.`);
+  linhas.push(`   - SRO: ${fmt(h.sro,0)} mL/dia, sendo preferencialmente ${fmt(h.inicio,0)} mL nas primeiras 4–6 horas.`);
+  linhas.push(`   - Outros líquidos: ${fmt(h.outros,0)} mL/dia (água, suco, chá, água de coco etc.).`);
+  linhas.push('   - Manter hidratação durante todo o período febril e por 24–48h após a febre baixar.');
+  linhas.push('3. Repouso relativo e evitar automedicação.');
+  let escolha=$('antitermico').value, dipTxt, paraTxt;
+  if(m<3){
+    dipTxt='Dipirona: NÃO gerar dose automática em <3 meses; individualizar.';
+  }else if($('dipAp').value==='gotas'){
+    dipTxt=`Dipirona gotas 500 mg/mL: ${d.gotas} gotas VO de 6/6h se febre ou dor (${fmt(d.mg,0)} mg/dose = 10 mg/kg/dose).`;
+  }else{
+    dipTxt=`Dipirona solução oral 50 mg/mL: ${fmt(d.mlSol,1)} mL VO de 6/6h se febre ou dor (${fmt(d.mg,0)} mg/dose = 10 mg/kg/dose).`;
+  }
+  if($('parAp').value==='gotas'){
+    paraTxt=`Paracetamol gotas 200 mg/mL: ${par.gotas} gotas VO de 6/6h se febre ou dor (${fmt(par.mg,0)} mg/dose = 10 mg/kg/dose).`;
+  }else{
+    paraTxt=`Paracetamol solução 32 mg/mL: ${fmt(par.ml32,1)} mL VO de 6/6h se febre ou dor (${fmt(par.mg,0)} mg/dose = 10 mg/kg/dose).`;
+  }
+  if(escolha==='dip') linhas.push('4. '+dipTxt);
+  else if(escolha==='para') linhas.push('4. '+paraTxt);
+  else {
+    linhas.push('4. Se febre ou dor, escolher UMA opção, conforme alergia/contraindicação/disponibilidade:');
+    linhas.push('   A) '+dipTxt);
+    linhas.push('   OU');
+    linhas.push('   B) '+paraTxt);
+    linhas.push('   Não usar os dois juntos de rotina.');
+  }
+  linhas.push('5. NÃO usar: AAS, ibuprofeno/anti-inflamatórios, diclofenaco, nimesulida, naproxeno, cetoprofeno ou corticoide.');
+  linhas.push('6. Retorno: no dia da melhora/queda da febre. Se a febre não baixar, retornar no 5º dia de doença. No Grupo B, retorno/reavaliação diária conforme hemograma até 48h após defervescência.');
+  linhas.push('7. Retornar IMEDIATAMENTE se: dor abdominal intensa e contínua; vômitos persistentes; tontura/desmaio; sonolência importante, irritabilidade ou confusão; sangramento de mucosa; extremidades frias/palidez; falta de ar; redução importante da diurese; piora do estado geral; recusa persistente de líquidos.');
+  linhas.push('8. Usar repelente durante a fase sintomática e orientar eliminação de criadouros do Aedes aegypti.');
+  linhas.push('9. Notificar caso suspeito e entregar/preencher cartão de acompanhamento da dengue.');
+  return linhas.join('\n');
+}
+function copiar(id){
+  const el=$(id); el.select(); el.setSelectionRange(0,99999); navigator.clipboard.writeText(el.value);
+}
+function limpar(){document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);$('febre').checked=true;$('semFoco').checked=true;['peso','idade','dia','temp'].forEach(id=>$(id).value='');$('resumo').innerHTML='<span class="pill">Preencha os dados e calcule</span>';$('alertas').innerHTML='';$('conduta').innerHTML='';$('hidratacao').innerHTML='';$('rx').value='';}
+</script>
+</body>
+</html>

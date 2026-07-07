@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Pediátrica - Constipação Intestinal</title>
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#ffffff; --ink:#1f2937; --muted:#64748b; --line:#e2e8f0;
+      --primary:#be5f63; --primary2:#f7dddd; --danger:#b91c1c; --warn:#b45309; --ok:#047857;
+      --blue:#2563eb; --soft:#f1f5f9;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; background:linear-gradient(180deg,#fff7f7 0%,var(--bg) 230px); color:var(--ink);}
+    header{padding:22px 16px 10px; text-align:center}
+    header h1{margin:0; font-size:1.45rem; color:#8f383d; line-height:1.2}
+    header p{margin:8px auto 0; max-width:760px; color:var(--muted); font-size:.95rem}
+    main{max-width:1050px; margin:0 auto; padding:12px 12px 70px; display:grid; grid-template-columns:1fr; gap:12px}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 4px 18px rgba(15,23,42,.06); padding:16px}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:12px}
+    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+    @media(max-width:760px){.col-3,.col-4,.col-6,.col-8{grid-column:span 12} header h1{font-size:1.22rem}}
+    label{display:block; font-weight:700; font-size:.92rem; margin-bottom:6px; color:#334155}
+    input,select,textarea{width:100%; padding:11px 12px; border:1px solid #cbd5e1; border-radius:12px; background:#fff; font-size:1rem; color:var(--ink)}
+    input:focus,select:focus,textarea:focus{outline:2px solid #f1b7ba; border-color:var(--primary)}
+    .hint{font-size:.8rem; color:var(--muted); margin-top:5px; line-height:1.35}
+    .section-title{font-size:1.05rem; margin:0 0 12px; color:#8f383d; display:flex; align-items:center; gap:8px}
+    .pill{display:inline-flex; align-items:center; padding:5px 9px; border-radius:999px; background:var(--primary2); color:#8f383d; font-weight:700; font-size:.78rem}
+    .checks{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
+    @media(max-width:760px){.checks{grid-template-columns:1fr}}
+    .check{display:flex; gap:8px; align-items:flex-start; background:#fff; border:1px solid var(--line); padding:10px; border-radius:12px; min-height:46px}
+    .check input{width:18px; min-width:18px; margin-top:2px}
+    .check span{font-size:.9rem; line-height:1.25}
+    .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
+    button{border:0; border-radius:13px; padding:12px 15px; font-weight:800; cursor:pointer; font-size:.95rem}
+    .primary{background:var(--primary); color:white}.ghost{background:var(--soft); color:#334155}.dangerBtn{background:#fee2e2; color:#991b1b}
+    .result{display:none}.result.show{display:block}
+    .alert{border-radius:14px; padding:12px 14px; margin:10px 0; line-height:1.45; border:1px solid}
+    .alert-danger{background:#fef2f2; border-color:#fecaca; color:#7f1d1d}.alert-warn{background:#fffbeb; border-color:#fde68a; color:#78350f}.alert-ok{background:#ecfdf5; border-color:#a7f3d0; color:#064e3b}.alert-info{background:#eff6ff; border-color:#bfdbfe; color:#1e3a8a}
+    table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.92rem; overflow:hidden; border-radius:12px}
+    th,td{padding:10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top} th{background:#f8e8e9; color:#7f3034}
+    .rx{background:#0f172a; color:#e2e8f0; border-radius:14px; padding:14px; white-space:pre-wrap; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.88rem; line-height:1.45; margin-top:10px}
+    .copyline{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:12px; flex-wrap:wrap}
+    .small{font-size:.82rem; color:var(--muted); line-height:1.4}.badge{font-weight:800; color:#8f383d}
+    details{border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff} summary{font-weight:800; cursor:pointer; color:#334155}
+    ul{margin:8px 0 0 18px; padding:0} li{margin:5px 0}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Calculadora Pediátrica — Constipação Intestinal</h1>
+  <p>Baseada no Guia Prático de Orientação da SBP. Auxilia na triagem de sinais de alarme, critérios funcionais, desimpactação, manutenção e prescrição domiciliar.</p>
+</header>
+<main>
+  <section class="card">
+    <h2 class="section-title">1) Dados do paciente <span class="pill">entrada</span></h2>
+    <div class="grid">
+      <div class="col-3"><label>Peso (kg)</label><input id="peso" type="number" step="0.1" min="0" placeholder="Ex.: 18" /></div>
+      <div class="col-3"><label>Idade</label><input id="idade" type="number" step="1" min="0" placeholder="Ex.: 3" /></div>
+      <div class="col-3"><label>Unidade</label><select id="unidade"><option value="anos">anos</option><option value="meses">meses</option><option value="dias">dias</option></select></div>
+      <div class="col-3"><label>Controle esfincteriano?</label><select id="controle"><option value="nao">Não / não sabe</option><option value="sim">Sim</option></select></div>
+      <div class="col-4"><label>Dias sem evacuar</label><input id="diasSemEvacuar" type="number" step="1" min="0" placeholder="Ex.: 5" /></div>
+      <div class="col-4"><label>Consistência das fezes</label><select id="bristol"><option value="duras">Duras/ressecadas</option><option value="pastosas">Pastosas</option><option value="liquidas">Líquidas/escape</option><option value="nao">Não informado</option></select></div>
+      <div class="col-4"><label>Dor abdominal atual</label><select id="dor"><option value="nao">Não/importante não</option><option value="leve">Leve</option><option value="moderada">Moderada</option><option value="intensa">Intensa/progressiva</option></select></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">2) Sinais de alarme <span class="pill">não perder</span></h2>
+    <div class="checks" id="alarmes">
+      <label class="check"><input type="checkbox" value="Mecônio > 48h"><span>Atraso na eliminação de mecônio &gt; 48h</span></label>
+      <label class="check"><input type="checkbox" value="Início no primeiro mês"><span>Início no primeiro mês de vida</span></label>
+      <label class="check"><input type="checkbox" value="Vômitos biliosos"><span>Vômitos biliosos</span></label>
+      <label class="check"><input type="checkbox" value="Febre/toxemia/queda do estado geral"><span>Febre, toxemia ou queda do estado geral</span></label>
+      <label class="check"><input type="checkbox" value="Baixo ganho ponderoestatural"><span>Baixo ganho de peso/estatura</span></label>
+      <label class="check"><input type="checkbox" value="Distensão abdominal importante"><span>Distensão abdominal importante</span></label>
+      <label class="check"><input type="checkbox" value="Sangue nas fezes sem fissura"><span>Sangue nas fezes sem fissura evidente</span></label>
+      <label class="check"><input type="checkbox" value="Alteração neurológica/coluna/sacro"><span>Alteração neurológica, coluna lombossacra, tufo de pelos sacral</span></label>
+      <label class="check"><input type="checkbox" value="Fístulas perineais/anomalia anal"><span>Fístulas perineais, anomalia anal ou suspeita de Hirschsprung</span></label>
+      <label class="check"><input type="checkbox" value="Suspeita de violência sexual"><span>Suspeita de violência sexual — não realizar toque retal</span></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">3) Critérios de Roma IV e impactação <span class="pill">funcional</span></h2>
+    <div class="checks" id="roma">
+      <label class="check"><input type="checkbox" value="≤2 evacuações/semana"><span>≤ 2 evacuações por semana</span></label>
+      <label class="check"><input type="checkbox" value="Retenção excessiva"><span>Retenção excessiva / comportamento de prender</span></label>
+      <label class="check"><input type="checkbox" value="Dor/dificuldade evacuatória"><span>Dor ou dificuldade para evacuar</span></label>
+      <label class="check"><input type="checkbox" value="Fezes volumosas"><span>Fezes de grande calibre / entopem vaso</span></label>
+      <label class="check"><input type="checkbox" value="Massa fecal"><span>Massa fecal palpável ou reto cheio, se avaliado</span></label>
+      <label class="check"><input type="checkbox" value="Incontinência fecal"><span>Escape/incontinência fecal ≥ 1x/semana</span></label>
+    </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="col-4"><label>Impactação/fecaloma?</label><select id="impactacao"><option value="nao">Não evidente</option><option value="suspeita">Suspeita clínica</option><option value="sim">Sim / massa fecal importante</option></select><div class="hint">Ex.: vários dias sem evacuar, massa fecal, escape paradoxal, fezes muito volumosas.</div></div>
+      <div class="col-4"><label>PEG disponível?</label><select id="pegDisp"><option value="sim">Sim</option><option value="nao">Não</option></select></div>
+      <div class="col-4"><label>Via oral possível?</label><select id="vo"><option value="sim">Sim</option><option value="nao">Não</option></select></div>
+    </div>
+    <div class="btns"><button class="primary" onclick="calcular()">Calcular conduta</button><button class="ghost" onclick="limpar()">Limpar</button><button class="dangerBtn" onclick="marcarImpactacao()">Marcar impactação</button></div>
+  </section>
+
+  <section class="card result" id="resultado">
+    <h2 class="section-title">Resultado e prescrição <span class="pill">saída</span></h2>
+    <div id="saida"></div>
+    <div class="copyline"><button class="primary" onclick="copiarPrescricao()">Copiar prescrição</button><span class="small">Confira apresentações, protocolo local e contraindicações antes de prescrever.</span></div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">Orientações rápidas para alta</h2>
+    <details open><summary>Texto para entregar/orientar família</summary>
+      <ul>
+        <li>A constipação costuma formar um ciclo: evacuar dói, a criança prende, as fezes endurecem e depois dói mais.</li>
+        <li>O objetivo não é apenas “evacuar hoje”, mas manter fezes pastosas por semanas para o reto voltar ao normal.</li>
+        <li>Sentar no vaso 5–10 minutos após as refeições, com apoio para os pés, sem bronca ou punição.</li>
+        <li>Estimular água, frutas com casca/bagaço quando possível, verduras, legumes, feijão, aveia e alimentos integrais.</li>
+        <li>Retornar antes se febre, vômitos biliosos, distensão importante, dor intensa, sangue importante, piora do estado geral ou não eliminação de gases.</li>
+      </ul>
+    </details>
+  </section>
+</main>
+<script>
+function val(id){return document.getElementById(id).value}
+function num(id){const v=parseFloat(val(id)); return Number.isFinite(v)?v:null}
+function checks(id){return Array.from(document.querySelectorAll(`#${id} input:checked`)).map(x=>x.value)}
+function idadeMeses(){const i=num('idade'); if(i===null) return null; const u=val('unidade'); if(u==='anos') return i*12; if(u==='meses') return i; return i/30.4375}
+function fmt(n,dec=1){if(!Number.isFinite(n)) return '—'; return n.toLocaleString('pt-BR',{maximumFractionDigits:dec, minimumFractionDigits: dec})}
+function arred(n){if(!Number.isFinite(n)) return '—'; return (Math.round(n*10)/10).toLocaleString('pt-BR',{maximumFractionDigits:1})}
+function doseRange(p,min,max,un){return `${arred(p*min)} a ${arred(p*max)} ${un}`}
+function calcular(){
+  const peso=num('peso'), meses=idadeMeses(), al=checks('alarmes'), ro=checks('roma');
+  const imp=val('impactacao'), peg=val('pegDisp'), vo=val('vo'), dor=val('dor'), dias=num('diasSemEvacuar');
+  const res=document.getElementById('resultado'), out=document.getElementById('saida');
+  if(!peso || peso<=0){out.innerHTML='<div class="alert alert-danger"><b>Informe o peso</b> para calcular as doses.</div>'; res.classList.add('show'); return;}
+  let idadeTxt = meses===null?'idade não informada': meses<1?`${Math.round(meses*30)} dias` : meses<24?`${Math.round(meses)} meses` : `${arred(meses/12)} anos`;
+  let html=`<div class="alert alert-info"><b>Paciente:</b> ${arred(peso)} kg • ${idadeTxt}. Critérios Roma marcados: <b>${ro.length}</b>. Sinais de alarme: <b>${al.length}</b>.</div>`;
+  if(dor==='intensa') al.push('Dor abdominal intensa/progressiva');
+  if(al.length>0){
+    html += `<div class="alert alert-danger"><b>Atenção: há sinais de alarme.</b><br>Não conduzir como constipação funcional simples. Avaliar necessidade de investigação, observação/internação, exames direcionados e/ou encaminhamento especializado.<br><b>Marcados:</b> ${al.join('; ')}.</div>`;
+  }
+  const menor1ano = meses!==null && meses<12;
+  const menor2anos = meses!==null && meses<24;
+  const maior1ano = meses===null ? true : meses>=12;
+  const romaOk = ro.length>=2;
+  if(romaOk) html += `<div class="alert alert-ok"><b>Compatível com constipação funcional</b>, se não houver outra condição médica explicando o quadro. Seguir educação + esvaziamento se impactado + manutenção.</div>`;
+  else html += `<div class="alert alert-warn"><b>Critérios Roma IV incompletos pela seleção.</b> Pode ainda ser constipação aguda/inicial, pseudoconstipação do aleitamento ou disquesia do lactente. Correlacionar com história e exame.</div>`;
+  const pegDesMin=peso*1, pegDesMax=peso*1.5;
+  const pegManMin=peso*0.2, pegManIni=peso*0.4, pegManMax=peso*0.8;
+  const lactMin=peso*1, lactIni=peso*1, lactMax=peso*3;
+  const enemaSFMenorMin=peso*5, enemaSFMenorMax=peso*10, enemaSFMaior=peso*6, enemaFosf=peso*2.5;
+  html += `<table><tr><th>Item</th><th>Dose calculada</th><th>Observação</th></tr>
+  <tr><td>PEG desimpactação</td><td>${arred(pegDesMin)} a ${arred(pegDesMax)} g/dia por 3 dias</td><td>1 a 1,5 g/kg/dia, até esvaziamento.</td></tr>
+  <tr><td>PEG manutenção</td><td>${arred(pegManMin)} a ${arred(pegManMax)} g/dia<br><b>Sugestão inicial:</b> ${arred(pegManIni)} g/dia</td><td>0,2 a 0,8 g/kg/dia. Ajustar conforme fezes.</td></tr>
+  <tr><td>Lactulose</td><td>${arred(lactMin)} a ${arred(lactMax)} mL/dia<br><b>Sugestão inicial:</b> ${arred(lactIni)} mL/dia</td><td>Alternativa se PEG indisponível. Pode causar gases/cólicas.</td></tr>
+  <tr><td>Enema SF 0,9%</td><td>${menor1ano ? `${arred(enemaSFMenorMin)} a ${arred(enemaSFMenorMax)} mL retal` : `${arred(enemaSFMaior)} mL retal`}</td><td>${menor1ano ? 'Menor de 1 ano: 5–10 mL/kg.' : 'Maior de 1 ano: 6 mL/kg.'}</td></tr>
+  <tr><td>Enema fosfato</td><td>${maior1ano ? `${arred(enemaFosf)} mL retal` : 'Evitar / não indicado'}</td><td>Apenas >1 ano e evitar se possível pelo risco de hiperfosfatemia.</td></tr>
+  </table>`;
+  let conduta='';
+  if(imp==='sim' || imp==='suspeita' || (dias!==null && dias>=5)){
+    if(peg==='sim' && vo==='sim'){
+      conduta = `DESIMPACTAÇÃO VO com PEG: ${arred(pegDesMin)} a ${arred(pegDesMax)} g/dia por 3 dias ou até esvaziamento. Depois manter PEG ${arred(pegManIni)} g/dia e titular.`;
+      html += `<div class="alert alert-warn"><b>Impactação/fecaloma provável.</b><br>${conduta}</div>`;
+    } else {
+      conduta = `Considerar abordagem retal por impossibilidade de PEG VO: SF 0,9% ${menor1ano ? `${arred(enemaSFMenorMin)} a ${arred(enemaSFMenorMax)} mL` : `${arred(enemaSFMaior)} mL`} via retal. Fosfato de sódio somente se >1 ano: ${maior1ano ? arred(enemaFosf)+' mL' : 'não indicado'}, evitando se possível.`;
+      html += `<div class="alert alert-warn"><b>Impactação com via oral/PEG desfavorável.</b><br>${conduta}</div>`;
+    }
+  } else {
+    conduta = peg==='sim' ? `Manutenção com PEG ${arred(pegManIni)} g VO 1x/dia, ajustar entre ${arred(pegManMin)} e ${arred(pegManMax)} g/dia.` : `PEG indisponível: lactulose ${arred(lactIni)} mL/dia VO, ajustar entre ${arred(lactMin)} e ${arred(lactMax)} mL/dia.`;
+    html += `<div class="alert alert-ok"><b>Sem impactação importante selecionada.</b><br>${conduta}</div>`;
+  }
+  if(menor2anos) html += `<div class="alert alert-warn"><b>Menor de 2 anos:</b> evitar óleo mineral. Em lactente pequeno, diferenciar pseudoconstipação do aleitamento e disquesia do lactente, que não exigem laxantes se fezes amolecidas e sem alarme.</div>`;
+  const rx = gerarRx(peso, meses, imp, peg, vo, pegDesMin, pegDesMax, pegManIni, pegManMin, pegManMax, lactIni, lactMin, lactMax, menor1ano, maior1ano, enemaSFMenorMin, enemaSFMenorMax, enemaSFMaior, enemaFosf);
+  html += `<h3>Prescrição sugerida</h3><div class="rx" id="rxText">${rx}</div>`;
+  html += `<div class="small"><b>Nota:</b> tratamento de manutenção geralmente por pelo menos 2 meses; considerar redução gradual apenas após pelo menos 1 mês sem sintomas.</div>`;
+  out.innerHTML=html; res.classList.add('show'); window.scrollTo({top:document.getElementById('resultado').offsetTop-10,behavior:'smooth'});
+}
+function gerarRx(peso, meses, imp, peg, vo, pegDesMin, pegDesMax, pegManIni, pegManMin, pegManMax, lactIni, lactMin, lactMax, menor1ano, maior1ano, enemaSFMenorMin, enemaSFMenorMax, enemaSFMaior, enemaFosf){
+  const temImp = imp==='sim' || imp==='suspeita';
+  let s = `PRESCRIÇÃO / CONDUTA — CONSTIPAÇÃO INTESTINAL\nPeso: ${arred(peso)} kg\n\n`;
+  if(temImp && peg==='sim' && vo==='sim'){
+    s += `1) Polietilenoglicol 3350/4000: ${arred(pegDesMin)} a ${arred(pegDesMax)} g VO ao dia, por 3 dias ou até esvaziamento fecal.\n   Diluir conforme orientação da apresentação disponível. Orientar que pode haver escape fecal no início.\n\n`;
+    s += `Após esvaziamento:\n2) Polietilenoglicol 3350/4000: iniciar ${arred(pegManIni)} g VO 1x/dia.\n   Ajustar entre ${arred(pegManMin)} e ${arred(pegManMax)} g/dia para manter fezes pastosas, sem dor.\n\n`;
+  } else if(temImp && (peg==='nao' || vo==='nao')){
+    s += `1) Se necessidade de desimpactação retal e sem contraindicações:\n`;
+    s += menor1ano ? `   Enema com SF 0,9%: ${arred(enemaSFMenorMin)} a ${arred(enemaSFMenorMax)} mL via retal.\n` : `   Enema com SF 0,9%: ${arred(enemaSFMaior)} mL via retal.\n`;
+    if(maior1ano) s += `   Enema de fosfato de sódio: ${arred(enemaFosf)} mL via retal, evitar se possível pelo risco de hiperfosfatemia.\n`;
+    s += `\n2) Manutenção após esvaziamento:\n`;
+    s += peg==='sim' ? `   Polietilenoglicol 3350/4000: ${arred(pegManIni)} g VO 1x/dia, titular conforme resposta.\n\n` : `   Lactulose: ${arred(lactIni)} mL VO ao dia, podendo dividir 12/12h. Ajustar entre ${arred(lactMin)} e ${arred(lactMax)} mL/dia.\n\n`;
+  } else {
+    if(peg==='sim'){
+      s += `1) Polietilenoglicol 3350/4000: ${arred(pegManIni)} g VO 1x/dia.\n   Ajustar entre ${arred(pegManMin)} e ${arred(pegManMax)} g/dia conforme consistência das fezes.\n\n`;
+    } else {
+      s += `1) Lactulose: ${arred(lactIni)} mL VO ao dia, podendo dividir 12/12h.\n   Ajustar entre ${arred(lactMin)} e ${arred(lactMax)} mL/dia conforme resposta.\n\n`;
+    }
+  }
+  s += `ORIENTAÇÕES\n- Objetivo: fezes pastosas, sem dor, diariamente ou a cada 1–2 dias.\n- Sentar no vaso 5–10 min após refeições, com apoio para os pés.\n- Estimular água, frutas, verduras, legumes, feijão, aveia e integrais; evitar excesso de leite/ultraprocessados.\n- Não punir escapes fecais; usar reforço positivo.\n- Retorno em 2–4 semanas. Manter tratamento por pelo menos 2 meses; reduzir gradualmente apenas após 1 mês sem sintomas.\n- Retornar antes se febre, vômitos biliosos, distensão importante, dor intensa, sangue, piora do estado geral ou não eliminação de gases.`;
+  return s;
+}
+function copiarPrescricao(){const el=document.getElementById('rxText'); if(!el) return; navigator.clipboard.writeText(el.innerText).then(()=>alert('Prescrição copiada!'))}
+function limpar(){document.querySelectorAll('input').forEach(i=>{if(i.type==='checkbox') i.checked=false; else i.value=''}); document.querySelectorAll('select').forEach(s=>s.selectedIndex=0); document.getElementById('resultado').classList.remove('show')}
+function marcarImpactacao(){document.getElementById('impactacao').value='sim'; ['≤2 evacuações/semana','Dor/dificuldade evacuatória','Fezes volumosas','Massa fecal'].forEach(v=>{const cb=Array.from(document.querySelectorAll('#roma input')).find(x=>x.value===v); if(cb) cb.checked=true;});}
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calculadora Pediátrica — Urticária</title>
+<style>
+:root{--bg:#f7fbff;--card:#fff;--ink:#17324d;--muted:#5d6b7a;--brand:#0d7ea8;--brand2:#63c5da;--danger:#b42318;--warn:#b54708;--ok:#027a48;--line:#d6e4ef;--soft:#eaf7fb}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#e8f7fb 0%,#f8fbff 45%,#fff 100%);color:var(--ink)}
+header{padding:20px 16px 12px;max-width:1180px;margin:auto}.hero{background:linear-gradient(135deg,#0d7ea8,#45bdd5);color:white;border-radius:22px;padding:20px;box-shadow:0 12px 32px rgba(13,126,168,.22)}
+h1{margin:0 0 6px;font-size:clamp(24px,4vw,38px)}.sub{opacity:.95;margin:0;font-size:15px;line-height:1.45}.wrap{max-width:1180px;margin:0 auto;padding:12px 16px 32px;display:grid;grid-template-columns:390px 1fr;gap:16px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.sticky{position:static!important}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(23,50,77,.06)}.sticky{position:sticky;top:10px;align-self:start}
+label{display:block;font-weight:750;margin:12px 0 6px}.hint{font-size:12.5px;color:var(--muted);line-height:1.35}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #c7d7e4;border-radius:12px;background:#fff;color:var(--ink);font-size:15px}textarea{min-height:86px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.checks{display:grid;gap:8px;margin-top:8px}.check{display:flex;gap:8px;align-items:flex-start;background:#f8fbfd;border:1px solid #e2edf5;border-radius:12px;padding:9px}.check input{width:auto;margin-top:3px}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--brand);color:#fff}button.secondary{background:#eef6fb;color:#0b5f7c;border:1px solid #cfe5ef}button.danger{background:#fff0ee;color:var(--danger);border:1px solid #ffd1cc}.pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--soft);color:#096783;font-size:12px;font-weight:800;margin:2px 4px 2px 0}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.section-title h2{font-size:18px;margin:0}.result{white-space:pre-wrap;background:#fbfdff;border:1px solid #dbeaf3;border-radius:14px;padding:12px;line-height:1.45;font-size:14.5px;min-height:80px}.alert{border-radius:14px;padding:12px;margin:10px 0;font-weight:650;line-height:1.4}.alert.red{background:#fff1f0;color:#8a1f14;border:1px solid #ffd2cc}.alert.yellow{background:#fff8eb;color:#7a3a00;border:1px solid #ffdf99}.alert.green{background:#ecfdf3;color:#035e3c;border:1px solid #b7efcc}.mini{font-size:12.5px;color:var(--muted)}.table{width:100%;border-collapse:collapse;font-size:13.2px}.table th,.table td{border-bottom:1px solid #e3edf5;padding:8px;text-align:left;vertical-align:top}.table th{background:#f3f9fc}footer{max-width:1180px;margin:0 auto 28px;padding:0 16px;color:var(--muted);font-size:12px}.hide{display:none}@media print{body{background:white}.wrap{display:block}.sticky{position:static}.btns,header .sub,.no-print{display:none}.card{box-shadow:none;margin-bottom:12px}.result{border:1px solid #999}}
+</style>
+</head>
+<body>
+<header><div class="hero"><h1>Urticária Pediátrica</h1><p class="sub">Calculadora prática para PA/ambulatório e alta: classifica gravidade, sugere conduta, gera prescrição e orientações para casa. Baseada nas diretrizes da SBP para urticária na criança e adolescente.</p></div></header>
+<main class="wrap">
+<section class="card sticky">
+  <div class="section-title"><h2>Dados do paciente</h2><span class="pill">PA + casa</span></div>
+  <div class="grid2"><div><label>Idade</label><input id="idade" type="number" min="0" step="0.1" value="5"></div><div><label>Unidade</label><select id="idadeUn"><option value="anos">anos</option><option value="meses">meses</option></select></div></div>
+  <label>Peso (kg)</label><input id="peso" type="number" min="1" step="0.1" value="20">
+  <div class="grid2"><div><label>Duração</label><select id="duracao"><option value="aguda">Aguda (&lt; 6 semanas)</option><option value="cronica">Crônica (&gt; 6 semanas)</option></select></div><div><label>Extensão</label><select id="extensao"><option value="localizada">Localizada</option><option value="generalizada">Generalizada</option></select></div></div>
+  <label>Anti-H1 preferido para prescrição</label><select id="antiH1"><option value="desloratadina">Desloratadina xarope 0,5 mg/mL</option><option value="loratadina">Loratadina xarope 1 mg/mL</option><option value="cetirizina">Cetirizina solução 1 mg/mL</option><option value="fexofenadina">Fexofenadina suspensão 6 mg/mL</option><option value="bilastina">Bilastina comp./sachê</option><option value="levocetirizina">Levocetirizina gotas/comp.</option></select>
+  <div class="grid2"><div><label>Prednisolona</label><select id="cortDose"><option value="0">Não calcular de rotina</option><option value="0.5">0,5 mg/kg/dia</option><option value="1" selected>1 mg/kg/dia</option></select></div><div><label>Apresentação</label><select id="cortAp"><option value="3">3 mg/mL</option><option value="1">1 mg/mL</option></select></div></div>
+  <label>Sinais de gravidade / anafilaxia</label>
+  <div class="checks">
+    <label class="check"><input type="checkbox" id="resp"> Desconforto respiratório, estridor, sibilância, rouquidão, edema de língua/orofaringe</label>
+    <label class="check"><input type="checkbox" id="cv"> Hipotensão, síncope, prostração importante ou sintomas cardiovasculares</label>
+    <label class="check"><input type="checkbox" id="gi"> Vômitos repetidos/dor abdominal intensa após possível alérgeno</label>
+    <label class="check"><input type="checkbox" id="face"> Edema/eritema de face e pescoço ou angioedema importante</label>
+    <label class="check"><input type="checkbox" id="trigger"> Suspeita de alimento, medicação, AINE, picada de inseto ou infecção associada</label>
+  </div>
+  <label>Observações / gatilho suspeito</label><textarea id="obs" placeholder="Ex.: iniciou após ibuprofeno; febre/IVAS; alimento novo; picada de inseto..."></textarea>
+  <div class="btns"><button onclick="calcular()">Gerar conduta</button><button class="secondary" onclick="window.print()">Imprimir</button><button class="danger" onclick="limpar()">Limpar</button></div>
+  <p class="hint">Anti-histamínico de 2ª geração é a primeira linha. Evite combinar anti-H1 diferentes ao mesmo tempo; em refratários, pode-se aumentar o mesmo anti-H1 até 4x a dose licenciada, idealmente com reavaliação.</p>
+</section>
+<section style="display:grid;gap:16px">
+  <div id="banner" class="alert green">Preencha os dados e clique em “Gerar conduta”.</div>
+  <div class="card"><div class="section-title"><h2>1) Conduta no PA / ambulatório</h2><button class="secondary no-print" onclick="copyBox('pa')">Copiar</button></div><div id="pa" class="result"></div></div>
+  <div class="card"><div class="section-title"><h2>2) Prescrição para casa</h2><button class="secondary no-print" onclick="copyBox('casa')">Copiar</button></div><div id="casa" class="result"></div></div>
+  <div class="card"><div class="section-title"><h2>3) Orientações de alta</h2><button class="secondary no-print" onclick="copyBox('orient')">Copiar</button></div><div id="orient" class="result"></div></div>
+  <div class="card"><h2 style="font-size:18px;margin:0 0 10px">Referência rápida de doses</h2><table class="table"><thead><tr><th>Medicação</th><th>Dose pediátrica usual</th><th>Observação</th></tr></thead><tbody>
+    <tr><td>Desloratadina</td><td>6m-2a: 1 mg/dia; 2-6a: 1,25 mg/dia; 6-11a: 2,5 mg/dia; ≥12a: 5 mg/dia</td><td>Xarope usual 0,5 mg/mL</td></tr>
+    <tr><td>Loratadina</td><td>&gt;2a e &lt;30 kg: 5 mg/dia; ≥30 kg: 10 mg/dia</td><td>Xarope usual 1 mg/mL</td></tr>
+    <tr><td>Cetirizina</td><td>2-6a: 2,5 mg 12/12h; 6-12a: 5 mg 12/12h; ≥12a: 10 mg/dia</td><td>Solução usual 1 mg/mL</td></tr>
+    <tr><td>Fexofenadina</td><td>6m-2a: 15 mg 12/12h; 6-11a: 30 mg 12/12h; ≥12a: 60 mg 12/12h ou 120 mg/dia</td><td>Suspensão usual 6 mg/mL</td></tr>
+    <tr><td>Prednisolona</td><td>0,5–1 mg/kg/dia por 3–5 dias se urticária generalizada/angioedema, sem exceder dose adulta local</td><td>Não é rotina em quadros leves</td></tr>
+  </tbody></table></div>
+</section>
+</main>
+<footer>Ferramenta de apoio. Não substitui avaliação clínica, protocolo local, bula ou julgamento médico. Em suspeita de anafilaxia, priorizar adrenalina IM e suporte.</footer>
+<script>
+function fmt(n,d=1){return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:d})}
+function meses(){let v=parseFloat(document.getElementById('idade').value||0); return document.getElementById('idadeUn').value==='anos'?v*12:v}
+function doseAnti(nome,m,peso){let anos=m/12; let r={ok:true,txt:'',pa:''};
+ if(nome==='desloratadina'){
+   if(m<6)return {ok:false,txt:'Desloratadina: não sugerida abaixo de 6 meses nesta ferramenta.'};
+   let mg,ml;if(m<24){mg=1;ml=2}else if(anos<6){mg=1.25;ml=2.5}else if(anos<12){mg=2.5;ml=5}else{mg=5;ml=10}
+   r.txt=`Desloratadina xarope 0,5 mg/mL: ${fmt(ml)} mL VO 1x/dia (${fmt(mg)} mg/dia).`; r.pa=`Desloratadina ${fmt(ml)} mL VO agora.`; return r;
+ }
+ if(nome==='loratadina'){
+   if(anos<2)return {ok:false,txt:'Loratadina: usar apenas se idade > 2 anos nesta ferramenta.'};
+   let mg=peso<30?5:10, ml=mg; r.txt=`Loratadina xarope 1 mg/mL: ${fmt(ml)} mL VO 1x/dia (${mg} mg/dia).`; r.pa=`Loratadina ${fmt(ml)} mL VO agora.`; return r;
+ }
+ if(nome==='cetirizina'){
+   if(anos<2)return {ok:false,txt:'Cetirizina: usar apenas se idade ≥ 2 anos nesta ferramenta.'};
+   if(anos<6){r.txt='Cetirizina solução 1 mg/mL: 2,5 mL VO 12/12h (5 mg/dia).'; r.pa='Cetirizina 2,5 mL VO agora.'}
+   else if(anos<12){r.txt='Cetirizina solução 1 mg/mL: 5 mL VO 12/12h (10 mg/dia).'; r.pa='Cetirizina 5 mL VO agora.'}
+   else{r.txt='Cetirizina 10 mg VO 1x/dia ou 5 mg VO 12/12h.'; r.pa='Cetirizina 10 mg VO agora.'} return r;
+ }
+ if(nome==='fexofenadina'){
+   if(m<6)return {ok:false,txt:'Fexofenadina: usar apenas se idade ≥ 6 meses nesta ferramenta.'};
+   if(m<24){r.txt='Fexofenadina suspensão 6 mg/mL: 2,5 mL VO 12/12h (15 mg/dose).'; r.pa='Fexofenadina 2,5 mL VO agora.'}
+   else if(anos<6){r.txt='Fexofenadina suspensão 6 mg/mL: 5 mL VO 12/12h (30 mg/dose).'; r.pa='Fexofenadina 5 mL VO agora.'}
+   else if(anos<12){r.txt='Fexofenadina suspensão 6 mg/mL: 5 mL VO 12/12h (30 mg/dose; 60 mg/dia).'; r.pa='Fexofenadina 5 mL VO agora.'}
+   else{r.txt='Fexofenadina: 60 mg VO 12/12h ou 120 mg VO 1x/dia.'; r.pa='Fexofenadina 60 mg VO agora.'} return r;
+ }
+ if(nome==='bilastina'){
+   if(anos<6)return {ok:false,txt:'Bilastina: usar apenas se idade ≥ 6 anos nesta ferramenta.'};
+   let mg=anos<12?10:20; r.txt=`Bilastina ${mg} mg VO 1x/dia, em jejum.`; r.pa=`Bilastina ${mg} mg VO agora, se em jejum.`; return r;
+ }
+ if(nome==='levocetirizina'){
+   if(anos<6)return {ok:false,txt:'Levocetirizina: usar apenas se idade ≥ 6 anos nesta ferramenta.'};
+   r.txt='Levocetirizina 5 mg VO 1x/dia.'; r.pa='Levocetirizina 5 mg VO agora.'; return r;
+ }
+}
+function calcular(){
+ let m=meses(), anos=m/12, peso=parseFloat(document.getElementById('peso').value||0), dur=document.getElementById('duracao').value, ext=document.getElementById('extensao').value;
+ let resp=respEl('resp'), cv=respEl('cv'), gi=respEl('gi'), face=respEl('face'), trigger=respEl('trigger'), obs=document.getElementById('obs').value.trim();
+ let anafilaxia=(resp||cv) || ((gi||face) && trigger); let grave=anafilaxia||face||ext==='generalizada';
+ let anti=doseAnti(document.getElementById('antiH1').value,m,peso); let antiTxt=anti.ok?anti.txt:anti.txt+' Escolher outro anti-H1 apropriado à idade/peso ou seguir protocolo local.';
+ let antiPa=anti.ok?anti.pa:'Anti-H1 VO de 2ª geração conforme idade/peso e disponibilidade local.';
+ let cort=parseFloat(document.getElementById('cortDose').value||0), cortAp=parseFloat(document.getElementById('cortAp').value||3); let cortTxt='', cortPa='';
+ if(cort>0){let mg=Math.min(peso*cort,40);let ml=mg/cortAp;cortTxt=`Prednisolona ${cortAp} mg/mL: ${fmt(ml)} mL VO 1x/dia por 3 a 5 dias (${fmt(mg)} mg/dia; ${cort} mg/kg/dia; máx. sugerido nesta ferramenta 40 mg/dia).`; cortPa=`Prednisolona ${cortAp} mg/mL: ${fmt(ml)} mL VO agora.`}
+ let adrMl=Math.min(peso*0.01, anos>=12?0.5:0.3); let sf=Math.round(peso*20); let banner=document.getElementById('banner');
+ let classif=dur==='aguda'?'URTICÁRIA AGUDA (< 6 semanas)':'URTICÁRIA CRÔNICA (> 6 semanas)';
+ if(anafilaxia){banner.className='alert red';banner.textContent='ALERTA: sinais compatíveis com anafilaxia/gravidade. Priorizar adrenalina IM e suporte.'}
+ else if(grave){banner.className='alert yellow';banner.textContent='Quadro grave ou generalizado/angioedema: avaliar observação, corticoide curto e sinais de anafilaxia.'}
+ else{banner.className='alert green';banner.textContent='Quadro não grave: anti-H1 de segunda geração e orientações.'}
+ let pa=`${classif}\nPeso: ${fmt(peso)} kg | Idade: ${fmt(anos,1)} anos\n\nAvaliar imediatamente: sinais vitais, padrão respiratório, orofaringe/língua, perfusão, ausculta, extensão das lesões e possível gatilho.${obs?'\nGatilho/observação: '+obs:''}\n\n`;
+ if(anafilaxia){
+ pa+=`CONDUTA DE EMERGÊNCIA — suspeita de anafilaxia:\n1. Adrenalina 1 mg/mL (1:1000): ${fmt(adrMl,2)} mL IM na face ântero-lateral da coxa agora. Repetir a cada 5–15 min se persistirem sintomas.\n2. Monitorização, decúbito, O2 se necessário, acesso venoso. Se hipotensão/choque: SF 0,9% ${sf} mL EV em bolus (20 mL/kg), reavaliar.\n3. Após adrenalina/suporte: ${antiPa}\n4. Considerar corticosteroide conforme quadro: ${cortPa || 'prednisolona/prednisona 0,5–1 mg/kg/dia por curto período conforme protocolo local.'}\n5. Observar e considerar admissão hospitalar, especialmente se sintomas respiratórios/cardiovasculares, necessidade de doses repetidas de adrenalina ou gatilho alimentar/medicamentoso importante.`;
+ } else if(grave){
+ pa+=`CONDUTA NO PA/AMBULATÓRIO — urticária generalizada e/ou angioedema, sem critérios claros de anafilaxia:\n1. ${antiPa}\n2. ${cortPa || 'Se sintomas intensos, generalizados ou com angioedema: considerar prednisolona/prednisona 0,5–1 mg/kg/dia por 3–5 dias.'}\n3. Observar evolução clínica, reavaliar via aérea e sinais vitais. Se surgir desconforto respiratório, hipotensão, síncope ou sintomas sistêmicos após alérgeno: tratar como anafilaxia com adrenalina IM.\n4. Investigar e suspender possível gatilho: AINE/aspirina, antibiótico recente, alimento, picada de inseto, infecção. Exames apenas se guiados por história/exame.`;
+ } else {
+ pa+=`CONDUTA NO PA/AMBULATÓRIO — não grave:\n1. ${antiPa}\n2. Sem necessidade de exames de rotina se história/exame não sugerirem causa específica.\n3. Orientar medidas gerais e retorno se piora. Evitar sedativos/anti-H1 de 1ª geração como rotina.`;
+ }
+ if(dur==='cronica') pa+=`\n\nURTICÁRIA CRÔNICA: tratar com anti-H1 de 2ª geração diariamente. Se controle inadequado em 2–4 semanas, reavaliar adesão/gatilhos e considerar aumentar o mesmo anti-H1 até 4x a dose licenciada, preferencialmente com especialista. Encaminhar Alergia/Dermatologia; considerar hemograma e VHS/PCR conforme história.`;
+ let casa=`PRESCRIÇÃO PARA CASA\n\n1. ${antiTxt}\n   Usar diariamente por 7 a 14 dias; se lesões cessarem, manter por mais 2–3 dias e suspender/reduzir conforme evolução. Em urticária crônica, uso diário até reavaliação.\n`;
+ if(grave && cort>0) casa+=`\n2. ${cortTxt}\n`;
+ else if(grave) casa+=`\n2. Corticoide VO: considerar apenas se urticária generalizada/angioedema importante, por curto período, conforme avaliação clínica.\n`;
+ casa+=`\n3. Hidratação habitual, compressas frias se prurido. Evitar banho quente, calor excessivo, coçar/fricção e roupas apertadas.\n4. Evitar o gatilho suspeito até reavaliação. Se suspeita de reação a medicamento, não reintroduzir por conta própria.`;
+ let orient=`ORIENTAÇÕES\n\n• Urticária são placas elevadas e pruriginosas que costumam mudar de lugar e desaparecer em até 24h sem deixar marca. Angioedema pode durar mais, até cerca de 72h.\n• Procurar urgência imediatamente se: falta de ar, chiado, rouquidão, tosse persistente, edema de língua/garganta, tontura/desmaio, palidez/sudorese, vômitos repetidos, sonolência/prostração, piora rápida das lesões ou edema importante de face/pescoço.\n• Evitar AINEs/aspirina, codeína e morfina se perceber piora ou se forem gatilhos suspeitos. Para febre/dor, preferir medicação já tolerada previamente e conforme orientação médica.\n• Em crianças, infecção viral é causa comum. Nem toda urticária durante uso de antibiótico confirma alergia ao antibiótico; registrar o episódio e encaminhar para avaliação se houver suspeita.\n• Se duração > 6 semanas, recorrência frequente, angioedema sem urticas, lesão fixa >24h no mesmo local, dor articular, febre recorrente ou manchas que deixam roxo/descamação: reavaliar e encaminhar Alergia/Dermatologia.\n• Retorno ambulatorial em 48–72h se sintomas persistentes, antes se piora.`;
+ document.getElementById('pa').textContent=pa; document.getElementById('casa').textContent=casa; document.getElementById('orient').textContent=orient;
+}
+function respEl(id){return document.getElementById(id).checked}
+function copyBox(id){navigator.clipboard.writeText(document.getElementById(id).textContent||'')}
+function limpar(){document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);document.getElementById('obs').value='';document.getElementById('pa').textContent='';document.getElementById('casa').textContent='';document.getElementById('orient').textContent='';document.getElementById('banner').className='alert green';document.getElementById('banner').textContent='Preencha os dados e clique em “Gerar conduta”.'}
+calcular();
+</script>
+</body>
+</html>
