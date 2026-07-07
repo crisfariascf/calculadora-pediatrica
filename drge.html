@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora DRGE Pediátrica</title>
+<style>
+  :root{
+    --bg:#fff7f5;
+    --card:#ffffff;
+    --ink:#2f2a2a;
+    --muted:#6d5f5d;
+    --line:#f0c8c0;
+    --primary:#e66b5f;
+    --primary2:#ff9a8d;
+    --danger:#c62828;
+    --warn:#b26a00;
+    --ok:#1b7f4c;
+    --blue:#2b6cb0;
+    --purple:#6b46c1;
+    --shadow:0 8px 22px rgba(112, 45, 35, .12);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background:linear-gradient(180deg,#fff7f5 0%, #fff 42%);
+    color:var(--ink);
+  }
+  header{
+    padding:28px 16px 22px;
+    text-align:center;
+    background:linear-gradient(135deg,var(--primary),#f8b2a8);
+    color:white;
+    border-bottom-left-radius:28px;
+    border-bottom-right-radius:28px;
+    box-shadow:var(--shadow);
+  }
+  header h1{margin:0 0 8px;font-size:1.55rem;letter-spacing:.2px}
+  header p{margin:0 auto;max-width:860px;font-size:.96rem;opacity:.96}
+  main{max-width:1120px;margin:18px auto 90px;padding:0 14px}
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  h2{font-size:1.08rem;margin:0 0 12px;color:#8d332b}
+  h3{font-size:1rem;margin:14px 0 8px;color:#7a3029}
+  label{display:block;font-size:.88rem;font-weight:650;margin:10px 0 5px}
+  input, select, textarea{
+    width:100%;
+    border:1px solid #e5b6ad;
+    border-radius:12px;
+    padding:10px 11px;
+    font-size:.95rem;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{min-height:70px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media (max-width:560px){.row,.row3{grid-template-columns:1fr}}
+  .checks{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:7px;
+    margin-top:8px;
+  }
+  .check{
+    display:flex;gap:8px;align-items:flex-start;
+    border:1px solid #f0d0ca;
+    border-radius:12px;
+    padding:8px;
+    background:#fffaf9;
+    font-size:.88rem;
+  }
+  .check input{width:auto;margin-top:2px}
+  button{
+    border:0;border-radius:14px;padding:12px 14px;
+    font-weight:800;cursor:pointer;font-size:.96rem;
+    background:var(--primary);color:white;
+    box-shadow:0 5px 14px rgba(230,107,95,.22);
+  }
+  button.secondary{background:#6d5f5d}
+  button.ghost{background:#fff;color:#8d332b;border:1px solid var(--line);box-shadow:none}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:5px 9px;border-radius:999px;
+    background:#fff1ef;border:1px solid var(--line);
+    color:#7a3029;font-size:.78rem;font-weight:750;margin:2px 4px 2px 0;
+  }
+  .pill.danger{background:#fff1f1;color:var(--danger);border-color:#ffc1c1}
+  .pill.ok{background:#effaf3;color:var(--ok);border-color:#bde8cc}
+  .pill.warn{background:#fff7e8;color:var(--warn);border-color:#ffdda0}
+  .pill.blue{background:#eef6ff;color:var(--blue);border-color:#c5defa}
+  .result-section{
+    border-left:5px solid var(--primary);
+    background:#fffaf9;
+    padding:12px 12px;
+    border-radius:14px;
+    margin:11px 0;
+  }
+  .result-section.danger{border-left-color:var(--danger);background:#fff5f5}
+  .result-section.warn{border-left-color:var(--warn);background:#fff9ec}
+  .result-section.ok{border-left-color:var(--ok);background:#f4fff7}
+  .result-section.blue{border-left-color:var(--blue);background:#f3f8ff}
+  ul{margin:7px 0 0 20px;padding:0}
+  li{margin:5px 0}
+  .small{font-size:.78rem;color:var(--muted);line-height:1.35}
+  .rx{
+    white-space:pre-wrap;
+    background:#ffffff;
+    border:1px dashed #d9a9a2;
+    border-radius:14px;
+    padding:12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:.84rem;
+    line-height:1.45;
+  }
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tab{background:#fff;color:#8d332b;border:1px solid var(--line);box-shadow:none;padding:9px 11px}
+  .tab.active{background:var(--primary);color:white;border-color:var(--primary)}
+  .hidden{display:none!important}
+  table{width:100%;border-collapse:collapse;font-size:.84rem;margin-top:8px;background:#fff;border-radius:12px;overflow:hidden}
+  th,td{border:1px solid #f0d0ca;padding:8px;text-align:left;vertical-align:top}
+  th{background:#fff1ef;color:#7a3029}
+  .footer-note{
+    position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);
+    border-top:1px solid var(--line);padding:8px 12px;text-align:center;
+    font-size:.75rem;color:#6d5f5d;backdrop-filter: blur(8px);
+  }
+  .copy-ok{font-size:.8rem;color:var(--ok);font-weight:700;display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Calculadora DRGE Pediátrica</h1>
+  <p>Conduta por idade, sinais de alerta, manejo hospitalar, prescrição para casa e orientações. Baseada no GPO SBP 2024 sobre Doença do Refluxo Gastroesofágico.</p>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="card">
+      <h2>1) Dados do paciente</h2>
+      <div class="row">
+        <div>
+          <label>Peso (kg)</label>
+          <input id="peso" type="number" step="0.1" min="0" placeholder="Ex.: 8.5" />
+        </div>
+        <div>
+          <label>Idade</label>
+          <input id="idade" type="number" step="1" min="0" placeholder="Ex.: 4" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Unidade da idade</label>
+          <select id="unidadeIdade">
+            <option value="meses">meses</option>
+            <option value="anos">anos</option>
+            <option value="dias">dias</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo de alimentação</label>
+          <select id="alimentacao">
+            <option value="materno">Aleitamento materno</option>
+            <option value="formula">Fórmula</option>
+            <option value="mista">Mista</option>
+            <option value="maior">Dieta de criança maior/adolescente</option>
+          </select>
+        </div>
+      </div>
+
+      <h3>2) Perfil principal</h3>
+      <label>Queixa dominante</label>
+      <select id="perfil">
+        <option value="lactente_regurgitador">Lactente regurgitador, bom estado geral</option>
+        <option value="lactente_suspeita_drge">Lactente com suspeita de DRGE</option>
+        <option value="crianca_tipica">Criança/adolescente com sintomas típicos</option>
+        <option value="extraesofagico">Sintomas respiratórios/extraesofágicos predominantes</option>
+        <option value="risco">Grupo de risco/comorbidade</option>
+      </select>
+
+      <div class="checks">
+        <label class="check"><input type="checkbox" class="sintoma" value="regurgitacao"> Regurgitações/vômitos</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="choro"> Choro/irritabilidade/sono agitado</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="recusa"> Recusa alimentar/engasgos</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="pirose"> Azia/pirose/dor retroesternal</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="epigastralgia"> Dor epigástrica/queimação/dispepsia</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="resp"> Tosse/sibilância/rouquidão/laringite recorrente</label>
+        <label class="check"><input type="checkbox" class="sintoma" value="perdaponderal"> Baixo ganho/perda de peso</label>
+      </div>
+
+      <h3>3) Sinais de alerta</h3>
+      <div class="checks">
+        <label class="check"><input type="checkbox" class="alarme" value="febre"> Febre, letargia ou dor/irritabilidade excessiva</label>
+        <label class="check"><input type="checkbox" class="alarme" value="neuro"> Fontanela tensa, convulsões, macro/microcefalia</label>
+        <label class="check"><input type="checkbox" class="alarme" value="bilioso"> Vômitos biliosos, noturnos ou persistentes com perda de peso</label>
+        <label class="check"><input type="checkbox" class="alarme" value="sangue"> Hematêmese, melena ou sangramento retal</label>
+        <label class="check"><input type="checkbox" class="alarme" value="distensao"> Distensão abdominal ou diarreia crônica</label>
+        <label class="check"><input type="checkbox" class="alarme" value="inicio6m"> Início após 6 meses ou persistência após 12 meses</label>
+        <label class="check"><input type="checkbox" class="alarme" value="disuria"> Disúria</label>
+      </div>
+
+      <h3>4) Gravidade / contexto</h3>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="aplv"> Suspeita de APLV/eczema/sangue nas fezes/história familiar alérgica</label>
+        <label class="check"><input type="checkbox" id="esofagite"> Esofagite erosiva documentada ou forte suspeita de doença ácida</label>
+        <label class="check"><input type="checkbox" id="aspiracao"> Aspiração, pneumonia recorrente, apneia/BRUE ou risco de vida</label>
+        <label class="check"><input type="checkbox" id="comorbidade"> Neuropatia, pneumopatia, prematuridade, obesidade, malformação, hérnia hiatal</label>
+        <label class="check"><input type="checkbox" id="semresposta"> Já usou tratamento bem feito por 4–8 semanas sem resposta</label>
+      </div>
+
+      <label>Medicamento para calcular prescrição</label>
+      <select id="med">
+        <option value="famotidina">Famotidina suspensão 40 mg/5 mL</option>
+        <option value="omeprazol">Omeprazol</option>
+        <option value="pantoprazol">Pantoprazol</option>
+        <option value="esomeprazol">Esomeprazol</option>
+        <option value="lansoprazol">Lansoprazol</option>
+        <option value="sucralfato">Sucralfato suspensão 200 mg/mL</option>
+        <option value="antiacido">Antiácido Mg/Al</option>
+      </select>
+
+      <label>Observações livres</label>
+      <textarea id="obs" placeholder="Ex.: alergias, uso prévio de IBP, comorbidades..."></textarea>
+
+      <div class="actions">
+        <button onclick="calcular()">Gerar conduta</button>
+        <button class="ghost" onclick="limpar()">Limpar</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('conduta', this)">Conduta</button>
+          <button class="tab" onclick="showTab('prescricao', this)">Prescrição</button>
+          <button class="tab" onclick="showTab('orientacoes', this)">Orientações</button>
+          <button class="tab" onclick="showTab('doses', this)">Doses</button>
+        </div>
+
+        <div id="badges"></div>
+
+        <div id="tab-conduta">
+          <h2>Resultado</h2>
+          <div id="resultado" class="small">Preencha os dados e clique em “Gerar conduta”.</div>
+        </div>
+
+        <div id="tab-prescricao" class="hidden">
+          <h2>Prescrição gerada</h2>
+          <h3>Hospital / PA</h3>
+          <div id="rxHospital" class="rx">—</div>
+          <h3>Para casa</h3>
+          <div id="rxCasa" class="rx">—</div>
+          <div class="actions">
+            <button class="secondary" onclick="copiarPrescricao()">Copiar prescrição</button>
+            <span id="copyOk" class="copy-ok">Copiado!</span>
+          </div>
+        </div>
+
+        <div id="tab-orientacoes" class="hidden">
+          <h2>Orientações aos responsáveis</h2>
+          <div id="orientacoes">—</div>
+        </div>
+
+        <div id="tab-doses" class="hidden">
+          <h2>Tabela rápida de doses</h2>
+          <table>
+            <thead><tr><th>Medicação</th><th>Dose usual no guia</th><th>Observações práticas</th></tr></thead>
+            <tbody>
+              <tr><td>Antiácido Mg/Al</td><td>&lt;5 kg: 2,5 mL 3x/dia<br>&gt;5 kg: 5 mL 3x/dia</td><td>Sintomas leves/intermitentes, sob demanda.</td></tr>
+              <tr><td>Sucralfato</td><td>&lt;6 anos: 2,5 mL 4x/dia<br>&gt;6 anos: 1 g 4x/dia ou 5 mL 4x/dia</td><td>Citoprotetor; não modifica pH. Separar de outros remédios.</td></tr>
+              <tr><td>Famotidina</td><td>0,5–1 mg/kg/dia 12/12h<br>Máx. 40 mg/dia</td><td>Suspensão 40 mg/5 mL = 8 mg/mL. Pode usar à noite se 1x/dia.</td></tr>
+              <tr><td>Omeprazol</td><td>1–4 mg/kg/dia<br>Máx. 80 mg/dia</td><td>Usar preferencialmente antes do café. Evitar uso prolongado sem reavaliação.</td></tr>
+              <tr><td>Pantoprazol</td><td>1–2 mg/kg/dia<br>Máx. 40 mg/dia</td><td>Opção em maiores que conseguem comprimido.</td></tr>
+              <tr><td>Esomeprazol</td><td>Lactentes: 10 mg<br>Até 20 kg: 20 mg<br>&gt;20 kg: 40 mg</td><td>Comprimido/sachê solúvel conforme disponibilidade.</td></tr>
+              <tr><td>Lansoprazol</td><td>2 mg/kg/dia lactentes<br>30 mg se &gt;30 kg<br>Máx. 60 mg/dia</td><td>Geralmente 1x/dia.</td></tr>
+            </tbody>
+          </table>
+          <p class="small">Evitar metoclopramida, bromoprida e domperidona de rotina para DRGE pediátrica: benefício não comprovado e risco de efeitos adversos.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="footer-note">
+  Apoio à decisão clínica. Não substitui avaliação médica, exame físico, protocolos locais, bula e julgamento clínico. Atenção a doses máximas, contraindicações e sinais de alerta.
+</div>
+
+<script>
+function idadeMeses(){
+  const idade = parseFloat(document.getElementById('idade').value || 0);
+  const un = document.getElementById('unidadeIdade').value;
+  if(un === 'dias') return idade/30.44;
+  if(un === 'anos') return idade*12;
+  return idade;
+}
+function fmt(n, casas=1){
+  if(!isFinite(n)) return '—';
+  return Number(n.toFixed(casas)).toString().replace('.', ',');
+}
+function cap(n, max){return Math.min(n,max)}
+function checkedValues(cls){return [...document.querySelectorAll('.'+cls+':checked')].map(x=>x.value)}
+function isChecked(id){return document.getElementById(id).checked}
+
+function doseMed(med, peso, idadeM){
+  const idadeAnos = idadeM/12;
+  let out = {};
+  if(!peso || peso <= 0) return {texto:'Informe o peso para calcular dose em mg/mL.'};
+
+  if(med === 'famotidina'){
+    const mgDiaMin = cap(0.5*peso,40), mgDiaMax=cap(1*peso,40);
+    const dose12Min = mgDiaMin/2, dose12Max = mgDiaMax/2;
+    out.texto = `Famotidina suspensão 40 mg/5 mL (8 mg/mL):\nDose: 0,5–1 mg/kg/dia VO, dividir 12/12h. Máx. 40 mg/dia.\nPara ${fmt(peso)} kg: ${fmt(mgDiaMin)}–${fmt(mgDiaMax)} mg/dia = ${fmt(dose12Min)}–${fmt(dose12Max)} mg/dose 12/12h.\nVolume por dose: ${fmt(dose12Min/8,2)}–${fmt(dose12Max/8,2)} mL VO 12/12h.`;
+  }
+  if(med === 'omeprazol'){
+    const min=cap(1*peso,80), max=cap(4*peso,80);
+    out.texto = `Omeprazol:\nDose: 1–4 mg/kg/dia VO 1x/dia. Máx. 80 mg/dia.\nPara ${fmt(peso)} kg: ${fmt(min)}–${fmt(max)} mg/dia VO, preferencialmente 30 min antes do café.\nSugestão prática inicial: ${fmt(cap(1*peso,80))} mg/dia; ajustar conforme resposta/gravidade.`;
+  }
+  if(med === 'pantoprazol'){
+    const min=cap(1*peso,40), max=cap(2*peso,40);
+    out.texto = `Pantoprazol:\nDose: 1–2 mg/kg/dia VO 1x/dia. Máx. 40 mg/dia.\nPara ${fmt(peso)} kg: ${fmt(min)}–${fmt(max)} mg/dia VO, preferencialmente antes do café.`;
+  }
+  if(med === 'esomeprazol'){
+    let dose = idadeM < 12 ? 10 : (peso <= 20 ? 20 : 40);
+    out.texto = `Esomeprazol:\nDose orientativa do guia: lactentes 10 mg; até 20 kg: 20 mg; acima de 20 kg: 40 mg. Máx. 40 mg/dia.\nPara ${fmt(peso)} kg: ${dose} mg VO 1x/dia, preferencialmente antes do café.`;
+  }
+  if(med === 'lansoprazol'){
+    let dose = idadeM < 24 ? cap(2*peso,60) : (peso > 30 ? 30 : cap(2*peso,60));
+    out.texto = `Lansoprazol:\nDose: 2 mg/kg/dia para lactentes; 30 mg para maiores de 30 kg. Máx. 60 mg/dia.\nPara ${fmt(peso)} kg: cerca de ${fmt(dose)} mg VO 1x/dia.`;
+  }
+  if(med === 'sucralfato'){
+    if(idadeAnos < 6){
+      out.texto = `Sucralfato suspensão 200 mg/mL:\nCrianças <6 anos/lactentes: 2,5 mL VO 6/6h.\nTotal: 500 mg/dose, 4x/dia. Separar 1–2h de outras medicações.`;
+    } else {
+      out.texto = `Sucralfato:\nCrianças >6 anos: 1 g VO 6/6h OU suspensão 200 mg/mL 5 mL VO 6/6h.\nSeparar 1–2h de outras medicações.`;
+    }
+  }
+  if(med === 'antiacido'){
+    const vol = peso < 5 ? 2.5 : 5;
+    out.texto = `Antiácido com Mg/Al:\n${peso < 5 ? '<5 kg' : '>5 kg'}: ${String(vol).replace('.', ',')} mL VO 8/8h se sintomas leves/intermitentes.\nEvitar uso crônico sem reavaliação.`;
+  }
+  return out;
+}
+
+function classificar(){
+  const im = idadeMeses();
+  if(im < 1) return 'neonato';
+  if(im < 12) return 'lactente';
+  if(im < 24) return 'lactente_maior';
+  if(im < 144) return 'crianca';
+  return 'adolescente';
+}
+
+function gerarBadges(perfil, alertas, risco){
+  const faixa = classificar();
+  let txt = '';
+  txt += `<span class="pill blue">Faixa: ${faixa.replace('_',' ')}</span>`;
+  if(alertas.length) txt += `<span class="pill danger">Sinais de alerta: ${alertas.length}</span>`;
+  else txt += `<span class="pill ok">Sem alerta marcado</span>`;
+  if(risco) txt += `<span class="pill warn">Grupo de risco/gravidade</span>`;
+  if(perfil.includes('lactente')) txt += `<span class="pill">Fluxo de lactente</span>`;
+  if(perfil === 'crianca_tipica') txt += `<span class="pill">Fluxo criança/adolescente</span>`;
+  return txt;
+}
+
+function calcular(){
+  const peso = parseFloat(document.getElementById('peso').value || 0);
+  const im = idadeMeses();
+  const perfil = document.getElementById('perfil').value;
+  const sintomas = checkedValues('sintoma');
+  const alertas = checkedValues('alarme');
+  const aplv = isChecked('aplv');
+  const esofagite = isChecked('esofagite');
+  const aspiracao = isChecked('aspiracao');
+  const comorbidade = isChecked('comorbidade');
+  const semresposta = isChecked('semresposta');
+  const risco = aspiracao || comorbidade || esofagite || semresposta;
+  const med = document.getElementById('med').value;
+  const dose = doseMed(med,peso,im).texto;
+  const faixa = classificar();
+
+  document.getElementById('badges').innerHTML = gerarBadges(perfil, alertas, risco);
+
+  let res = '';
+  let hospital = '';
+  let casa = '';
+  let orient = '';
+
+  if(alertas.length){
+    res += `<div class="result-section danger"><h3>Conduta prioritária: NÃO tratar como refluxo simples</h3>
+      <ul>
+        <li>Há sinais de alerta marcados. Investigar diagnósticos alternativos conforme o achado: infecção, obstrução, HIC, estenose hipertrófica de piloro, sangramento digestivo, alergia alimentar, distúrbios metabólicos etc.</li>
+        <li>Se vômitos biliosos, distensão importante, toxemia, sangramento, desidratação, perda ponderal importante ou alteração neurológica: considerar avaliação hospitalar/urgência e exames direcionados.</li>
+        <li>Evitar iniciar IBP como “teste” antes de afastar causa grave quando há alerta.</li>
+      </ul></div>`;
+    hospital += `CONDUTA HOSPITALAR / PA\n- Avaliar estado geral, hidratação, peso, sinais vitais e crescimento.\n- Sinais de alerta presentes: investigar causa alternativa antes de fechar DRGE.\n- Considerar exames conforme quadro: glicemia/eletrólitos/gasometria se desidratação ou vômitos importantes; USG se suspeita de estenose hipertrófica de piloro; avaliação cirúrgica se vômito bilioso/distensão; EDA/gastropediatria se sangramento, disfagia, suspeita de esofagite grave.\n- Tratar desidratação/dor/complicações conforme protocolo local.\n`;
+  }
+
+  if((perfil.includes('lactente') || im < 24) && !alertas.length){
+    res += `<div class="result-section ok"><h3>Fluxograma de lactente</h3>
+      <ul>
+        <li>Se lactente saudável, com regurgitação, bom ganho ponderal e sem sinais de alerta: explicar RGE fisiológico; não precisa exame nem medicamento.</li>
+        <li>Primeiro passo: manejo conservador — manter aleitamento materno, evitar overfeeding, fracionar volumes, arrotar, não apertar abdome/fraldas antes da mamada, fórmula AR/espessante se usa fórmula.</li>
+        <li>Se suspeita de APLV ou sintomas persistentes: teste 2–4 semanas com dieta materna sem proteína do leite de vaca se amamentado ou fórmula extensamente hidrolisada/aminoácidos se não amamentado.</li>
+        <li>Antiácido/citoprotetor pode ser opção em sintomas leves/intermitentes. Supressão ácida por 4–8 semanas só se sintomas típicos importantes, esofagite/documentação de doença ácida ou falha do manejo inicial.</li>
+      </ul></div>`;
+    if(aplv){
+      res += `<div class="result-section warn"><h3>APLV no diferencial</h3><p>Como refluxo, cólica e APLV se sobrepõem no lactente, o fluxo prioriza teste terapêutico para APLV por 2–4 semanas antes de escalar supressão ácida, quando houver suspeita.</p></div>`;
+    }
+    hospital += `LACTENTE - MANEJO NO PA\n- Confirmar ausência de sinais de alerta e avaliar ganho ponderal.\n- Se "vomitador feliz": orientar e tranquilizar; não medicar.\n- Medidas: manter leite materno; evitar excesso de volume; fracionar mamadas; fórmula AR/espessante se usa fórmula; posição supina para dormir.\n- Se suspeita de APLV: orientar dieta materna sem PLV ou fórmula extensamente hidrolisada/aminoácidos por 2–4 semanas e reavaliar.\n- Evitar bromoprida/metoclopramida/domperidona de rotina para DRGE.\n`;
+    casa += `PRESCRIÇÃO / PLANO PARA CASA - LACTENTE\n1. Medidas gerais: manter aleitamento materno; evitar overfeeding; fracionar mamadas; arrotar; trocar fralda antes das mamadas; evitar tabagismo passivo.\n2. Sono: sempre em decúbito dorsal/supino para dormir.\n`;
+    if(aplv) casa += `3. Teste APLV: dieta materna sem proteína do leite de vaca se aleitamento materno OU fórmula extensamente hidrolisada/aminoácidos se fórmula, por 2–4 semanas. Reavaliar.\n`;
+  }
+
+  if((perfil === 'crianca_tipica' || im >= 24) && !alertas.length){
+    res += `<div class="result-section blue"><h3>Fluxograma de criança maior/adolescente</h3>
+      <ul>
+        <li>Sintomas típicos: azia/pirose, dor retroesternal, epigastralgia em queimação, náusea/regurgitação, dor torácica não cardíaca após avaliação.</li>
+        <li>Começar com educação alimentar/estilo de vida. Se sintomas típicos persistentes: teste com bloqueador H2 ou IBP por 4–8 semanas.</li>
+        <li>Se melhora: tentar retirada gradual após 4–8 semanas. Se recidiva ou impossibilidade de suspender: considerar EDA e/ou gastropediatria.</li>
+        <li>Se não melhora com uso correto de IBP: reavaliar adesão, horário, diferencial; considerar endoscopia, pHmetria/pH-impedanciometria.</li>
+      </ul></div>`;
+    hospital += `CRIANÇA/ADOLESCENTE - PA\n- Sem sinais de alerta: orientar medidas de estilo de vida e dieta.\n- Se sintomas típicos frequentes/persistentes: teste terapêutico por 4–8 semanas com H2 ou IBP.\n- Reavaliar em 2–4 semanas e ao final de 4–8 semanas.\n- Se disfagia, sangramento, perda de peso, dor intensa, vômitos persistentes, falha terapêutica ou necessidade crônica: encaminhar gastropediatria/considerar EDA.\n`;
+    casa += `PRESCRIÇÃO / PLANO PARA CASA - CRIANÇA/ADOLESCENTE\n1. Dieta fracionada; evitar refeições volumosas, muito gordurosas e altamente calóricas.\n2. Não deitar logo após comer; evitar comer muito antes de dormir.\n3. Reduzir peso se sobrepeso/obesidade; evitar tabagismo ativo/passivo.\n`;
+  }
+
+  if(perfil === 'extraesofagico' && !alertas.length){
+    res += `<div class="result-section warn"><h3>Sintomas extraesofágicos</h3>
+      <ul>
+        <li>Tosse, broncoespasmo, asma, rouquidão e laringite não devem receber IBP/H2 isoladamente como teste se não houver sintomas típicos ou exame sugestivo de DRGE.</li>
+        <li>Investigar causas respiratórias/ORL e tratar comorbidades. Supressão ácida só se houver pirose/epigastralgia/regurgitação típica associada ou documentação.</li>
+      </ul></div>`;
+    hospital += `SINTOMAS RESPIRATÓRIOS/EXTRAESOFÁGICOS\n- Não iniciar IBP/H2 apenas por tosse/sibilância/rouquidão sem sintomas típicos de DRGE.\n- Investigar asma, rinossinusite, infecção, aspiração, corpo estranho, alergias, etc.\n`;
+  }
+
+  if(risco){
+    res += `<div class="result-section danger"><h3>Maior risco / encaminhamento</h3>
+      <ul>
+        <li>Comorbidades como neuropatia, pneumopatia, prematuridade, malformações, hérnia hiatal, obesidade ou aspiração aumentam risco de DRGE grave e refratária.</li>
+        <li>Aspiração, pneumonias recorrentes, apneia/BRUE, falha terapêutica e necessidade de tratamento crônico devem motivar gastropediatria e investigação.</li>
+        <li>Cirurgia/fundoplicatura é considerada em aspiração/risco de vida, condições crônicas de alto risco ou necessidade crônica de medicações após avaliação adequada.</li>
+      </ul></div>`;
+  }
+
+  if(esofagite && !alertas.length){
+    res += `<div class="result-section blue"><h3>Esofagite/doença ácida documentada</h3><p>IBP é preferido quando há esofagite erosiva, estenose péptica, Barrett ou necessidade de bloqueio ácido mais efetivo. Programar reavaliação e tentativa de desmame após controle, evitando uso crônico sem investigação.</p></div>`;
+  }
+
+  res += `<div class="result-section"><h3>Medicamento selecionado</h3><div class="rx">${dose}</div></div>`;
+
+  let medLine = dose;
+  if(!alertas.length){
+    const usarMed = (esofagite || perfil === 'crianca_tipica' || sintomas.includes('pirose') || sintomas.includes('epigastralgia') || med === 'sucralfato' || med === 'antiacido');
+    if(usarMed){
+      casa += `\nMEDICAÇÃO SE INDICADA APÓS AVALIAÇÃO\n${medLine}\nDuração sugerida para H2/IBP quando teste terapêutico: 4–8 semanas, com reavaliação e tentativa de retirada gradual se melhora.\n`;
+    } else {
+      casa += `\nSem medicação antiácida de rotina neste momento se lactente saudável sem sintomas típicos/complicações. Reavaliar se piora.\n`;
+    }
+  }
+
+  if(!hospital) hospital = `CONDUTA HOSPITALAR / PA\n- Avaliar sinais de alerta, hidratação, crescimento e diagnóstico diferencial.\n- Sem alerta: manejo conservador e orientação por faixa etária.\n- Medicamentos apenas se indicação clínica; evitar procinéticos de rotina.\n`;
+  if(!casa) casa = `PRESCRIÇÃO / PLANO PARA CASA\n- Medidas conservadoras conforme idade.\n- Retorno/reavaliação se persistência, piora ou sinais de alerta.\n`;
+
+  orient = `<div class="result-section ok"><h3>Orientações essenciais</h3>
+    <ul>
+      <li><b>Quando procurar urgência:</b> vômito verde/bilioso, sangue no vômito ou fezes, sonolência/letargia, febre persistente, desidratação, perda de peso, distensão abdominal, engasgos importantes, apneia/cianose, piora respiratória ou recusa alimentar importante.</li>
+      <li><b>Lactentes:</b> refluxo/regurgitação é muito comum e costuma melhorar espontaneamente até 12–24 meses. Se cresce bem e não há alerta, geralmente não precisa remédio.</li>
+      <li><b>Sono seguro:</b> lactente deve dormir de barriga para cima. Não usar posicionadores, travesseiros ou elevação insegura no berço.</li>
+      <li><b>Alimentação:</b> evitar volumes grandes; fracionar; manter aleitamento materno; se fórmula, considerar AR/espessamento quando apropriado.</li>
+      <li><b>Criança maior/adolescente:</b> evitar refeições volumosas/gordurosas, não deitar após comer, manejar sobrepeso, evitar tabaco.</li>
+      <li><b>Medicações:</b> usar pelo menor tempo necessário; reavaliar em 4–8 semanas; não manter IBP crônico sem investigação/seguimento.</li>
+    </ul></div>`;
+
+  document.getElementById('resultado').innerHTML = res;
+  document.getElementById('rxHospital').textContent = hospital;
+  document.getElementById('rxCasa').textContent = casa;
+  document.getElementById('orientacoes').innerHTML = orient;
+}
+
+function showTab(tab, btn){
+  for(const id of ['conduta','prescricao','orientacoes','doses']){
+    document.getElementById('tab-'+id).classList.toggle('hidden', id!==tab);
+  }
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function limpar(){
+  document.querySelectorAll('input').forEach(i=>{
+    if(i.type==='checkbox') i.checked=false; else i.value='';
+  });
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  document.getElementById('badges').innerHTML='';
+  document.getElementById('resultado').innerHTML='Preencha os dados e clique em “Gerar conduta”.';
+  document.getElementById('rxHospital').textContent='—';
+  document.getElementById('rxCasa').textContent='—';
+  document.getElementById('orientacoes').innerHTML='—';
+}
+
+async function copiarPrescricao(){
+  const text = document.getElementById('rxHospital').textContent + "\n\n" + document.getElementById('rxCasa').textContent;
+  await navigator.clipboard.writeText(text);
+  const ok = document.getElementById('copyOk');
+  ok.style.display='inline';
+  setTimeout(()=>ok.style.display='none', 1600);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Pediátrica - Dor Abdominal Aguda</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
+  --blue:#2563eb; --blue2:#dbeafe; --red:#dc2626; --red2:#fee2e2;
+  --amber:#d97706; --amber2:#fef3c7; --green:#059669; --green2:#d1fae5;
+  --purple:#7c3aed; --purple2:#ede9fe; --gray:#e5e7eb;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+header{background:linear-gradient(135deg,#123b78,#2563eb);color:white;padding:22px 16px;border-bottom-left-radius:24px;border-bottom-right-radius:24px;box-shadow:0 8px 28px rgba(37,99,235,.25)}
+header h1{margin:0;font-size:1.45rem}
+header p{margin:6px 0 0;opacity:.92;font-size:.93rem}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
+.grid{display:grid;gap:14px}
+@media(min-width:900px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.22)}
+.card h2{font-size:1.05rem;margin:0 0 10px;color:#0f172a}
+.card h3{font-size:.96rem;margin:12px 0 7px}
+label{display:block;font-weight:700;font-size:.86rem;margin:9px 0 4px;color:#334155}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;font-size:.95rem}
+textarea{min-height:80px}
+.checks{display:grid;grid-template-columns:1fr;gap:7px;margin-top:8px}
+@media(min-width:720px){.checks.two{grid-template-columns:1fr 1fr}}
+.check{display:flex;gap:9px;align-items:flex-start;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:9px;font-size:.88rem}
+.check input{width:auto;margin-top:2px}
+button{border:0;border-radius:14px;padding:13px 16px;font-weight:800;font-size:1rem;cursor:pointer}
+.btn-main{background:var(--blue);color:white;width:100%;box-shadow:0 8px 20px rgba(37,99,235,.24)}
+.btn-ghost{background:#e2e8f0;color:#0f172a}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:.78rem;font-weight:800;margin:3px 4px 3px 0}
+.b-red{background:var(--red2);color:#991b1b}.b-amber{background:var(--amber2);color:#92400e}.b-green{background:var(--green2);color:#065f46}.b-blue{background:var(--blue2);color:#1e40af}.b-purple{background:var(--purple2);color:#5b21b6}
+.result{border-left:6px solid var(--blue);background:#f8fafc;border-radius:16px;padding:14px;margin-top:12px}
+.result.red{border-left-color:var(--red);background:#fff7f7}.result.amber{border-left-color:var(--amber);background:#fffbeb}.result.green{border-left-color:var(--green);background:#f0fdf4}
+.flow{display:grid;gap:10px;margin-top:10px}
+.step{border:1px solid #e2e8f0;background:#fff;border-radius:14px;padding:12px}
+.step strong{color:#0f172a}
+.rx{background:#0f172a;color:#f8fafc;border-radius:16px;padding:14px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;overflow:auto}
+.small{font-size:.8rem;color:var(--muted)}
+.table{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;font-size:.86rem}
+.table th,.table td{padding:9px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+.table th{background:#f1f5f9;text-align:left}
+.warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:10px;font-size:.86rem}
+.kpi{font-size:1.45rem;font-weight:900}
+.hidden{display:none}
+.print-only{display:none}
+@media print{
+ body{background:white}.card,header{box-shadow:none}.no-print{display:none!important}.print-only{display:block}
+ .wrap{max-width:none}.card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap" style="padding:0">
+    <h1>Calculadora Pediátrica — Dor Abdominal Aguda no PA</h1>
+    <p>Fluxograma prático com sinais de alerta, hipóteses por idade, AIR Score, APENDIC-RADS, exames, conduta hospitalar, alta e orientações.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card warn">
+    <b>Uso clínico:</b> ferramenta de apoio. Não substitui avaliação médica, protocolo institucional ou discussão com cirurgia/retaguarda. Em choque, sepse, peritonite ou deterioração: conduzir como emergência.
+  </div>
+
+  <section class="grid grid-3">
+    <div class="card">
+      <h2>1) Dados do paciente</h2>
+      <label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 18">
+      <label>Idade</label>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+        <input id="idade" type="number" min="0" step="1" placeholder="Ex.: 5">
+        <select id="idadeUn"><option value="anos">anos</option><option value="meses">meses</option><option value="dias">dias</option></select>
+      </div>
+      <label>Sexo / situação</label>
+      <select id="sexo">
+        <option value="M">Masculino</option>
+        <option value="Fpre">Feminino pré-púbere</option>
+        <option value="Fpub">Feminino púbere/adolescente</option>
+      </select>
+      <label>Escala de dor atual (0-10)</label><input id="dor" type="number" min="0" max="10" step="1" placeholder="0 a 10">
+      <label>Observações rápidas</label><textarea id="obs" placeholder="Início, localização, vômitos, evacuação, diurese, menstruação, última refeição..."></textarea>
+    </div>
+
+    <div class="card">
+      <h2>2) Sinais de alerta / abdome cirúrgico</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" class="alerta" value="choque"> Choque, sepse, prostração importante ou deterioração do estado geral</label>
+        <label class="check"><input type="checkbox" class="alerta" value="peritonite"> Defesa, rigidez/abdome em tábua, DB+, dor ao movimento/tosse/deambulação</label>
+        <label class="check"><input type="checkbox" class="alerta" value="bilioso"> Vômitos biliosos ou fecaloides</label>
+        <label class="check"><input type="checkbox" class="alerta" value="obstrucao"> Distensão importante, RHA ausentes/metálicos, parada de gases/fezes</label>
+        <label class="check"><input type="checkbox" class="alerta" value="sangue"> Melena, hematoquezia, hematúria ou sangramento importante</label>
+        <label class="check"><input type="checkbox" class="alerta" value="massa"> Massa abdominal, hérnia dolorosa/irredutível ou dor testicular</label>
+        <label class="check"><input type="checkbox" class="alerta" value="dorforte"> Dor intensa persistente, posição antálgica ou dor apesar de analgesia</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3) Sintomas direcionadores do fluxograma</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" class="sx" value="constipacao"> Constipação / fecaloma / evacuação ausente</label>
+        <label class="check"><input type="checkbox" class="sx" value="diarreia"> Diarreia não sanguinolenta</label>
+        <label class="check"><input type="checkbox" class="sx" value="disenteria"> Diarreia sanguinolenta</label>
+        <label class="check"><input type="checkbox" class="sx" value="urinario"> Disúria, polaciúria, dor lombar ou Giordano</label>
+        <label class="check"><input type="checkbox" class="sx" value="resp"> Tosse, taquipneia, dor torácica, ausculta alterada ou IVAS</label>
+        <label class="check"><input type="checkbox" class="sx" value="dm"> Poliúria, polidipsia, perda de peso, hálito cetônico, vômitos</label>
+        <label class="check"><input type="checkbox" class="sx" value="gineco"> Risco de gravidez/IST, atraso menstrual, dor pélvica, corrimento</label>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-2">
+    <div class="card">
+      <h2>4) AIR Score — suspeita de apendicite</h2>
+      <div class="grid grid-2">
+        <div><label>Vômitos</label><select id="airVom"><option value="0">Não</option><option value="1">Sim (+1)</option></select></div>
+        <div><label>Dor em FID</label><select id="airFID"><option value="0">Não</option><option value="1">Sim (+1)</option></select></div>
+        <div><label>Defesa abdominal</label><select id="airDef"><option value="0">Ausente</option><option value="1">Fraca (+1)</option><option value="2">Média (+2)</option><option value="3">Forte (+3)</option></select></div>
+        <div><label>Temperatura ≥ 38,5 ºC</label><select id="airTemp"><option value="0">Não</option><option value="1">Sim (+1)</option></select></div>
+        <div><label>Neutrófilos segmentados</label><select id="airNeu"><option value="0">&lt; 70%</option><option value="1">70–84% (+1)</option><option value="2">≥ 85% (+2)</option></select></div>
+        <div><label>Leucócitos</label><select id="airLeuco"><option value="0">≤ 10.000</option><option value="1">10.100–14.900 (+1)</option><option value="2">≥ 15.000 (+2)</option></select></div>
+        <div><label>PCR</label><select id="airPcr"><option value="0">&lt; 10 mg/L</option><option value="1">10–49 mg/L (+1)</option><option value="2">≥ 50 mg/L (+2)</option></select></div>
+      </div>
+      <div id="airBox" class="result"><span class="kpi">AIR 0</span><br>Preencha para classificar.</div>
+      <p class="small">Observação: o documento cita AIR 0–4 como baixa e 4–8 como média; por segurança, AIR 4 é tratado aqui como zona de média probabilidade se houver clínica compatível.</p>
+    </div>
+
+    <div class="card">
+      <h2>5) USG — APENDIC-RADS</h2>
+      <label>Resultado do ultrassom</label>
+      <select id="rads">
+        <option value="">Não realizado / não disponível</option>
+        <option value="0">0 — Apêndice não visualizado</option>
+        <option value="1">1 — Apêndice normal</option>
+        <option value="2">2 — Apêndice possivelmente normal</option>
+        <option value="3">3 — Não é possível excluir apendicite</option>
+        <option value="4">4 — Apendicite aguda</option>
+        <option value="5">5 — Apendicite complicada</option>
+      </select>
+      <div id="radsBox" class="result"><b>Sem USG:</b> decidir por clínica, AIR, sinais de alerta e reavaliação.</div>
+      <h3>Exames laboratoriais úteis</h3>
+      <div class="small">Hemograma, PCR, glicemia, eletrólitos, ureia/creatinina, TGO/TGP, FA/GGT, bilirrubinas, DHL, amilase/lipase, gasometria/lactato, beta-HCG, urina 1 e urocultura.</div>
+    </div>
+  </section>
+
+  <section class="card no-print">
+    <button class="btn-main" onclick="calcular()">GERAR CONDUTA E PRESCRIÇÃO</button>
+  </section>
+
+  <section id="saida" class="hidden">
+    <div class="card">
+      <h2>Resumo da conduta</h2>
+      <div id="resumo"></div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Fluxograma aplicado</h2>
+        <div id="fluxo" class="flow"></div>
+      </div>
+      <div class="card">
+        <h2>Hipóteses por faixa etária</h2>
+        <div id="idadeBox"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>Prescrição / plano no PA</h2>
+        <div id="rxHospital" class="rx"></div>
+      </div>
+      <div class="card">
+        <h2>Alta — prescrição e orientações</h2>
+        <div id="rxCasa" class="rx"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Checklist de prontuário</h2>
+      <table class="table">
+        <tr><th>Anamnese</th><td>Idade, comorbidades, cirurgias prévias, medicações, febre, última refeição, hábito intestinal, diarreia/constipação, náuseas/vômitos, disúria, anorexia, viagem, histórico familiar, atividade sexual/ciclo/corrimento quando aplicável.</td></tr>
+        <tr><th>Dor</th><td>Início, localização, irradiação, qualidade, intensidade 0–10, duração, recorrência, fatores de melhora/piora.</td></tr>
+        <tr><th>Exame físico</th><td>Estado geral, consciência, hidratação, sinais vitais, icterícia, ORL/otite/faringite, hálito cetônico/fecaloide, ausculta cardio-pulmonar, pele/púrpuras, hérnias, períneo/testículos, toque retal se indicado, abdome completo e sinais peritoneais.</td></tr>
+        <tr><th>Qualidade</th><td>Documentar AIR quando suspeita de apendicite, APENDIC-RADS quando USG realizada, e motivo de acionamento ou não da cirurgia.</td></tr>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+function val(id){return document.getElementById(id).value}
+function n(id){return parseFloat(val(id))||0}
+function checked(cls){return [...document.querySelectorAll('.'+cls+':checked')].map(x=>x.value)}
+function fmt(x){return (Math.round(x*10)/10).toString().replace('.',',')}
+function doseMl(mg, conc){return Math.max(0, mg/conc)}
+function calcManutencao(p){
+  if(!p) return 0;
+  let mlh=0;
+  if(p<=10) mlh=4*p;
+  else if(p<=20) mlh=40+2*(p-10);
+  else mlh=60+1*(p-20);
+  return mlh;
+}
+function faixaEtaria(idade,un){
+  let meses = un==='dias' ? idade/30 : un==='meses' ? idade : idade*12;
+  if(meses<1) return 'neonatal';
+  if(meses<24) return '1m-2a';
+  if(meses<144) return '2-11a';
+  return '12-19a';
+}
+function airScore(){
+  return ['airVom','airFID','airDef','airTemp','airNeu','airLeuco','airPcr'].reduce((s,id)=>s+(parseInt(val(id))||0),0)
+}
+function airClass(score){
+  if(score<=3) return ['Baixa probabilidade','green','Não há necessidade rotineira de imagem se exame clínico tranquilo; observar evolução e reavaliar.'];
+  if(score<=8) return ['Média probabilidade','amber','Manter jejum, hidratação e analgesia. Solicitar imagem, preferencialmente USG de abdome total.'];
+  return ['Alta probabilidade','red','Manter jejum, hidratação e analgesia. Solicitar imagem e avaliação conjunta com cirurgia; considerar TC se USG não resolver.'];
+}
+function updateAir(){
+  let s=airScore(), c=airClass(s);
+  let box=document.getElementById('airBox'); box.className='result '+c[1];
+  box.innerHTML=`<span class="kpi">AIR ${s}</span><br><b>${c[0]}</b><br>${c[2]}`;
+}
+function updateRads(){
+  let r=val('rads'), s=airScore();
+  let box=document.getElementById('radsBox');
+  let cls='', txt='<b>Sem USG:</b> decidir por clínica, AIR, sinais de alerta e reavaliação.';
+  if(r==='0'){cls='amber'; txt='<b>APENDIC-RADS 0:</b> apêndice não visualizado. Solicitar avaliação do cirurgião da unidade para avaliação em conjunto.'}
+  if(r==='1'){cls='green'; txt='<b>APENDIC-RADS 1:</b> apêndice normal. Se melhora clínica e sem sinais de alerta, considerar alta com orientações e retorno se piora.'}
+  if(r==='2'){cls='amber'; txt=`<b>APENDIC-RADS 2:</b> possivelmente normal. Avaliação conjunta com cirurgia. ${s>=4?'Como AIR ≥ 4, considerar TC de abdome se persistir suspeita.':'Se AIR baixo e clínica favorável, reavaliar/observação.'}`}
+  if(r==='3'){cls='amber'; txt=`<b>APENDIC-RADS 3:</b> não exclui apendicite. Avaliação conjunta com cirurgia. ${s>=4?'Como AIR ≥ 4, considerar TC de abdome.':'Reavaliar seriado; TC conforme evolução.'}`}
+  if(r==='4'){cls='red'; txt='<b>APENDIC-RADS 4:</b> apendicite aguda. Solicitar contato com Cirurgia Pediátrica/retaguarda.'}
+  if(r==='5'){cls='red'; txt='<b>APENDIC-RADS 5:</b> apendicite complicada. Solicitar contato com Cirurgia Pediátrica/retaguarda e suporte hospitalar.'}
+  box.className='result '+cls; box.innerHTML=txt;
+}
+document.querySelectorAll('select,input').forEach(el=>el.addEventListener('change',()=>{updateAir();updateRads()}));
+updateAir(); updateRads();
+
+function hipoteses(faixa, sexo){
+  const base={
+    'neonatal': ['Cirúrgicas: enterocolite necrotizante, obstrução intestinal, má rotação/volvo.','Clínicas: APLV, causas medicamentosas/idiopáticas, abuso.'],
+    '1m-2a': ['Cirúrgicas: invaginação, hérnia encarcerada, obstrução, má rotação/volvo, Hirschsprung.','Clínicas: aerofagia, PBE, RGE, abuso, ITU, GECA, pneumonia, constipação, intolerância à lactose.'],
+    '2-11a': ['Cirúrgicas: apendicite, pancreatite, tumores, torção testicular, hérnia encarcerada, divertículo de Meckel, síndrome da artéria mesentérica superior.','Clínicas: GECA, adenite mesentérica, PBE, CAD, tiflite, faringite, pielonefrite, pneumonia, Púrpura de Henoch-Schönlein, SHU, hepatite, úlcera péptica, anemia falciforme, abuso, constipação, dor funcional.'],
+    '12-19a': ['Cirúrgicas: apendicite, pancreatite, gravidez ectópica, torção de omento, abscesso/hemorragia do psoas, torção testicular.','Clínicas: idiopática, fadiga muscular, adenite, ITU, CAD, DIPA, gravidez, hepatite, Crohn, cisto ovariano, anemia falciforme, úlcera péptica, abscesso tubo-ovariano, constipação, dismenorreia.']
+  };
+  let arr=base[faixa]||[];
+  if(sexo==='M') arr.push('Sempre lembrar: torção testicular pode se manifestar como dor abdominal/vômitos.');
+  if(sexo==='Fpub') arr.push('Em adolescente: beta-HCG, IST/DIPA, gravidez ectópica, cisto/torção ovariana conforme clínica.');
+  return arr;
+}
+function calcular(){
+  const p=n('peso'), idade=n('idade'), un=val('idadeUn'), sexo=val('sexo'), dor=n('dor');
+  const alerts=checked('alerta'), sx=checked('sx'), faixa=faixaEtaria(idade,un);
+  const air=airScore(), airC=airClass(air), rads=val('rads');
+  const grave = alerts.length>0 || air>=9 || rads==='4' || rads==='5';
+  const medio = !grave && (air>=4 || ['0','2','3'].includes(rads));
+  let badges=[];
+  badges.push(`<span class="badge b-blue">${faixa}</span>`);
+  badges.push(`<span class="badge ${airC[1]==='red'?'b-red':airC[1]==='amber'?'b-amber':'b-green'}">AIR ${air} — ${airC[0]}</span>`);
+  if(alerts.length) badges.push(`<span class="badge b-red">${alerts.length} sinal(is) de alerta</span>`);
+  if(rads) badges.push(`<span class="badge ${['4','5'].includes(rads)?'b-red':['0','2','3'].includes(rads)?'b-amber':'b-green'}">APENDIC-RADS ${rads}</span>`);
+  document.getElementById('resumo').innerHTML = `
+    <div class="result ${grave?'red':medio?'amber':'green'}">
+      ${badges.join('')}
+      <h3>${grave?'Conduta prioritária: emergência/cirurgia':medio?'Conduta prioritária: observação + imagem/reavaliação':'Conduta prioritária: avaliar causas benignas e alta segura se critérios'}</h3>
+      <p>${grave?'Manter jejum, acesso venoso, analgesia, hidratação, exames dirigidos e acionar cirurgia/retaguarda conforme achado. Se choque/sepse, seguir protocolo específico imediatamente.':medio?'Manter jejum enquanto investiga, analgesia e hidratação. USG preferencial; considerar TC se AIR ≥ 4 e USG inconclusiva conforme discussão com cirurgia.':'Se bom estado geral, melhora da dor/vômitos e causas ameaçadoras descartadas, pode alta com sintomáticos, orientações e retorno precoce.'}</p>
+    </div>`;
+
+  let fluxo=[];
+  if(alerts.length){
+    fluxo.push(['Sinais sugestivos de abdome agudo cirúrgico', 'Consultar equipe cirúrgica. Considerar apendicite, obstrução, perfuração, hérnia encarcerada, invaginação, rotação/volvo, torção ovariana/testicular, pancreatite, peritonite.']);
+    fluxo.push(['Exames conforme suspeita', 'Laboratoriais: hemograma, PCR, urina 1/urocultura, eletrólitos, função renal/hepática, amilase/lipase, gasometria/lactato, beta-HCG se aplicável. Imagem: USG e/ou TC; RX abdome se obstrução/perfuração/corpo estranho; RX tórax se suspeita respiratória.']);
+  } else {
+    fluxo.push(['Sem sinais cirúrgicos claros', 'Procurar diagnósticos alternativos e tratar sintomaticamente com reavaliação seriada.']);
+  }
+  if(sx.includes('dm')) fluxo.push(['Sintomas sugestivos de diabetes/CAD', 'Glicemia capilar imediata. Se hiperglicemia/cetose/acidose, conduzir por protocolo específico de CAD.']);
+  if(sx.includes('constipacao')) fluxo.push(['Constipação?', 'Se distensão importante, vômitos biliosos ou parada de gases/fezes, pensar obstrução e RX abdome. Se quadro simples, manejar constipação.']);
+  if(sx.includes('diarreia')) fluxo.push(['Diarreia não sanguinolenta', 'Provável gastroenterite viral se exame tranquilizador. Hidratação oral/venosa conforme estado e orientar sinais de alarme.']);
+  if(sx.includes('disenteria')) fluxo.push(['Diarreia sanguinolenta', 'Investigar disenteria/infecciosa, colite, doença inflamatória intestinal e SHU conforme contexto.']);
+  if(sx.includes('urinario')) fluxo.push(['Sintomas urinários', 'Urina 1 e urocultura; considerar ITU/pielonefrite e tratar conforme protocolo local.']);
+  if(sx.includes('gineco') || sexo==='Fpub') fluxo.push(['Risco gravidez/IST ou dor pélvica', 'Beta-HCG, considerar gonorreia/clamídia, USG pélvico/transvaginal se indicado. Pensar DIPA, gravidez ectópica, abortamento, torção/cisto ovariano.']);
+  if(sx.includes('resp')) fluxo.push(['Sintomas respiratórios/IVAS', 'Considerar pneumonia/faringite/estreptococo; solicitar RX tórax/testes conforme clínica.']);
+  if(!sx.length && !alerts.length) fluxo.push(['Sem direcionador evidente', 'Reavaliação sistemática. A dor abdominal pediátrica pode ser intra ou extra-abdominal; não atrasar analgesia.']);
+  document.getElementById('fluxo').innerHTML = fluxo.map(x=>`<div class="step"><strong>${x[0]}</strong><br>${x[1]}</div>`).join('');
+
+  document.getElementById('idadeBox').innerHTML = hipoteses(faixa,sexo).map(x=>`<span class="badge b-purple">${x}</span>`).join(' ');
+
+  const manut=calcManutencao(p), bolus=20*p, bolus10=10*p;
+  const dipMg=15*p, dipMl=doseMl(dipMg,500);
+  const paraMg=15*p, paraMl=doseMl(paraMg,200);
+  const ondaMg=Math.min(0.15*p,8), ondaMl=doseMl(ondaMg,2);
+  let hosp = `PRESCRIÇÃO/PLANO NO PA — ${p?fmt(p)+' kg':'peso não informado'}
+
+1. Dieta/conduta
+   - Manter JEJUM até elucidação diagnóstica se suspeita cirúrgica, AIR médio/alto ou imagem pendente.
+   - Reavaliação seriada: dor, sinais vitais, vômitos, diurese, exame abdominal e sinais peritoneais.
+
+2. Acesso / hidratação
+   - Se choque/sepse: protocolo institucional; expansão inicial usual: SF 0,9% ${p?fmt(bolus10)+'–'+fmt(bolus)+' mL (10–20 mL/kg)':'10–20 mL/kg'} e reavaliar.
+   - Se sem choque e precisa EV: manutenção aproximada Holliday-Segar ${p?fmt(manut)+' mL/h':'calcular após informar peso'}, ajustar por hidratação, eletrólitos e perdas.
+
+3. Analgesia — não atrasar
+   - Dipirona ${p?fmt(dipMg)+' mg':'10–15 mg/kg/dose'} EV/VO 6/6h se dor/febre.
+     Apresentação 500 mg/mL: ${p?fmt(dipMl)+' mL por dose':'mL = dose mg ÷ 500'}.
+   - OU Paracetamol ${p?fmt(paraMg)+' mg':'10–15 mg/kg/dose'} VO 6/6h se alergia/alternativa.
+     Gotas 200 mg/mL: ${p?fmt(paraMl)+' mL por dose':'mL = dose mg ÷ 200'}.
+   - Evitar AINE se desidratação, sangramento, suspeita cirúrgica importante ou lesão renal.
+
+4. Antiemético, se vômitos atrapalhando hidratação/avaliação
+   - Ondansetrona ${p?fmt(ondaMg)+' mg':'0,15 mg/kg/dose, máx. 8 mg'} VO/EV 8/8h se necessário.
+     Ampola/solução 2 mg/mL: ${p?fmt(ondaMl)+' mL por dose':'mL = dose mg ÷ 2'}.
+
+5. Exames/imagem conforme fluxograma
+   - Sinais cirúrgicos ou AIR médio/alto: hemograma, PCR, urina 1/urocultura, eletrólitos, função renal, glicemia; beta-HCG se adolescente; USG abdome total preferencial.
+   - RX abdome: suspeita obstrutiva/perfurativa/corpo estranho.
+   - RX tórax: suspeita pneumonia/derrame/causa respiratória.
+   - TC abdome: complementar ao USG se pancreatite, apendicite/abscesso ou USG inconclusiva com AIR ≥ 4; sem contraste se ureterolitíase.
+
+6. Acionar cirurgia/retaguarda
+   - Sinais de peritonite/obstrução/perfuração, massa/hérnia, dor testicular/ovariana, AIR alto, APENDIC-RADS 0/2/3 para avaliação conjunta, APENDIC-RADS 4/5 para cirurgia pediátrica.`;
+
+  let casa = `ALTA — somente se critérios preenchidos:
+- Bom estado geral, sinais vitais estáveis, hidratação adequada.
+- Melhora da dor e/ou vômitos.
+- Causa cirúrgica/ameaçadora descartada OU diagnóstico definido com plano claro.
+- Se diagnóstico incerto: retorno programado em até 24h ou reavaliação com pediatra.
+
+PRESCRIÇÃO DOMICILIAR SUGERIDA — ${p?fmt(p)+' kg':'peso não informado'}
+1. Dipirona ${p?fmt(dipMg)+' mg':'10–15 mg/kg/dose'} VO de 6/6h se dor/febre.
+   500 mg/mL: ${p?fmt(dipMl)+' mL por dose':'mL = dose mg ÷ 500'}.
+   OU Paracetamol ${p?fmt(paraMg)+' mg':'10–15 mg/kg/dose'} VO de 6/6h se dor/febre.
+   200 mg/mL: ${p?fmt(paraMl)+' mL por dose':'mL = dose mg ÷ 200'}.
+2. Ondansetrona ${p?fmt(ondaMg)+' mg':'0,15 mg/kg/dose, máx. 8 mg'} VO 8/8h se vômitos persistentes, se liberado após avaliação.
+   2 mg/mL: ${p?fmt(ondaMl)+' mL por dose':'mL = dose mg ÷ 2'}.
+3. Hidratação oral fracionada. Se diarreia/vômitos: oferecer SRO em pequenos volumes frequentes.
+4. Não iniciar antibiótico sem diagnóstico definido.
+
+RETORNAR IMEDIATAMENTE SE:
+- Dor piora/progride, dor ao andar/pular/tossir, barriga endurecida ou criança não deixa examinar.
+- Vômitos biliosos/esverdeados, vômitos persistentes, sangue nas fezes ou urina.
+- Febre persistente, prostração, sonolência, sinais de desidratação, piora do estado geral.
+- Distensão abdominal, parada de gases/fezes, dor testicular, dor pélvica intensa ou desmaio.
+- Sem melhora ou diagnóstico incerto: reavaliar em até 24h.`;
+  document.getElementById('rxHospital').textContent=hosp;
+  document.getElementById('rxCasa').textContent=casa;
+  document.getElementById('saida').classList.remove('hidden');
+  document.getElementById('saida').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
