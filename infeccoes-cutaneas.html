@@ -1,341 +1,506 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora Pediátrica - Infecções Bacterianas Superficiais Cutâneas</title>
-  <style>
-    :root{
-      --bg:#f6f8fb; --card:#ffffff; --ink:#182230; --muted:#5d6677; --line:#d9e2ec;
-      --brand:#0f766e; --brand2:#0ea5a4; --soft:#e6fffb; --warn:#fff7e6; --danger:#fff1f2;
-      --red:#b42318; --amber:#b54708; --green:#067647; --blue:#175cd3; --purple:#6941c6;
-      --shadow:0 10px 30px rgba(16,24,40,.08); --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#effdfb 0,#f6f8fb 26rem);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);}
-    header{padding:28px 16px 18px;}
-    .wrap{max-width:1180px;margin:0 auto;}
-    .hero{display:grid;grid-template-columns:1.4fr .6fr;gap:18px;align-items:stretch;}
-    .heroCard{background:linear-gradient(135deg,#0f766e,#0ea5a4);color:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow);overflow:hidden;position:relative;}
-    .heroCard:after{content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.16)}
-    h1{font-size:clamp(1.65rem,3vw,2.6rem);margin:0 0 8px;line-height:1.06;letter-spacing:-.04em}
-    .subtitle{font-size:1rem;line-height:1.45;opacity:.95;margin:0;max-width:850px}
-    .metaCard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)}
-    .pill{display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:6px 10px;font-weight:700;font-size:.78rem;background:#ecfeff;color:#155e75;border:1px solid #a5f3fc;margin:4px 4px 0 0}
-    main{padding:0 16px 36px}.grid{display:grid;grid-template-columns:390px 1fr;gap:18px;align-items:start}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}.sticky{position:sticky;top:12px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}.sectionTitle h2{font-size:1.02rem;margin:0}.hint{font-size:.82rem;color:var(--muted);line-height:1.35}label{display:block;font-size:.86rem;font-weight:750;margin:12px 0 6px;color:#344054}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:11px 12px;font-size:.96rem;color:var(--ink);outline:none}textarea{min-height:74px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:var(--brand2);box-shadow:0 0 0 4px rgba(14,165,164,.12)}.check{display:flex;gap:9px;align-items:flex-start;border:1px solid #e5e7eb;background:#fafafa;border-radius:12px;padding:9px;margin:7px 0}.check input{width:18px;height:18px;margin:1px 0 0}.check span{font-size:.87rem;line-height:1.28}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:800;cursor:pointer;background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(15,118,110,.22)}.btn.secondary{background:#f1f5f9;color:#0f172a;box-shadow:none;border:1px solid #d0d5dd}.btn.warn{background:#b42318}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid #d0d5dd;background:#fff;color:#344054;border-radius:999px;padding:8px 11px;font-weight:800;font-size:.84rem;cursor:pointer}.tab.active{background:#0f766e;color:#fff;border-color:#0f766e}.output{display:grid;gap:14px}.resultHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-radius:18px;background:linear-gradient(135deg,#ecfdf3,#f0f9ff);border:1px solid #bbf7d0}.resultHeader h2{margin:0 0 4px;font-size:1.35rem}.badge{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:.75rem;font-weight:900;border:1px solid transparent;white-space:nowrap}.badge.green{background:#dcfae6;color:#067647;border-color:#abefc6}.badge.amber{background:#fef0c7;color:#b54708;border-color:#fedf89}.badge.red{background:#fee4e2;color:#b42318;border-color:#fecdca}.badge.blue{background:#d1e9ff;color:#175cd3;border-color:#b2ddff}.badge.purple{background:#ebe9fe;color:#5925dc;border-color:#d9d6fe}.box{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff}.box h3{margin:0 0 8px;font-size:1rem;display:flex;align-items:center;gap:8px}.box p{margin:6px 0;color:#344054;line-height:1.45}.box ul,.box ol{margin:8px 0 0;padding-left:20px}.box li{margin:6px 0;line-height:1.38}.alert{border-radius:16px;padding:13px 14px;margin:0;border:1px solid}.alert.red{background:var(--danger);border-color:#fecaca;color:#7f1d1d}.alert.amber{background:var(--warn);border-color:#fed7aa;color:#7c2d12}.alert.green{background:#ecfdf3;border-color:#bbf7d0;color:#064e3b}.alert.blue{background:#eff8ff;border-color:#b2ddff;color:#1849a9}.medGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.med{border:1px solid #e5e7eb;border-radius:14px;background:#fbfdff;padding:12px}.med strong{display:block;margin-bottom:5px}.small{font-size:.8rem;color:var(--muted)}.copyArea{white-space:pre-wrap;background:#0b1220;color:#e5e7eb;border-radius:14px;padding:14px;line-height:1.5;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;max-height:420px;overflow:auto}.footerNote{font-size:.78rem;color:var(--muted);text-align:center;margin-top:18px}.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.kpi div{border:1px solid #d0d5dd;border-radius:12px;padding:9px;background:#fff}.kpi b{display:block;font-size:.82rem;color:#344054}.kpi span{font-size:.78rem;color:var(--muted)}.timeline{display:grid;gap:8px}.step{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start}.num{width:28px;height:28px;border-radius:50%;background:#ccfbf1;color:#134e4a;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.82rem}.watermark{font-weight:900;color:#0f766e}.hide{display:none!important}@media(max-width:980px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.sticky{position:relative;top:auto}.medGrid{grid-template-columns:1fr}.kpi{grid-template-columns:1fr 1fr}}@media(max-width:600px){.row,.row3{grid-template-columns:1fr}.resultHeader{display:block}.badge{margin-top:8px}.heroCard,.metaCard{border-radius:18px}.card{padding:13px}.tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:4px}.tab{white-space:nowrap}}
-    @media print{body{background:#fff}.sticky,.btns,.tabs{position:static}.card,.box,.resultHeader{box-shadow:none}.btn{display:none}.grid{grid-template-columns:1fr}.copyArea{max-height:none}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calculadora Pediátrica — Infecções Bacterianas Cutâneas</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --ink:#172033; --muted:#667085; --line:#d9e2ec;
+    --brand:#0f766e; --brand2:#14b8a6; --soft:#e6fffb; --soft2:#f0fdfa;
+    --danger:#fff1f2; --dangerInk:#9f1239; --warn:#fff7e6; --warnInk:#92400e;
+    --ok:#ecfdf3; --okInk:#067647; --blue:#eff8ff; --blueInk:#175cd3; --purple:#f4f3ff; --purpleInk:#5925dc;
+    --shadow:0 10px 30px rgba(15,23,42,.08); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; color:var(--ink); background:linear-gradient(180deg,#ecfeff 0,#f5f7fb 360px); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 16px;}
+  header{padding:26px 0 16px;}
+  .hero{display:grid; grid-template-columns:1.35fr .65fr; gap:16px; align-items:stretch;}
+  .heroMain{border-radius:26px; padding:26px; background:radial-gradient(circle at 95% -20%,rgba(255,255,255,.35),transparent 26%),linear-gradient(135deg,#0f766e,#0ea5a4); color:#fff; box-shadow:var(--shadow);}
+  h1{font-size:clamp(1.7rem,3vw,2.65rem); line-height:1.04; margin:0 0 10px; letter-spacing:-.045em;}
+  .subtitle{margin:0; font-size:1rem; line-height:1.45; opacity:.95; max-width:900px;}
+  .heroSide{border:1px solid var(--line); border-radius:26px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); padding:18px;}
+  .pill{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; margin:4px 3px 0 0; border-radius:999px; font-weight:800; font-size:.76rem; background:#ecfeff; border:1px solid #a5f3fc; color:#155e75;}
+  .grid{display:grid; grid-template-columns:410px 1fr; gap:16px; align-items:start; padding-bottom:36px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px;}
+  .sticky{position:sticky; top:10px; max-height:calc(100vh - 20px); overflow:auto;}
+  .sectionTitle{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin:0 0 12px;}
+  .sectionTitle h2{font-size:1.04rem; margin:0; letter-spacing:-.02em;}
+  .hint{font-size:.82rem; color:var(--muted); line-height:1.35;}
+  label{display:block; font-size:.85rem; font-weight:800; margin:12px 0 6px; color:#344054;}
+  input,select,textarea{width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:10px 11px; background:#fff; color:var(--ink); font-size:.96rem; outline:none;}
+  textarea{min-height:80px; resize:vertical;}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand2); box-shadow:0 0 0 4px rgba(20,184,166,.14);}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:9px;}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px;}
+  .check{display:flex; align-items:flex-start; gap:9px; border:1px solid #e5e7eb; border-radius:12px; padding:9px; background:#fbfcfe; margin:7px 0;}
+  .check input{width:18px; height:18px; margin-top:1px; flex:0 0 auto;}
+  .check span{font-size:.86rem; line-height:1.28;}
+  .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .btn{border:0; border-radius:12px; padding:10px 12px; font-weight:900; cursor:pointer; background:var(--brand); color:#fff; box-shadow:0 8px 18px rgba(15,118,110,.22);}
+  .btn.secondary{background:#f8fafc; color:#0f172a; border:1px solid #d0d5dd; box-shadow:none;}
+  .btn.danger{background:#be123c;}
+  .tabs{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .tab{border:1px solid #d0d5dd; border-radius:999px; padding:8px 11px; background:#fff; color:#344054; cursor:pointer; font-weight:900; font-size:.84rem;}
+  .tab.active{background:var(--brand); color:#fff; border-color:var(--brand);}
+  .output{display:grid; gap:14px;}
+  .banner{border:1px solid #bbf7d0; border-radius:20px; padding:16px; background:linear-gradient(135deg,#ecfdf3,#eff8ff); display:flex; justify-content:space-between; gap:12px; align-items:flex-start;}
+  .banner h2{margin:0 0 4px; font-size:1.35rem; letter-spacing:-.02em;}
+  .badge{display:inline-flex; white-space:nowrap; align-items:center; border-radius:999px; padding:5px 9px; border:1px solid transparent; font-size:.75rem; font-weight:950;}
+  .badge.ok{background:#dcfae6; color:#067647; border-color:#abefc6;}
+  .badge.warn{background:#fef0c7; color:#b54708; border-color:#fedf89;}
+  .badge.danger{background:#fee4e2; color:#b42318; border-color:#fecdca;}
+  .badge.blue{background:#d1e9ff; color:#175cd3; border-color:#b2ddff;}
+  .badge.purple{background:#ebe9fe; color:#5925dc; border-color:#d9d6fe;}
+  .box{border:1px solid var(--line); border-radius:16px; padding:14px; background:#fff;}
+  .box h3{margin:0 0 9px; font-size:1rem; display:flex; align-items:center; gap:7px; letter-spacing:-.01em;}
+  .box p{margin:6px 0; color:#344054; line-height:1.45;}
+  .box ul,.box ol{margin:8px 0 0; padding-left:20px;}
+  .box li{margin:6px 0; line-height:1.38;}
+  .alert{border-radius:16px; padding:12px 13px; border:1px solid; margin:0; line-height:1.4;}
+  .alert.danger{background:var(--danger); border-color:#fecaca; color:#7f1d1d;}
+  .alert.warn{background:var(--warn); border-color:#fed7aa; color:#7c2d12;}
+  .alert.ok{background:var(--ok); border-color:#bbf7d0; color:#064e3b;}
+  .alert.blue{background:var(--blue); border-color:#b2ddff; color:#1849a9;}
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .medGrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+  .med{border:1px solid #e5e7eb; border-radius:14px; background:#fbfdff; padding:12px; overflow:hidden;}
+  .med strong{display:block; margin-bottom:5px; color:#172033;}
+  .med .dose{font-weight:900; color:#0f766e; margin-bottom:4px;}
+  .small{font-size:.8rem; color:var(--muted); line-height:1.35;}
+  .tiny{font-size:.74rem; color:var(--muted); line-height:1.3;}
+  .copyArea{white-space:pre-wrap; background:#0b1220; color:#e5e7eb; border-radius:14px; padding:14px; line-height:1.5; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.82rem; max-height:440px; overflow:auto;}
+  .kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:10px;}
+  .kpi div{border:1px solid #d0d5dd; border-radius:12px; padding:9px; background:#fff;}
+  .kpi b{display:block; font-size:.82rem; color:#344054;}
+  .kpi span{font-size:.78rem; color:var(--muted);}
+  .quickGrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+  details{border:1px solid #e5e7eb; border-radius:14px; background:#fbfdff; padding:11px 12px;}
+  details summary{font-weight:900; cursor:pointer; color:#0f172a;}
+  details p{margin:.55rem 0 0; color:#475467; line-height:1.42;}
+  table{border-collapse:collapse; width:100%; font-size:.86rem; overflow:hidden; border-radius:12px;}
+  th,td{border:1px solid #e5e7eb; padding:8px; text-align:left; vertical-align:top;}
+  th{background:#f1f5f9; color:#344054; font-weight:900;}
+  .footerNote{text-align:center; color:var(--muted); font-size:.76rem; margin:18px 0 0; line-height:1.35;}
+  .hide{display:none!important;}
+  @media(max-width:1000px){.hero,.grid{grid-template-columns:1fr}.sticky{position:relative; top:auto; max-height:none}.split,.medGrid,.quickGrid{grid-template-columns:1fr}.kpi{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.row,.row3{grid-template-columns:1fr}.banner{display:block}.badge{margin-top:8px}.tabs{overflow:auto; flex-wrap:nowrap; padding-bottom:4px}.tab{white-space:nowrap}.heroMain,.heroSide{border-radius:18px}.card{padding:13px}}
+  @media print{body{background:#fff}.sticky,.tabs,.btns,header{display:none}.grid{display:block}.card,.box,.banner{box-shadow:none}.copyArea{max-height:none}.wrap{max-width:100%;}.output{gap:8px}}
+</style>
 </head>
 <body>
 <header>
   <div class="wrap hero">
-    <div class="heroCard">
+    <div class="heroMain">
       <h1>Calculadora Pediátrica de Infecções Bacterianas Cutâneas</h1>
-      <p class="subtitle">Apoio rápido para diferenciar piodermites, calcular doses por peso e gerar conduta/prescrição para PA, ambulatório e situações de emergência. Funciona offline em um único arquivo HTML.</p>
+      <p class="subtitle">Triagem por padrão de lesão, separação por doença, cálculo de antibióticos em mg e mL, conduta para PA/ambulatório/hospital e prescrição copiável.</p>
     </div>
-    <div class="metaCard">
-      <div class="pill">SBP - Dermatologia/Infectologia</div>
-      <div class="pill">Impetigo</div><div class="pill">Celulite/Erisipela</div><div class="pill">Abscesso/Furúnculo</div><div class="pill">SSSS/Fasciíte</div>
-      <p class="hint" style="margin-top:12px">Use como suporte. Ajuste por protocolo local, alergias, função renal/hepática, neonatos, gravidade clínica e cultura.</p>
+    <div class="heroSide">
+      <div class="pill">Impetigo tópico/sistêmico</div><div class="pill">Mupirocina e afins</div><div class="pill">Foliculite</div><div class="pill">Furúnculo</div><div class="pill">Celulite/Erisipela</div><div class="pill">SSSS/Fasciíte</div>
+      <p class="hint" style="margin-top:12px">Material de apoio. Ajuste por protocolo local, alergias, função renal/hepática, neonatos, cultura/antibiograma e gravidade.</p>
     </div>
   </div>
 </header>
 <main class="wrap grid">
   <aside class="card sticky">
-    <div class="sectionTitle"><h2>Dados do paciente</h2><span class="hint">campos mínimos: peso + idade</span></div>
+    <div class="sectionTitle"><h2>Entrada rápida</h2><span class="hint">peso + idade ajudam a calcular</span></div>
+
     <div class="row">
       <div><label for="peso">Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 18" /></div>
       <div><label for="idade">Idade</label><input id="idade" type="number" min="0" step="0.1" placeholder="Ex.: 4" /></div>
     </div>
     <div class="row">
       <div><label for="idadeUnid">Unidade</label><select id="idadeUnid"><option value="anos">anos</option><option value="meses">meses</option><option value="dias">dias</option></select></div>
-      <div><label for="temperatura">Temperatura (opcional)</label><input id="temperatura" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 38.2" /></div>
+      <div><label for="temperatura">Temperatura</label><input id="temperatura" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 38.2" /></div>
     </div>
-    <label for="doenca">Doença / síndrome principal</label>
+
+    <label for="doenca">Doença / síndrome</label>
     <select id="doenca">
-      <option value="auto">Triagem automática pelo padrão das lesões</option>
-      <option value="impetigo_nb">Impetigo crostoso / não-bolhoso</option>
+      <option value="auto">Triagem automática pelo padrão</option>
+      <option value="impetigo_nb">Impetigo crostoso / não bolhoso</option>
       <option value="impetigo_b">Impetigo bolhoso</option>
-      <option value="dermatite_perianal">Dermatite estreptocócica perianal</option>
-      <option value="ssss">Síndrome da pele escaldada estafilocócica - SSSS</option>
+      <option value="perianal">Dermatite estreptocócica perianal</option>
+      <option value="ssss">Síndrome da pele escaldada estafilocócica — SSSS</option>
       <option value="foliculite">Foliculite</option>
-      <option value="furunculo">Furúnculo / carbúnculo / abscesso cutâneo</option>
+      <option value="furunculo">Furúnculo</option>
+      <option value="abscesso">Abscesso cutâneo / carbúnculo</option>
       <option value="ectima">Ectima</option>
+      <option value="ectima_gangrenoso">Ectima gangrenoso</option>
       <option value="dactilite">Dactilite bolhosa distal</option>
       <option value="paroniquia">Paroníquia aguda</option>
       <option value="celulite">Celulite</option>
       <option value="erisipela">Erisipela</option>
       <option value="fasciite">Fasciíte necrosante</option>
     </select>
-    <label for="padrao">Padrão predominante das lesões</label>
+
+    <label for="padrao">Padrão predominante</label>
     <select id="padrao">
       <option value="crostas_mel">Crostas melicéricas / erosões superficiais</option>
-      <option value="bolhas_flacidas">Bolhas flácidas superficiais</option>
-      <option value="perianal">Eritema perianal bem delimitado + prurido/dor/estrias sangue</option>
-      <option value="exfoliacao_dolorosa">Exantema doloroso + Nikolsky / descamação / rágades</option>
+      <option value="bolhas_flacidas">Bolhas flácidas superficiais localizadas</option>
+      <option value="perianal">Eritema perianal brilhante e bem delimitado</option>
+      <option value="exfoliacao_dolorosa">Pele dolorosa, Nikolsky, rágades periorais</option>
       <option value="pustulas_foliculares">Pápulas/pústulas perifoliculares</option>
-      <option value="nodulo_flutuante">Nódulo doloroso/flutuante com ponto de drenagem</option>
-      <option value="ulcera_crosta">Úlcera com crosta aderente / escara</option>
+      <option value="nodulo_furunculo">Nódulo doloroso centrado no pelo, ponto de drenagem</option>
+      <option value="colecao_abscesso">Coleção purulenta / flutuação / carbúnculo</option>
+      <option value="ulcera_crosta">Úlcera com crosta espessa/escura e bordas elevadas</option>
+      <option value="ectima_gangrenoso">Lesão necrótica/escara em paciente tóxico ou imunocomprometido</option>
       <option value="bolha_dedo">Bolha oval em falange distal</option>
       <option value="prega_unha">Dor/edema/pus em prega ungueal</option>
-      <option value="celulite">Eritema, calor, dor e edema com limites mal definidos</option>
-      <option value="erisipela">Placa elevada bem delimitada + febre/calafrios</option>
-      <option value="dor_desproporcional">Dor desproporcional, rápida progressão, violáceo/bolhas hemorrágicas</option>
+      <option value="celulite">Eritema quente doloroso com limites mal definidos</option>
+      <option value="erisipela">Placa eritematosa elevada, bem delimitada</option>
+      <option value="dor_desproporcional">Dor desproporcional, violáceo, bolhas hemorrágicas</option>
     </select>
+
     <div class="row3">
-      <div><label for="bsa">% superfície</label><input id="bsa" type="number" min="0" max="100" step="0.5" placeholder="Ex.: 1" /></div>
+      <div><label for="bsa">Área % SC</label><input id="bsa" type="number" min="0" step="0.5" placeholder="Ex.: 1" /></div>
       <div><label for="segmentos">Segmentos</label><input id="segmentos" type="number" min="0" step="1" placeholder="Ex.: 1" /></div>
-      <div><label for="halo">Halo/celulite cm</label><input id="halo" type="number" min="0" step="0.5" placeholder="Ex.: 3" /></div>
+      <div><label for="halo">Halo/eritema cm</label><input id="halo" type="number" min="0" step="0.5" placeholder="Ex.: 2" /></div>
     </div>
-    <label for="alergia">Alergia a beta-lactâmicos</label>
-    <select id="alergia"><option value="nao">Não</option><option value="leve">Reação não imediata/baixo risco</option><option value="grave">Anafilaxia, urticária imediata ou reação grave</option></select>
-    <label for="apresentacao">Apresentação preferida para cálculo VO</label>
-    <select id="apresentacao"><option value="suspensao">Suspensão oral quando existir</option><option value="comprimido">Comprimido/cápsula quando possível</option></select>
-    <div style="margin-top:12px">
-      <label class="check"><input id="febre" type="checkbox"><span>Febre, toxemia, prostração ou sinais sistêmicos</span></label>
-      <label class="check"><input id="mrsa" type="checkbox"><span>Risco/suspeita de MRSA: abscesso/pus, recorrência, contato MRSA, falha beta-lactâmico, surto</span></label>
-      <label class="check"><input id="imuno" type="checkbox"><span>Imunossupressão, diabetes, doença renal/hepática, desnutrição ou lactente pequeno</span></label>
-      <label class="check"><input id="especial" type="checkbox"><span>Local especial: face/periorbitário, mãos/pés, genital, extensa área ou dificuldade de drenagem</span></label>
-      <label class="check"><input id="flutuacao" type="checkbox"><span>Flutuação / abscesso evidente / drenagem espontânea</span></label>
-      <label class="check"><input id="rapida" type="checkbox"><span>Progressão rápida, dor desproporcional, bolhas hemorrágicas, necrose ou instabilidade</span></label>
-      <label class="check"><input id="falha" type="checkbox"><span>Falha terapêutica após 48-72h ou recorrência</span></label>
+    <div class="row">
+      <div><label for="diametro">Abscesso/furúnculo cm</label><input id="diametro" type="number" min="0" step="0.5" placeholder="Ex.: 1.5" /></div>
+      <div><label for="alergia">Alergia</label><select id="alergia"><option value="nenhuma">sem alergia beta-lactâmico</option><option value="leve">alergia leve/baixo risco</option><option value="grave">anafilaxia/SCAR/alto risco</option></select></div>
     </div>
-    <label for="observacoes">Observações livres</label>
-    <textarea id="observacoes" placeholder="Ex.: lesão em membro inferior há 2 dias, sem vômitos, boa aceitação..."></textarea>
-    <div class="btns"><button class="btn" id="calcBtn">Calcular conduta</button><button class="btn secondary" id="limparBtn">Limpar</button></div>
+
+    <label>Critérios que mudam conduta</label>
+    <div class="check"><input id="febre" type="checkbox"><span>Febre, calafrios, adenopatia importante ou sintomas sistêmicos</span></div>
+    <div class="check"><input id="toxemia" type="checkbox"><span>Toxemia, prostração, hipotensão, vômitos persistentes ou desidratação</span></div>
+    <div class="check"><input id="rapida" type="checkbox"><span>Progressão rápida, necrose, violáceo, crepitação ou dor desproporcional</span></div>
+    <div class="check"><input id="flutuacao" type="checkbox"><span>Flutuação/coleção purulenta ou drenagem espontânea</span></div>
+    <div class="check"><input id="especial" type="checkbox"><span>Face/periorbitário, mão, genital, períneo, articulação, cateter ou lesão profunda</span></div>
+    <div class="check"><input id="imuno" type="checkbox"><span>Imunossupressão, diabetes, doença renal/hepática, cardiopatia ou lactente pequeno</span></div>
+    <div class="check"><input id="mrsa" type="checkbox"><span>Risco de MRSA: infecção purulenta, abscesso, recorrência, contato, surto, falha prévia</span></div>
+    <div class="check"><input id="falha" type="checkbox"><span>Falha após 48–72h de tratamento ou recorrente</span></div>
+
+    <label for="obs">Observações para sair no texto</label>
+    <textarea id="obs" placeholder="Ex.: lesões em MMII há 2 dias, prurido, sem febre..."></textarea>
+
+    <div class="btns">
+      <button class="btn" id="calcBtn">Gerar conduta</button>
+      <button class="btn secondary" id="copyBtn">Copiar prescrição/evolução</button>
+      <button class="btn secondary" onclick="window.print()">Imprimir</button>
+      <button class="btn secondary" id="clearBtn">Limpar</button>
+    </div>
   </aside>
-  <section>
-    <div class="tabs" id="quickTabs"></div>
-    <div class="output" id="saida"></div>
+
+  <section class="card">
+    <div class="tabs">
+      <button class="tab active" data-tab="resultado">Resultado</button>
+      <button class="tab" data-tab="doencas">Doenças separadas</button>
+      <button class="tab" data-tab="antibioticos">Antibióticos</button>
+      <button class="tab" data-tab="prescricao">Texto copiável</button>
+    </div>
+
+    <div id="tab-resultado" class="tabPage output"></div>
+    <div id="tab-doencas" class="tabPage hide"></div>
+    <div id="tab-antibioticos" class="tabPage hide"></div>
+    <div id="tab-prescricao" class="tabPage hide"></div>
+
+    <p class="footerNote">Fontes base: SBP — Documento Científico “Infecções Bacterianas Superficiais Cutâneas” (2022); guias pediátricos de SSTI para doses e durações. Esta ferramenta não substitui avaliação médica, protocolo local, cultura/antibiograma e checagem de dose máxima, função renal/hepática e idade neonatal.</p>
   </section>
 </main>
 <script>
 const $ = id => document.getElementById(id);
-const fmt = n => Number.isFinite(n) ? (Math.round(n*10)/10).toString().replace('.', ',') : '--';
-const fmt0 = n => Number.isFinite(n) ? Math.round(n).toString() : '--';
-const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-function val(id){ return $(id)?.value || ''; }
-function checked(id){ return !!$(id)?.checked; }
-function idadeMeses(){
-  const x = parseFloat(val('idade')); const u = val('idadeUnid');
-  if(!Number.isFinite(x)) return NaN;
-  if(u==='dias') return x/30.44;
-  if(u==='meses') return x;
-  return x*12;
+const num = id => { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : NaN; };
+const chk = id => $(id).checked;
+const val = id => $(id).value;
+const diseaseName = {
+  impetigo_nb:'Impetigo crostoso / não bolhoso', impetigo_b:'Impetigo bolhoso', perianal:'Dermatite estreptocócica perianal', ssss:'Síndrome da pele escaldada estafilocócica (SSSS)', foliculite:'Foliculite', furunculo:'Furúnculo', abscesso:'Abscesso cutâneo / carbúnculo', ectima:'Ectima', ectima_gangrenoso:'Ectima gangrenoso', dactilite:'Dactilite bolhosa distal', paroniquia:'Paroníquia aguda', celulite:'Celulite', erisipela:'Erisipela', fasciite:'Fasciíte necrosante'
+};
+const patternMap = {crostas_mel:'impetigo_nb', bolhas_flacidas:'impetigo_b', perianal:'perianal', exfoliacao_dolorosa:'ssss', pustulas_foliculares:'foliculite', nodulo_furunculo:'furunculo', colecao_abscesso:'abscesso', ulcera_crosta:'ectima', ectima_gangrenoso:'ectima_gangrenoso', bolha_dedo:'dactilite', prega_unha:'paroniquia', celulite:'celulite', erisipela:'erisipela', dor_desproporcional:'fasciite'};
+function readState(){
+  const idade = num('idade'); const unit = val('idadeUnid');
+  let meses = NaN; if(Number.isFinite(idade)){ meses = unit==='anos'?idade*12:unit==='meses'?idade:idade/30.44; }
+  return {kg:num('peso'), idade, unit, meses, anos: Number.isFinite(meses)?meses/12:NaN, temp:num('temperatura'), doenca:val('doenca'), padrao:val('padrao'), bsa:num('bsa'), segmentos:num('segmentos'), halo:num('halo'), diametro:num('diametro'), alergia:val('alergia'), febre:chk('febre'), toxemia:chk('toxemia'), rapida:chk('rapida'), flutuacao:chk('flutuacao'), especial:chk('especial'), imuno:chk('imuno'), mrsa:chk('mrsa'), falha:chk('falha'), obs:val('obs').trim() };
 }
-function idadeAnos(){ const m = idadeMeses(); return Number.isFinite(m) ? m/12 : NaN; }
-function peso(){ const p=parseFloat(val('peso')); return Number.isFinite(p) && p>0 ? p : NaN; }
-function doseMg(kg, mgkg, max){ if(!Number.isFinite(kg)) return NaN; return Math.min(kg*mgkg, max||Infinity); }
-function doseRange(kg, low, high, max){ return [doseMg(kg,low,max), doseMg(kg,high,max)]; }
-function ml(mg, conc){ if(!Number.isFinite(mg)||!conc) return '--'; return fmt(mg/conc); }
-function gotasPorMg(mg, mgPorGota){ if(!Number.isFinite(mg)||!mgPorGota) return '--'; return fmt0(mg/mgPorGota); }
-function medLine(nome, detalhe, obs='') { return `<div class="med"><strong>${nome}</strong><div>${detalhe}</div>${obs?`<div class="small">${obs}</div>`:''}</div>`; }
-function li(arr){ return arr.filter(Boolean).map(x=>`<li>${x}</li>`).join(''); }
-function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function getState(){
-  return {kg:peso(), meses:idadeMeses(), anos:idadeAnos(), bsa:parseFloat(val('bsa')), segmentos:parseInt(val('segmentos')), halo:parseFloat(val('halo')), alergia:val('alergia'), febre:checked('febre'), mrsa:checked('mrsa'), imuno:checked('imuno'), especial:checked('especial'), flutuacao:checked('flutuacao'), rapida:checked('rapida'), falha:checked('falha'), padrao:val('padrao'), doenca:val('doenca'), obs:val('observacoes'), temp:parseFloat(val('temperatura'))};
+function chooseDisease(s){ return s.doenca==='auto' ? patternMap[s.padrao] : s.doenca; }
+function fmt(x, dec=1){ return Number.isFinite(x) ? (Math.round(x*Math.pow(10,dec))/Math.pow(10,dec)).toString().replace('.',',') : '--'; }
+function fmt0(x){ return Number.isFinite(x) ? String(Math.round(x)).replace('.',',') : '--'; }
+function dose(kg, mgkg, max){ if(!Number.isFinite(kg)) return NaN; return Math.min(kg*mgkg, max); }
+function ml(mg, concMgMl){ return Number.isFinite(mg) ? fmt(mg/concMgMl,1) : '--'; }
+function gotasFromMg(mg, mgGota){ return Number.isFinite(mg) ? fmt0(mg/mgGota) : '--'; }
+function med(title, doseText, note, tags=[]){ return {title, doseText, note, tags}; }
+function medHtml(m){ return `<div class="med"><strong>${m.title}</strong><div class="dose">${m.doseText}</div><div class="small">${m.note||''}</div></div>`; }
+function medsToHtml(list){ return `<div class="medGrid">${list.map(medHtml).join('')}</div>`; }
+function li(list){ return `<ul>${list.map(x=>`<li>${x}</li>`).join('')}</ul>`; }
+function box(title, inner){ return `<div class="box"><h3>${title}</h3>${inner}</div>`; }
+function alertBox(type, text){ return `<div class="alert ${type}">${text}</div>`; }
+function antibioticBank(s){
+  const kg=s.kg;
+  const ceph17=dose(kg,17,500), ceph25=dose(kg,25,500), ceph125=dose(kg,12.5,500);
+  const amox25=dose(kg,25,500), amoxClav=dose(kg,22.5,875), clinda10=dose(kg,10,450), clindaIV=dose(kg,10,600), clindaNec=dose(kg,10,900);
+  const tmp5=dose(kg,5,160), doxy=dose(kg,2.2,100), cefaz=dose(kg,25,2000), ceftriax=dose(kg,50,2000), oxac=dose(kg,50,2000), vanco=dose(kg,15,1000), piptazo=dose(kg,100,4000), mero=dose(kg,20,1000), linez=dose(kg,10,600);
+  const penG = Number.isFinite(kg)?Math.min(kg*50000,4000000):NaN;
+  const dip=dose(kg,15,1000), para=dose(kg,15,750);
+  return {
+    topicos:[
+      med('Mupirocina 2% pomada', 'Aplicar camada fina 3x/dia por 5 dias', 'Impetigo leve/limitado, foliculite e paroníquia após drenagem/banho morno. No impetigo pode estender até 7–10 dias conforme evolução. Uso acima de 2 meses.'),
+      med('Ácido fusídico 2% creme', 'Aplicar 2–3x/dia por 7–10 dias', 'Alternativa tópica para impetigo/foliculite quando disponível. Evitar uso repetido desnecessário por resistência.'),
+      med('Retapamulina 1% pomada', 'Aplicar 2x/dia por 5 dias', 'Opção para impetigo limitado. Uso acima de 9 meses.'),
+      med('Clindamicina tópica', 'Aplicar 1–2x/dia por 5–7 dias', 'Pode ser opção em foliculite; não substitui antibiótico sistêmico se celulite, abscesso profundo ou sintomas sistêmicos.'),
+      med('Compressas mornas', '10–15 min, 3–4x/dia', 'Furúnculo/paroníquia. Se flutuação/abscesso: avaliar incisão e drenagem.')
+    ],
+    orais:[
+      med('Cefalexina 250 mg/5 mL', `${fmt0(ceph17)} mg = ${ml(ceph17,50)} mL VO 8/8h`, `Dose prática SSTI: 17 mg/kg/dose 8/8h; máx. 500 mg/dose. Alternativas: 25 mg/kg/dose 8/8h = ${fmt0(ceph25)} mg (${ml(ceph25,50)} mL), ou 12,5 mg/kg/dose 6/6h = ${fmt0(ceph125)} mg (${ml(ceph125,50)} mL). Cobre MSSA/EGA, não cobre MRSA.`),
+      med('Amoxicilina 250 mg/5 mL', `${fmt0(amox25)} mg = ${ml(amox25,50)} mL VO 12/12h`, 'Útil para quadro estreptocócico/perianal quando escolhido. Dose: 25 mg/kg/dose 12/12h; máx. 500 mg/dose.'),
+      med('Amoxicilina-clavulanato 400/57 mg/5 mL', `${fmt0(amoxClav)} mg do componente amoxicilina = ${ml(amoxClav,80)} mL VO 12/12h`, 'Alternativa para celulite/paroníquia, mordedura ou flora mista. Dose: 22,5 mg/kg/dose do componente amoxicilina; máx. 875 mg/dose.'),
+      med('Clindamicina 75 mg/5 mL', `${fmt0(clinda10)} mg = ${ml(clinda10,15)} mL VO 8/8h`, 'MRSA suspeito, alergia grave a beta-lactâmico ou abscesso. Dose: 10 mg/kg/dose; máx. 450 mg/dose. Ver resistência local e risco de diarreia/C. difficile.'),
+      med('Sulfametoxazol-trimetoprima 200/40 mg/5 mL', `${fmt0(tmp5)} mg de TMP = ${ml(tmp5,8)} mL VO 12/12h`, 'Dose: 4–6 mg/kg/dose do componente TMP; aqui 5 mg/kg/dose; máx. 160 mg TMP/dose. Bom para MRSA, mas cobertura de Streptococcus pyogenes é controversa/limitada.'),
+      med('Doxiciclina ≥ 8 anos', `${fmt0(doxy)} mg VO 12/12h`, 'Dose: 2,2 mg/kg/dose; máx. 100 mg/dose. Opção para MRSA em idade permitida; evitar abaixo de 8 anos salvo indicação específica.'),
+      med('Penicilina benzatina IM', Number.isFinite(kg)?(kg<27?'600.000 UI IM dose única':'1.200.000 UI IM dose única'):'--', 'Opção para infecção estreptocócica/erisipela quando adesão é problema e não há alergia. Conferir protocolo local.')
+    ],
+    ev:[
+      med('Cefazolina EV', `${fmt0(cefaz)} mg EV 8/8h`, 'Celulite/erisipela hospitalar não grave, MSSA/EGA. Dose: 25 mg/kg/dose; máx. 2 g/dose.'),
+      med('Ceftriaxona EV/IM', `${fmt0(ceftriax)} mg 1x/dia`, 'Pode ser opção IV/IM em serviços específicos. Dose: 50 mg/kg/dose; máx. 2 g/dose. Cuidado em neonatos.'),
+      med('Oxacilina EV', `${fmt0(oxac)} mg EV 6/6h`, 'MSSA/SSSS. Dose: 50 mg/kg/dose; máx. 2 g/dose.'),
+      med('Clindamicina EV', `${fmt0(clindaIV)} mg EV 8/8h`, 'MRSA/alergia/toxina. Dose usual: 10 mg/kg/dose; máx. 600 mg/dose. Em fasciíte pode usar máx. até 900 mg/dose conforme protocolo.'),
+      med('Vancomicina EV', `${fmt0(vanco)} mg EV 6/6h`, 'MRSA grave, SSSS com risco MRSA ou infecção purulenta grave. Dose inicial: 15 mg/kg/dose; requer ajuste renal e monitorização.'),
+      med('Penicilina G cristalina EV', `${fmt0(penG)} UI EV 6/6h`, 'Erisipela/estreptococo grave quando indicado. Dose sugerida: 50.000 UI/kg/dose 6/6h; máx. 4 milhões UI/dose.'),
+      med('Piperacilina-tazobactam EV', `${fmt0(piptazo)} mg do componente piperacilina EV 6/6h`, 'Fasciíte/infecção polimicrobiana grave. Dose: 100 mg/kg/dose do componente piperacilina; máx. 4 g/dose.'),
+      med('Meropenem EV', `${fmt0(mero)} mg EV 8/8h`, 'Fasciíte grave/risco ESBL conforme epidemiologia. Dose: 20 mg/kg/dose; máx. 1 g/dose.'),
+      med('Linezolida EV/VO', `${fmt0(linez)} mg 8/8h se <12 anos; 12/12h se ≥12 anos`, 'Alternativa para MRSA/toxina quando indicada por Infectologia. Máx. 600 mg/dose.')
+    ],
+    sintomaticos:[
+      med('Dipirona 500 mg/mL', `${fmt0(dip)} mg = ${ml(dip,500)} mL ≈ ${gotasFromMg(dip,25)} gotas VO 6/6h se dor/febre`, 'Dose: 10–15 mg/kg/dose. Conferir apresentação e máximos.'),
+      med('Paracetamol 200 mg/mL', `${fmt0(para)} mg = ${ml(para,200)} mL ≈ ${gotasFromMg(para,10)} gotas VO 6/6h se dor/febre`, 'Dose: 10–15 mg/kg/dose. Não associar com outros produtos contendo paracetamol.')
+    ]
+  };
 }
-const diseaseLabels = {
-  impetigo_nb:'Impetigo crostoso / não-bolhoso', impetigo_b:'Impetigo bolhoso', dermatite_perianal:'Dermatite estreptocócica perianal', ssss:'Síndrome da pele escaldada estafilocócica (SSSS)', foliculite:'Foliculite', furunculo:'Furúnculo / carbúnculo / abscesso', ectima:'Ectima', dactilite:'Dactilite bolhosa distal', paroniquia:'Paroníquia aguda', celulite:'Celulite', erisipela:'Erisipela', fasciite:'Fasciíte necrosante'};
-const patternToDisease = {crostas_mel:'impetigo_nb', bolhas_flacidas:'impetigo_b', perianal:'dermatite_perianal', exfoliacao_dolorosa:'ssss', pustulas_foliculares:'foliculite', nodulo_flutuante:'furunculo', ulcera_crosta:'ectima', bolha_dedo:'dactilite', prega_unha:'paroniquia', celulite:'celulite', erisipela:'erisipela', dor_desproporcional:'fasciite'};
-function chooseDisease(s){ return s.doenca==='auto' ? (patternToDisease[s.padrao]||'impetigo_nb') : s.doenca; }
-function severity(s, d){
-  const severeByDisease = ['fasciite'].includes(d) || (d==='ssss' && (s.febre || s.rapida || s.bsa>=5 || s.imuno));
-  const warning = s.rapida || s.imuno || s.especial || s.falha || s.febre || s.temp>=38 || (Number.isFinite(s.bsa)&&s.bsa>2) || (Number.isFinite(s.segmentos)&&s.segmentos>=2) || (Number.isFinite(s.halo)&&s.halo>5);
-  if(severeByDisease || s.rapida) return {level:'grave', badge:'red', text:'Emergência / provável internação'};
-  if(warning) return {level:'moderado', badge:'amber', text:'Atenção - reavaliar e considerar sistêmico'};
-  return {level:'leve', badge:'green', text:'Provável manejo ambulatorial'};
+function severity(s,d){
+  const tempFebre = Number.isFinite(s.temp) && s.temp>=38;
+  const ageSmall = Number.isFinite(s.meses) && s.meses<3;
+  const extensive = (Number.isFinite(s.bsa)&&s.bsa>2) || (Number.isFinite(s.segmentos)&&s.segmentos>=2) || (Number.isFinite(s.halo)&&s.halo>5);
+  const grave = d==='fasciite' || d==='ectima_gangrenoso' || s.toxemia || s.rapida || (d==='ssss' && (extensive || s.febre || tempFebre || s.imuno));
+  if(grave) return {kind:'danger', text:'Emergência / provável internação', level:'grave'};
+  if(s.febre || tempFebre || s.imuno || s.especial || s.falha || ageSmall || extensive || d==='impetigo_b' || d==='abscesso') return {kind:'warn', text:'Atenção: avaliar sistêmico/retorno precoce', level:'moderado'};
+  return {kind:'ok', text:'Provável manejo ambulatorial', level:'leve'};
 }
-function commonWarnings(s,d){
+function warnings(s,d){
   let out=[];
-  if(!Number.isFinite(s.kg)) out.push('Informe o peso para calcular doses em mg e mL.');
-  if(!Number.isFinite(s.meses)) out.push('Informe a idade para alertas de faixa etária.');
-  if(Number.isFinite(s.meses)&&s.meses<1) out.push('Neonato: doses dependem de idade gestacional, idade pós-natal e função renal. Checar protocolo neonatal antes de prescrever.');
-  if(s.rapida || d==='fasciite') out.push('Dor desproporcional, necrose, violáceo, bolhas hemorrágicas, crepitação, hipotensão ou rápida progressão = tratar como fasciíte/sepse até prova em contrário. Não atrasar cirurgia.');
-  if(s.especial) out.push('Local especial ou face/periorbitário: avaliar necessidade de imagem, drenagem por equipe especializada e internação, principalmente se dor ocular, proptose, limitação ocular ou queda do estado geral.');
-  if(s.falha) out.push('Falha em 48-72h: reconsiderar diagnóstico diferencial, abscesso oculto, resistência, adesão, cultura e necessidade de ampliar/IV.');
-  if(s.alergia==='grave') out.push('Alergia imediata/grave a beta-lactâmico: evitar penicilinas/cefalosporinas sem avaliação de risco; preferir clindamicina quando adequada e sensível.');
+  if(!Number.isFinite(s.kg)) out.push('Informe o peso para calcular mg e mL com segurança.');
+  if(!Number.isFinite(s.meses)) out.push('Informe a idade para alertas de faixa etária e restrições.');
+  if(Number.isFinite(s.meses)&&s.meses<1) out.push('Neonato: doses dependem de idade gestacional/pós-natal e função renal. Não usar dose padrão sem checagem neonatal.');
+  if(s.rapida || d==='fasciite') out.push('Dor desproporcional, necrose, bolhas hemorrágicas, violáceo, crepitação ou rápida progressão: acionar cirurgia e iniciar ATB amplo sem atraso.');
+  if(s.toxemia) out.push('Toxemia/instabilidade: manejar como sepse, acesso venoso, culturas quando possível, expansão se indicado e antibiótico EV precoce.');
+  if(s.especial) out.push('Local especial: face/periorbitário, mão, genital, períneo, articulação ou cateter exige menor limiar para imagem, especialista e internação.');
+  if(s.falha) out.push('Falha em 48–72h: procurar abscesso oculto, diagnóstico diferencial, resistência, adesão e coletar cultura se possível.');
+  if(s.alergia==='grave') out.push('Alergia grave a beta-lactâmico: evitar penicilinas/cefalosporinas sem avaliação; clindamicina/vancomicina/linezolida podem ser opções conforme cenário.');
+  if(d==='foliculite' && s.flutuacao) out.push('Se há flutuação/coleção, provavelmente não é apenas foliculite: reclassifique como furúnculo/abscesso e avalie drenagem.');
   return out;
 }
-function antibioticSet(s){
-  const kg=s.kg;
-  const cefalexina = doseMg(kg,17,500);
-  const cefalexina6 = doseMg(kg,12.5,500);
-  const amox = doseMg(kg,25,875);
-  const amoxClav = doseMg(kg,22.5,875);
-  const clindaPO = doseMg(kg,10,450);
-  const clindaIV = doseMg(kg,10,600);
-  const tmp = doseMg(kg,5,160);
-  const doxy = doseMg(kg,2.2,100);
-  const cefaz = doseMg(kg,25,2000);
-  const ceftriax = doseMg(kg,50,2000);
-  const oxac = doseMg(kg,50,2000);
-  const vanco = doseMg(kg,15,1000);
-  const pipTazo = doseMg(kg,100,4000);
-  const mero = doseMg(kg,20,1000);
-  const penG = Number.isFinite(kg)? Math.min(kg*50000, 4000000) : NaN;
-  const dip = doseMg(kg,15,1000);
-  const para = doseMg(kg,15,750);
-  return {
-    cefalexina: medLine('Cefalexina 250 mg/5 mL', `${fmt0(cefalexina)} mg = ${ml(cefalexina,50)} mL VO 8/8h`, 'Dose usada: 17 mg/kg/dose 8/8h; máx. 500 mg/dose. Alternativa 6/6h: '+fmt0(cefalexina6)+' mg = '+ml(cefalexina6,50)+' mL.'),
-    amoxicilina: medLine('Amoxicilina 250 mg/5 mL', `${fmt0(amox)} mg = ${ml(amox,50)} mL VO 12/12h`, 'Dose usada: 25 mg/kg/dose 12/12h; ajustar duração conforme quadro.'),
-    amoxClav: medLine('Amoxicilina-clavulanato 400/57 mg/5 mL', `${fmt0(amoxClav)} mg do componente amoxicilina = ${ml(amoxClav,80)} mL VO 12/12h`, 'Dose usada: 22,5 mg/kg/dose do componente amoxicilina; máx. 875 mg/dose.'),
-    clindaPO: medLine('Clindamicina 75 mg/5 mL', `${fmt0(clindaPO)} mg = ${ml(clindaPO,15)} mL VO 8/8h`, 'Dose usada: 10 mg/kg/dose 8/8h; máx. 450 mg/dose. Ver resistência local.'),
-    clindaIV: medLine('Clindamicina EV', `${fmt0(clindaIV)} mg EV 8/8h`, 'Dose usada: 10 mg/kg/dose; máx. 600 mg/dose. Diluir conforme protocolo local.'),
-    smxTmp: medLine('Sulfametoxazol-trimetoprima 200/40 mg/5 mL', `${fmt0(tmp)} mg de TMP = ${ml(tmp,8)} mL VO 12/12h`, 'Dose usada: 5 mg/kg/dose do componente TMP 12/12h; máx. 160 mg TMP/dose. Cobertura de Streptococcus pode ser limitada.'),
-    doxy: medLine('Doxiciclina ≥ 8 anos', `${fmt0(doxy)} mg VO 12/12h`, 'Usar apenas se idade permitir; dose usada: 2,2 mg/kg/dose; máx. 100 mg/dose.'),
-    cefazolina: medLine('Cefazolina EV', `${fmt0(cefaz)} mg EV 8/8h`, 'Dose usada: 25 mg/kg/dose; máx. 2 g/dose. Transicionar para VO quando melhorar.'),
-    ceftriaxona: medLine('Ceftriaxona EV/IM', `${fmt0(ceftriax)} mg 1x/dia`, 'Dose usada: 50 mg/kg/dose 24/24h; máx. 2 g/dose. Evitar em neonatos com risco específico.'),
-    oxacilina: medLine('Oxacilina EV', `${fmt0(oxac)} mg EV 6/6h`, 'Dose usada: 50 mg/kg/dose 6/6h. Escolha clássica para MSSA/SSSS grave.'),
-    vancomicina: medLine('Vancomicina EV', `${fmt0(vanco)} mg EV 6/6h`, 'Dose inicial: 15 mg/kg/dose. Requer ajuste renal e monitorização por nível/AUC conforme serviço.'),
-    piptazo: medLine('Piperacilina-tazobactam EV', `${fmt0(pipTazo)} mg do componente piperacilina EV 6/6h`, 'Dose usada: 100 mg/kg/dose do componente piperacilina; máx. 4 g/dose. Diluição conforme farmácia.'),
-    meropenem: medLine('Meropenem EV', `${fmt0(mero)} mg EV 8/8h`, 'Dose usada: 20 mg/kg/dose; máx. 1 g/dose. Reservar para gravidade/risco ESBL conforme protocolo.'),
-    penicilinaG: medLine('Penicilina G cristalina EV', `${fmt0(penG)} UI EV 6/6h`, 'Dose sugerida: 50.000 UI/kg/dose 6/6h para infecção estreptocócica; ajustar conforme protocolo.'),
-    benzathine: medLine('Penicilina benzatina IM', `${Number.isFinite(kg) ? (kg<27?'600.000 UI IM dose única':'1.200.000 UI IM dose única') : '--'}`, 'Opção para erisipela/estreptococo quando adesão for problema e não houver alergia.'),
-    analgesia: medLine('Dor/febre - escolher 1 opção', `Dipirona ${fmt0(dip)} mg = ${ml(dip,500)} mL = ~${gotasPorMg(dip,25)} gotas VO 6/6h se dor/febre OU Paracetamol ${fmt0(para)} mg = ${ml(para,200)} mL = ~${gotasPorMg(para,10)} gotas VO 6/6h`, 'Conferir concentração do produto. Evitar duplicidade e respeitar máximos diários.')
+function diseasePlans(s){
+  const b=antibioticBank(s); const age=s.meses;
+  const systemicImpetigo = (Number.isFinite(s.bsa)&&s.bsa>2) || (Number.isFinite(s.segmentos)&&s.segmentos>=2) || (Number.isFinite(age)&&age<24) || s.mrsa || s.febre || s.toxemia || s.imuno || s.falha;
+  const betaSafe = s.alergia!=='grave';
+  const mrsaOrAllergy = s.mrsa || s.alergia==='grave';
+  const p={};
+  p.impetigo_nb={
+    dx:['Epiderme superficial; S. aureus e/ou Streptococcus pyogenes.','Crostas melicéricas, vesícula/pústula que rompe, halo eritematoso; geralmente sem dor importante ou sintomas sistêmicos.','Cultura se suspeita de MRSA, surto, recorrência ou falha terapêutica.'],
+    cond: systemicImpetigo?['Lesão extensa, múltiplos segmentos, <2 anos, sintomas sistêmicos, MRSA ou falha: indicar antibiótico sistêmico.','Remover crostas com água/sabão ou compressa úmida antes do tópico.','Reavaliar em 48–72h.']:['Lesões únicas/limitadas: tratar com antibiótico tópico.','Remover crostas; higiene das mãos; unhas curtas; cobrir lesões se possível.'],
+    meds: systemicImpetigo?(mrsaOrAllergy?[b.orais[3],b.orais[4], ...(s.anos>=8?[b.orais[5]]:[])]:[b.orais[0],b.orais[2]]):b.topicos.slice(0,3),
+    casa:[systemicImpetigo?'Antibiótico sistêmico por 7 dias; associar higiene local e, se muita crosta, tópico nas lesões.':'Mupirocina/fusídico/retapamulina conforme escolhido por 5–10 dias.','Evitar compartilhar toalhas/roupas; lavar roupas de cama; lavar mãos após tocar lesões.','Retorno se febre, celulite, dor importante, lesão periorbitária, piora ou ausência de melhora em 48–72h.'],
+    diff:['Herpes simples/zoster, escabiose, dermatite atópica/seborreica, tinea, candidíase, eczema herpético.']
   };
-}
-function topicalMeds(){
-  return [
-    medLine('Mupirocina 2% pomada', 'Aplicar camada fina 3x/dia por 5-7 dias', 'No impetigo, pode ser 7-10 dias conforme evolução; uso acima de 2 meses.'),
-    medLine('Ácido fusídico 2% creme', 'Aplicar 2-3x/dia por 7-10 dias', 'Alternativa tópica quando disponível.'),
-    medLine('Retapamulina 1% pomada', 'Aplicar 2x/dia por 5 dias', 'Uso acima de 9 meses.'),
-    medLine('Compressas mornas', '10-15 minutos, 3-4x/dia', 'Útil em furúnculo/paroníquia; não substitui drenagem se flutuante.')
-  ];
-}
-function diseasePlan(d,s){
-  const abx=antibioticSet(s); const age=s.meses; const sysImpetigo = d==='impetigo_b' || (Number.isFinite(s.bsa)&&s.bsa>2) || (Number.isFinite(s.segmentos)&&s.segmentos>=2) || (Number.isFinite(age)&&age<24) || s.mrsa || s.febre || s.imuno;
-  const plans={};
-  plans.impetigo_nb={
-    dx:['Infecção superficial da epiderme, geralmente por S. aureus e/ou Streptococcus pyogenes.','Crostas cor de mel, face/periorificial ou membros, prurido ocasional, geralmente sem dor ou sintomas sistêmicos.','Cultura se suspeita de MRSA, surto, recorrência ou falha terapêutica.'],
-    pa: sysImpetigo ? ['Indicar antibiótico sistêmico porque há extensão, <2 anos, múltiplos segmentos, MRSA/gravidade ou outro critério selecionado.','Limpar lesões e remover crostas com água/sabão ou compressa úmida antes do tópico.','Considerar cultura se surto, falha, recorrência ou MRSA.'] : ['Lesão limitada: tratamento tópico isolado é adequado.','Limpar/remover crostas; cobrir se possível; orientar higiene rigorosa.'],
-    meds: sysImpetigo ? ((s.mrsa||s.alergia==='grave')?[abx.clindaPO,abx.smxTmp,...(s.anos>=8?[abx.doxy]:[])]:[abx.cefalexina,abx.amoxClav]) : topicalMeds().slice(0,3),
-    casa:[sysImpetigo?'Antibiótico sistêmico por 7 dias, reavaliando em 48-72h.':'Pomada tópica por 5-10 dias, até resolução completa das lesões.','Evitar compartilhar toalhas/roupas, lavar mãos, manter unhas curtas, cobrir lesões quando possível.','Retornar se febre, aumento rápido, dor importante, celulite, lesão próxima aos olhos ou sem melhora em 48-72h.'],
-    diff:['Herpes simples/zoster, dermatite atópica/seborreica, escabiose, tinea, candidíase e eczema herpético.']
+  p.impetigo_b={
+    dx:['Bolhas flácidas superficiais por S. aureus produtor de toxina; comum em lactentes.','Rompe facilmente, deixa base úmida/eritematosa; pode haver febre/diarreia.','Diferenciar de SSSS quando há dor cutânea difusa, rágades, Nikolsky ou desnudamento extenso.'],
+    cond:['Antibiótico sistêmico é indicado; tópico isolado não basta.','Avaliar extensão, hidratação, febre, lactente pequeno e sinais de SSSS.','Cultura se surto, MRSA, falha ou recorrência.'],
+    meds: mrsaOrAllergy?[b.orais[3],b.orais[4]]:[b.orais[0],b.orais[2]],
+    casa:['Antibiótico por 7 dias; higiene local suave; manter lesões cobertas quando possível.','Retorno rápido se prostração, febre persistente, desidratação, pele dolorosa extensa ou novas bolhas em progressão.'],
+    diff:['SSSS, queimadura, Stevens-Johnson/NET, epidermólise bolhosa, bolhas de fricção.']
   };
-  plans.impetigo_b={
-    dx:['Forma bolhosa geralmente por S. aureus produtor de exotoxina; mais comum em lactentes.','Bolhas superficiais, flácidas, conteúdo claro, rompem fácil e deixam base úmida/eritematosa; pode ter febre/diarreia.','Não costuma formar crosta melicérica clássica.'],
-    pa:['Indicar antibiótico sistêmico; tópico isolado não é suficiente quando bolhoso ou extenso.','Avaliar idade <2 anos, extensão, hidratação, dor e sinais de SSSS.','Se lesões muito extensas, rágades periorais, Nikolsky, dor cutânea difusa ou toxemia: tratar como SSSS/internar.'],
-    meds:(s.mrsa||s.alergia==='grave')?[abx.clindaPO,abx.smxTmp]:[abx.cefalexina,abx.amoxClav],
-    casa:['Antibiótico por 7 dias; higiene local suave; evitar romper bolhas propositalmente fora de contexto assistido.','Manter afastamento de creche/escola até pelo menos 24h de antibiótico efetivo e lesões controladas/cobertas, conforme regra local.','Retornar imediatamente se febre persistente, prostração, pele dolorosa extensa, desidratação ou piora rápida.'],
-    diff:['SSSS, queimadura, Stevens-Johnson/NET, epidermólise bolhosa, varicela, herpes.']
+  p.perianal={
+    dx:['Infecção superficial perianal geralmente por estreptococo beta-hemolítico do grupo A.','Eritema brilhante, bem delimitado ao redor do ânus; prurido, dor retal, evacuação dolorosa e sangue em fezes podem ocorrer.','Confirmar com swab/cultura perianal quando possível; ASLO não é confiável para confirmar.'],
+    cond:['Tratamento é sistêmico, mesmo quando superficial.','Pesquisar constipação, fissuras e transmissão entre contatos próximos.','Considerar cultura de controle se recorrente/falha.'],
+    meds: betaSafe?[b.orais[1],b.orais[0]]:[b.orais[3]],
+    casa:['Antibiótico por 10 dias costuma ser usado; ajustar ao protocolo local/cultura.','Higiene suave, evitar fricção vigorosa, tratar constipação/dor evacuatória.','Retorno se dor intensa, abscesso, febre, persistência ou recorrência.'],
+    diff:['Dermatite de fralda, candidíase, dermatite de contato, trauma por higiene, alergia alimentar, DII, histiocitose, abuso sexual.']
   };
-  plans.dermatite_perianal={
-    dx:['Eritema brilhante, bem demarcado ao redor do ânus, geralmente por estreptococo beta-hemolítico do grupo A.','Sintomas frequentes: prurido anal, dor retal, dor ao evacuar e estrias de sangue nas fezes.','Manifestações sistêmicas são raras; atraso diagnóstico pode levar a constipação.'],
-    pa:['Coletar swab/cultura perianal quando possível para confirmar e documentar erradicação.','Tratar com antibiótico sistêmico; investigar contatos/recorrência se casos repetidos.','Evitar tratar como candidíase/dermatite de fralda sem revisar o padrão bem delimitado.'],
-    meds:s.alergia==='grave'?[abx.clindaPO]:[abx.amoxicilina,abx.cefalexina],
-    casa:['Antibiótico geralmente por 10 dias.','Higiene suave; evitar fricção vigorosa; tratar constipação se dor evacuatória.','Retornar se dor intensa, abscesso, proctite, febre, sangramento persistente ou recorrência.'],
-    diff:['Dermatite de fralda, candidíase, trauma por higiene/manipulação, dermatite de contato, alergia alimentar, DII, histiocitose e abuso sexual quando contexto sugerir.']
+  p.ssss={
+    dx:['Emergência por toxina estafilocócica: febre/irritabilidade, eritema doloroso e posterior bolhas/desnudamento.','Rágades periorais e sinal de Nikolsky ajudam; mucosas geralmente poupadas, diferente de Stevens-Johnson/NET.','Hemocultura e cultura da bolha podem ser negativas; procurar foco em vias aéreas, conjuntiva, ouvido ou coto umbilical.'],
+    cond:['Internar se extenso, lactente, febre/toxemia, desidratação ou dor importante; considerar unidade de queimados se grande área.','Iniciar antibiótico antiestafilocócico sistêmico precocemente; tópico isolado não é eficaz.','Suporte: analgesia, hidratação, temperatura, nutrição, curativos não aderentes e isolamento de contato. Evitar sulfadiazina de prata.'],
+    meds: s.mrsa?[b.ev[4],b.ev[3]]:[b.ev[2],b.ev[3]],
+    casa:['Não é quadro para alta sem avaliação especializada se houver extensão, dor difusa, febre ou lactente.','Alta somente em caso muito localizado, bom estado geral, garantia de reavaliação rigorosa e ATB sistêmico.'],
+    diff:['Impetigo bolhoso, choque tóxico, Kawasaki, celulite, queimadura, Stevens-Johnson/NET, epidermólise bolhosa.']
   };
-  plans.ssss={
-    dx:['Emergência pediátrica potencialmente fatal por toxina estafilocócica.','Febre/irritabilidade/mal-estar seguidos de erupção dolorosa, bolhas flácidas, Nikolsky, rágades periorais e ausência de acometimento de mucosa.','Mais frequente em menores de 2 anos.'],
-    pa:['Avaliar ABCDE, analgesia, hidratação, temperatura e eletrólitos; isolar para evitar surtos.','Casos graves: internar, idealmente unidade com experiência em queimados/pele extensa; não usar sulfadiazina de prata rotineiramente em área desnuda.','Antibiótico EV precoce contra MSSA; considerar clindamicina por efeito antitoxina; vancomicina se risco MRSA.','Hemocultura/bolha podem ser negativas; procurar foco distante: nasofaringe, conjuntiva, ouvido, coto umbilical.'],
-    meds:(s.mrsa?[abx.vancomicina,abx.clindaIV,abx.oxacilina]:[abx.oxacilina,abx.clindaIV,abx.cefazolina]),
-    casa:['Não é quadro para manejo domiciliar sem avaliação presencial. Após alta, manter hidratação, curativos conforme orientação, retorno precoce e completar antibiótico.','Retornar imediatamente se febre, recusa alimentar, sonolência, redução de diurese, extensão de descamação ou dor.'],
-    diff:['Impetigo bolhoso, escarlatina, Kawasaki, choque tóxico, Stevens-Johnson/NET, queimadura térmica, celulite e epidermólise bolhosa.']
+  p.foliculite={
+    dx:['Inflamação superficial do folículo piloso: pápulas/pústulas perifoliculares com halo eritematoso.','S. aureus é o agente bacteriano mais comum; comum em couro cabeludo, membros, face/perioral.','Diferente do furúnculo: não há nódulo profundo, flutuação, necrose do folículo ou abscesso subcutâneo.'],
+    cond:['Poucas pústulas e bom estado geral: higiene, evitar fricção/oclusão e observar; muitos casos resolvem espontaneamente.','Forma extensa/persistente: tópico com mupirocina, ácido fusídico ou clindamicina.','Se celulite ao redor, febre, abscesso ou falha: tratar como celulite/furúnculo e considerar cultura.'],
+    meds: b.topicos.filter(x=>['Mupirocina 2% pomada','Ácido fusídico 2% creme','Clindamicina tópica'].includes(x.title)),
+    casa:['Banho diário, não espremer, trocar roupas/toalhas, evitar lâmina/atrito até melhorar.','Mupirocina 2% 3x/dia por 5 dias se extensa/localizada persistente.','Retorno se virar nódulo doloroso/flutuante, febre, celulite ou sem melhora em 5–7 dias.'],
+    diff:['Acne, rosácea papulopustular, foliculite por drogas/outros agentes, hidradenite, escabiose, queratose pilar.']
   };
-  plans.foliculite={
-    dx:['Inflamação superficial do folículo piloso; pápulas/pústulas perifoliculares em base eritematosa.','S. aureus é causa bacteriana comum; pode ocorrer em couro cabeludo, membros, face/perioral e após picadas/traumas.'],
-    pa:['Poucas pústulas: costuma resolver espontaneamente; considerar tópico se sintomática ou extensa.','Se celulite associada, febre, imunossupressão ou lesão extensa: conduzir como celulite/abscesso.','Reavaliar se não melhora; pensar em acne, rosácea, escabiose, ceratose pilar, hidradenite ou foliculite por outros agentes.'],
-    meds:s.febre||s.imuno||s.especial?[abx.cefalexina, ...(s.mrsa?[abx.clindaPO,abx.smxTmp]:[])]:[topicalMeds()[0],topicalMeds()[1]],
-    casa:['Evitar manipular/espremer; higiene suave; não compartilhar lâminas/toalhas.','Retornar se surgirem nódulos dolorosos, celulite ao redor, febre ou disseminação.'],
-    diff:['Acne, rosácea papulopustular, foliculite por drogas/outros agentes, hidradenite supurativa, escabiose, ceratose pilar.']
+  p.furunculo={
+    dx:['Infecção profunda do folículo piloso que se estende ao subcutâneo.','Nódulo eritematoso doloroso, às vezes flutuante, com pústula/ponto de drenagem; S. aureus é o principal agente.','Carbúnculo = coalescência de furúnculos com múltiplos pontos de drenagem e maior profundidade.'],
+    cond:['Calor local/compressas. Não espremer.','Se flutuação ou drenagem incompleta: incisão e drenagem é a conduta principal. Enviar cultura se recorrente, grave, MRSA ou falha.','Antibiótico sistêmico se halo eritematoso >2 cm, celulite, múltiplos, carbúnculo, sintomas sistêmicos, imunossupressão, local especial ou recorrência.'],
+    meds: (s.flutuacao || s.mrsa || s.halo>2 || s.febre || s.imuno || s.especial || s.falha)?[b.orais[4],b.orais[3],...(betaSafe&&!s.mrsa?[b.orais[0]]:[])]:[b.topicos[4]],
+    casa:['Compressas mornas 10–15 min 3–4x/dia; não manipular/espremê-lo.','Se drenado: curativo limpo e retorno para revisão.','Retorno se febre, aumento do halo, dor progressiva, listras vermelhas, face/mão/genital ou sem melhora em 48h.'],
+    diff:['Cisto epidermoide inflamado, hidradenite supurativa, corpo estranho, pioderma gangrenoso, micobactéria cutânea.']
   };
-  plans.furunculo={
-    dx:['Infecção profunda do folículo piloso até subcutâneo; nódulo doloroso, eritematoso, flutuante, com ponto de drenagem.','Carbúnculo/antraz: coalescência de furúnculos com múltiplos tratos de drenagem.','S. aureus é o principal agente; pensar em MRSA se purulento/recorrente.'],
-    pa:['Se houver flutuação: incisão e drenagem é a medida principal; coletar cultura se recorrente, grave, falha ou surto.','Antibiótico sistêmico se halo eritematoso >2 cm, carbúnculo, múltiplas lesões, febre/toxemia, imunossupressão, lactente, face/mãos/genital ou falha.','USG se dúvida de coleção ou flutuação difícil.'],
-    meds:(s.flutuacao||s.mrsa||s.halo>2||s.febre||s.imuno||s.especial)?[abx.clindaPO,abx.smxTmp,...(s.anos>=8?[abx.doxy]:[]),...(s.alergia!=='grave'&&!s.mrsa?[abx.cefalexina]:[])]:[topicalMeds()[3]],
-    casa:['Compressas mornas; não espremer. Se drenado, curativo limpo e troca conforme orientação.','Antibiótico quando indicado por 5-7 dias; retorno em 24-48h se drenagem, criança pequena ou local especial.','Recorrência/furunculose: avaliar colonização, higiene familiar e possibilidade de descolonização com mupirocina nasal conforme serviço.'],
-    diff:['Cisto epidermoide inflamado, hidradenite supurativa, corpo estranho, pioderma gangrenoso, micobactérias.']
+  p.abscesso={
+    dx:['Coleção purulenta em derme/subcutâneo; pode corresponder a abscesso, carbúnculo ou furúnculo coalescente.','Flutuação, dor, calor, eritema; ultrassom ajuda quando dúvida de coleção.','S. aureus/MRSA deve ser considerado em purulento.'],
+    cond:['Controle de foco: incisão e drenagem sempre que factível.','Cultura do pus se grave, recorrente, falha, MRSA, imunossupressão ou hospitalização.','Antibiótico pós-drenagem se celulite associada, febre, múltiplos, imunossupressão, extremos de idade, local especial ou abscesso grande.'],
+    meds: s.mrsa||s.alergia==='grave'||s.flutuacao?[b.orais[4],b.orais[3]]:[b.orais[0],b.orais[4]],
+    casa:['Curativo limpo, não espremer, retorno para reavaliação/drenagem se piora.','Antibiótico geralmente 5–7 dias quando indicado; ajustar à cultura.'],
+    diff:['Cisto infectado, hidradenite, linfonodo supurado, corpo estranho, celulite sem coleção.']
   };
-  plans.ectima={
-    dx:['Infecção ulcerativa que acomete derme; úlcera com crosta aderente amarelada/escura, bordas elevadas violáceas.','Geralmente inicia como impetigo e evolui mais profundamente; pode cicatrizar com marca.','Ectima gangrenoso por Pseudomonas é alerta para gravidade/imunodeficiência.'],
-    pa:['Indicar antibiótico sistêmico; tópico isolado não basta.','Investigar imunodeficiência/doença de base se ectima, especialmente gangrenoso, múltiplo ou grave.','Se extenso, necrose, paciente tóxico ou suspeita Pseudomonas: internar e usar cobertura EV antipseudomonal.'],
-    meds:(s.rapida||s.imuno||s.febre)?[abx.ceftriaxona,abx.piptazo,abx.meropenem]:((s.mrsa||s.alergia==='grave')?[abx.clindaPO,abx.smxTmp]:[abx.cefalexina,abx.amoxClav]),
-    casa:['Antibiótico geralmente 7-10 dias e limpeza da crosta sem trauma excessivo.','Retornar se aumento da úlcera, febre, necrose, dor importante, linfangite ou ausência de melhora em 48-72h.'],
-    diff:['Leishmaniose, vasculite, CIVD/êmbolos sépticos, pioderma gangrenoso.']
+  p.ectima={
+    dx:['Infecção ulcerativa que atinge derme; parece impetigo que aprofundou.','Úlcera com crosta espessa amarelada/escura, seca e aderente; bordas elevadas/violáceas.','Agente comum: Streptococcus pyogenes; S. aureus pode atuar associado. Investigar imunodeficiência se incomum/extenso.'],
+    cond:['Antibiótico sistêmico é indicado.','Higiene, retirada cuidadosa de crostas, curativos e avaliação de doença de base.','Se extenso, tóxico, imunossuprimido ou lesão necrótica: internar e considerar ectima gangrenoso/Pseudomonas.'],
+    meds: betaSafe?[b.orais[0],b.orais[2]]:[b.orais[3]],
+    casa:['Antibiótico por 7–10 dias; curativo diário; não arrancar crosta agressivamente.','Retorno se febre, novas úlceras, necrose, dor intensa, imunossupressão ou sem melhora em 48–72h.'],
+    diff:['Leishmaniose, vasculite, CIVD, êmbolos sépticos/endocardite, pioderma gangrenoso.']
   };
-  plans.dactilite={
-    dx:['Bolha oval acral de 10-30 mm em falange distal de um ou mais dedos; mais comum entre 2 e 16 anos.','Agentes prevalentes: estreptococo do grupo A e S. aureus.'],
-    pa:['Incisão/drenagem quando indicado, compressas mornas e antibiótico oral.','Coletar cultura para diferenciar panarício herpético/impetigo bolhoso e direcionar terapia.','Avaliar dor intensa, limitação funcional, sinais de tenossinovite ou celulite extensa.'],
-    meds:(s.mrsa||s.alergia==='grave')?[abx.clindaPO]:[abx.cefalexina],
-    casa:['Antibiótico por 7-10 dias; manter curativo limpo e mão elevada se edema.','Retornar se piora da dor, febre, estrias, edema progressivo ou dificuldade de mover dedo.'],
+  p.ectima_gangrenoso={
+    dx:['Lesão ulceronecrótica/escara, classicamente associada a Pseudomonas aeruginosa e imunodeficiência/neutropenia ou sepse.','Pode iniciar como mácula/vesícula e evoluir para necrose com bordas eritematovioláceas.','É sinal de alerta para sepse e imunodeficiência.'],
+    cond:['Internar, coletar culturas e iniciar antipseudomonal EV conforme protocolo local.','Avaliar hemograma/neutropenia, imunodeficiência e foco sistêmico.','Solicitar Infectologia/Dermato/Cirurgia conforme profundidade/necrose.'],
+    meds:[b.ev[6],b.ev[7],b.ev[4]],
+    casa:['Não orientar tratamento domiciliar inicial em suspeita verdadeira de ectima gangrenoso.'],
+    diff:['Fasciíte, vasculite, leishmaniose, pioderma gangrenoso, CIVD, êmbolo séptico.']
+  };
+  p.dactilite={
+    dx:['Bolha oval acral de 10–30 mm na falange distal, em um ou mais dedos; crianças de 2–16 anos.','Agentes: EGA e S. aureus.','Diferenciar de panarício herpético, impetigo bolhoso e bolha de fricção.'],
+    cond:['Cultura da bolha ajuda a diferenciar e guiar tratamento.','Tratamento: incisão/drenagem quando indicado, compressas quentes e antibiótico oral resistente a beta-lactamase.','Avaliar dor, mobilidade, sinais de tenossinovite ou comprometimento profundo.'],
+    meds: betaSafe?[b.orais[0]]:[b.orais[3]],
+    casa:['Compressas mornas; manter curativo limpo; não romper em casa.','Retorno se dor progressiva, edema de dedo/mão, limitação de movimento, febre ou piora.'],
     diff:['Panarício herpético, impetigo bolhoso, bolha de fricção, queimadura.']
   };
-  plans.paroniquia={
-    dx:['Infecção após trauma na cutícula/prega ungueal; edema, eritema, sensibilidade e pus na prega ungueal.','Pode causar dor latejante e bolhas; matriz ungueal infantil é frágil.'],
-    pa:['Compressas mornas e antibiótico tópico se leve.','Drenagem se houver coleção/pus; antibiótico sistêmico se celulite, extensão, imunossupressão ou falha.','Se história de roer unha/sucção digital, considerar flora oral e preferir amoxicilina-clavulanato quando não alérgico.'],
-    meds:(s.flutuacao||s.halo>0||s.febre||s.imuno)?((s.mrsa||s.alergia==='grave')?[abx.clindaPO]:[abx.amoxClav,abx.cefalexina]):[topicalMeds()[0],topicalMeds()[3]],
-    casa:['Evitar manipular/cortar cutícula; compressa morna 3-4x/dia.','Se drenado: curativo limpo. Antibiótico sistêmico geralmente 7-10 dias quando indicado.','Retornar se febre, linfangite, dor intensa, edema progressivo ou limitação do dedo.'],
-    diff:['Panarício herpético, unha encravada com granuloma, trauma, corpo estranho, candidíase crônica.']
+  p.paroniquia={
+    dx:['Infecção da prega ungueal após trauma/manipulação/unha encravada.','Edema, eritema, dor latejante e pus na prega proximal/lateral.','Em criança, inflamação pode induzir distrofia ungueal se não tratada.'],
+    cond:['Sem abscesso: compressas mornas + antibiótico tópico.','Com pus/flutuação: drenagem é fundamental; após drenagem, mupirocina pode ser usada.','Se celulite, extensão, febre, imunossupressão ou mordedura/chupar dedo: antibiótico oral; considerar amox-clav para flora oral/anaeróbios.'],
+    meds: (s.flutuacao||s.febre||s.halo>2||s.imuno||s.especial)?(s.mrsa||s.alergia==='grave'?[b.orais[3],b.orais[4]]:[b.orais[2],b.orais[0],b.topicos[0]]):[b.topicos[4],b.topicos[0]],
+    casa:['Compressa morna 10–15 min 3–4x/dia; elevar dedo; evitar manipular cutícula/unha.','Se drenagem: curativo e retorno.','Retorno se dor intensa, listras vermelhas, edema de todo dedo, febre, limitação de movimento ou piora.'],
+    diff:['Panarício herpético, onicocriptose, trauma, corpo estranho, paroníquia crônica/candidíase.']
   };
-  plans.celulite={
-    dx:['Infecção da derme profunda e subcutâneo: eritema, calor, dor e edema.','Limites geralmente mal definidos e evolução mais lenta que a erisipela. Pode haver febre/adenopatia.','Pesquisar porta de entrada: fissura interdigital, trauma, úlcera, picada, cirurgia.'],
-    pa:['Sem gravidade: antibiótico VO com reavaliação em 48h; marcar bordas para acompanhar.','Grave, falha VO, toxemia, lactente/imunossuprimido ou local especial: hospitalizar e iniciar EV.','USG/TC/RM se suspeita de abscesso, coleção, corpo estranho ou fasciíte. Hemocultura se sepse/bacteremia/imunossupressão.'],
-    meds:(s.rapida||s.febre||s.imuno||s.especial||s.falha)?((s.mrsa||s.alergia==='grave')?[abx.clindaIV,abx.vancomicina]:[abx.cefazolina,abx.ceftriaxona,abx.oxacilina]):((s.mrsa||s.alergia==='grave')?[abx.clindaPO]:[abx.cefalexina,abx.amoxClav]),
-    casa:['Antibiótico por 5 dias inicialmente, estender se resposta lenta; elevar membro e analgesia.','Pode piorar visualmente nas primeiras 24h apesar de antibiótico adequado; reavaliar se dor/sistêmico piorarem.','Retornar se febre persistente, aumento após 24-48h, dor desproporcional, bolhas, necrose, prostração, vômitos ou redução de diurese.'],
-    diff:['Erisipela, abscesso, trombose, dermatite de contato, reação a picada, fasciíte necrosante, osteomielite.']
+  p.celulite={
+    dx:['Infecção da derme profunda e subcutâneo: eritema, calor, dor e edema.','Limites mal definidos e evolução mais lenta que erisipela. Pode haver febre/adenopatia.','Pesquisar porta de entrada: fissuras, intertrigo, trauma, picada, ferida, úlcera. US se suspeita de abscesso.'],
+    cond:['Leve sem sinais sistêmicos: VO e reavaliação em 48–72h.','Grave, lactente pequeno, imunossuprimido, face/periorbitário, falha VO, vômitos ou toxemia: internar/EV.','Elevar membro, analgesia, demarcar borda, tratar porta de entrada.'],
+    meds: (s.toxemia||s.rapida||s.imuno||s.especial||s.falha)?(s.mrsa?[b.ev[4],b.ev[3]]:[b.ev[0],b.ev[1],b.ev[3]]):(mrsaOrAllergy?[b.orais[3]]:[b.orais[0],b.orais[2]]),
+    casa:['Antibiótico geralmente 5 dias se resposta boa; pode prolongar se evolução lenta/grave.','Elevar membro, hidratar pele, tratar micose/intertrigo/fissuras.','Retorno se febre, piora do eritema após 24–48h, dor importante, bolhas, necrose, prostração ou sinais periorbitários.'],
+    diff:['Erisipela, abscesso, trombose, dermatite de contato, picada inflamada, vasculite, fasciíte necrosante.']
   };
-  plans.erisipela={
-    dx:['Infecção da derme superficial com acometimento linfático; principal agente é estreptococo do grupo A.','Placa eritematosa elevada, bem delimitada, com febre/calafrios/mal-estar muitas vezes antes da lesão.','Face é associada a foco nasofaríngeo; membros inferiores são comuns.'],
-    pa:['Penicilina/amoxicilina ou cefalosporina conforme protocolo; suporte com hidratação, antitérmico, compressas frias e elevação.','Internar se lactente, imunocomprometido, baixa adesão, falha ambulatorial, bolhas/necrose ou toxemia.','Hemograma/PCR não são necessários de rotina se quadro típico e leve; considerar em imunocomprometidos/graves.'],
-    meds:(s.febre||s.imuno||s.falha||s.especial)?((s.alergia==='grave')?[abx.clindaIV]:[abx.penicilinaG,abx.cefazolina,abx.ceftriaxona]):((s.alergia==='grave')?[abx.clindaPO]:[abx.amoxicilina,abx.cefalexina,abx.benzathine]),
-    casa:['Antibiótico geralmente 5-10 dias, conforme resposta e protocolo.','Elevar área afetada; tratar porta de entrada (intertrigo, fissuras, eczema).','Retornar se bolhas/necrose, piora sistêmica, febre persistente, dor desproporcional ou falha em 48-72h.'],
-    diff:['Celulite, fasciíte necrosante, dermatite de contato, trombose, mordedura/picada, queimadura.']
+  p.erisipela={
+    dx:['Infecção da derme superficial e linfáticos; principal agente: estreptococo beta-hemolítico do grupo A.','Placa eritematosa elevada e bem delimitada; pode ter mal-estar, febre e calafrios antes da lesão.','Pode formar vesículas/bolhas; face costuma seguir infecção de nasofaringe.'],
+    cond:['Penicilina/amoxicilina/cefalexina são opções quando não há alergia.','Suporte: hidratação, antitérmico/analgesia, compressas frias e elevação da área.','Hospitalizar lactentes, imunocomprometidos, baixa adesão, falha ambulatorial ou sinais sistêmicos importantes.'],
+    meds: (s.toxemia||s.imuno||s.falha||s.especial)?(betaSafe?[b.ev[5],b.ev[0]]:[b.ev[3],b.ev[4]]):(betaSafe?[b.orais[1],b.orais[0],b.orais[6]]:[b.orais[3]]),
+    casa:['Antibiótico por 5–10 dias conforme resposta/protocolo.','Elevar área, compressas frias, analgesia; tratar fatores predisponentes como intertrigo, eczema, edema.','Retorno se bolhas extensas, necrose, dor desproporcional, febre persistente ou piora.'],
+    diff:['Celulite, dermatite de contato, tromboflebite, fasciíte, picada de inseto, queimadura.']
   };
-  plans.fasciite={
-    dx:['Infecção rara, rapidamente progressiva, com necrose de fáscia/subcutâneo e alto risco de sepse/choque.','Pista-chave: dor desproporcional ao achado cutâneo, evolução rápida, eritema violáceo, bolhas hemorrágicas, endurecimento além do eritema e toxemia.','Pode ocorrer após trauma, picada, procedimento, pós-varicela ou até contusão sem lesão aparente.'],
-    pa:['EMERGÊNCIA: chamar cirurgia imediatamente para exploração/desbridamento. Não atrasar por exames se instável.','ABCDE, acesso venoso, reposição volêmica, analgesia, culturas se não atrasarem, lactato, hemograma, função renal/hepática, eletrólitos, coagulograma.','Antibiótico EV amplo precoce: cobrir MRSA + Gram negativos + anaeróbios; adicionar clindamicina se suspeita estreptocócica/toxina.','Internação/UTI; considerar imunoglobulina em choque tóxico estreptocócico conforme especialista.'],
-    meds:[abx.vancomicina,abx.piptazo,abx.meropenem,abx.clindaIV],
-    casa:['Não há prescrição domiciliar inicial. Após alta, seguir plano de curativos, reabilitação, antibiótico dirigido por cultura e retorno cirúrgico/infectologia.'],
-    diff:['Celulite/erisipela bolhosa, abscesso profundo, hematoma infectado, piomiosite, gangrena gasosa, pioderma gangrenoso.']
+  p.fasciite={
+    dx:['Infecção necrosante de rápida progressão; pode evoluir para sepse/choque.','Pista principal: dor desproporcional ao exame; depois eritema violáceo, edema duro, bolhas hemorrágicas, necrose, crepitação.','Pode ocorrer após trauma, picada, varicela, procedimento ou mesmo contusão sem ferida aberta.'],
+    cond:['Emergência: cirurgia imediata para avaliação/desbridamento; não esperar imagem se instável.','Antibiótico EV amplo precoce: cobrir MRSA, Gram-negativos e anaeróbios + antitoxina.','Coletar culturas se não atrasar; manejar sepse, analgesia, UTI e Infectologia.'],
+    meds:[b.ev[4],b.ev[6],b.ev[3],b.ev[7],b.ev[8]],
+    casa:['Não é manejo domiciliar. Transferir/internar urgentemente.'],
+    diff:['Celulite/erisipela bolhosa, abscesso, hematoma infectado, piomiosite, gangrena gasosa, pioderma gangrenoso.']
   };
-  return plans[d] || plans.impetigo_nb;
+  return p;
 }
-function buildCopy(d,s,sev,plan){
-  const abx=antibioticSet(s);
-  const medsTxt = (plan.meds||[]).map(m=>m.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()).join('\n- ');
-  const dx = diseaseLabels[d];
-  const obs = s.obs ? `\nObservações: ${s.obs}` : '';
-  return `CALCULADORA - INFECÇÕES BACTERIANAS CUTÂNEAS PEDIÁTRICAS\n\nPaciente: ${Number.isFinite(s.kg)?fmt(s.kg)+' kg':'peso não informado'}; idade: ${Number.isFinite(s.meses)?(s.meses<24?fmt(s.meses)+' meses':fmt(s.anos)+' anos'):'não informada'}; T: ${Number.isFinite(s.temp)?fmt(s.temp)+' °C':'--'}\nHipótese: ${dx}\nClassificação: ${sev.text}\nAlergia beta-lactâmico: ${val('alergia')} | MRSA: ${s.mrsa?'sim':'não'} | Imuno/lactente/fator risco: ${s.imuno?'sim':'não'}${obs}\n\nCONDUTA PA/HOSPITAL:\n- ${plan.pa.join('\n- ')}\n\nMEDICAÇÕES CALCULADAS:\n- ${medsTxt || 'Sem medicação calculada.'}\n- ${abx.analgesia.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}\n\nORIENTAÇÕES/ALTA:\n- ${plan.casa.join('\n- ')}\n\nALERTAS:\n- ${commonWarnings(s,d).join('\n- ') || 'Sem alertas adicionais pelo formulário.'}\n\nDiagnósticos diferenciais: ${plan.diff.join(' ')}`;
+function durationHint(d,s){
+  if(['foliculite','paroniquia'].includes(d) && !s.febre && !s.flutuacao) return 'Tópico/compressas por 5 dias; reavaliar se não melhorar.';
+  if(['celulite','erisipela','abscesso'].includes(d)) return '5 dias se quadro leve e boa resposta; 7–10 dias se extenso, lento, drenagem ou comorbidade.';
+  if(['impetigo_nb','impetigo_b','furunculo','dactilite'].includes(d)) return 'Geralmente 5–7 dias; impetigo tópico pode ir até 7–10 dias.';
+  if(['perianal','ectima'].includes(d)) return 'Frequentemente 10 dias; ajustar por resposta/cultura.';
+  if(d==='ssss') return 'Sistêmico e suporte; duração conforme gravidade/resposta e serviço.';
+  if(d==='fasciite') return '7–14 dias ou pelo menos até controle cirúrgico, melhora clínica e afebril 48–72h, conforme equipe.';
+  return 'Ajustar duração conforme resposta e protocolo local.';
 }
+function buildPrescription(s,d,plan,sev){
+  const b=antibioticBank(s);
+  const mainMeds = plan.meds || [];
+  const lines=[];
+  lines.push(`PACIENTE: ${Number.isFinite(s.kg)?fmt(s.kg,1)+' kg':'peso não informado'}; idade ${Number.isFinite(s.idade)?fmt(s.idade,1)+' '+s.unit:'não informada'}.`);
+  lines.push(`HIPÓTESE: ${diseaseName[d]}. Gravidade: ${sev.text}.`);
+  if(s.obs) lines.push(`OBS.: ${s.obs}`);
+  lines.push('\nACHADOS/CRITÉRIOS:');
+  lines.push(`- Padrão: ${$('padrao').selectedOptions[0].text}.`);
+  if(Number.isFinite(s.bsa)) lines.push(`- Área estimada: ${fmt(s.bsa,1)}% SC.`);
+  if(Number.isFinite(s.segmentos)) lines.push(`- Segmentos acometidos: ${fmt0(s.segmentos)}.`);
+  if(Number.isFinite(s.halo)) lines.push(`- Halo/eritema: ${fmt(s.halo,1)} cm.`);
+  if(s.febre || (Number.isFinite(s.temp)&&s.temp>=38)) lines.push('- Febre/sintomas sistêmicos presentes.');
+  if(s.flutuacao) lines.push('- Flutuação/coleção purulenta: avaliar incisão e drenagem.');
+  if(s.mrsa) lines.push('- Risco de MRSA selecionado.');
+  if(s.alergia!=='nenhuma') lines.push(`- Alergia: ${$('alergia').selectedOptions[0].text}.`);
+  lines.push('\nCONDUTA:');
+  plan.cond.forEach(x=>lines.push(`- ${strip(x)}`));
+  lines.push('\nPRESCRIÇÃO SUGERIDA (selecionar/ajustar):');
+  mainMeds.forEach((m,i)=>lines.push(`${i+1}. ${m.title}: ${strip(m.doseText)}. ${strip(m.note||'')}`));
+  lines.push(`\nDuração orientativa: ${durationHint(d,s)}`);
+  lines.push('\nSintomáticos, se necessário:');
+  b.sintomaticos.forEach((m,i)=>lines.push(`- ${m.title}: ${strip(m.doseText)}.`));
+  lines.push('\nORIENTAÇÕES:');
+  plan.casa.forEach(x=>lines.push(`- ${strip(x)}`));
+  lines.push('- Retornar imediatamente se piora rápida, prostração, febre persistente, dor desproporcional, bolhas hemorrágicas, necrose, lesão próxima aos olhos ou sinais de desidratação.');
+  lines.push('\nOBS.: Conferir dose máxima, concentração disponível, função renal/hepática, faixa etária neonatal, alergias e protocolo local.');
+  return lines.join('\n');
+}
+function strip(x){ return String(x).replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&amp;/g,'&'); }
 function render(){
-  const s=getState(); const d=chooseDisease(s); const sev=severity(s,d); const plan=diseasePlan(d,s); const warnings=commonWarnings(s,d); const abx=antibioticSet(s);
-  const ageTxt=Number.isFinite(s.meses)?(s.meses<1?fmt(s.meses*30.44)+' dias':s.meses<24?fmt(s.meses)+' meses':fmt(s.anos)+' anos'):'--';
-  const impCrit = d.startsWith('impetigo') ? `<div class="alert ${d==='impetigo_nb'?'blue':'amber'}"><b>Critério de impetigo sistêmico:</b> ${d==='impetigo_b'?'bolhoso = sistêmico.':(((Number.isFinite(s.bsa)&&s.bsa>2)||(Number.isFinite(s.segmentos)&&s.segmentos>=2)||(Number.isFinite(s.meses)&&s.meses<24)||s.mrsa||s.febre||s.imuno)?'presente pelo formulário.':'não evidente; tópico tende a bastar se lesão limitada.')}</div>` : '';
-  const dangerBlock = (sev.level==='grave') ? `<div class="alert red"><b>Prioridade:</b> avaliação presencial imediata, acesso EV se grave, culturas quando úteis sem atrasar antibiótico/cirurgia, e considerar regulação/internação.</div>` : '';
-  const warnHtml = warnings.length ? `<div class="alert amber"><b>Alertas:</b><ul>${li(warnings)}</ul></div>` : '';
-  const medHtml = (plan.meds||[]).join('') + abx.analgesia;
-  const copy=buildCopy(d,s,sev,plan);
-  $('saida').innerHTML = `
-    <div class="resultHeader">
-      <div><h2>${diseaseLabels[d]}</h2><p style="margin:0;color:#475467">${sev.text} • ${Number.isFinite(s.kg)?fmt(s.kg)+' kg':'peso --'} • ${ageTxt}</p>
-        <div class="kpi"><div><b>%SC</b><span>${Number.isFinite(s.bsa)?fmt(s.bsa)+'%':'--'}</span></div><div><b>Segmentos</b><span>${Number.isFinite(s.segmentos)?s.segmentos:'--'}</span></div><div><b>Halo/celulite</b><span>${Number.isFinite(s.halo)?fmt(s.halo)+' cm':'--'}</span></div><div><b>MRSA</b><span>${s.mrsa?'sim':'não'}</span></div></div>
-      </div>
-      <span class="badge ${sev.badge}">${sev.text}</span>
+  const s=readState(); const d=chooseDisease(s); const plans=diseasePlans(s); const plan=plans[d] || plans.impetigo_nb; const sev=severity(s,d); const warn=warnings(s,d); const b=antibioticBank(s);
+  const ageText=Number.isFinite(s.meses)?(s.meses<24?`${fmt(s.meses,1)} meses`:`${fmt(s.meses/12,1)} anos`):'idade não informada';
+  const rx=buildPrescription(s,d,plan,sev); window.__rxText=rx;
+  $('tab-resultado').innerHTML = `
+    <div class="banner">
+      <div><h2>${diseaseName[d]}</h2><p class="hint">Peso: ${Number.isFinite(s.kg)?fmt(s.kg,1)+' kg':'não informado'} • Idade: ${ageText} • Padrão: ${$('padrao').selectedOptions[0].text}</p>
+      <div class="kpi"><div><b>Área</b><span>${Number.isFinite(s.bsa)?fmt(s.bsa,1)+'% SC':'--'}</span></div><div><b>Segmentos</b><span>${Number.isFinite(s.segmentos)?fmt0(s.segmentos):'--'}</span></div><div><b>Halo</b><span>${Number.isFinite(s.halo)?fmt(s.halo,1)+' cm':'--'}</span></div><div><b>Alergia</b><span>${$('alergia').selectedOptions[0].text}</span></div></div></div>
+      <span class="badge ${sev.kind}">${sev.text}</span>
     </div>
-    ${dangerBlock}${warnHtml}${impCrit}
-    <div class="box"><h3>🔎 Como reconhecer / diagnóstico provável</h3><ul>${li(plan.dx)}</ul></div>
-    <div class="box"><h3>🏥 Conduta no PA / hospital</h3><div class="timeline">${plan.pa.map((x,i)=>`<div class="step"><div class="num">${i+1}</div><div>${x}</div></div>`).join('')}</div></div>
-    <div class="box"><h3>💊 Prescrição calculada / opções de tratamento</h3><div class="medGrid">${medHtml}</div><p class="small">Doses sugeridas para apoio rápido. Conferir apresentação disponível, dose máxima, função renal/hepática, idade neonatal, interações e protocolo local.</p></div>
-    <div class="box"><h3>🏠 Alta e orientações para casa</h3><ul>${li(plan.casa)}</ul></div>
-    <div class="box"><h3>🧭 Diferenciais para não perder</h3><ul>${li(plan.diff)}</ul></div>
-    <div class="box"><h3>📋 Texto para copiar para prescrição/conduta</h3><div class="btns"><button class="btn secondary" onclick="copyText()">Copiar texto</button><button class="btn secondary" onclick="window.print()">Imprimir / salvar PDF</button></div><pre id="copy" class="copyArea">${esc(copy)}</pre></div>
-    <div class="box"><h3>📚 Observações rápidas da fonte</h3><ul><li>Infecções cutâneas são classificadas por profundidade: impetigo/foliculite superficiais, furúnculo/abscesso, ectima, celulite/erisipela e fasciíte.</li><li>Impetigo limitado pode ser tópico; bolhoso, extenso, menor de 2 anos, MRSA ou múltiplos segmentos tende a necessitar antibiótico sistêmico.</li><li>Fasciíte necrosante e SSSS extensa são emergências: suporte, antibiótico EV e avaliação cirúrgica/UTI quando indicado.</li></ul></div>`;
+    ${warn.length?alertBox(sev.kind==='danger'?'danger':'warn', '<strong>Alertas:</strong>'+li(warn)):alertBox('ok','Sem critério de gravidade selecionado. Mesmo assim, conferir exame físico completo e evolução.')}
+    <div class="split">
+      ${box('Como reconhecer', li(plan.dx))}
+      ${box('Conduta inicial', li(plan.cond))}
+    </div>
+    ${box('Medicações sugeridas para este cenário', medsToHtml(plan.meds))}
+    <div class="split">
+      ${box('Orientações para casa / retorno', li(plan.casa))}
+      ${box('Diferenciais importantes', li(plan.diff))}
+    </div>
+    ${box('Duração e reavaliação', `<p>${durationHint(d,s)}</p><p><strong>Reavaliar em 24–72h</strong> conforme gravidade. Em celulite/erisipela, demarcar bordas pode ajudar a avaliar progressão.</p>`)}
+  `;
+  renderDiseases(s,d);
+  renderAntibiotics(s);
+  $('tab-prescricao').innerHTML = `${box('Texto copiável para evolução/prescrição', `<div class="copyArea" id="copyArea">${escapeHtml(rx)}</div>`)}<div class="btns"><button class="btn" onclick="copyRx()">Copiar texto</button></div>`;
 }
-function copyText(){ const t=$('copy')?.innerText||''; navigator.clipboard?.writeText(t); }
-function initTabs(){
-  const items=[['auto','Auto'],['impetigo_nb','Impetigo'],['furunculo','Abscesso'],['celulite','Celulite'],['erisipela','Erisipela'],['ssss','SSSS'],['fasciite','Fasciíte'],['paroniquia','Paroníquia']];
-  $('quickTabs').innerHTML=items.map(([v,l])=>`<button class="tab" data-d="${v}">${l}</button>`).join('');
-  $('quickTabs').addEventListener('click',e=>{const b=e.target.closest('button[data-d]'); if(!b)return; $('doenca').value=b.dataset.d; updateTabs(); render();});
+function renderDiseases(s,current){
+  const cards = [
+    ['impetigo_nb','Crostas melicéricas. Tópico se limitado; sistêmico se extenso, <2 anos, ≥2 segmentos, MRSA/falha ou sinais sistêmicos.'],
+    ['impetigo_b','Bolhas flácidas superficiais. Sempre pensar em ATB sistêmico e diferenciar de SSSS.'],
+    ['perianal','Eritema anal bem delimitado com prurido/dor/constipação. Tratamento sistêmico, swab/cultura quando possível.'],
+    ['ssss','Pele dolorosa, rágades periorais, Nikolsky, desnudamento. Emergência se extenso/lactente/toxemia.'],
+    ['foliculite','Pústulas perifoliculares superficiais. Sem nódulo profundo. Higiene/tópico; se celulite, muda conduta.'],
+    ['furunculo','Nódulo profundo do folículo, doloroso, pode drenar. Compressas; drenagem se flutuante; ATB se halo >2 cm/carbúnculo/sistêmico.'],
+    ['abscesso','Coleção purulenta. Drenagem é controle de foco; ATB se celulite, febre, grande, múltiplo, imunossuprimido ou local especial.'],
+    ['ectima','Úlcera com crosta espessa/escura e bordas elevadas. Precisa ATB sistêmico e investigar base se incomum.'],
+    ['ectima_gangrenoso','Lesão necrótica/escara em paciente tóxico/imuno. Pensar Pseudomonas, sepse e internação.'],
+    ['dactilite','Bolha oval na falange distal. Cultura, drenagem quando indicado, cefalexina se sem alergia.'],
+    ['paroniquia','Prega ungueal dolorosa com pus. Compressa + mupirocina; drenar abscesso; sistêmico se celulite/extensão.'],
+    ['celulite','Eritema quente, doloroso, edema, limites mal definidos. VO se leve; EV/internação se grave/falha/local especial.'],
+    ['erisipela','Placa elevada, bem delimitada, sistêmicos prévios. Estreptococo; penicilina/amox/cefalexina.'],
+    ['fasciite','Dor desproporcional, rápida progressão, violáceo/necrose/bolhas hemorrágicas. Cirurgia + ATB amplo imediato.']
+  ];
+  $('tab-doencas').innerHTML = `
+    ${alertBox('blue','Esta aba separa as entidades para não misturar foliculite, furúnculo, abscesso e celulite. Clique na doença no seletor à esquerda para gerar prescrição específica.')}
+    <div class="quickGrid">${cards.map(([k,txt])=>`<details ${k===current?'open':''}><summary>${diseaseName[k]}</summary><p>${txt}</p></details>`).join('')}</div>
+    ${box('Diferença prática: foliculite × furúnculo × abscesso', `<table><thead><tr><th>Quadro</th><th>Profundidade/pista</th><th>Conduta-chave</th></tr></thead><tbody><tr><td>Foliculite</td><td>Pápulas/pústulas pequenas centradas no pelo, superficiais.</td><td>Higiene, evitar atrito; mupirocina/fusídico/clindamicina tópica se extensa.</td></tr><tr><td>Furúnculo</td><td>Nódulo doloroso profundo do folículo, pode ter ponto de drenagem.</td><td>Compressa; drenagem se flutuante; ATB se halo &gt;2 cm, celulite, múltiplo, febre ou risco.</td></tr><tr><td>Abscesso/carbúnculo</td><td>Coleção purulenta/flutuação; carbúnculo tem múltiplos tratos.</td><td>Incisão e drenagem; cultura se indicado; considerar MRSA.</td></tr><tr><td>Celulite</td><td>Infecção difusa da derme/subcutâneo, sem coleção obrigatória.</td><td>ATB sistêmico; US se dúvida de abscesso.</td></tr></tbody></table>`)}
+  `;
 }
-function updateTabs(){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.d===val('doenca'))); }
-function limpar(){ ['peso','idade','temperatura','bsa','segmentos','halo','observacoes'].forEach(id=>$(id).value=''); ['febre','mrsa','imuno','especial','flutuacao','rapida','falha'].forEach(id=>$(id).checked=false); $('doenca').value='auto'; $('padrao').value='crostas_mel'; $('alergia').value='nao'; $('idadeUnid').value='anos'; updateTabs(); render(); }
-['peso','idade','idadeUnid','temperatura','doenca','padrao','bsa','segmentos','halo','alergia','apresentacao','observacoes'].forEach(id=>$(id).addEventListener('input',()=>{updateTabs(); render();}));
-['febre','mrsa','imuno','especial','flutuacao','rapida','falha'].forEach(id=>$(id).addEventListener('change',render));
-$('calcBtn').addEventListener('click',render); $('limparBtn').addEventListener('click',limpar);
-initTabs(); updateTabs(); render();
+function renderAntibiotics(s){
+  const b=antibioticBank(s);
+  $('tab-antibioticos').innerHTML = `
+    ${alertBox('warn','As doses abaixo são calculadas pelo peso informado e devem ser conferidas com dose máxima, apresentação disponível, idade, função renal/hepática e protocolo local.')}
+    ${box('Tópicos — mupirocina e afins', medsToHtml(b.topicos))}
+    ${box('Orais mais usados', medsToHtml(b.orais))}
+    ${box('Endovenosos / graves', medsToHtml(b.ev))}
+    ${box('Sintomáticos', medsToHtml(b.sintomaticos))}
+    ${box('Macetes de escolha', `<ul><li><strong>Impetigo limitado/foliculite:</strong> prefira tópico; não usar bacitracina como rotina.</li><li><strong>Não purulento/celulite/erisipela:</strong> pensar em estreptococo/MSSA → cefalexina/amox-clav/cefazolina.</li><li><strong>Purulento/abscesso/furúnculo com risco:</strong> pensar em MRSA → drenagem + SMX-TMP ou clindamicina quando indicado.</li><li><strong>SSSS:</strong> oxacilina/cefazolina para MSSA; vancomicina se risco MRSA; clindamicina pode ser associada por efeito antitoxina.</li><li><strong>Fasciíte:</strong> vancomicina + piperacilina-tazobactam + clindamicina/linezolida e cirurgia urgente.</li></ul>`)}
+  `;
+}
+function escapeHtml(str){ return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function copyRx(){ navigator.clipboard.writeText(window.__rxText||'').then(()=>alert('Texto copiado.')); }
+function clearForm(){ document.querySelectorAll('input').forEach(i=>{ if(i.type==='checkbox') i.checked=false; else i.value=''; }); $('idadeUnid').value='anos'; $('doenca').value='auto'; $('padrao').value='crostas_mel'; $('alergia').value='nenhuma'; $('obs').value=''; render(); }
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tabPage').forEach(p=>p.classList.add('hide')); $('tab-'+btn.dataset.tab).classList.remove('hide'); if(btn.dataset.tab==='prescricao') render(); }));
+$('calcBtn').addEventListener('click',render); $('copyBtn').addEventListener('click',()=>{ render(); copyRx(); }); $('clearBtn').addEventListener('click',clearForm);
+['peso','idade','idadeUnid','temperatura','doenca','padrao','bsa','segmentos','halo','diametro','alergia','febre','toxemia','rapida','flutuacao','especial','imuno','mrsa','falha','obs'].forEach(id=>$(id).addEventListener('input',render));
+render();
 </script>
-<div class="wrap footerNote">Base clínica: Documento Científico SBP - Infecções Bacterianas Superficiais Cutâneas; doses pediátricas usuais adicionadas para apoio operacional. Ferramenta não substitui avaliação médica e protocolos locais.</div>
 </body>
 </html>
