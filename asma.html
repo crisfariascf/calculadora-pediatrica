@@ -103,7 +103,7 @@ summary{font-weight:700;cursor:pointer;font-size:13px}
 <body>
 <header>
   <h1>Asma Pediátrica no PA — Calculadora Offline</h1>
-  <p>Campos à esquerda; resposta e prescrição à direita. Base priorizada: GINA 2026; HCA/guia local como complemento.</p>
+  <p>Campos à esquerda; resposta à direita. PRAM com SatO₂ explícita. Base priorizada: GINA 2026; HCA/guia local como complemento.</p>
 </header>
 
 <div class="layout">
@@ -158,7 +158,9 @@ summary{font-weight:700;cursor:pointer;font-size:13px}
           <div><label>Entrada de ar</label><select id="pramEntrada"><option value="0">Normal = 0</option><option value="1">Reduzida bases = 1</option><option value="2">Redução difusa = 2</option><option value="3">Mínima/ausente = 3</option></select></div>
           <div><label>Sibilância</label><select id="pramSibilo"><option value="0">Ausente = 0</option><option value="1">Expiratória = 1</option><option value="2">Insp + exp = 2</option><option value="3">Audível/tórax silencioso = 3</option></select></div>
           <div><label>Usar PRAM?</label><select id="usarPram"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+          <div><label>SatO₂ no PRAM</label><select id="pramSatModo"><option value="auto">Automático pela SatO₂ geral</option><option value="0">≥ 95% = 0</option><option value="1">92–94% = 1</option><option value="2">&lt; 92% = 2</option></select></div>
         </div>
+        <p class="note" id="pramSatInfo">SatO₂ do PRAM: usa automaticamente o campo “SatO₂ ar ambiente (%)” acima. Pontuação: ≥95% = 0; 92–94% = 1; &lt;92% = 2.</p>
       </details>
 
       <button type="button" onclick="calcularTudo()">Gerar / atualizar resposta</button>
@@ -266,16 +268,38 @@ function faixaEtaria(){
 }
 
 function pramScore(){
-  var sat=val('sat');
+  var satModo = el('pramSatModo') ? el('pramSatModo').value : 'auto';
   var sp=0;
-  if(sat && sat < 92) sp=2;
-  else if(sat && sat <= 94) sp=1;
+  if(satModo !== 'auto'){
+    sp = parseInt(satModo);
+  } else {
+    var sat=val('sat');
+    if(sat && sat < 92) sp=2;
+    else if(sat && sat <= 94) sp=1;
+    else sp=0;
+  }
   return parseInt(el('pramSupra').value)+parseInt(el('pramEscaleno').value)+parseInt(el('pramEntrada').value)+parseInt(el('pramSibilo').value)+sp;
 }
 function pramClasse(score){
   if(score >= 8) return 'GRAVE';
   if(score >= 4) return 'MODERADA';
   return 'LEVE';
+}
+function pramSatDescricao(){
+  var modo = el('pramSatModo') ? el('pramSatModo').value : 'auto';
+  var sat = val('sat');
+  var pontos = 0, faixa = '';
+  if(modo !== 'auto'){
+    pontos = parseInt(modo);
+    if(pontos === 0) faixa = '≥95%';
+    else if(pontos === 1) faixa = '92–94%';
+    else faixa = '<92%';
+    return faixa + ' = ' + pontos + ' ponto(s), manual';
+  }
+  if(sat && sat < 92){ pontos=2; faixa='<92%'; }
+  else if(sat && sat <= 94){ pontos=1; faixa='92–94%'; }
+  else { pontos=0; faixa='≥95% ou não informada'; }
+  return faixa + ' = ' + pontos + ' ponto(s), automático';
 }
 function classificarBase(){
   var age=idadeAnos(), sat=val('sat'), fr=val('fr'), fc=val('fc');
@@ -569,7 +593,7 @@ function calcularTudo(){
     el('saida').style.display='block';
     var cls=estado.grav==='LEVE'?'leve':(estado.grav==='MODERADA'?'moderada':'grave');
     var pscore=pramScore();
-    el('resumo').innerHTML='<span class="badge '+cls+'">'+estado.grav+'</span><span class="badge">'+faixaEtaria()+'</span><span class="badge">'+idadeTexto()+'</span><span class="badge">'+peso+' kg</span><span class="badge">PRAM '+pscore+' ('+pramClasse(pscore)+')</span>';
+    el('resumo').innerHTML='<span class="badge '+cls+'">'+estado.grav+'</span><span class="badge">'+faixaEtaria()+'</span><span class="badge">'+idadeTexto()+'</span><span class="badge">'+peso+' kg</span><span class="badge">PRAM '+pscore+' ('+pramClasse(pscore)+')</span><span class="badge">Sat PRAM: '+pramSatDescricao()+'</span>';
 
     var a='';
     if(estado.grav==='AMEAÇA À VIDA') a+='<div class="box dangerbox"><b>Ameaça à vida:</b> suporte imediato, leito de vermelha, monitorização, considerar UTI. Se anafilaxia, adrenalina IM antes do broncodilatador.</div>';
@@ -612,6 +636,7 @@ function limparTudo(){
     else inputs[i].value='';
   }
   el('sat').value=''; el('fr').value=''; el('fc').value='';
+  if(el('pramSatModo')) el('pramSatModo').value='auto';
   el('placeholder').style.display='flex';
   el('saida').style.display='none';
   el('erro').style.display='none';
