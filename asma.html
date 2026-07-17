@@ -356,7 +356,7 @@ summary::marker{color:var(--brand2)}
     </section>
 
     <section class="card">
-      <p class="note">🔎 Ferramenta de apoio offline, baseada no Guia ArkaMed GINA 2026 e no Protocolo Clínico de Asma na Urgência do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho. Conferir apresentação disponível, dose máxima, contraindicações, técnica inalatória, protocolo local e julgamento clínico antes de administrar.</p>
+      <p class="note">🔎 Ferramenta de apoio offline, atualizada com o GINA 2026 oficial, o Guia ArkaMed GINA 2026 e o Protocolo Clínico de Asma na Urgência do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho. Conferir apresentação disponível, dose máxima, contraindicações, técnica inalatória, protocolo local e julgamento clínico antes de administrar.</p>
     </section>
   </main>
 </div>
@@ -371,7 +371,10 @@ function chk(id){ return el(id).checked; }
 function idadeAnos(){ var i=val('idade'); return el('unidade').value==='meses'?i/12:i; }
 function idadeTexto(){ return el('unidade').value==='meses'?val('idade')+' meses':val('idade')+' anos'; }
 function roundHalf(x){ return Math.round(x*2)/2; }
-function roundStep(x, step){ return Math.round(Math.round(x/step)*step*100)/100; }
+function roundDose(x){ return Math.round((x + Number.EPSILON)*100)/100; }
+function fmtDose(x){
+  return Number(x).toFixed(2).replace('.',',').replace(/0+$/,'').replace(/,$/,'');
+}
 
 function faixaEtaria(){
   var a=idadeAnos();
@@ -473,38 +476,32 @@ function sevIcon(g){
 }
 
 /* ---------- Doses ---------- */
-function sabaDose(g, age, peso){
-  if(age >= 6){
-    if(g === 'LEVE') return 4;
-    if(g === 'MODERADA') return peso >= 20 ? 6 : 4;
-    if(g === 'GRAVE') {
-      if(peso < 20) return 6;
-      if(peso <= 35) return 8;
-      return 10;
-    }
-    return 10;
-  } else {
-    var faixaSaba = {LEVE:[2,4], MODERADA:[4,6], GRAVE:[6,10]}[g] || [6,10];
-    var estimSaba = Math.round(peso/2.5); // ~1 jato a cada 2-3 kg (regra do protocolo local)
-    return Math.max(faixaSaba[0], Math.min(faixaSaba[1], estimSaba));
+function sabaDose(g, age){
+  // GINA 2026 oficial: não criar dose exata por peso quando a diretriz fornece uma faixa.
+  if(age < 6){
+    if(g === 'GRAVE' || g === 'AMEAÇA À VIDA') return '4–6';
+    return '4'; // leve e moderada
   }
+  if(g === 'LEVE') return '4';
+  if(g === 'MODERADA') return '4–6';
+  return '6–10'; // grave ou ameaça à vida
 }
-function sabaFaixa(g, age){
-  if(age >= 6){
-    if(g === 'LEVE') return '4 jatos';
-    if(g === 'MODERADA') return '4–6 jatos';
-    return '6–10 jatos';
-  } else {
-    if(g === 'LEVE') return '2–4 jatos';
-    if(g === 'MODERADA') return '4–6 jatos';
-    return '6–10 jatos';
+function sabaFaixa(g, age){ return sabaDose(g,age)+' jatos'; }
+function sabaEsquema(g, age){
+  if(g === 'LEVE'){
+    return 'pMDI + espaçador AGORA, um jato por vez; avaliar resposta e, se necessário, repetir uma vez após 30–60 min.';
   }
+  if(g === 'MODERADA'){
+    return 'pMDI + espaçador, um jato por vez; repetir se necessário até 3 administrações na 1ª hora, com intervalo de 20–30 min.';
+  }
+  if(age < 6){
+    return 'pMDI + espaçador, um jato por vez; repetir a cada 20 min, se necessário, até 3 administrações na 1ª hora.';
+  }
+  return 'pMDI + espaçador, um jato por vez; repetir a cada 20–30 min, se necessário, até 3 administrações na 1ª hora.';
 }
 function ipraDose(peso, age){
-  if(age >= 6) return {spray:4, gotas:20, neb:'0,25 mg = 1 mL da solução 0,025%'};
-  if(peso < 10) return {spray:2, gotas:10, neb:'0,25 mg/mL conforme protocolo local'};
-  if(peso <= 20) return {spray:4, gotas:20, neb:'0,25 mg/mL conforme protocolo local'};
-  return {spray:8, gotas:40, neb:'0,25 mg/mL conforme protocolo local'};
+  // GINA 2026 oficial: 4 jatos de 20 mcg ou 0,25 mg por nebulização, inclusive em ≤5 anos.
+  return {spray:4, gotas:20, neb:'0,25 mg = 1 mL da solução 0,25 mg/mL'};
 }
 function tetoPred(age){
   if(age < 2) return 20;
@@ -523,10 +520,23 @@ function magDose(peso){
   return {mg:mg, gr:(mg/1000).toFixed(mg%1000?1:0), ml10:roundHalf(Math.min(0.5*peso,20)), ml50:roundHalf(Math.min(0.1*peso,4))};
 }
 function adrenalinaDose(peso, age){
-  if(age >= 12) return {mg:'0,3–0,5', ml:'0,3–0,5', texto:'dose fixa de adulto/adolescente'};
-  var mg = roundStep(Math.min(0.01*peso, 0.5), 0.05);
-  if(mg < 0.05) mg = 0.05;
-  return {mg:mg, ml:mg, texto:'0,01 mg/kg IM, máx. 0,5 mg'};
+  // Adrenalina 1 mg/mL (1:1000): 0,01 mg/kg IM. Em pediatria/adolescência, máx. 0,5 mg.
+  // Em adultos, a faixa recomendada é 0,3–0,5 mg; a dose calculada é limitada a essa faixa.
+  var calculada = roundDose(0.01*peso);
+  var mg, texto;
+  if(age >= 18){
+    mg = roundDose(Math.min(Math.max(calculada,0.3),0.5));
+    texto = 'adulto: 0,3–0,5 mg IM; cálculo de 0,01 mg/kg limitado à faixa adulta';
+  } else {
+    mg = roundDose(Math.min(calculada,0.5));
+    texto = 'criança/adolescente: 0,01 mg/kg IM, máx. 0,5 mg';
+  }
+  return {
+    mg:fmtDose(mg),
+    ml:fmtDose(mg),
+    texto:texto,
+    formula:'0,01 × '+peso+' kg = '+fmtDose(calculada)+' mg'+(calculada>0.5?' → teto 0,5 mg':'')
+  };
 }
 function corticoideIndicado(g){
   return (g === 'MODERADA' || g === 'GRAVE' || g === 'AMEAÇA À VIDA' || redFlags());
@@ -566,13 +576,13 @@ function pintar(painelId, containerId, steps){
 /* ---------- 1ª hora ---------- */
 function stepsPrimeiraHora(){
   var age=estado.age, peso=estado.peso, g=estado.grav;
-  var saba=sabaDose(g,age,peso), ip=ipraDose(peso,age), pr=predDose(peso,age,1), pr2=predDose(peso,age,2), mag=magDose(peso), dex=dexaDose(peso), ad=adrenalinaDose(peso,age);
+  var saba=sabaDose(g,age), ip=ipraDose(peso,age), pr=predDose(peso,age,1), pr2=predDose(peso,age,2), mag=magDose(peso), dex=dexaDose(peso), ad=adrenalinaDose(peso,age);
   var s=[];
 
   if(chk('anafilaxia')){
     s.push(step('alerta','🚨','Anafilaxia associada — adrenalina IM primeiro',
-      'Aplicar na face lateral da coxa ANTES do broncodilatador. Pode repetir a cada 5–15 min se necessário. ('+ad.texto+')',
-      'Adrenalina 1 mg/mL: '+ad.mg+' mg = '+ad.ml+' mL IM'));
+      'Aplicar na face anterolateral da coxa ANTES do broncodilatador. Pode repetir a cada 5–15 min se necessário. '+ad.texto+'. Macete: '+ad.formula+'.',
+      'Adrenalina 1 mg/mL (1:1000): '+ad.mg+' mg = '+ad.ml+' mL IM'));
   }
 
   if(g==='GRAVE' || g==='AMEAÇA À VIDA'){
@@ -582,14 +592,14 @@ function stepsPrimeiraHora(){
   }
 
   s.push(step('broncho','💨','Salbutamol — broncodilatador',
-    'pMDI + espaçador AGORA; repetir até 3 vezes na 1ª hora, intervalo de 20–30 min, conforme resposta. Faixa-base: '+sabaFaixa(g,age)+'. Agitar o inalador antes de cada jato.',
+    sabaEsquema(g,age)+' Dose: '+sabaFaixa(g,age)+'. Fazer 5–6 respirações correntes após cada jato e agitar o inalador imediatamente antes de cada acionamento.',
     saba+' jatos (100 mcg/jato)'));
 
   if(g==='LEVE'){
     s.push(step('info','ℹ️','Ipratrópio — não usar de rotina','Associar apenas se evoluir para moderada, resposta insuficiente ou decisão do plantonista.'));
   } else {
     s.push(step('broncho','💨','Ipratrópio associado',
-      'Junto ao salbutamol, pMDI + espaçador, repetir até 3x na 1ª hora. Alternativa nebulização: '+ip.neb+' + SF 0,9% 3 mL. Correspondência local: '+ip.gotas+' gotas.',
+      'Junto ao salbutamol nas crises moderada/grave, pMDI + espaçador, até 3 administrações na 1ª hora. Alternativa: '+ip.neb+'. Se o conta-gotas fornecer 20 gotas/mL, corresponde a '+ip.gotas+' gotas.',
       ip.spray+' jatos (20 mcg/jato)'));
   }
 
@@ -633,7 +643,8 @@ function gerarHora2(){
   var r=document.querySelector('input[name="resp1"]:checked');
   if(!r){ alert('Marque a resposta após a 1ª hora.'); return; }
   var age=estado.age, peso=estado.peso, g=estado.grav, ip=ipraDose(peso,age), mag=magDose(peso);
-  var saba=sabaDose(g==='LEVE'?'MODERADA':g,age,peso);
+  var saba=sabaDose(g==='LEVE'?'MODERADA':g,age);
+  var sabaGrave=sabaDose('GRAVE',age);
   var s=[];
   if(r.value==='boa'){
     s.push(step('obs','👁️','Manter observação',''));
@@ -651,7 +662,7 @@ function gerarHora2(){
   } else {
     s.push(step('alerta','🚨','Tratar como GRAVE / AMEAÇA À VIDA',''));
     s.push(step('alerta','🏥','Suporte imediato','Leito de vermelha, acesso venoso, monitorização contínua; O₂ se SatO₂ <92%/ameaça à vida; acionar suporte.'));
-    s.push(step('broncho','💨','Salbutamol em alta dose','pMDI + espaçador a cada 20–30 min por mais 1 hora, ou nebulização conforme disponibilidade.', '10 jatos (100 mcg/jato)'));
+    s.push(step('broncho','💨','Salbutamol em alta dose','pMDI + espaçador, um jato por vez; repetir conforme resposta e monitorização de toxicidade.', sabaGrave+' jatos (100 mcg/jato)'));
     s.push(step('broncho','💨','Ipratrópio, se ainda na fase inicial','', ip.spray+' jatos ou '+ip.gotas+' gotas neb.'));
     s.push(step('mag','⚡','Sulfato de magnésio EV','Máximo 2 g; diluir em SF 0,9% 50–100 mL, infundir em 20–30 min.', mag.mg+' mg ('+mag.gr+' g) — 10%: '+mag.ml10+' mL OU 50%: '+mag.ml50+' mL'));
     s.push(step('interna','🏥','Considerar UTI','VNI e terbutalina EV conforme protocolo local.'));
@@ -693,10 +704,10 @@ function stepsAlta(){
   if(age >= 6){
     s.push(step('cortico','🚫','Não dar alta com SABA isolado','Preferir estratégia anti-inflamatória: ICS-formoterol quando disponível/adequado, ou ICS associado ao resgate.'));
     s.push(step('cortico','💊','Opção GINA 2026 — Track 1','Budesonida-formoterol como manutenção + resgate, conforme prescrição do serviço/especialista.'));
-    s.push(step('broncho','💨','Se ICS-formoterol indisponível','Salbutamol com espaçador de 4/4h a 6/6h por até 5 dias + iniciar/manter corticoide inalatório de controle.', '4–6 jatos (100 mcg/jato)'));
+    s.push(step('broncho','💨','Se ICS-formoterol indisponível','Salbutamol com espaçador apenas se necessário, não de horário fixo; manter/iniciar corticoide inalatório. Procurar reavaliação se precisar de doses repetidas ou >12 jatos em 24 h.', '2 jatos por resgate (100 mcg/jato)'));
   } else {
-    s.push(step('info','ℹ️','Menor de 6 anos','O documento GINA 2026 enviado não detalha alta específica; usar HCA/protocolo local.'));
-    s.push(step('broncho','💨','Salbutamol','Espaçador de 4/4h a 6/6h por até 5 dias, individualizar conforme resposta.', '2–4 jatos (100 mcg/jato)'));
+    s.push(step('info','ℹ️','Menor de 6 anos','GINA 2026 oficial: manter resgate apenas conforme necessidade e procurar reavaliação se o salbutamol for necessário novamente em menos de 4 horas.'));
+    s.push(step('broncho','💨','Salbutamol','Usar com espaçador apenas se necessário, não de rotina. Se precisar novamente em menos de 4 horas, procurar reavaliação.', '2 jatos por resgate (100 mcg/jato)'));
     s.push(step('controle','🔁','Corticoide inalatório','Iniciar/manter se indicação clínica de controle/recorrência, conforme protocolo local.'));
   }
   s.push(step('cortico','💊','Prednisolona/Prednisona','Se crise moderada/grave ou já iniciada no PA, por 3–5 dias.', pr.dia+' mg/dia ('+pr.dose12+' mg 12/12h)'));
@@ -705,7 +716,8 @@ function stepsAlta(){
 }
 function stepsInternacao(){
   var age=estado.age, peso=estado.peso, pr=predDose(peso,age,1), ip=ipraDose(peso,age), mag=magDose(peso);
-  var saba = age>=6 ? (peso<20?6:(peso<=35?8:10)) : (peso>=20?10:6);
+  var gravInternacao = (estado.grav==='LEVE') ? 'MODERADA' : estado.grav;
+  var saba = sabaDose(gravInternacao,age);
   var s=[];
   s.push(step('info','📌','Critérios práticos', 'Persistência de desconforto, hipoxemia ou necessidade frequente de broncodilatador; má resposta à 1ª hora ou evolução para grave/ameaça à vida; red flags, dificuldade de tratamento domiciliar ou dúvida diagnóstica.'));
   s.push(step('obs','🧪','Exames/monitorização', 'Eletrólitos (especialmente K+, se doses repetidas de salbutamol); gasometria se fadiga, alteração de consciência ou hipoxemia persistente; radiografia se dúvida diagnóstica, assimetria, dor pleurítica, febre/infiltrado; hemograma tem pouco valor em crise puramente asmática.'));
@@ -724,23 +736,21 @@ function stepsInternacao(){
 function rxBasesHTML(){
   return ''
     +'<h4>Base prioritária</h4>'
-    +'<p>GINA 2026 (Guia ArkaMed) para faixa ≥6 anos/adolescentes; Protocolo Clínico HCA Severino Bezerra de Carvalho como complemento, especialmente em &lt;6 anos.</p>'
+    +'<p>GINA 2026 oficial como base prioritária para todas as faixas etárias; Guia ArkaMed GINA 2026 e Protocolo Clínico HCA Severino Bezerra de Carvalho como apoio/complemento local.</p>'
     +'<h4>Mudanças aplicadas do GINA 2026</h4>'
     +'<ul>'
-    +'<li>SpO₂: O₂ suplementar só se SatO₂ &lt;92%, salvo ameaça à vida. Alvo em ≥6 anos: 92–95%.</li>'
-    +'<li>Salbutamol mais conservador: leve 4 jatos; moderada 4–6 jatos; grave 6–10 jatos.</li>'
-    +'<li>Ipratrópio em moderada/grave; evitar prolongar além de 1–2h se sem benefício.</li>'
-    +'<li>Corticoide sistêmico: moderada/grave ou sem resposta à 1ª dose de SABA; crise leve com boa resposta não recebe automaticamente.</li>'
-    +'<li>Anafilaxia + asma: adrenalina IM antes do broncodilatador.</li>'
-    +'<li>Alta: não dar alta com SABA isolado em ≥6 anos; organizar terapia anti-inflamatória.</li>'
-    +'<li>PRAM opcional incluído para &lt;18 anos.</li>'
+    +'<li>SpO₂: O₂ suplementar só se SatO₂ &lt;92%, salvo ameaça à vida. Alvo em ≥6 anos: 92–95%; em ≤5 anos: manter ≥92%.</li>'
+    +'<li>Salbutamol pMDI + espaçador: ≤5 anos — leve 4 jatos, moderada 4 jatos, grave/ameaça 4–6 jatos; ≥6 anos — leve 4, moderada 4–6, grave/ameaça 6–10.</li>'
+    +'<li>Não foi criada conversão arbitrária de peso para escolher um número dentro das faixas 4–6 ou 6–10; a faixa é exibida como na diretriz e deve ser individualizada pela gravidade/resposta.</li>'
+    +'<li>Ipratrópio em moderada/grave: 4 jatos de 20 mcg ou 0,25 mg nebulizado, até 3 administrações na 1ª hora; evitar prolongar além de 1–2h sem benefício.</li>'
+    +'<li>Anafilaxia + asma: adrenalina IM antes do broncodilatador. Dose pediátrica/adolescente: 0,01 mg/kg da solução 1 mg/mL, máx. 0,5 mg; adulto: 0,3–0,5 mg.</li>'
+    +'<li>Alta: resgate conforme necessidade, não de horário fixo; não dar alta com SABA isolado em ≥6 anos.</li>'
     +'</ul>'
     +'<h4>Conflitos/complementos com o protocolo local (HCA)</h4>'
     +'<ul>'
-    +'<li>HCA/guia local antigo usavam alvo O₂ 94–98% ou 93–95%; esta versão prioriza GINA 2026.</li>'
-    +'<li>HCA/guia local usavam salbutamol 1 jato a cada 2–3 kg até 10 jatos; esta versão reduz a dose em leve/moderada conforme GINA 2026.</li>'
-    +'<li>GINA 2026 simplifica ipratrópio em ≥6 anos para 4 jatos ou 0,25 mg nebulizado; em &lt;6 anos mantida a lógica do HCA/guia local.</li>'
-    +'<li>O documento GINA 2026 enviado não detalha todo o manejo de &lt;6 anos; nessa faixa mantido o HCA/protocolo local como complemento.</li>'
+    +'<li>O HCA antigo usava alvo O₂ 94–98%; esta versão prioriza GINA 2026.</li>'
+    +'<li>O HCA usava 1 jato de salbutamol a cada 2–3 kg e ipratrópio spray por peso; esta versão prioriza as doses fixas/faixas do GINA 2026.</li>'
+    +'<li>As apresentações locais e orientações operacionais do HCA permanecem apenas como complemento quando não conflitarem com o GINA 2026.</li>'
     +'</ul>';
 }
 
@@ -770,8 +780,8 @@ function calcularTudo(){
     var a='';
     if(g==='AMEAÇA À VIDA') a+='<div class="box dangerbox">🆘 <b>Ameaça à vida:</b> suporte imediato, leito de vermelha, monitorização, considerar UTI. Se anafilaxia, adrenalina IM antes do broncodilatador.</div>';
     else if(g==='GRAVE') a+='<div class="box dangerbox">🔴 <b>Crise grave:</b> broncodilatador em alta dose, ipratrópio, corticoide sistêmico, vigilância estreita e considerar MgSO₄ se refratária.</div>';
-    else if(g==='MODERADA') a+='<div class="box warn">🟡 <b>Crise moderada:</b> salbutamol 4–6 jatos, ipratrópio associado, corticoide sistêmico e reavaliação em 1 hora.</div>';
-    else a+='<div class="box ok">🟢 <b>Crise leve:</b> salbutamol 4 jatos em ≥6 anos; corticoide sistêmico não automático se boa resposta.</div>';
+    else if(g==='MODERADA') a+='<div class="box warn">🟡 <b>Crise moderada:</b> salbutamol '+sabaDose(g,estado.age)+' jatos, ipratrópio 4 jatos associado, corticoide sistêmico e reavaliação em 1 hora.</div>';
+    else a+='<div class="box ok">🟢 <b>Crise leve:</b> salbutamol 4 jatos; avaliar resposta antes de repetir. Corticoide sistêmico não automático se boa resposta.</div>';
 
     if(redFlags()) a+='<div class="box dangerbox">🚩 <b>Red flag marcada:</b> menor limiar para observação prolongada, internação ou retorno precoce.</div>';
     if(estado.sat && estado.sat>=92) a+='<div class="box info">💡 <b>Oxigênio:</b> GINA 2026 priorizado — não dar O₂ por reflexo se SatO₂ ≥92% e sem ameaça à vida.</div>';
