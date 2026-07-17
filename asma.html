@@ -109,6 +109,8 @@ button.tab{
 }
 button.tab.active{background:linear-gradient(120deg,var(--brand),var(--brand2));color:white;box-shadow:0 3px 8px rgba(15,110,92,.28)}
 .tabsRow{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
+.autoTag{display:inline-flex;align-items:center;margin-left:5px;padding:2px 6px;border-radius:999px;background:var(--brandSoft);color:var(--brand);font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;vertical-align:1px}
+#frRel:disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);background:#f5f8fb;cursor:not-allowed}
 
 /* Severity banner */
 .severityBanner{
@@ -276,7 +278,7 @@ summary::marker{color:var(--brand2)}
         <div class="fieldWrap"><label>Peso (kg)</label><input id="peso" type="number" min="1" step="0.1" placeholder="Ex: 24"></div>
         <div class="fieldWrap" id="wrapSat"><label>SatO₂ em ar ambiente (%)</label><input id="sat" type="number" min="40" max="100" step="1" placeholder="Ex: 93"><div class="fieldHint" id="hintSat">≥94% leve · 92–93% moderada · &lt;92% grave</div></div>
         <div class="fieldWrap" id="wrapFr"><label>FR (irpm)</label><input id="fr" type="number" min="0" step="1" placeholder="Ex: 32"><div class="fieldHint" id="hintFr">O limite grave muda conforme a idade.</div></div>
-        <div class="fieldWrap" id="wrapFrRel"><label>FR em relação ao esperado</label><select id="frRel"><option value="">Selecione</option><option value="leve">Normal ou pouco aumentada</option><option value="moderada">Aumentada</option></select><div class="fieldHint" id="hintFrRel">Usado para diferenciar leve de moderada abaixo do limite grave.</div></div>
+        <div class="fieldWrap" id="wrapFrRel"><label>FR em relação ao esperado <span class="autoTag">automático</span></label><select id="frRel" disabled aria-readonly="true" aria-live="polite"><option value="">Aguardando idade e FR</option><option value="leve">Normal ou pouco aumentada</option><option value="moderada">Aumentada para a idade</option><option value="grave">Acima do limite grave da asma</option></select><div class="fieldHint" id="hintFrRel">Preenchido automaticamente pela idade e pelo valor da FR.</div></div>
         <div class="fieldWrap"><label>FC (bpm) — monitorização</label><input id="fc" type="number" min="0" step="1" placeholder="Ex: 126"><div class="fieldHint">Não define isoladamente a gravidade no GINA 2026.</div></div>
         <div class="fieldWrap" id="wrapPef"><label>PEF (% melhor pessoal/previsto)</label><input id="pef" type="number" min="0" max="150" step="1" placeholder="Opcional"><div class="fieldHint" id="hintPef">Aplicável principalmente acima de 5 anos.</div></div>
       </div>
@@ -441,7 +443,7 @@ summary::marker{color:var(--brand2)}
     </section>
 
     <section class="card">
-      <p class="note">🔎 Ferramenta de apoio offline, atualizada com o GINA 2026 oficial, o Guia ArkaMed GINA 2026 e o Protocolo Clínico de Asma na Urgência do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho. Conferir apresentação disponível, dose máxima, contraindicações, técnica inalatória, protocolo local e julgamento clínico antes de administrar.</p>
+      <p class="note">🔎 Ferramenta de apoio offline, atualizada com o GINA 2026 oficial, o Guia ArkaMed GINA 2026, o Protocolo Clínico de Asma na Urgência do HCA e faixas etárias de FR do Royal Children’s Hospital Melbourne para o preenchimento automático. Conferir apresentação disponível, dose máxima, contraindicações, técnica inalatória, protocolo local e julgamento clínico antes de administrar.</p>
     </section>
   </main>
 </div>
@@ -506,6 +508,37 @@ function pramSatDescricao(){
   return faixa + ' = ' + pontos + ' ponto(s), automático';
 }
 
+/* ---------- FR automática por idade ---------- */
+function referenciaFrEtaria(){
+  if(!(val('idade') > 0)) return null;
+  var a=idadeAnos(), meses=a*12;
+  // Limites superiores de faixas aceitáveis em crianças doentes (RCH),
+  // usados apenas para operacionalizar "normal/pouco aumentada" versus "aumentada".
+  if(meses < 6) return {max:60, faixa:'0–5 meses'};
+  if(meses < 12) return {max:55, faixa:'6–11 meses'};
+  if(a < 2) return {max:45, faixa:'1 ano'};
+  if(a < 4) return {max:40, faixa:'2–3 anos'};
+  if(a < 10) return {max:30, faixa:'4–9 anos'};
+  return {max:25, faixa:'≥10 anos'};
+}
+function avaliarFrAutomatica(){
+  var fr=val('fr'), ref=referenciaFrEtaria();
+  if(!ref || !(fr > 0)) return {valor:'',severity:null,label:'Aguardando idade e FR',hint:'Preencha idade e FR para o cálculo automático.'};
+  var limiteGrave=idadeAnos()<6?40:30;
+  if(fr>limiteGrave){
+    return {valor:'grave',severity:'GRAVE',label:'Acima do limite grave da asma',hint:'Grave: FR '+fr+'/min >'+limiteGrave+'/min pelo GINA 2026.'};
+  }
+  if(fr>ref.max){
+    return {valor:'moderada',severity:'MODERADA',label:'Aumentada para a idade',hint:'Moderada: FR acima da faixa esperada para '+ref.faixa+' (>'+ref.max+'/min), mas sem ultrapassar o limite grave de '+limiteGrave+'/min.'};
+  }
+  return {valor:'leve',severity:'LEVE',label:'Normal ou pouco aumentada',hint:'Leve pela FR: dentro da faixa aceitável para '+ref.faixa+' (≤'+ref.max+'/min) e abaixo do limite grave.'};
+}
+function atualizarFrRelAutomatico(){
+  var r=avaliarFrAutomatica(), campo=el('frRel');
+  if(campo) campo.value=r.valor;
+  return r;
+}
+
 /* ---------- Classificação ---------- */
 var ordemGravidade={'LEVE':1,'MODERADA':2,'GRAVE':3,'AMEAÇA À VIDA':4};
 function maiorGravidade(lista){
@@ -525,9 +558,8 @@ function criteriosAtivos(incluirPram){
   }
 
   if(fr){
-    if(fr > limiteFr) lista.push(criterio('fr','FR',fr+' irpm','GRAVE','FR >'+limiteFr+'/min para esta faixa etária'));
-    else if(el('frRel').value==='moderada') lista.push(criterio('fr','FR',fr+' irpm','MODERADA','FR aumentada, mas ≤'+limiteFr+'/min'));
-    else if(el('frRel').value==='leve') lista.push(criterio('fr','FR',fr+' irpm','LEVE','FR normal ou pouco aumentada e ≤'+limiteFr+'/min'));
+    var frAuto=avaliarFrAutomatica();
+    if(frAuto.severity) lista.push(criterio('fr','FR',fr+' irpm',frAuto.severity,frAuto.hint));
   }
 
   var mapaSelect={leve:'LEVE',moderada:'MODERADA',grave:'GRAVE',ameaca:'AMEAÇA À VIDA'};
@@ -565,8 +597,6 @@ function camposObrigatoriosAusentes(){
   var aus=[];
   if(!val('sat')) aus.push('SatO₂');
   if(!val('fr')) aus.push('FR');
-  var limiteFr=idadeAnos()<6?40:30;
-  if(val('fr') && val('fr')<=limiteFr && !el('frRel').value) aus.push('FR em relação ao esperado');
   if(!el('fala').value) aus.push('fala/posição');
   if(!el('consciencia').value) aus.push('consciência/cianose');
   if(!el('musculatura').value) aus.push('musculatura acessória');
@@ -622,14 +652,11 @@ function atualizarCoresAoVivo(){
     aplicarClasseCampo('wrapSat',sat<92?'GRAVE':sat<94?'MODERADA':'LEVE',sat<92?'Grave: SatO₂ <92% em ar ambiente.':sat<94?'Moderada: SatO₂ 92–93%.':'Leve: SatO₂ ≥94%.');
   } else aplicarClasseCampo('wrapSat',null,'≥94% leve · 92–93% moderada · <92% grave');
 
-  var frSev=null, frHint=idadeInformada?'Limite grave nesta idade: >'+limite+'/min.':'Informe a idade para aplicar o limite de FR.';
-  if(fr && idadeInformada){
-    if(fr>limite){frSev='GRAVE';frHint='Grave: FR '+fr+'/min >'+limite+'/min.';}
-    else if(el('frRel').value==='moderada'){frSev='MODERADA';frHint='Moderada: FR aumentada, porém ≤'+limite+'/min.';}
-    else if(el('frRel').value==='leve'){frSev='LEVE';frHint='Leve: FR normal/pouco aumentada e ≤'+limite+'/min.';}
-  }
+  var frAuto=atualizarFrRelAutomatico();
+  var frSev=frAuto.severity;
+  var frHint=idadeInformada?(fr?frAuto.hint:'Informe a FR para classificação automática.'):'Informe a idade para aplicar os limites de FR.';
   aplicarClasseCampo('wrapFr',frSev,frHint);
-  aplicarClasseCampo('wrapFrRel',frSev,!idadeInformada?'Informe a idade primeiro.':fr>limite?'O valor numérico já coloca o caso como grave.':'Define leve versus moderada quando FR não ultrapassa '+limite+'/min.');
+  aplicarClasseCampo('wrapFrRel',frSev,frAuto.hint);
 
   var selectMap=[['wrapFala','fala'],['wrapMusculatura','musculatura'],['wrapEntrada','entradaAr'],['wrapSibilos','sibilos']];
   selectMap.forEach(function(p){var v=el(p[1]).value; aplicarClasseCampo(p[0],v?({leve:'LEVE',moderada:'MODERADA',grave:'GRAVE'}[v]):null,null);});
@@ -944,9 +971,10 @@ function rxBasesHTML(){
     +'<h4>Base prioritária</h4>'
     +'<p>GINA 2026 oficial como base prioritária para todas as faixas etárias; Guia ArkaMed GINA 2026 e Protocolo Clínico HCA Severino Bezerra de Carvalho como apoio/complemento local.</p>'
     +'<h4>Classificação dinâmica</h4>'
-    +'<p>Os campos seguem as tabelas do GINA 2026: ≥6 anos (Box 9-4) e crianças ≤5 anos (Box 12-1). SatO₂, FR, fala, consciência/cianose, musculatura acessória, entrada de ar, sibilância, PEF e PRAM recebem cores conforme a coluna correspondente.</p>'
+    +'<p>Os campos seguem as tabelas do GINA 2026: ≥6 anos (Box 9-4) e crianças ≤5 anos (Box 12-1). SatO₂, FR, fala, consciência/cianose, musculatura acessória, entrada de ar, sibilância, PEF e PRAM recebem cores conforme a coluna correspondente. O campo “FR em relação ao esperado” é calculado automaticamente a partir da idade e da FR.</p>'
     +'<h4>Mudanças aplicadas do GINA 2026</h4>'
     +'<ul>'
+    +'<li>FR automática: as faixas aceitáveis por idade são usadas para diferenciar normal/pouco aumentada de aumentada; os pontos de corte de gravidade do GINA 2026 (&gt;40/min em ≤5 anos e &gt;30/min em ≥6 anos) sempre têm prioridade.</li>'
     +'<li>SpO₂: O₂ suplementar só se SatO₂ &lt;92%, salvo ameaça à vida. Alvo em ≥6 anos: 92–95%; em ≤5 anos: manter ≥92%.</li>'
     +'<li>Salbutamol pMDI + espaçador: ≤5 anos — leve 4 jatos, moderada 4 jatos, grave/ameaça 4–6 jatos; ≥6 anos — leve 4, moderada 4–6, grave/ameaça 6–10.</li>'
     +'<li>Não foi criada conversão arbitrária de peso para escolher um número dentro das faixas 4–6 ou 6–10; a faixa é exibida como na diretriz e deve ser individualizada pela gravidade/resposta.</li>'
