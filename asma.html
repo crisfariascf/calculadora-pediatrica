@@ -190,6 +190,52 @@ summary::marker{color:var(--brand2)}
 .basesBox ul{margin:4px 0;padding-left:19px}
 .basesBox li{margin:3px 0}
 
+
+/* Classificação dinâmica dos parâmetros */
+.fieldWrap{position:relative;border-radius:12px;padding:7px;border:1px solid transparent;transition:.18s}
+.fieldWrap label{margin-left:2px}
+.fieldWrap input,.fieldWrap select{transition:.18s}
+.fieldHint{font-size:10.8px;line-height:1.35;color:var(--muted);margin:5px 3px 0;min-height:15px}
+.fieldWrap.sevField-LEVE{background:var(--leveSoft);border-color:#b7edc9}
+.fieldWrap.sevField-LEVE input,.fieldWrap.sevField-LEVE select{border-color:var(--leve);background:#fff;color:#14532d}
+.fieldWrap.sevField-MODERADA{background:var(--moderadaSoft);border-color:#f6d38c}
+.fieldWrap.sevField-MODERADA input,.fieldWrap.sevField-MODERADA select{border-color:var(--moderada);background:#fff;color:#854d0e}
+.fieldWrap.sevField-GRAVE{background:var(--graveSoft);border-color:#f2b7b7}
+.fieldWrap.sevField-GRAVE input,.fieldWrap.sevField-GRAVE select{border-color:var(--grave);background:#fff;color:#991b1b}
+.fieldWrap.sevField-AMEACA{background:var(--ameacaSoft);border-color:#d89a9a;box-shadow:0 0 0 2px rgba(127,29,29,.08)}
+.fieldWrap.sevField-AMEACA input,.fieldWrap.sevField-AMEACA select{border-color:var(--ameaca);background:#fff;color:#450a0a;font-weight:700}
+
+.severityLegend{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 10px}
+.legendItem{font-size:10.8px;font-weight:700;padding:4px 8px;border-radius:999px;border:1px solid}
+.legendLeve{background:var(--leveSoft);border-color:#b7edc9;color:#166534}
+.legendMod{background:var(--moderadaSoft);border-color:#f6d38c;color:#92400e}
+.legendGrave{background:var(--graveSoft);border-color:#f2b7b7;color:#b91c1c}
+.legendAmeaca{background:var(--ameacaSoft);border-color:#d89a9a;color:#6b1010}
+
+.whyBox{border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 12px;background:#fbfcfe}
+.whyTitle{font-family:'Sora',sans-serif;font-size:14px;margin:0 0 5px;display:flex;align-items:center;gap:7px}
+.whyText{font-size:12.3px;color:var(--muted);line-height:1.45;margin:0 0 10px}
+.reasonList{display:flex;gap:7px;flex-wrap:wrap}
+.reasonPill{font-size:11.5px;font-weight:700;padding:6px 9px;border-radius:10px;border:1px solid;line-height:1.3}
+.reason-LEVE{background:var(--leveSoft);border-color:#b7edc9;color:#166534}
+.reason-MODERADA{background:var(--moderadaSoft);border-color:#f6d38c;color:#92400e}
+.reason-GRAVE{background:var(--graveSoft);border-color:#f2b7b7;color:#b91c1c}
+.reason-AMEACA{background:var(--ameacaSoft);border-color:#d89a9a;color:#6b1010}
+.reasonNeutral{background:#eef2f6;border-color:#d8dee8;color:#475569}
+
+.criteriaGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.criteriaCol{border:1px solid var(--line);border-radius:12px;padding:10px;background:white;min-width:0}
+.criteriaCol h4{font-family:'Sora',sans-serif;font-size:11.5px;margin:0 0 7px}
+.criteriaCol ul{padding-left:16px;margin:0;font-size:10.9px;line-height:1.42;color:#475569}
+.criteriaCol li{margin:3px 0}
+.criteriaCol.current-LEVE{background:var(--leveSoft);border-color:var(--leve)}
+.criteriaCol.current-MODERADA{background:var(--moderadaSoft);border-color:var(--moderada)}
+.criteriaCol.current-GRAVE{background:var(--graveSoft);border-color:var(--grave)}
+.criteriaCol.current-AMEACA{background:var(--ameacaSoft);border-color:var(--ameaca)}
+.liveRule{font-size:11.2px;color:#475569;background:#f1f5f9;border-radius:10px;padding:8px 10px;margin:8px 0 0;line-height:1.4}
+@media(max-width:700px){.criteriaGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.criteriaGrid{grid-template-columns:1fr}}
+
 @media(max-width:900px){
   header{position:relative}
   .layout{grid-template-columns:1fr;padding:12px}
@@ -225,25 +271,63 @@ summary::marker{color:var(--brand2)}
     <section class="card">
       <div class="sectionHead"><span class="ic">🧒</span><h2>Dados do paciente</h2></div>
       <div class="grid">
-        <div><label>Idade</label><input id="idade" type="number" min="0" step="0.1" placeholder="Ex: 8"></div>
-        <div><label>Unidade</label><select id="unidade"><option value="anos">anos</option><option value="meses">meses</option></select></div>
-        <div><label>Peso (kg)</label><input id="peso" type="number" min="1" step="0.1" placeholder="Ex: 24"></div>
-        <div><label>SatO₂ ar amb. (%)</label><input id="sat" type="number" min="40" max="100" step="1" placeholder="Ex: 93"></div>
-        <div><label>FR (irpm)</label><input id="fr" type="number" min="0" step="1" placeholder="Ex: 32"></div>
-        <div><label>FC (bpm)</label><input id="fc" type="number" min="0" step="1" placeholder="Ex: 126"></div>
+        <div class="fieldWrap"><label>Idade</label><input id="idade" type="number" min="0" step="0.1" placeholder="Ex: 8"></div>
+        <div class="fieldWrap"><label>Unidade</label><select id="unidade"><option value="anos">anos</option><option value="meses">meses</option></select></div>
+        <div class="fieldWrap"><label>Peso (kg)</label><input id="peso" type="number" min="1" step="0.1" placeholder="Ex: 24"></div>
+        <div class="fieldWrap" id="wrapSat"><label>SatO₂ em ar ambiente (%)</label><input id="sat" type="number" min="40" max="100" step="1" placeholder="Ex: 93"><div class="fieldHint" id="hintSat">≥94% leve · 92–93% moderada · &lt;92% grave</div></div>
+        <div class="fieldWrap" id="wrapFr"><label>FR (irpm)</label><input id="fr" type="number" min="0" step="1" placeholder="Ex: 32"><div class="fieldHint" id="hintFr">O limite grave muda conforme a idade.</div></div>
+        <div class="fieldWrap" id="wrapFrRel"><label>FR em relação ao esperado</label><select id="frRel"><option value="">Selecione</option><option value="leve">Normal ou pouco aumentada</option><option value="moderada">Aumentada</option></select><div class="fieldHint" id="hintFrRel">Usado para diferenciar leve de moderada abaixo do limite grave.</div></div>
+        <div class="fieldWrap"><label>FC (bpm) — monitorização</label><input id="fc" type="number" min="0" step="1" placeholder="Ex: 126"><div class="fieldHint">Não define isoladamente a gravidade no GINA 2026.</div></div>
+        <div class="fieldWrap" id="wrapPef"><label>PEF (% melhor pessoal/previsto)</label><input id="pef" type="number" min="0" max="150" step="1" placeholder="Opcional"><div class="fieldHint" id="hintPef">Aplicável principalmente acima de 5 anos.</div></div>
       </div>
 
-      <h3 class="subHead"><span class="ic">🩺</span>Sinais clínicos</h3>
+      <h3 class="subHead"><span class="ic">🩺</span>Parâmetros da tabela de gravidade</h3>
+      <div class="severityLegend">
+        <span class="legendItem legendLeve">🟢 Leve</span>
+        <span class="legendItem legendMod">🟡 Moderada</span>
+        <span class="legendItem legendGrave">🔴 Grave</span>
+        <span class="legendItem legendAmeaca">🆘 Ameaça à vida</span>
+      </div>
+      <div class="grid">
+        <div class="fieldWrap" id="wrapFala"><label>Fala / posição</label><select id="fala">
+          <option value="">Selecione</option>
+          <option value="leve">Fala em frases; consegue deitar</option>
+          <option value="moderada">Frases curtas; prefere sentar</option>
+          <option value="grave">Palavras / não consegue falar, beber ou deitar</option>
+        </select><div class="fieldHint" id="hintFala">Considere a capacidade habitual e o desenvolvimento da criança.</div></div>
+
+        <div class="fieldWrap" id="wrapConsciencia"><label>Consciência / cianose</label><select id="consciencia">
+          <option value="">Selecione</option>
+          <option value="normal">Alerta, sem cianose central</option>
+          <option value="agitado">Agitação, mas alerta</option>
+          <option value="ameaca">Sonolento, confuso, desorientado ou cianose central</option>
+        </select><div class="fieldHint" id="hintConsciencia">Alteração de consciência ou cianose central = ameaça à vida.</div></div>
+
+        <div class="fieldWrap" id="wrapMusculatura"><label>Musculatura acessória / retrações</label><select id="musculatura">
+          <option value="">Selecione</option>
+          <option value="leve">Ausente ou leve</option>
+          <option value="moderada">Presente / algumas retrações</option>
+          <option value="grave">Uso intenso; retração de escalenos</option>
+        </select><div class="fieldHint" id="hintMusculatura">Suprasternal, supraclavicular ou intercostal.</div></div>
+
+        <div class="fieldWrap" id="wrapEntrada"><label>Entrada de ar</label><select id="entradaAr">
+          <option value="">Selecione</option>
+          <option value="leve">Normal ou leve redução basal</option>
+          <option value="moderada">Reduzida em bases ou difusamente</option>
+          <option value="grave">Mínima / tórax silencioso / apenas sibilo inspiratório</option>
+        </select><div class="fieldHint" id="hintEntrada">Tórax silencioso é sinal grave; com alteração neurológica, ameaça à vida.</div></div>
+
+        <div class="fieldWrap" id="wrapSibilos"><label>Sibilância</label><select id="sibilos">
+          <option value="">Selecione</option>
+          <option value="leve">Ausente ou leve expiratória</option>
+          <option value="moderada">Expiratória audível ± inspiratória</option>
+          <option value="grave">Tórax quieto/silencioso</option>
+        </select><div class="fieldHint" id="hintSibilos">Pouco sibilo com entrada de ar mínima não significa melhora.</div></div>
+      </div>
+      <div class="liveRule">A cor muda enquanto os dados são preenchidos. A classificação final segue o <b>critério mais grave informado</b>; em crianças ≤5 anos, “leve” exige que todos os parâmetros sejam leves.</div>
+
+      <h3 class="subHead"><span class="ic">➕</span>Condições associadas</h3>
       <div class="checks">
-        <label class="chk"><input type="checkbox" id="frasesCurtas"> Fala frases curtas / prefere sentar</label>
-        <label class="chk dangerChk"><input type="checkbox" id="naoFalaBebeDeita"> Não consegue falar, beber ou deitar</label>
-        <label class="chk dangerChk"><input type="checkbox" id="difFalarAlimentar"> Dificuldade para falar ou se alimentar</label>
-        <label class="chk"><input type="checkbox" id="musculo"> Musculatura acessória / retrações</label>
-        <label class="chk dangerChk"><input type="checkbox" id="musculoIntenso"> Uso intenso de musculatura acessória</label>
-        <label class="chk"><input type="checkbox" id="agitado"> Agitação importante</label>
-        <label class="chk dangerChk"><input type="checkbox" id="neuro"> Sonolência, confusão ou desorientação</label>
-        <label class="chk dangerChk"><input type="checkbox" id="cianose"> Cianose central</label>
-        <label class="chk dangerChk"><input type="checkbox" id="silencioso"> Tórax silencioso / entrada de ar mínima</label>
         <label class="chk dangerChk"><input type="checkbox" id="anafilaxia"> Sinais de anafilaxia associados</label>
         <label class="chk"><input type="checkbox" id="voImpossivel"> Vômitos/dispneia impedindo via oral</label>
         <label class="chk"><input type="checkbox" id="controle"> Já usa corticoide inalatório de controle</label>
@@ -293,6 +377,7 @@ summary::marker{color:var(--brand2)}
 
       <div id="saida" style="display:none">
         <div id="resumo"></div>
+        <div id="racional"></div>
         <div id="alertas"></div>
 
         <div class="tabsRow noprint">
@@ -399,6 +484,7 @@ function pramScore(){
   return parseInt(el('pramSupra').value)+parseInt(el('pramEscaleno').value)+parseInt(el('pramEntrada').value)+parseInt(el('pramSibilo').value)+sp;
 }
 function pramClasse(score){
+  if(score >= 11) return 'AMEAÇA À VIDA';
   if(score >= 8) return 'GRAVE';
   if(score >= 4) return 'MODERADA';
   return 'LEVE';
@@ -421,43 +507,72 @@ function pramSatDescricao(){
 }
 
 /* ---------- Classificação ---------- */
-function classificarBase(){
-  var age=idadeAnos(), sat=val('sat'), fr=val('fr'), fc=val('fc');
-  if(chk('neuro') || chk('cianose') || chk('silencioso')) return 'AMEAÇA À VIDA';
-
-  if(age >= 6){
-    if(chk('naoFalaBebeDeita') || chk('musculoIntenso')) return 'GRAVE';
-    if(sat && sat < 92) return 'GRAVE';
-    if(fr && fr > 30) return 'GRAVE';
-    var moderada=false;
-    if(chk('frasesCurtas') || chk('musculo') || chk('agitado')) moderada=true;
-    if(sat && sat >= 92 && sat < 94) moderada=true;
-    if(moderada) return 'MODERADA';
-    return 'LEVE';
-  } else {
-    if(chk('difFalarAlimentar') || chk('musculoIntenso') || chk('musculo')) return 'GRAVE';
-    if(sat && sat < 92) return 'GRAVE';
-    if(fr && fr > 40) return 'GRAVE';
-    if((age < 4 && fc > 180) || (age >=4 && age < 6 && fc > 150)) return 'GRAVE';
-    var mod=false;
-    if(chk('agitado')) mod=true;
-    if(sat && sat >= 92 && sat < 94) mod=true;
-    if(fr){
-      if(age < 2/12 && fr > 60) mod=true;
-      else if(age >= 2/12 && age < 1 && fr > 50) mod=true;
-      else if(age >= 1 && age < 6 && fr > 40) mod=true;
-    }
-    return mod ? 'MODERADA' : 'LEVE';
-  }
+var ordemGravidade={'LEVE':1,'MODERADA':2,'GRAVE':3,'AMEAÇA À VIDA':4};
+function maiorGravidade(lista){
+  var atual='LEVE';
+  lista.forEach(function(c){ if(c.severity && ordemGravidade[c.severity] > ordemGravidade[atual]) atual=c.severity; });
+  return atual;
 }
-function classificarFinal(){
-  var cbase=classificarBase();
-  if(el('usarPram').value === 'sim'){
-    var pc=pramClasse(pramScore());
-    var ordem={'LEVE':1,'MODERADA':2,'GRAVE':3,'AMEAÇA À VIDA':4};
-    if(ordem[pc] > ordem[cbase]) return pc;
+function criterio(id,label,value,severity,reason){ return {id:id,label:label,value:value,severity:severity,reason:reason}; }
+function criteriosAtivos(incluirPram){
+  var age=idadeAnos(), sat=val('sat'), fr=val('fr'), pef=val('pef'), lista=[];
+  var limiteFr = age < 6 ? 40 : 30;
+
+  if(sat){
+    if(sat < 92) lista.push(criterio('sat','SatO₂',sat+'%','GRAVE','SatO₂ <92% em ar ambiente'));
+    else if(sat < 94) lista.push(criterio('sat','SatO₂',sat+'%','MODERADA','SatO₂ 92–93%'));
+    else lista.push(criterio('sat','SatO₂',sat+'%','LEVE','SatO₂ ≥94%'));
   }
-  return cbase;
+
+  if(fr){
+    if(fr > limiteFr) lista.push(criterio('fr','FR',fr+' irpm','GRAVE','FR >'+limiteFr+'/min para esta faixa etária'));
+    else if(el('frRel').value==='moderada') lista.push(criterio('fr','FR',fr+' irpm','MODERADA','FR aumentada, mas ≤'+limiteFr+'/min'));
+    else if(el('frRel').value==='leve') lista.push(criterio('fr','FR',fr+' irpm','LEVE','FR normal ou pouco aumentada e ≤'+limiteFr+'/min'));
+  }
+
+  var mapaSelect={leve:'LEVE',moderada:'MODERADA',grave:'GRAVE',ameaca:'AMEAÇA À VIDA'};
+  var fala=el('fala').value;
+  if(fala) lista.push(criterio('fala','Fala/posição',el('fala').options[el('fala').selectedIndex].text,mapaSelect[fala],
+    fala==='leve'?'Fala em frases e consegue deitar':fala==='moderada'?'Frases curtas e prefere sentar':'Palavras ou incapacidade de falar, beber ou deitar'));
+
+  var consc=el('consciencia').value;
+  if(consc==='normal') lista.push(criterio('consciencia','Consciência','Alerta, sem cianose','LEVE','Sem alteração de consciência ou cianose central'));
+  else if(consc==='ameaca') lista.push(criterio('consciencia','Consciência/cianose',el('consciencia').options[el('consciencia').selectedIndex].text,'AMEAÇA À VIDA','Sonolência, confusão, desorientação ou cianose central'));
+  else if(consc==='agitado') lista.push(criterio('consciencia','Agitação','Agitação importante','GRAVE','Agitação importante é tratada de forma conservadora como sinal grave de possível hipóxia'));
+
+  [['musculatura','Musculatura acessória'],['entradaAr','Entrada de ar'],['sibilos','Sibilância']].forEach(function(par){
+    var e=el(par[0]), v=e.value;
+    if(v) lista.push(criterio(par[0],par[1],e.options[e.selectedIndex].text,mapaSelect[v],
+      v==='grave'?(par[0]==='entradaAr'?'Tórax silencioso ou entrada mínima':par[0]==='sibilos'?'Tórax quieto/silencioso':'Uso intenso ou retração de escalenos'):
+      v==='moderada'?'Achado da coluna moderada':'Achado compatível com apresentação leve'));
+  });
+
+  if(age >= 6 && pef){
+    if(pef < 50) lista.push(criterio('pef','PEF',pef+'%','GRAVE','PEF <50% do melhor pessoal/previsto'));
+    else if(pef <= 70) lista.push(criterio('pef','PEF',pef+'%','MODERADA','PEF 50–70%'));
+    else lista.push(criterio('pef','PEF',pef+'%','LEVE','PEF >70%'));
+  }
+
+  if(incluirPram && el('usarPram').value==='sim'){
+    var ps=pramScore(), pc=pramClasse(ps);
+    lista.push(criterio('pram','PRAM',String(ps),pc,'PRAM '+ps+' = '+pc.toLowerCase()));
+  }
+  return lista;
+}
+function classificarBase(){ return maiorGravidade(criteriosAtivos(false)); }
+function classificarFinal(){ return maiorGravidade(criteriosAtivos(true)); }
+function camposObrigatoriosAusentes(){
+  var aus=[];
+  if(!val('sat')) aus.push('SatO₂');
+  if(!val('fr')) aus.push('FR');
+  var limiteFr=idadeAnos()<6?40:30;
+  if(val('fr') && val('fr')<=limiteFr && !el('frRel').value) aus.push('FR em relação ao esperado');
+  if(!el('fala').value) aus.push('fala/posição');
+  if(!el('consciencia').value) aus.push('consciência/cianose');
+  if(!el('musculatura').value) aus.push('musculatura acessória');
+  if(!el('entradaAr').value) aus.push('entrada de ar');
+  if(!el('sibilos').value) aus.push('sibilância');
+  return aus;
 }
 function redFlags(){
   return chk('rfUti')||chk('rfInternacao')||chk('rfCorticoide')||chk('rfSaba')||chk('rfIcs')||chk('rfComorb');
@@ -473,6 +588,97 @@ function sevIcon(g){
   if(g==='MODERADA') return '🟡';
   if(g==='GRAVE') return '🔴';
   return '🆘';
+}
+
+
+/* ---------- Cores ao vivo e justificativa ---------- */
+function limparClasseCampo(w){
+  if(!w) return;
+  w.classList.remove('sevField-LEVE','sevField-MODERADA','sevField-GRAVE','sevField-AMEACA');
+}
+function aplicarClasseCampo(id,severity,hint){
+  var w=el(id); if(!w) return; limparClasseCampo(w);
+  if(severity) w.classList.add('sevField-'+(severity==='AMEAÇA À VIDA'?'AMEACA':severity));
+  var h=w.querySelector('.fieldHint'); if(h && hint) h.textContent=hint;
+}
+function atualizarRotulosEtarios(){
+  var idadeInformada=val('idade')>0, menor=idadeAnos()<6;
+  var mus=el('musculatura');
+  if(mus){
+    mus.options[1].text=menor?'Ausente':'Ausente ou leve';
+    mus.options[2].text=menor?'Algumas retrações':'Presente / algumas retrações';
+    mus.options[3].text=menor?'Retrações presentes/intensas; escalenos':'Uso intenso; retração de escalenos';
+  }
+  if(!idadeInformada){
+    el('hintFr').textContent='Informe a idade para aplicar o limite de FR.';
+    el('pef').disabled=false;
+    el('hintPef').textContent='Opcional; usado principalmente a partir de 6 anos.';
+  }
+}
+function atualizarCoresAoVivo(){
+  atualizarRotulosEtarios();
+  var idadeInformada=val('idade')>0, age=idadeAnos(), limite=age<6?40:30, sat=val('sat'), fr=val('fr'), pef=val('pef');
+  if(sat){
+    aplicarClasseCampo('wrapSat',sat<92?'GRAVE':sat<94?'MODERADA':'LEVE',sat<92?'Grave: SatO₂ <92% em ar ambiente.':sat<94?'Moderada: SatO₂ 92–93%.':'Leve: SatO₂ ≥94%.');
+  } else aplicarClasseCampo('wrapSat',null,'≥94% leve · 92–93% moderada · <92% grave');
+
+  var frSev=null, frHint=idadeInformada?'Limite grave nesta idade: >'+limite+'/min.':'Informe a idade para aplicar o limite de FR.';
+  if(fr && idadeInformada){
+    if(fr>limite){frSev='GRAVE';frHint='Grave: FR '+fr+'/min >'+limite+'/min.';}
+    else if(el('frRel').value==='moderada'){frSev='MODERADA';frHint='Moderada: FR aumentada, porém ≤'+limite+'/min.';}
+    else if(el('frRel').value==='leve'){frSev='LEVE';frHint='Leve: FR normal/pouco aumentada e ≤'+limite+'/min.';}
+  }
+  aplicarClasseCampo('wrapFr',frSev,frHint);
+  aplicarClasseCampo('wrapFrRel',frSev,!idadeInformada?'Informe a idade primeiro.':fr>limite?'O valor numérico já coloca o caso como grave.':'Define leve versus moderada quando FR não ultrapassa '+limite+'/min.');
+
+  var selectMap=[['wrapFala','fala'],['wrapMusculatura','musculatura'],['wrapEntrada','entradaAr'],['wrapSibilos','sibilos']];
+  selectMap.forEach(function(p){var v=el(p[1]).value; aplicarClasseCampo(p[0],v?({leve:'LEVE',moderada:'MODERADA',grave:'GRAVE'}[v]):null,null);});
+  var cv=el('consciencia').value;
+  aplicarClasseCampo('wrapConsciencia',cv==='ameaca'?'AMEAÇA À VIDA':cv==='agitado'?'GRAVE':cv==='normal'?'LEVE':null,cv==='ameaca'?'Ameaça à vida: alteração neurológica ou cianose central.':cv==='agitado'?'Grave: agitação importante pode indicar hipóxia e exige reavaliação imediata.':'Alteração de consciência ou cianose central = ameaça à vida.');
+
+  if(!idadeInformada){
+    aplicarClasseCampo('wrapPef',null,'Opcional; usado principalmente a partir de 6 anos.');
+    el('pef').disabled=false;
+  } else if(age<6){
+    aplicarClasseCampo('wrapPef',null,'PEF não é necessário para classificar crianças ≤5 anos.');
+    el('pef').disabled=true; el('pef').value='';
+  } else {
+    el('pef').disabled=false;
+    if(pef) aplicarClasseCampo('wrapPef',pef<50?'GRAVE':pef<=70?'MODERADA':'LEVE',pef<50?'Grave: PEF <50%.':pef<=70?'Moderada: PEF 50–70%.':'Leve: PEF >70%.');
+    else aplicarClasseCampo('wrapPef',null,'Opcional: >70% leve · 50–70% moderada · <50% grave.');
+  }
+  if(el('pramSatInfo')) el('pramSatInfo').textContent='SatO₂ do PRAM: '+pramSatDescricao()+'. PRAM 0–3 leve; 4–7 moderada; 8–10 grave; 11–12 ameaça à vida.';
+}
+function textoRegraClassificacao(g){
+  if(g==='AMEAÇA À VIDA') return 'Foi identificado ao menos um sinal de ameaça à vida. A conduta deve ser imediata e não depende da soma dos demais critérios.';
+  if(g==='GRAVE') return 'Basta um critério grave para classificar o caso como grave, mesmo que outros parâmetros estejam melhores.';
+  if(g==='MODERADA') return 'Há parâmetros da coluna moderada e nenhum critério grave ou de ameaça à vida informado.';
+  return idadeAnos()<6?'Todos os parâmetros obrigatórios informados ficaram na faixa leve.':'Todos os parâmetros informados ficaram na faixa leve, sem critério moderado, grave ou de ameaça à vida.';
+}
+function criteriosTabelaHTML(g){
+  var menor=idadeAnos()<6;
+  var cols = menor ? [
+    ['LEVE',['Alerta, sem cianose','SatO₂ ≥94%','Fala em frases','FR ≤40/min e normal/pouco aumentada','Sem uso de musculatura acessória','Entrada normal ou leve redução basal','Sem sibilo ou leve expiratório','PRAM 0–3']],
+    ['MODERADA',['Alerta, sem cianose','SatO₂ 92–93%','Fala em frases curtas','FR aumentada, mas ≤40/min','Algumas retrações','Entrada de ar reduzida','Sibilância expiratória ± inspiratória','PRAM 4–7']],
+    ['GRAVE',['Qualquer um destes','SatO₂ <92%','Fala apenas palavras / não bebe','FR >40/min','Retrações intensas ou escalenos','Tórax silencioso/entrada mínima','PRAM 8–10']],
+    ['AMEAÇA À VIDA',['Qualquer um destes','Sonolência ou confusão','Cianose central','Categoria clínica mais grave','PRAM 11–12']]
+  ] : [
+    ['LEVE',['Fala em frases; consegue deitar','Não agitado','FR normal ou pouco aumentada','Sem/leve musculatura acessória','Sem/leve sibilo expiratório','Entrada de ar normal','SatO₂ ≥94%','PEF >70%','PRAM 0–3 se <18 anos']],
+    ['MODERADA',['Frases curtas; prefere sentar','FR aumentada, mas ≤30/min','Musculatura acessória presente','Sibilo expiratório audível','Entrada de ar reduzida','SatO₂ 92–93%','PEF 50–70%','PRAM 4–7 se <18 anos']],
+    ['GRAVE',['Qualquer um destes','Não consegue falar, beber ou deitar','FR >30/min','Uso intenso de musculatura','Tórax silencioso/quieto','SatO₂ <92%','PEF <50%','PRAM 8–10 se <18 anos']],
+    ['AMEAÇA À VIDA',['Sonolência, confusão ou desorientação','Cianose central','Tórax silencioso com deterioração','PRAM 11–12 se <18 anos']]
+  ];
+  return '<div class="criteriaGrid">'+cols.map(function(c){
+    var cls=''; if(c[0]===g) cls=' current-'+(g==='AMEAÇA À VIDA'?'AMEACA':g);
+    return '<div class="criteriaCol'+cls+'"><h4>'+sevIcon(c[0])+' '+c[0]+'</h4><ul>'+c[1].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>';
+  }).join('')+'</div>';
+}
+function renderRacionalClassificacao(g){
+  var ativos=criteriosAtivos(true), determinantes=ativos.filter(function(c){return c.severity===g;});
+  var pills=determinantes.length?determinantes.map(function(c){return '<span class="reasonPill reason-'+(g==='AMEAÇA À VIDA'?'AMEACA':g)+'"><b>'+c.label+':</b> '+c.value+' — '+c.reason+'</span>';}).join(''):'<span class="reasonPill reasonNeutral">Nenhum critério determinante identificado.</span>';
+  var outros=ativos.filter(function(c){return c.severity && c.severity!==g;});
+  var outrosHtml=outros.length?'<div class="reasonList" style="margin-top:7px">'+outros.map(function(c){return '<span class="reasonPill reason-'+(c.severity==='AMEAÇA À VIDA'?'AMEACA':c.severity)+'">'+c.label+': '+c.value+'</span>';}).join('')+'</div>':'';
+  return '<div class="whyBox"><h3 class="whyTitle">🔎 Por que este caso é '+g+'?</h3><p class="whyText">'+textoRegraClassificacao(g)+'</p><div class="reasonList">'+pills+'</div>'+outrosHtml+'<details><summary>Ver os critérios de leve, moderada, grave e ameaça à vida</summary>'+criteriosTabelaHTML(g)+'</details></div>';
 }
 
 /* ---------- Doses ---------- */
@@ -737,6 +943,8 @@ function rxBasesHTML(){
   return ''
     +'<h4>Base prioritária</h4>'
     +'<p>GINA 2026 oficial como base prioritária para todas as faixas etárias; Guia ArkaMed GINA 2026 e Protocolo Clínico HCA Severino Bezerra de Carvalho como apoio/complemento local.</p>'
+    +'<h4>Classificação dinâmica</h4>'
+    +'<p>Os campos seguem as tabelas do GINA 2026: ≥6 anos (Box 9-4) e crianças ≤5 anos (Box 12-1). SatO₂, FR, fala, consciência/cianose, musculatura acessória, entrada de ar, sibilância, PEF e PRAM recebem cores conforme a coluna correspondente.</p>'
     +'<h4>Mudanças aplicadas do GINA 2026</h4>'
     +'<ul>'
     +'<li>SpO₂: O₂ suplementar só se SatO₂ &lt;92%, salvo ameaça à vida. Alvo em ≥6 anos: 92–95%; em ≤5 anos: manter ≥92%.</li>'
@@ -760,6 +968,8 @@ function calcularTudo(){
     el('erro').style.display='none';
     var idade=val('idade'), peso=val('peso');
     if(!idade || !peso){ el('erro').textContent='Preencha idade e peso.'; el('erro').style.display='block'; return; }
+    var faltantes=camposObrigatoriosAusentes();
+    if(faltantes.length){ el('erro').innerHTML='<b>Complete os parâmetros de gravidade:</b> '+faltantes.join(', ')+'.'; el('erro').style.display='block'; return; }
     estado={age:idadeAnos(), peso:peso, grav:classificarFinal(), sat:val('sat')};
 
     el('placeholder').style.display='none';
@@ -774,8 +984,9 @@ function calcularTudo(){
       +'<span class="sevChip">'+faixaEtaria()+'</span>'
       +'<span class="sevChip">'+idadeTexto()+'</span>'
       +'<span class="sevChip">'+peso+' kg</span>'
-      +'<span class="sevChip">PRAM '+pscore+' · '+pramClasse(pscore)+'</span>'
+      +'<span class="sevChip">'+(el('usarPram').value==='sim'?'PRAM '+pscore+' · '+pramClasse(pscore):'PRAM não aplicado')+'</span>'
       +'</div></div>';
+    el('racional').innerHTML = renderRacionalClassificacao(g);
 
     var a='';
     if(g==='AMEAÇA À VIDA') a+='<div class="box dangerbox">🆘 <b>Ameaça à vida:</b> suporte imediato, leito de vermelha, monitorização, considerar UTI. Se anafilaxia, adrenalina IM antes do broncodilatador.</div>';
@@ -783,6 +994,7 @@ function calcularTudo(){
     else if(g==='MODERADA') a+='<div class="box warn">🟡 <b>Crise moderada:</b> salbutamol '+sabaDose(g,estado.age)+' jatos, ipratrópio 4 jatos associado, corticoide sistêmico e reavaliação em 1 hora.</div>';
     else a+='<div class="box ok">🟢 <b>Crise leve:</b> salbutamol 4 jatos; avaliar resposta antes de repetir. Corticoide sistêmico não automático se boa resposta.</div>';
 
+    if(el('consciencia').value==='agitado') a+='<div class="box dangerbox">⚠️ <b>Agitação importante:</b> tratada de forma conservadora como sinal grave de possível hipóxia; reavaliar imediatamente.</div>';
     if(redFlags()) a+='<div class="box dangerbox">🚩 <b>Red flag marcada:</b> menor limiar para observação prolongada, internação ou retorno precoce.</div>';
     if(estado.sat && estado.sat>=92) a+='<div class="box info">💡 <b>Oxigênio:</b> GINA 2026 priorizado — não dar O₂ por reflexo se SatO₂ ≥92% e sem ameaça à vida.</div>';
     el('alertas').innerHTML=a;
@@ -818,13 +1030,25 @@ function limparTudo(){
     if(inputs[i].type==='checkbox'||inputs[i].type==='radio') inputs[i].checked=false;
     else inputs[i].value='';
   }
-  el('sat').value=''; el('fr').value=''; el('fc').value='';
-  if(el('pramSatModo')) el('pramSatModo').value='auto';
+  var selects=document.querySelectorAll('select');
+  for(var j=0;j<selects.length;j++) selects[j].selectedIndex=0;
+  el('unidade').value='anos';
+  el('usarPram').value='nao';
+  el('pramSatModo').value='auto';
   el('placeholder').style.display='flex';
   el('saida').style.display='none';
   el('erro').style.display='none';
   textos={};
+  atualizarCoresAoVivo();
 }
+document.addEventListener('DOMContentLoaded',function(){
+  var campos=document.querySelectorAll('#idade,#unidade,#sat,#fr,#frRel,#pef,#fala,#consciencia,#musculatura,#entradaAr,#sibilos,#usarPram,#pramSatModo,#pramSupra,#pramEscaleno,#pramEntrada,#pramSibilo');
+  for(var i=0;i<campos.length;i++){
+    campos[i].addEventListener('input',atualizarCoresAoVivo);
+    campos[i].addEventListener('change',atualizarCoresAoVivo);
+  }
+  atualizarCoresAoVivo();
+});
 </script>
 </body>
 </html>
