@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DC/TMD · Calculadora de Diagnóstico de DTM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --ink:#152B33;
+    --spine:#1B3A4B;
+    --paper:#F7F4EC;
+    --paper2:#FFFFFF;
+    --line:#D9D2C2;
+    --right:#2E5F6E;
+    --left:#8A4A32;
+    --accent:#C97B4A;
+    --ok:#3E7A4C;
+    --ok-bg:#E7F1E8;
+    --no-bg:#F1EEE4;
+    --muted:#6B675E;
+    --danger:#A23B2F;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    padding-bottom:80px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header.top{
+    background:var(--spine);
+    color:#F3EFE4;
+    padding:34px 0 26px;
+    border-bottom:4px solid var(--accent);
+  }
+  header.top .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#C7B6A0;
+    margin-bottom:6px;
+  }
+  header.top h1{
+    font-family:'Source Serif 4', serif;
+    font-weight:700;
+    font-size:clamp(26px,4vw,38px);
+    margin:0 0 8px;
+  }
+  header.top p.sub{margin:0;color:#D8CFC0;font-size:14.5px;max-width:640px;}
+
+  nav.steps{
+    position:sticky;top:0;z-index:50;
+    background:var(--paper2);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 2px 6px rgba(0,0,0,.04);
+  }
+  nav.steps .wrap{display:flex;gap:2px;overflow-x:auto;}
+  nav.steps button{
+    appearance:none;border:none;background:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.03em;
+    color:var(--muted);
+    padding:14px 16px 12px;
+    cursor:pointer;white-space:nowrap;
+    border-bottom:3px solid transparent;
+  }
+  nav.steps button.active{color:var(--spine);border-bottom-color:var(--accent);font-weight:600;}
+  nav.steps button:hover{color:var(--spine);}
+
+  section.step{display:none;padding:32px 0 10px;}
+  section.step.active{display:block;}
+
+  h2.section-title{
+    font-family:'Source Serif 4', serif;
+    font-size:23px;font-weight:700;
+    margin:0 0 4px;
+    color:var(--spine);
+  }
+  p.section-note{color:var(--muted);font-size:14px;margin:0 0 22px;max-width:680px;}
+
+  .card{
+    background:var(--paper2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:20px 22px;
+    margin-bottom:18px;
+  }
+  .card h3{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--spine);
+    margin:0 0 4px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h3 .tag{
+    background:var(--paper);border:1px solid var(--line);
+    color:var(--muted);border-radius:3px;padding:1px 6px;font-size:11px;
+  }
+  .card p.q{font-size:15px;margin:8px 0 14px;max-width:680px;}
+  .card p.hint{font-size:12.5px;color:var(--muted);margin:-8px 0 14px;}
+
+  /* bilateral twin layout — the signature device: mirrors the real bilateral exam chart */
+  .bilateral{
+    display:grid;
+    grid-template-columns:1fr 3px 1fr;
+    gap:0 18px;
+    align-items:start;
+  }
+  .bilateral .spine-line{
+    background:repeating-linear-gradient(to bottom, var(--line) 0 6px, transparent 6px 12px);
+    width:1px;justify-self:center;height:100%;
+  }
+  .side-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    margin-bottom:8px;font-weight:600;
+  }
+  .side-label.D{color:var(--right);}
+  .side-label.E{color:var(--left);}
+
+  label.opt{
+    display:flex;align-items:flex-start;gap:8px;
+    font-size:14px;margin-bottom:7px;cursor:pointer;
+    padding:6px 8px;border-radius:4px;
+  }
+  label.opt:hover{background:var(--paper);}
+  label.opt input{margin-top:3px;}
+  input[type=number]{
+    width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;
+    font-family:'IBM Plex Mono',monospace;font-size:14px;
+  }
+  .mm-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px;}
+
+  .nav-btns{display:flex;justify-content:space-between;margin-top:28px;}
+  button.btn{
+    font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:14.5px;
+    padding:11px 22px;border-radius:5px;border:1px solid var(--spine);
+    background:var(--spine);color:#fff;cursor:pointer;
+  }
+  button.btn.ghost{background:none;color:var(--spine);}
+  button.btn:hover{opacity:.88;}
+
+  /* Results */
+  .diag-card{
+    border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:12px;
+    background:var(--no-bg);
+  }
+  .diag-card.positive{background:var(--ok-bg);border-color:var(--ok);}
+  .diag-card h4{
+    margin:0 0 6px;font-family:'Source Serif 4',serif;font-size:17px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .diag-card h4 .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block;}
+  .diag-card.positive h4 .dot{background:var(--ok);}
+  .diag-card .icd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .diag-card ul{margin:8px 0 0;padding-left:20px;font-size:13.5px;}
+  .diag-card ul li{margin-bottom:2px;}
+  .diag-card .criterion-met{color:var(--ok);}
+  .diag-card .criterion-unmet{color:var(--danger);}
+
+  .side-heading{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.08em;
+    text-transform:uppercase;margin:26px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line);
+  }
+  .side-heading.D{color:var(--right);border-color:var(--right);}
+  .side-heading.E{color:var(--left);border-color:var(--left);}
+
+  .alert-box{
+    border-left:4px solid var(--accent);background:#FBF0E6;padding:12px 16px;
+    font-size:13.5px;border-radius:0 4px 4px 0;margin-bottom:20px;
+  }
+
+  footer.refs{
+    background:var(--spine);color:#D8CFC0;padding:28px 0 40px;margin-top:40px;
+  }
+  footer.refs .wrap{font-size:12.5px;}
+  footer.refs h5{color:#F3EFE4;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px;}
+  footer.refs p{margin:0 0 6px;}
+  footer.refs a{color:#E8B893;}
+
+  @media (max-width:720px){
+    .bilateral{grid-template-columns:1fr;}
+    .bilateral .spine-line{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">Eixo I · DC/TMD — Diagnostic Criteria for Temporomandibular Disorders</div>
+    <h1>Calculadora de Diagnóstico de DTM</h1>
+    <p class="sub">Ferramenta guiada de apoio à decisão clínica, baseada nas árvores de decisão e na Tabela de Critérios Diagnósticos do DC/TMD (Schiffman et al., 2014), com o Questionário de Sintomas e a Ficha de Exame Clínico na tradução portuguesa oficial (INfORM / FMUP–CHSJ, 2018).</p>
+  </div>
+</header>
+
+<nav class="steps">
+  <div class="wrap">
+    <button data-step="0" class="active">0 · Triagem</button>
+    <button data-step="1">1 · Questionário</button>
+    <button data-step="2">2 · Exame — Localização</button>
+    <button data-step="3">3 · Exame — Movimentos</button>
+    <button data-step="4">4 · Exame — Ruídos e bloqueio</button>
+    <button data-step="5">5 · Exame — Palpação</button>
+    <button data-step="6">6 · Resultado</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- STEP 0 — SCREENER -->
+<section class="step active" data-step="0">
+  <h2 class="section-title">DTM — Rastreio de dor (screener)</h2>
+  <p class="section-note">Instrumento de rastreio rápido (Gonzalez et al., 2011). Não gera diagnóstico por si só — indica se a avaliação completa do Eixo I está indicada. Sens./Espec. elevadas para triagem em cuidados primários e urgência.</p>
+
+  <div class="card">
+    <h3>1. <span class="tag">Triagem</span></h3>
+    <p class="q">Nos últimos 30 dias, qual das seguintes opções melhor descreve qualquer dor na sua mandíbula ou região da fonte, de ambos os lados?</p>
+    <label class="opt"><input type="radio" name="scr1" value="0"> Sem dor</label>
+    <label class="opt"><input type="radio" name="scr1" value="1"> Dor vem e vai</label>
+    <label class="opt"><input type="radio" name="scr1" value="1"> Dor está sempre presente</label>
+  </div>
+  <div class="card">
+    <h3>2. <span class="tag">Triagem</span></h3>
+    <p class="q">Nos últimos 30 dias, sentiu dor ou rigidez na sua mandíbula ao despertar?</p>
+    <label class="opt"><input type="radio" name="scr2" value="0"> Não</label>
+    <label class="opt"><input type="radio" name="scr2" value="1"> Sim</label>
+  </div>
+  <div class="card">
+    <h3>3. <span class="tag">Triagem</span></h3>
+    <p class="q">Nos últimos 30 dias, as seguintes atividades alteraram alguma dor na sua mandíbula ou região da fonte, em qualquer um dos lados?</p>
+    <label class="opt"><input type="checkbox" name="scr3"> Mastigar comida dura ou rija / abrir a boca ou mover a mandíbula / hábitos com os maxilares / falar, beijar ou bocejar</label>
+  </div>
+
+  <div class="alert-box" id="screenerResult">Responda às 3 perguntas para ver a recomendação de rastreio.</div>
+
+  <div class="nav-btns">
+    <span></span>
+    <button class="btn" onclick="goStep(1)">Continuar para o Questionário de Sintomas →</button>
+  </div>
+</section>
+
+<!-- STEP 1 — SYMPTOM QUESTIONNAIRE -->
+<section class="step" data-step="1">
+  <h2 class="section-title">Questionário de Sintomas (itens SQ3–SQ14)</h2>
+  <p class="section-note">Responda por lado (Direito / Esquerdo). Estes itens alimentam diretamente os critérios de história das árvores de decisão do Eixo I.</p>
+
+  <div class="card">
+    <h3>SQ3 <span class="tag">Dor regional</span></h3>
+    <p class="q">Nos últimos 30 dias, teve dor na mandíbula, na fonte, no ouvido, ou à frente do ouvido?</p>
+    <div class="bilateral">
+      <div><div class="side-label D">Lado Direito</div>
+        <label class="opt"><input type="checkbox" id="D_SQ3"> Presente</label>
+      </div>
+      <div class="spine-line"></div>
+      <div><div class="side-label E">Lado Esquerdo</div>
+        <label class="opt"><input type="checkbox" id="E_SQ3"> Presente</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ4 <span class="tag">Dor modificada por função</span></h3>
+    <p class="q">Nos últimos 30 dias, mastigar, abrir a boca / mover a mandíbula, hábitos parafuncionais ou outras funções (falar, beijar, bocejar) alteraram essa dor?</p>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_SQ4"> Presente</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_SQ4"> Presente</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ5 / SQ7 <span class="tag">Dor de cabeça</span></h3>
+    <p class="q">SQ5 — Nos últimos 30 dias, teve dores de cabeça que incluam a zona das fontes?<br>SQ7 — Essa dor de cabeça foi alterada por mastigar, mover a mandíbula ou hábitos parafuncionais?</p>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_SQ5"> SQ5 presente (lado D)</label>
+           <label class="opt"><input type="checkbox" id="D_SQ7"> SQ7 presente (lado D)</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_SQ5"> SQ5 presente (lado E)</label>
+           <label class="opt"><input type="checkbox" id="E_SQ7"> SQ7 presente (lado E)</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ8 <span class="tag">Sons articulares</span></h3>
+    <p class="q">Nos últimos 30 dias, teve algum som articular quando moveu ou usou a mandíbula?</p>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_SQ8"> Presente à direita</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_SQ8"> Presente à esquerda</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ9–SQ10 <span class="tag">Bloqueio de boca fechada</span></h3>
+    <p class="q">SQ9 — Alguma vez a mandíbula bloqueou/prendeu de modo que não a abrisse na totalidade?<br>SQ10 — Esse bloqueio foi suficientemente grave para interferir na capacidade de se alimentar?</p>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_SQ9"> SQ9 positivo (D)</label>
+        <label class="opt"><input type="checkbox" id="D_SQ10"> SQ10 positivo (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_SQ9"> SQ9 positivo (E)</label>
+        <label class="opt"><input type="checkbox" id="E_SQ10"> SQ10 positivo (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ11–SQ12 <span class="tag">Bloqueio intermitente atual</span></h3>
+    <p class="q">SQ11 — Nos últimos 30 dias, a mandíbula bloqueou (sem conseguir abrir na totalidade), tendo depois desbloqueado, voltando a abrir na totalidade?<br>SQ12 — A mandíbula está <em>atualmente</em> bloqueada / limitada, sem abrir na totalidade?</p>
+    <p class="hint">Para "bloqueio intermitente com redução", é necessário SQ11 = Sim <strong>e</strong> SQ12 = Não.</p>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_SQ11"> SQ11 = Sim (D)</label>
+        <label class="opt"><input type="checkbox" id="D_SQ12"> SQ12 = Sim (D) — atualmente bloqueada</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_SQ11"> SQ11 = Sim (E)</label>
+        <label class="opt"><input type="checkbox" id="E_SQ12"> SQ12 = Sim (E) — atualmente bloqueada</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>SQ13–SQ14 <span class="tag">Bloqueio de boca aberta</span></h3>
+    <p class="q">SQ13 — Nos últimos 30 dias, ao abrir muito a boca, a mandíbula bloqueou/prendeu sem conseguir fechá-la dessa posição?<br>SQ14 — Foi necessário fazer alguma manobra (descansar, mover, empurrar) para conseguir fechar?</p>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_SQ13"> SQ13 positivo (D)</label>
+        <label class="opt"><input type="checkbox" id="D_SQ14"> SQ14 positivo (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_SQ13"> SQ13 positivo (E)</label>
+        <label class="opt"><input type="checkbox" id="E_SQ14"> SQ14 positivo (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(0)">← Voltar</button>
+    <button class="btn" onclick="goStep(2)">Continuar para o Exame Clínico →</button>
+  </div>
+</section>
+
+<!-- STEP 2 — EXAM: LOCATION (E1a/E1b) -->
+<section class="step" data-step="2">
+  <h2 class="section-title">Exame Clínico — Confirmação da localização (E1a / E1b)</h2>
+  <p class="section-note">O examinador confirma, por palpação/apontamento do doente, em que estrutura anatómica a dor (ou dor de cabeça) referida nos últimos 30 dias se localiza.</p>
+
+  <div class="card">
+    <h3>E1a <span class="tag">Localização da dor</span></h3>
+    <p class="q">Nesta região, a dor confirmada localiza-se em:</p>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="radio" name="D_E1a" value="none"> Nenhuma estrutura confirmada</label>
+        <label class="opt"><input type="radio" name="D_E1a" value="muscle"> Músculo mastigatório (temporal/masséter/outro)</label>
+        <label class="opt"><input type="radio" name="D_E1a" value="tmj"> ATM</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="radio" name="E_E1a" value="none"> Nenhuma estrutura confirmada</label>
+        <label class="opt"><input type="radio" name="E_E1a" value="muscle"> Músculo mastigatório (temporal/masséter/outro)</label>
+        <label class="opt"><input type="radio" name="E_E1a" value="tmj"> ATM</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E1b <span class="tag">Localização da dor de cabeça</span></h3>
+    <p class="q">A dor de cabeça confirmada localiza-se na área do temporal?</p>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_E1b"> Confirmada no temporal (D)</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_E1b"> Confirmada no temporal (E)</label></div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(1)">← Voltar</button>
+    <button class="btn" onclick="goStep(3)">Continuar →</button>
+  </div>
+</section>
+
+<!-- STEP 3 — EXAM: MOVEMENTS (E4/E5) -->
+<section class="step" data-step="3">
+  <h2 class="section-title">Exame Clínico — Movimentos mandibulares (E4 / E5)</h2>
+  <p class="section-note">Meça a abertura máxima assistida (incluindo sobremordida vertical) e registe se os movimentos reproduzem dor familiar muscular ou articular.</p>
+
+  <div class="card">
+    <h3>E4C <span class="tag">Abertura máxima assistida (mm)</span></h3>
+    <p class="q">Valor único (não é por lado) — usado nos critérios de deslocamento discal.</p>
+    <div class="mm-row"><label>Abertura máxima assistida (incl. sobremordida vertical):</label><input type="number" id="E4C_mm" min="0" max="80"> mm</div>
+  </div>
+
+  <div class="card">
+    <h3>E4b/E4c <span class="tag">Dor familiar — abertura</span></h3>
+    <p class="q">A abertura (livre de dor, máxima não assistida ou máxima assistida) reproduziu dor familiar?</p>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E4_muscle"> Dor familiar muscular com a abertura (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E4_tmj"> Dor familiar articular (ATM) com a abertura (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E4_headache"> Dor de cabeça familiar no temporal com a abertura (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E4_muscle"> Dor familiar muscular com a abertura (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E4_tmj"> Dor familiar articular (ATM) com a abertura (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E4_headache"> Dor de cabeça familiar no temporal com a abertura (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E5 <span class="tag">Dor familiar — lateralidade / protrusão</span></h3>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E5_tmj"> Dor familiar articular (ATM) com lateralidade/protrusão (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E5_headache"> Dor de cabeça familiar no temporal com excursão (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E5_tmj"> Dor familiar articular (ATM) com lateralidade/protrusão (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E5_headache"> Dor de cabeça familiar no temporal com excursão (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(2)">← Voltar</button>
+    <button class="btn" onclick="goStep(4)">Continuar →</button>
+  </div>
+</section>
+
+<!-- STEP 4 — EXAM: NOISES & LOCKING (E6/E7/E8) -->
+<section class="step" data-step="4">
+  <h2 class="section-title">Exame Clínico — Ruídos articulares e bloqueio (E6 / E7 / E8)</h2>
+  <p class="section-note">Avaliação dos ruídos da ATM durante abertura/fecho e movimentos laterais/protrusivos, e manobras de desbloqueio quando aplicável.</p>
+
+  <div class="card">
+    <h3>E6 <span class="tag">Ruídos — abertura e fecho</span></h3>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E6_click_openclose"> Estalido na abertura <strong>e</strong> no fecho (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E6_click_either"> Estalido na abertura <strong>ou</strong> no fecho (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E6_crepitus"> Crepitação (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E6_noise_patient"> Ruído referido pelo doente durante o exame (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E6_click_openclose"> Estalido na abertura <strong>e</strong> no fecho (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E6_click_either"> Estalido na abertura <strong>ou</strong> no fecho (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E6_crepitus"> Crepitação (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E6_noise_patient"> Ruído referido pelo doente durante o exame (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E7 <span class="tag">Ruídos — lateralidade e protrusão</span></h3>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E7_click"> Estalido na lateralidade/protrusão (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E7_crepitus"> Crepitação (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E7_click"> Estalido na lateralidade/protrusão (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E7_crepitus"> Crepitação (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E8 <span class="tag">Manobra de bloqueio (opcional, se presente na consulta)</span></h3>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E8_open"> Manobra necessária para abrir a boca (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E8_close"> Manobra necessária para fechar a boca (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E8_open"> Manobra necessária para abrir a boca (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E8_close"> Manobra necessária para fechar a boca (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(3)">← Voltar</button>
+    <button class="btn" onclick="goStep(5)">Continuar →</button>
+  </div>
+</section>
+
+<!-- STEP 5 — EXAM: PALPATION (E9/E10) -->
+<section class="step" data-step="5">
+  <h2 class="section-title">Exame Clínico — Palpação muscular e articular (E9 / E10)</h2>
+  <p class="section-note">A palpação (2 seg. músculos / 1 kg ATM) determina a dor familiar e, quando presente, o subtipo de mialgia — local, com espalhamento ou com dor referida.</p>
+
+  <div class="card">
+    <h3>E9 <span class="tag">Palpação muscular</span></h3>
+    <div class="bilateral">
+      <div>
+        <label class="opt"><input type="checkbox" id="D_E9_familiar2s"> Dor familiar à palpação (2 seg) (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E9_familiar5s"> Dor familiar à palpação (5 seg — afastar falso negativo) (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E9_spreading"> Dor estende-se além do limite do músculo (espalhamento) (D)</label>
+        <label class="opt"><input type="checkbox" id="D_E9_referred"> Dor estende-se além da área de estimulação (dor referida) (D)</label>
+      </div>
+      <div class="spine-line"></div>
+      <div>
+        <label class="opt"><input type="checkbox" id="E_E9_familiar2s"> Dor familiar à palpação (2 seg) (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E9_familiar5s"> Dor familiar à palpação (5 seg — afastar falso negativo) (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E9_spreading"> Dor estende-se além do limite do músculo (espalhamento) (E)</label>
+        <label class="opt"><input type="checkbox" id="E_E9_referred"> Dor estende-se além da área de estimulação (dor referida) (E)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E9 <span class="tag">Palpação da ATM</span></h3>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_E9_tmj_familiar"> Dor familiar à palpação da ATM (D)</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_E9_tmj_familiar"> Dor familiar à palpação da ATM (E)</label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>E9 <span class="tag">Dor de cabeça familiar à palpação do temporal</span></h3>
+    <div class="bilateral">
+      <div><label class="opt"><input type="checkbox" id="D_E9_headache"> Dor de cabeça familiar à palpação do temporal (D)</label></div>
+      <div class="spine-line"></div>
+      <div><label class="opt"><input type="checkbox" id="E_E9_headache"> Dor de cabeça familiar à palpação do temporal (E)</label></div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(4)">← Voltar</button>
+    <button class="btn" onclick="calcularDiagnostico()">Calcular diagnóstico →</button>
+  </div>
+</section>
+
+<!-- STEP 6 — RESULTS -->
+<section class="step" data-step="6">
+  <h2 class="section-title">Resultado — Diagnóstico DC/TMD (Eixo I)</h2>
+  <p class="section-note">Gerado a partir da Tabela de Critérios Diagnósticos e das Árvores de Decisão do DC/TMD (Schiffman et al., 2014). Confirme sempre clinicamente; instrumento de apoio, não substitui o julgamento clínico.</p>
+  <div id="results"></div>
+  <div class="nav-btns">
+    <button class="btn ghost" onclick="goStep(5)">← Voltar ao exame</button>
+    <button class="btn" onclick="window.print()">Imprimir / guardar resultado</button>
+  </div>
+</section>
+
+</div>
+
+<footer class="refs">
+  <div class="wrap">
+    <h5>Referências e proveniência</h5>
+    <p>Schiffman E, Ohrbach R, Truelove E, et al. Diagnostic Criteria for Temporomandibular Disorders (DC/TMD) for Clinical and Research Applications: Recommendations of the International RDC/TMD Consortium Network and Orofacial Pain Special Interest Group. <em>J Oral Facial Pain Headache</em>. 2014;28:6-27.</p>
+    <p>Ohrbach R (ed). Diagnostic Criteria for Temporomandibular Disorders: Assessment Instruments. Version 15May2016. www.rdc-tmdinternational.org</p>
+    <p>Gonzalez YM, Schiffman E, Gordon SM, et al. Development of a brief and effective TMD pain screening questionnaire. <em>JADA</em>. 2011;142:1183-1191.</p>
+    <p>Tradução portuguesa: Faria C, Coutinho FA, Pinto JC, et al. Critérios de Diagnóstico para Disfunção Temporomandibular. Serviço de Estomatologia, Centro Hospitalar de São João / Faculdade de Medicina da Universidade do Porto. Aceite pelo INfORM em 3 ago. 2018.</p>
+    <p style="margin-top:14px;opacity:.8;">Esta calculadora é uma ferramenta de apoio à decisão e não substitui a avaliação clínica presencial nem a confirmação por imagiologia (RM/TC) quando indicada.</p>
+  </div>
+</footer>
+
+<script>
+function goStep(n){
+  document.querySelectorAll('section.step').forEach(s=>s.classList.remove('active'));
+  document.querySelector('section.step[data-step="'+n+'"]').classList.add('active');
+  document.querySelectorAll('nav.steps button').forEach(b=>b.classList.remove('active'));
+  document.querySelector('nav.steps button[data-step="'+n+'"]').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav.steps button').forEach(b=>{
+  b.addEventListener('click',()=>goStep(b.dataset.step));
+});
+
+// screener live feedback
+function updateScreener(){
+  const s1 = document.querySelector('input[name="scr1"]:checked');
+  const s2 = document.querySelector('input[name="scr2"]:checked');
+  const s3 = document.getElementById('scr3').checked;
+  const box = document.getElementById('screenerResult');
+  if(!s1 && !s2){ box.textContent = 'Responda às perguntas para ver a recomendação de rastreio.'; return; }
+  let positive = (s1 && s1.value==='1') || (s2 && s2.value==='1') || s3;
+  box.innerHTML = positive
+    ? '<strong>Rastreio positivo.</strong> Prossiga para o Questionário de Sintomas completo e para o Exame Clínico (Eixo I).'
+    : 'Rastreio negativo para dor de DTM nos últimos 30 dias. Ainda assim, pode prosseguir para avaliar ruídos articulares e bloqueios isoladamente.';
+}
+document.querySelectorAll('input[name="scr1"], input[name="scr2"], #scr3').forEach(el=>el.addEventListener('change',updateScreener));
+
+function val(id){ const el=document.getElementById(id); if(!el) return false; return el.type==='checkbox' ? el.checked : el.value; }
+function radioVal(name){ const el=document.querySelector('input[name="'+name+'"]:checked'); return el? el.value : null; }
+function num(id){ const el=document.getElementById(id); const v = el && el.value!=='' ? parseFloat(el.value) : null; return v; }
+
+function computeSide(side){
+  const g = id => val(side+'_'+id);
+  const E1a = radioVal(side+'_E1a');
+
+  // ---- MYALGIA ----
+  const sq3 = g('SQ3'), sq4 = g('SQ4');
+  const familiarMuscleAny = g('E4_muscle') || g('E9_familiar2s') || g('E9_familiar5s');
+  const myalgia = !!(sq3 && sq4 && E1a==='muscle' && familiarMuscleAny);
+
+  let subtype = null;
+  if(myalgia){
+    if(g('E9_referred')) subtype = 'referral';
+    else if(g('E9_spreading')) subtype = 'spreading';
+    else if(g('E9_familiar2s') || g('E9_familiar5s')) subtype = 'local';
+  }
+
+  // ---- ARTHRALGIA ----
+  const familiarTmjAny = g('E4_tmj') || g('E5_tmj') || g('E9_tmj_familiar');
+  const arthralgia = !!(sq3 && sq4 && E1a==='tmj' && familiarTmjAny);
+
+  // ---- HEADACHE ATTRIBUTED TO TMD ----
+  const sq5 = g('SQ5'), sq7 = g('SQ7');
+  const E1b = g('E1b');
+  const familiarHeadacheAny = g('E4_headache') || g('E5_headache') || g('E9_headache');
+  const headachePrereq = myalgia || arthralgia;
+  const headacheAttrib = !!(sq5 && sq7 && E1b && familiarHeadacheAny && headachePrereq);
+  const headacheBlockedByPrereq = !!(sq5 && sq7 && E1b && familiarHeadacheAny && !headachePrereq);
+
+  // ---- DISC DISPLACEMENT WITH REDUCTION ----
+  const sq8 = g('SQ8');
+  const noiseHistory = sq8 || g('E6_noise_patient');
+  const clickPattern = g('E6_click_openclose') || (g('E6_click_either') && g('E7_click'));
+  const ddReduction = !!(noiseHistory && clickPattern);
+
+  // ---- DD WITH REDUCTION, INTERMITTENT LOCKING ----
+  const sq11 = g('SQ11'), sq12 = g('SQ12');
+  const ddReductionLocking = !!(ddReduction && sq11 && !sq12);
+
+  // ---- DD WITHOUT REDUCTION (with / without limited opening) ----
+  const sq9 = g('SQ9'), sq10 = g('SQ10');
+  const mao = num('E4C_mm'); // shared, not per-side, handled outside
+  let ddNoReductionLimited = false, ddNoReductionUnlimited = false;
+  if(sq9 && sq10 && mao !== null){
+    if(mao < 40) ddNoReductionLimited = true;
+    else ddNoReductionUnlimited = true;
+  }
+
+  // ---- DEGENERATIVE JOINT DISEASE ----
+  const crepitus = g('E6_crepitus') || g('E7_crepitus');
+  const djd = !!(noiseHistory && crepitus);
+
+  // ---- SUBLUXATION ----
+  const sq13 = g('SQ13'), sq14 = g('SQ14');
+  const subluxation = !!(sq13 && sq14);
+
+  return {
+    E1a, sq3, sq4, myalgia, subtype, arthralgia,
+    sq5, sq7, E1b, headacheAttrib, headacheBlockedByPrereq,
+    ddReduction, ddReductionLocking, ddNoReductionLimited, ddNoReductionUnlimited,
+    djd, subluxation, mao
+  };
+}
+
+function crit(ok, text){
+  return '<li class="'+(ok?'criterion-met':'criterion-unmet')+'">'+(ok?'✓ ':'— ')+text+'</li>';
+}
+
+function renderSide(sideLabel, r){
+  let html = '<div class="side-heading '+ (sideLabel==='Direito'?'D':'E') +'">Lado '+sideLabel+'</div>';
+
+  // Myalgia
+  const subtypeName = {local:'Mialgia Local', spreading:'Dor Miofascial (com espalhamento)', referral:'Dor Miofascial com Dor Referida'};
+  html += '<div class="diag-card '+(r.myalgia?'positive':'')+'"><h4><span class="dot"></span>Mialgia'+(r.subtype?' → '+subtypeName[r.subtype]:'')+'</h4><span class="icd">ICD-9 729.1 · Sens 0.90 / Espec 0.99</span><ul>'
+    + crit(r.sq3,'SQ3 — dor em estrutura mastigatória')
+    + crit(r.sq4,'SQ4 — dor modificada por movimento/função/parafunção')
+    + crit(r.E1a==='muscle','E1a — dor confirmada em músculo mastigatório')
+    + crit(r.myalgia && (r.subtype!==null), 'Dor familiar à abertura ou palpação muscular (E4/E9)')
+    + '</ul></div>';
+
+  // Arthralgia
+  html += '<div class="diag-card '+(r.arthralgia?'positive':'')+'"><h4><span class="dot"></span>Artralgia</h4><span class="icd">ICD-9 524.62 · Sens 0.89 / Espec 0.98</span><ul>'
+    + crit(r.sq3,'SQ3 — dor em estrutura mastigatória')
+    + crit(r.sq4,'SQ4 — dor modificada por movimento/função/parafunção')
+    + crit(r.E1a==='tmj','E1a — dor confirmada na ATM')
+    + crit(r.arthralgia,'Dor familiar com palpação da ATM ou amplitude de movimento (E4/E5/E9)')
+    + '</ul></div>';
+
+  // Headache
+  let headacheNote = '';
+  if(r.headacheBlockedByPrereq) headacheNote = '<p class="hint" style="color:var(--danger);">Critérios de história/exame preenchidos, mas requer diagnóstico prévio de Mialgia ou Artralgia (não confirmado neste lado).</p>';
+  html += '<div class="diag-card '+(r.headacheAttrib?'positive':'')+'"><h4><span class="dot"></span>Dor de Cabeça Atribuída a DTM</h4><span class="icd">ICD-9 339.89/784.0 · Sens 0.89 / Espec 0.87</span><ul>'
+    + crit(!!(r.myalgia||r.arthralgia),'Pré-requisito: diagnóstico de Mialgia ou Artralgia neste lado')
+    + crit(r.sq5,'SQ5 — dor de cabeça na região temporal')
+    + crit(r.sq7,'SQ7 — dor de cabeça modificada por função mandibular')
+    + crit(r.E1b,'E1b — dor de cabeça confirmada no temporal')
+    + crit(r.headacheAttrib,'Dor de cabeça familiar reproduzida (E4/E5/E9)')
+    + '</ul>'+headacheNote+'</div>';
+
+  // DD with reduction
+  html += '<div class="diag-card '+(r.ddReduction?'positive':'')+'"><h4><span class="dot"></span>Deslocamento Discal com Redução'+(r.ddReductionLocking?' → com Bloqueio Intermitente':'')+'</h4><span class="icd">ICD-9 524.63</span><ul>'
+    + crit(!!(r.sq3!==undefined),'SQ8 e/ou ruído referido pelo doente no exame (E6/E7)')
+    + crit(r.ddReduction,'Estalido abertura+fecho (E6), ou estalido abertura/fecho + lateral/protrusivo (E6+E7)')
+    + (r.ddReduction? crit(r.ddReductionLocking,'+ SQ11 = Sim e SQ12 = Não (bloqueio intermitente com redução)') : '')
+    + '</ul></div>';
+
+  // DD without reduction
+  html += '<div class="diag-card '+((r.ddNoReductionLimited||r.ddNoReductionUnlimited)?'positive':'')+'"><h4><span class="dot"></span>Deslocamento Discal sem Redução'
+    + (r.ddNoReductionLimited?' — com limitação da abertura':'')
+    + (r.ddNoReductionUnlimited?' — sem limitação da abertura':'') + '</h4><span class="icd">ICD-9 524.63</span><ul>'
+    + crit(true, 'SQ9 (bloqueio prévio/atual em boca fechada) + SQ10 (interferência na alimentação)')
+    + crit(r.mao!==null, 'E4C — abertura máxima assistida registada: '+(r.mao!==null? r.mao+' mm':'não preenchida'))
+    + crit(r.ddNoReductionLimited,'< 40 mm → com limitação da abertura')
+    + crit(r.ddNoReductionUnlimited,'≥ 40 mm → sem limitação da abertura')
+    + '</ul></div>';
+
+  // DJD
+  html += '<div class="diag-card '+(r.djd?'positive':'')+'"><h4><span class="dot"></span>Doença Articular Degenerativa</h4><span class="icd">ICD-9 715.18 · Sens 0.55 / Espec 0.61</span><ul>'
+    + crit(true,'SQ8 e/ou ruído referido pelo doente no exame (E6/E7)')
+    + crit(r.djd,'Crepitação detetada pelo examinador (E6/E7)')
+    + '</ul></div>';
+
+  // Subluxation
+  html += '<div class="diag-card '+(r.subluxation?'positive':'')+'"><h4><span class="dot"></span>Subluxação</h4><span class="icd">ICD-9 830.0 · Sens 0.98 / Espec 1.00</span><ul>'
+    + crit(r.subluxation===r.subluxation,'SQ13 — bloqueio em boca muito aberta')
+    + crit(r.subluxation,'SQ14 — manobra necessária para fechar')
+    + '</ul></div>';
+
+  return html;
+}
+
+function calcularDiagnostico(){
+  const rD = computeSide('D');
+  const rE = computeSide('E');
+  let html = '';
+
+  const anyPositive = [rD,rE].some(r=>r.myalgia||r.arthralgia||r.headacheAttrib||r.ddReduction||r.ddNoReductionLimited||r.ddNoReductionUnlimited||r.djd||r.subluxation);
+  if(!anyPositive){
+    html += '<div class="alert-box">Nenhum critério diagnóstico foi satisfeito com os dados introduzidos. Reveja o questionário e o exame, ou considere investigar outros diagnósticos de dor orofacial (dor neuropática, nevralgias, patologia dentária/sinusal, etc. — fora do âmbito do DC/TMD Eixo I).</div>';
+  }
+
+  html += renderSide('Direito', rD);
+  html += renderSide('Esquerdo', rE);
+
+  document.getElementById('results').innerHTML = html;
+  goStep(6);
+}
+</script>
+
+</body>
+</html>
