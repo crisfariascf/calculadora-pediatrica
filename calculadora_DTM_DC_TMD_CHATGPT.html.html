@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTM • Avaliação Clínica DC/TMD</title>
+<style>
+:root{--bg:#f4f7f6;--card:#fff;--ink:#18312b;--muted:#60746f;--green:#2f6758;--green2:#e5f1ed;--amber:#a66d16;--amberbg:#fff4dc;--red:#a33b3b;--redbg:#fde9e9;--blue:#2d617f;--bluebg:#e8f2f8;--line:#d8e2df}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink);line-height:1.45}
+header{background:linear-gradient(135deg,#173e34,#397a67);color:white;padding:26px 20px}
+header .wrap,.app{max-width:1380px;margin:auto}.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+h1{margin:.2rem 0;font-size:clamp(1.55rem,3vw,2.35rem)} header p{max-width:900px;margin:.4rem 0 0;opacity:.9}
+.tabs{display:flex;gap:8px;overflow:auto;padding:12px 0;position:sticky;top:0;background:rgba(244,247,246,.96);backdrop-filter:blur(8px);z-index:5}
+.tab{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 14px;white-space:nowrap;cursor:pointer;font-weight:700;color:var(--muted)}
+.tab.active{background:var(--green);color:white;border-color:var(--green)}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:18px;align-items:start}
+@media(max-width:980px){.grid{grid-template-columns:1fr}.results{position:static!important}}
+.panel,.results{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px rgba(22,58,48,.06)}
+.panel{padding:18px;margin-bottom:16px}.results{padding:18px;position:sticky;top:66px}
+.section{display:none}.section.active{display:block}.section h2,.results h2{margin:0 0 6px}.sub{color:var(--muted);font-size:.92rem;margin-bottom:14px}
+.field{margin:12px 0}.field>label,.group-title{font-weight:750;display:block;margin-bottom:6px}
+input,select,textarea{width:100%;border:1px solid #c7d5d1;border-radius:10px;padding:10px;background:white;color:var(--ink);font:inherit}
+textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:620px){.row,.row3{grid-template-columns:1fr}}
+.options{display:grid;gap:7px}.opt{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:11px;padding:9px;background:#fbfcfc}.opt input{width:auto;margin-top:3px}
+.mini{font-size:.82rem;color:var(--muted)}.callout{border-left:4px solid var(--blue);background:var(--bluebg);padding:11px 13px;border-radius:9px;margin:12px 0}
+.warn{border-color:var(--amber);background:var(--amberbg)}.danger{border-color:var(--red);background:var(--redbg)}
+button.primary{width:100%;border:0;border-radius:12px;padding:13px;background:var(--green);color:white;font-weight:800;font-size:1rem;cursor:pointer}
+button.secondary{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:white;font-weight:700;cursor:pointer}
+.score{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.badge{border-radius:999px;padding:5px 9px;font-size:.78rem;font-weight:800;background:var(--green2);color:var(--green)}
+.badge.red{background:var(--redbg);color:var(--red)}.badge.amber{background:var(--amberbg);color:var(--amber)}.badge.blue{background:var(--bluebg);color:var(--blue)}
+.result-block{padding:13px;border:1px solid var(--line);border-radius:13px;margin:12px 0}.result-block h3{margin:0 0 7px;font-size:1rem}.result-block ul{margin:6px 0 0;padding-left:20px}
+.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:600px){.checkgrid{grid-template-columns:1fr}}
+.range-wrap{display:grid;grid-template-columns:1fr 60px;gap:8px;align-items:center}.range-wrap input[type=range]{padding:0}.range-val{text-align:center;font-weight:800}
+.footer-note{font-size:.8rem;color:var(--muted);padding:15px 2px 30px}.hide{display:none}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="eyebrow">Apoio à decisão clínica • uso profissional</div><h1>Calculadora de DTM baseada no DC/TMD</h1><p>Triagem, Eixo I, impacto funcional e psicossocial, sinais de alerta, hipóteses diagnósticas e fluxo inicial de manejo. Não substitui exame presencial padronizado nem avaliação odontológica especializada.</p></div></header>
+<div class="app">
+<nav class="tabs">
+<button class="tab active" data-tab="triagem">1. Triagem</button>
+<button class="tab" data-tab="historia">2. História</button>
+<button class="tab" data-tab="exame">3. Exame DC/TMD</button>
+<button class="tab" data-tab="eixo2">4. Eixo II</button>
+<button class="tab" data-tab="alertas">5. Alertas</button>
+<button class="tab" data-tab="conduta">6. Conduta</button>
+</nav>
+
+<div class="grid">
+<main>
+<section id="triagem" class="section active panel">
+<h2>Triagem de dor relacionada à DTM</h2><div class="sub">Baseada no TMD Pain Screener. Pontuação positiva sugere necessidade de avaliação clínica; não fecha diagnóstico.</div>
+<div class="field"><label>Nos últimos 30 dias, a dor na mandíbula ou têmpora:</label><select id="scr1"><option value="0">Não ocorreu</option><option value="1">Foi e voltou</option><option value="1">Esteve sempre presente</option></select></div>
+<div class="field"><label>Teve dor ou rigidez mandibular ao acordar?</label><select id="scr2"><option value="0">Não</option><option value="1">Sim</option></select></div>
+<div class="group-title">Alguma destas atividades modificou a dor?</div>
+<div class="checkgrid">
+<label class="opt"><input type="checkbox" class="scr" value="1">Mastigar alimento duro/resistente</label>
+<label class="opt"><input type="checkbox" class="scr" value="1">Abrir a boca ou mover a mandíbula</label>
+<label class="opt"><input type="checkbox" class="scr" value="1">Apertar, ranger, manter dentes encostados ou mascar goma</label>
+<label class="opt"><input type="checkbox" class="scr" value="1">Falar, bocejar, beijar ou outra atividade mandibular</label>
+</div>
+<div class="callout"><b>Interpretação:</b> no instrumento original de 6 itens, escore ≥3 é compatível com rastreio positivo para DTM dolorosa.</div>
+</section>
+
+<section id="historia" class="section panel">
+<h2>História clínica dirigida</h2><div class="sub">Caracterize localização, comportamento, incapacidade e possíveis diagnósticos diferenciais.</div>
+<div class="row">
+<div class="field"><label>Idade</label><input id="age" type="number" min="10" max="100"></div>
+<div class="field"><label>Duração do quadro</label><select id="duration"><option value="acute">Até 3 meses</option><option value="persistent">Mais de 3 meses</option></select></div>
+</div>
+<div class="field"><label>Local predominante da dor</label><select id="painloc"><option value="none">Sem dor</option><option value="muscle">Masseter/temporal</option><option value="joint">Pré-auricular/ATM</option><option value="both">Muscular e articular</option><option value="other">Outra localização</option></select></div>
+<div class="field"><label>A dor é modificada por movimento, função ou hábito mandibular?</label><select id="modified"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+<div class="field"><label>Cefaleia temporal nos últimos 30 dias?</label><select id="headache"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+<div class="field"><label>Ruídos articulares atuais referidos pelo paciente?</label><select id="noiseHx"><option value="none">Nenhum</option><option value="click">Estalo</option><option value="crepitus">Crepitação</option><option value="both">Estalo e crepitação</option></select></div>
+<div class="row">
+<div class="field"><label>Travamento fechado prévio?</label><select id="closedLock"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+<div class="field"><label>Interferiu na mastigação?</label><select id="chewInterf"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+</div>
+<div class="row">
+<div class="field"><label>Travamento aberto prévio?</label><select id="openLock"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+<div class="field"><label>Precisou manobra para fechar?</label><select id="closeManeuver"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+</div>
+<div class="field"><label>Observações e diagnósticos diferenciais</label><textarea id="notes" placeholder="Odontalgia, otalgia, neuralgia, sinusopatia, trauma, artrite sistêmica, cefaleia primária, infecção, neoplasia..."></textarea></div>
+</section>
+
+<section id="exame" class="section panel">
+<h2>Exame clínico orientado pelo DC/TMD</h2><div class="sub">Registre “dor familiar”: dor reconhecida pelo paciente como semelhante à que motivou a consulta.</div>
+<div class="row3">
+<div class="field"><label>Abertura sem dor (mm)</label><input id="openPainfree" type="number" min="0" max="80"></div>
+<div class="field"><label>Abertura máxima não assistida (mm)</label><input id="openUnassist" type="number" min="0" max="80"></div>
+<div class="field"><label>Abertura máxima assistida (mm)</label><input id="openAssist" type="number" min="0" max="80"></div>
+</div>
+<div class="mini">Para classificar deslocamento de disco sem redução com limitação, o DC/TMD usa abertura máxima assistida + sobremordida ≤40 mm.</div>
+<div class="row">
+<div class="field"><label>Sobremordida vertical (mm)</label><input id="overbite" type="number" min="0" max="15" value="0"></div>
+<div class="field"><label>Desvio/deflexão</label><select id="deviation"><option value="none">Nenhum</option><option value="corrected">Desvio corrigido</option><option value="deflection">Deflexão não corrigida</option></select></div>
+</div>
+<div class="group-title">Dor familiar provocada</div>
+<div class="checkgrid">
+<label class="opt"><input id="famOpenMuscle" type="checkbox">Ao abrir/movimentar — músculos</label>
+<label class="opt"><input id="famPalpMuscle" type="checkbox">Palpação masseter/temporal — músculos</label>
+<label class="opt"><input id="famOpenJoint" type="checkbox">Ao abrir/movimentar — ATM</label>
+<label class="opt"><input id="famPalpJoint" type="checkbox">Palpação da ATM — articulação</label>
+<label class="opt"><input id="famHeadache" type="checkbox">Movimento/palpação reproduz cefaleia temporal familiar</label>
+</div>
+<div class="field"><label>Padrão da dor à palpação muscular por 5 segundos</label><select id="spread"><option value="local">Permanece no local estimulado</option><option value="spreading">Espalha dentro do limite do músculo</option><option value="referred">Ultrapassa o limite do músculo (dor referida)</option><option value="none">Sem dor familiar</option></select></div>
+<div class="group-title">Ruídos e travamento observados</div>
+<div class="checkgrid">
+<label class="opt"><input id="examClickOC" type="checkbox">Estalo na abertura e/ou fechamento</label>
+<label class="opt"><input id="examClickExc" type="checkbox">Estalo em lateralidade/protrusão</label>
+<label class="opt"><input id="examCrepitus" type="checkbox">Crepitação detectada pelo examinador</label>
+<label class="opt"><input id="maneuverOpen" type="checkbox">Necessitou manobra para abrir durante o exame</label>
+<label class="opt"><input id="lockedOpenExam" type="checkbox">Travamento aberto presente no exame</label>
+</div>
+</section>
+
+<section id="eixo2" class="section panel">
+<h2>Eixo II — impacto, função e contexto psicossocial</h2>
+<div class="group-title">Dor e incapacidade — GCPS v2 simplificada</div>
+<div class="row3">
+<div class="field"><label>Dor atual (0–10)</label><input class="gcps" id="painNow" type="number" min="0" max="10" value="0"></div>
+<div class="field"><label>Pior dor/30 dias</label><input class="gcps" id="painWorst" type="number" min="0" max="10" value="0"></div>
+<div class="field"><label>Dor média/30 dias</label><input class="gcps" id="painAvg" type="number" min="0" max="10" value="0"></div>
+</div>
+<div class="row3">
+<div class="field"><label>Dias impedido/30</label><input id="disabilityDays" type="number" min="0" max="30" value="0"></div>
+<div class="field"><label>Interferência diária (0–10)</label><input class="interf" type="number" min="0" max="10" value="0"></div>
+<div class="field"><label>Interferência social (0–10)</label><input class="interf" type="number" min="0" max="10" value="0"></div>
+</div>
+<div class="field"><label>Interferência no trabalho (0–10)</label><input class="interf" type="number" min="0" max="10" value="0"></div>
+
+<div class="group-title">JFLS-8 — limitação funcional no último mês (0–10)</div>
+<div id="jfls"></div>
+
+<div class="group-title" style="margin-top:16px">PHQ-4 — últimas 2 semanas (0–3 por item)</div>
+<div id="phq"></div>
+<div class="callout warn"><b>Atenção:</b> PHQ-4 é rastreio, não diagnóstico. Respostas com sofrimento intenso, desesperança ou risco de autoagressão exigem avaliação direta e fluxo de segurança.</div>
+</section>
+
+<section id="alertas" class="section panel">
+<h2>Sinais de alerta e diagnósticos alternativos</h2><div class="sub">A presença de alerta deve prevalecer sobre o algoritmo de DTM e direcionar investigação/encaminhamento.</div>
+<div class="checkgrid">
+<label class="opt"><input class="redflag" type="checkbox">Trauma importante, deformidade ou suspeita de fratura</label>
+<label class="opt"><input class="redflag" type="checkbox">Febre, edema progressivo, eritema ou sinais de infecção</label>
+<label class="opt"><input class="redflag" type="checkbox">Perda de peso, massa, linfonodomegalia ou dor noturna progressiva</label>
+<label class="opt"><input class="redflag" type="checkbox">Déficit neurológico, alteração sensitiva ou paresia facial</label>
+<label class="opt"><input class="redflag" type="checkbox">Alteração visual, claudicação mandibular ou suspeita de arterite temporal</label>
+<label class="opt"><input class="redflag" type="checkbox">Trismo intenso de início agudo, disfagia, sialorreia ou risco de via aérea</label>
+<label class="opt"><input class="redflag" type="checkbox">Dor não mecânica, lancinante, elétrica ou com padrão neuralgiforme</label>
+<label class="opt"><input class="redflag" type="checkbox">Artrite inflamatória sistêmica, imunossupressão ou neoplasia prévia</label>
+<label class="opt"><input class="redflag" type="checkbox">Otalgia/hipoacusia/vertigem persistente sem correlação mandibular</label>
+<label class="opt"><input class="redflag" type="checkbox">Cefaleia nova, súbita, focal ou com outros sinais neurológicos</label>
+</div>
+</section>
+
+<section id="conduta" class="section panel">
+<h2>Preferências e segurança terapêutica</h2>
+<div class="row">
+<div class="field"><label>Gestação</label><select id="preg"><option value="no">Não</option><option value="yes">Sim/possível</option></select></div>
+<div class="field"><label>Idoso/frágil</label><select id="frail"><option value="no">Não</option><option value="yes">Sim</option></select></div>
+</div>
+<div class="checkgrid">
+<label class="opt"><input id="giRisk" type="checkbox">Risco gastrointestinal/úlcera/sangramento</label>
+<label class="opt"><input id="renalRisk" type="checkbox">Doença renal/desidratação</label>
+<label class="opt"><input id="anticoag" type="checkbox">Anticoagulante/antiagregante</label>
+<label class="opt"><input id="allergyNSAID" type="checkbox">Alergia ou contraindicação a AINE</label>
+</div>
+<div class="field"><label>Objetivo do relatório</label><select id="setting"><option value="primary">Atendimento inicial/atenção primária</option><option value="dental">Odontologia geral</option><option value="specialist">Especialista em DTM/dor orofacial</option></select></div>
+</section>
+</main>
+
+<aside class="results">
+<h2>Resumo clínico</h2><div class="sub">Atualizado automaticamente conforme os campos.</div>
+<div id="scores"></div>
+<div id="diagnoses"></div>
+<div id="plan"></div>
+<button class="primary" onclick="window.print()">Imprimir / salvar em PDF</button>
+<button class="secondary" style="width:100%;margin-top:8px" onclick="resetAll()">Limpar avaliação</button>
+</aside>
+</div>
+
+<div class="footer-note"><b>Base científica:</b> DC/TMD (Eixos I e II), instrumentos oficiais do INfORM/IADR, diretriz britânica de manejo de DTM dolorosa em adultos e recomendações contemporâneas de cuidado conservador. Esta ferramenta usa regras clínicas automatizadas, mas não substitui treinamento para palpação padronizada, calibração do examinador, diagnóstico diferencial ou interpretação de imagem.</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+$$('.tab').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.remove('active'));$$('.section').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#'+b.dataset.tab).classList.add('active')});
+
+const jflsItems=['Mastigar alimento duro','Mastigar frango/carne macia','Comer alimento macio sem mastigar','Abrir o suficiente para beber em copo','Engolir','Bocejar','Falar','Sorrir'];
+$('#jfls').innerHTML=jflsItems.map((x,i)=>`<div class="field"><label>${i+1}. ${x}</label><div class="range-wrap"><input class="jfls" type="range" min="0" max="10" value="0" oninput="this.nextElementSibling.textContent=this.value"><div class="range-val">0</div></div></div>`).join('');
+const phqItems=['Nervoso(a), ansioso(a) ou no limite','Incapaz de parar ou controlar preocupações','Pouco interesse ou prazer nas atividades','Desanimado(a), deprimido(a) ou sem esperança'];
+$('#phq').innerHTML=phqItems.map((x,i)=>`<div class="field"><label>${i+1}. ${x}</label><select class="phq"><option value="0">Nenhuma vez</option><option value="1">Vários dias</option><option value="2">Mais da metade dos dias</option><option value="3">Quase todos os dias</option></select></div>`).join('');
+
+function val(id){return $('#'+id)?.value}
+function checked(id){return $('#'+id)?.checked}
+function sum(sel){return $$(sel).reduce((a,e)=>a+(parseFloat(e.value)||0),0)}
+function badge(text,type=''){return `<span class="badge ${type}">${text}</span>`}
+
+function calculate(){
+ let scr=(+val('scr1'))+(+val('scr2'))+$$('.scr:checked').length;
+ let cpi=((+val('painNow'))+(+val('painWorst'))+(+val('painAvg')))/3*10;
+ let interf=sum('.interf')/3*10, days=+val('disabilityDays');
+ let disabilityPoints=(days>=16?4:days>=7?3:days>=3?2:days>=1?1:0)+(interf>=70?4:interf>=50?3:interf>=30?2:interf>0?1:0);
+ let javg=sum('.jfls')/8, phq=sum('.phq'), anxiety=+$$('.phq')[0].value+ +$$('.phq')[1].value, depression=+$$('.phq')[2].value+ +$$('.phq')[3].value;
+ let red=$$('.redflag:checked').length;
+ let mao=(+val('openAssist')||0)+(+val('overbite')||0);
+ let dx=[];
+ let regional=['muscle','joint','both'].includes(val('painloc')) && val('modified')==='yes';
+ if(regional && (checked('famOpenMuscle')||checked('famPalpMuscle'))){
+   if(val('spread')==='referred') dx.push('Dor miofascial com referência');
+   else if(val('spread')==='spreading') dx.push('Dor miofascial com espalhamento');
+   else dx.push('Mialgia');
+ }
+ if(regional && ['joint','both'].includes(val('painloc')) && (checked('famOpenJoint')||checked('famPalpJoint'))) dx.push('Artralgia da ATM');
+ if(dx.some(x=>x.includes('Mialgia')||x.includes('Artralgia')||x.includes('miofascial')) && val('headache')==='yes' && checked('famHeadache')) dx.push('Cefaleia atribuída à DTM — provável; excluir cefaleias primárias/secundárias');
+ let hasNoise=val('noiseHx')!=='none';
+ if(hasNoise && (checked('examClickOC') || (checked('examClickOC')&&checked('examClickExc')))) {
+   if(val('closedLock')==='yes' && val('chewInterf')==='yes' && checked('maneuverOpen')) dx.push('Deslocamento de disco com redução e travamento intermitente');
+   else dx.push('Deslocamento de disco com redução');
+ }
+ if(val('closedLock')==='yes' && val('chewInterf')==='yes'){
+   if(mao>0 && mao<=40) dx.push('Deslocamento de disco sem redução, com limitação de abertura');
+   else if(mao>40) dx.push('Deslocamento de disco sem redução, sem limitação de abertura');
+ }
+ if((val('noiseHx')==='crepitus'||val('noiseHx')==='both') && checked('examCrepitus')) dx.push('Doença articular degenerativa — hipótese clínica');
+ if(val('openLock')==='yes' && val('closeManeuver')==='yes' && checked('lockedOpenExam')) dx.push('Subluxação/luxação recorrente');
+ if(!dx.length) dx.push('Critérios automatizados insuficientes para diagnóstico DC/TMD; revisar exame e diferenciais');
+
+ let scrType=scr>=3?'red':'', phqType=phq>=9?'red':phq>=6?'amber':'';
+ $('#scores').innerHTML=`
+ <div class="score"><span>Triagem TMD dolorosa</span>${badge(scr+'/6 '+(scr>=3?'positiva':'negativa'),scrType)}</div>
+ <div class="score"><span>Intensidade característica</span>${badge(cpi.toFixed(0)+'/100',cpi>=70?'red':cpi>=40?'amber':'')}</div>
+ <div class="score"><span>Interferência média</span>${badge(interf.toFixed(0)+'/100',interf>=70?'red':interf>=40?'amber':'')}</div>
+ <div class="score"><span>JFLS-8 média</span>${badge(javg.toFixed(1)+'/10',javg>=7?'red':javg>=4?'amber':'')}</div>
+ <div class="score"><span>PHQ-4</span>${badge(phq+'/12',phqType)}</div>
+ <div class="score"><span>Abertura assistida + sobremordida</span>${badge(mao?mao+' mm':'não informada',mao&&mao<=40?'amber':'blue')}</div>
+ <div class="score"><span>Sinais de alerta</span>${badge(red?red+' presente(s)':'nenhum marcado',red?'red':'')}</div>`;
+
+ $('#diagnoses').innerHTML=`<div class="result-block"><h3>Hipóteses geradas</h3><ul>${dx.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+
+ let plan=[];
+ if(red){
+  plan.push(`<div class="result-block danger"><h3>Prioridade: investigar causa não-DTM</h3><ul><li>Interromper o fluxo automatizado de DTM e avaliar urgência conforme o sinal encontrado.</li><li>Considerar avaliação médica/odontológica urgente, imagem ou encaminhamento especializado direcionado.</li></ul></div>`);
+ } else {
+  let first=`<li>Explicar o diagnóstico provável, natureza musculoesquelética e geralmente benigna do quadro, evitando linguagem alarmista.</li>
+  <li>Autocuidado por 2–6 semanas: alimentação temporariamente macia sem restrição excessiva, evitar mastigação prolongada, goma, apertamento sustentado e abertura extrema.</li>
+  <li>Calor local, automassagem suave, sono regular e exercícios mandibulares graduais conforme tolerância.</li>
+  <li>Manter atividades habituais e retorno progressivo da função; evitar repouso mandibular rígido e intervenções irreversíveis precoces.</li>`;
+  plan.push(`<div class="result-block"><h3>Primeira linha conservadora</h3><ul>${first}</ul></div>`);
+  if(dx.some(x=>x.includes('limitação de abertura'))) plan.push(`<div class="result-block warn"><h3>Limitação de abertura</h3><ul><li>Encaminhamento mais precoce a especialista em DTM/dor orofacial ou cirurgia bucomaxilofacial.</li><li>Considerar fisioterapia orientada e mobilização precoce não traumática.</li><li>RM é o método de escolha para disco quando o resultado puder mudar a conduta; não solicitar rotineiramente.</li></ul></div>`);
+  if(dx.some(x=>x.includes('degenerativa'))) plan.push(`<div class="result-block"><h3>Componente degenerativo</h3><ul><li>Considerar TC/CBCT apenas quando confirmação óssea for clinicamente relevante.</li><li>Pesquisar artrite inflamatória, trauma e outras causas sistêmicas conforme história.</li></ul></div>`);
+  let medRisk=checked('giRisk')||checked('renalRisk')||checked('anticoag')||checked('allergyNSAID')||val('preg')==='yes'||val('frail')==='yes';
+  plan.push(`<div class="result-block"><h3>Analgesia — adulto, curto prazo</h3><ul><li>Preferir abordagem individualizada e pelo menor tempo necessário. Paracetamol pode ser considerado quando apropriado.</li><li>AINE pode ser opção em exacerbação aguda somente após avaliar contraindicações, interações, gestação, função renal e risco gastrointestinal.</li>${medRisk?'<li><b>Há fator de risco marcado:</b> não sugerir AINE automaticamente; revisar prescrição e alternativas.</li>':'<li>Sem contraindicação marcada, ainda é necessária revisão clínica antes de prescrever.</li>'}<li>Evitar opioides e benzodiazepínicos como rotina; neuromoduladores pertencem ao manejo de dor persistente selecionada e supervisionada.</li></ul></div>`);
+  if(cpi>=50||interf>=50||javg>=5||val('duration')==='persistent') plan.push(`<div class="result-block warn"><h3>Quadro persistente ou de maior impacto</h3><ul><li>Plano multimodal: educação, exercício/fisioterapia, manejo do sono e estresse, e avaliação de fatores perpetuadores.</li><li>Reavaliar em 4–8 semanas com medidas de dor e função.</li><li>Considerar especialista em DTM/dor orofacial; abordagem psicológica baseada em evidências quando houver sofrimento ou incapacidade.</li></ul></div>`);
+  if(phq>=6) plan.push(`<div class="result-block warn"><h3>Rastreio psicossocial relevante</h3><ul><li>Explorar ansiedade, humor, sono, catastrofização e impacto funcional sem atribuir a dor “apenas ao emocional”.</li><li>PHQ-4 elevado pede avaliação ampliada e, conforme contexto, cuidado compartilhado em saúde mental.</li></ul></div>`);
+  plan.push(`<div class="result-block"><h3>O que evitar como primeira resposta</h3><ul><li>Ajuste oclusal irreversível, desgaste seletivo, ortodontia ou cirurgia sem indicação específica.</li><li>Imagem de rotina em todo paciente com dor.</li><li>Placa como solução isolada: quando indicada, preferir dispositivo estabilizador reversível, bem ajustado e monitorado.</li><li>Tratar ruído articular assintomático apenas por estar presente.</li></ul></div>`);
+ }
+ $('#plan').innerHTML=plan.join('');
+}
+document.addEventListener('input',calculate);document.addEventListener('change',calculate);
+function resetAll(){document.querySelectorAll('input').forEach(e=>{if(e.type==='checkbox')e.checked=false;else if(e.type==='range'){e.value=0;e.nextElementSibling.textContent='0'}else e.value=e.defaultValue||''});document.querySelectorAll('select').forEach(e=>e.selectedIndex=0);document.querySelectorAll('textarea').forEach(e=>e.value='');calculate()}
+calculate();
+</script>
+</body>
+</html>
