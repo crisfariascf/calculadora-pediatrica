@@ -180,8 +180,8 @@ function calcular(){
 
   // Doses
   const pegDesFixo = peso*1.5; // dose de desimpactação do protocolo prático (1,5 g/kg/dia)
-  const pegManMin=peso*0.5, pegManMax=peso*1; // manutenção domiciliar (protocolo prático)
-  const pegManIni=peso*0.5;
+  const pegManMin=peso*0.4, pegManMax=peso*0.8; // manutenção (Tabela de referência)
+  const pegManIni=peso*0.4;
   const lactMin=peso*1, lactMax=Math.min(peso*3,60); // máx 60 mL/dia
   const faixaLact = faixaLactulose(meses);
   const oleoMin=peso*1, oleoMax=Math.min(peso*3,90); // máx 90 mL/dia
@@ -199,7 +199,7 @@ function calcular(){
   // 2) TRATAMENTO PARA CASA
   html += `<h3>2) Tratamento para casa (manutenção)</h3><table><tr><th>Item</th><th>Dose calculada</th><th>Observação</th></tr>
   <tr><td>PEG-LAX — desimpactação</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':arred(pegDesFixo)+' g/dia por 3 dias ou até esvaziamento completo'}</td><td>1,5 g/kg/dia. 1ª e melhor opção.</td></tr>
-  <tr><td>PEG-LAX — manutenção</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':`${arred(pegManMin)} a ${arred(pegManMax)} g/dia<br><b>Sugestão inicial:</b> ${arred(pegManIni)} g/dia`}</td><td>0,5 a 1 g/kg/dia. Ajustar conforme consistência das fezes.</td></tr>
+  <tr><td>PEG-LAX — manutenção</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':`${arred(pegManMin)} a ${arred(pegManMax)} g/dia<br><b>Sugestão inicial:</b> ${arred(pegManIni)} g/dia`}</td><td>0,4 a 0,8 g/kg/dia. Ajustar conforme consistência das fezes.</td></tr>
   <tr><td>Lactulose (apenas se PEG-LAX indisponível)</td><td>${arred(lactMin)} a ${arred(lactMax)} mL/dia (máx. 60 mL/dia = 40 g)${faixaLact?`<br><b>Faixa etária:</b> ${faixaLact}`:''}</td><td>Contraindicação absoluta: galactosemia. Apresentação 667 mg/mL (frasco 200 mL).</td></tr>
   <tr><td>Óleo mineral (última opção)</td><td>${menor2anos?'Contraindicado (&lt;2 anos)':`${arred(oleoMin)} a ${arred(oleoMax)} mL/dia à noite (máx. 90 mL/dia)`}</td><td>Contraindicado em &lt;2 anos e em risco de aspiração/disfagia.</td></tr>
   </table>`;
