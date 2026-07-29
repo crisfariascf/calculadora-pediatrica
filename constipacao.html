@@ -171,9 +171,7 @@ function calcular(){
     html += `<div class="alert alert-danger"><b>Atenção: há sinais de alarme.</b><br>Não conduzir como constipação funcional simples. Avaliar necessidade de investigação, observação/internação, exames direcionados e/ou encaminhamento especializado.<br><b>Marcados:</b> ${al.join('; ')}.</div>`;
   }
   const menor6meses = meses!==null && meses<6;
-  const menor1ano = meses!==null && meses<12;
   const menor2anos = meses!==null && meses<24;
-  const maior1ano = meses===null ? true : meses>=12;
   const romaOk = ro.length>=2;
   if(romaOk) html += `<div class="alert alert-ok"><b>Compatível com constipação funcional</b>, se não houver outra condição médica explicando o quadro. Seguir educação + desimpactação se impactado + manutenção.</div>`;
   else html += `<div class="alert alert-warn"><b>Critérios Roma IV incompletos pela seleção.</b> Pode ainda ser constipação aguda/inicial, pseudoconstipação do aleitamento ou disquesia do lactente. Correlacionar com história e exame.</div>`;
@@ -193,7 +191,7 @@ function calcular(){
   html += `<h3>1) Desimpactação imediata em consultório/PS</h3>
   <table><tr><th>Opção</th><th>Dose</th><th>Observação</th></tr>
   <tr><td><b>Opção 1 (retal, ação rápida)</b><br>Mini-lax</td><td>1 ampola<br><span class="small">(2 ampolas se fecaloma palpável ou dor importante em criança maior — geralmente basta 1)</span></td><td>Sorbitol + laurilsulfato de sódio. Ação em 5 a 40 min.</td></tr>
-  <tr><td><b>Opção 1 (retal, alternativa)</b><br>Enema</td><td>30 mL (1/4 do frasco)</td><td>Decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter posição até forte vontade de evacuar (2 a 5 min). <b>Associar simeticona (dose abaixo).</b></td></tr>
+  <tr><td><b>Opção 1 (retal, alternativa)</b><br>Enema fosfatado</td><td>${menor2anos?'<b>Contraindicado (&lt;2 anos)</b>':'30 mL (1/4 do frasco)'}</td><td>Indicado apenas em <b>maiores de 2 anos</b> (dose máxima do produto: 120 mL). Decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter posição até forte vontade de evacuar (2 a 5 min). <b>Associar simeticona (dose abaixo).</b></td></tr>
   <tr><td><b>Opção 2 (oral)</b><br>PEG-LAX</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':`<b>${arred(pegDesFixo)} g/dia</b>`}</td><td>Macrogol 3350/4000, apresentação 0,5 g/mL. 1x ao dia por 3 dias ou até esvaziamento completo.</td></tr>
   <tr><td><b>Simeticona (Luftal)</b><br>a associar ao enema</td><td>${simFaixa?`<b>${simFaixa.gotas}</b>, VO, 8/8h<br><span class="small">(≈ ${simFaixa.mg} — ${simFaixa.faixa})</span>`:'Informe a idade para calcular'}</td><td>Apresentação 75 mg/mL = 25 gotas (frasco 15 mL). Dose máxima: 166 gotas (500 mg)/dia. Agitar o frasco antes de usar; pode diluir em água/alimento ou ofertar direto na boca.</td></tr>
   </table>`;
@@ -214,7 +212,7 @@ function calcular(){
       conduta = `Desimpactação: Mini-lax retal (1 ampola; 2 se fecaloma palpável/dor importante) e/ou PEG-LAX ${arred(pegDesFixo)} g/dia VO por 3 dias ou até esvaziamento. Depois manter PEG-LAX ${arred(pegManIni)} g/dia e titular entre ${arred(pegManMin)} e ${arred(pegManMax)} g/dia.`;
       html += `<div class="alert alert-warn"><b>Impactação/fecaloma provável.</b><br>${conduta}</div>`;
     } else {
-      conduta = `Via oral desfavorável ou &lt;6 meses: priorizar desimpactação retal — Mini-lax (1 a 2 ampolas) ou Enema 30 mL (1/4 do frasco) + simeticona${simFaixa?` ${simFaixa.gotas} 8/8h`:''}. Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados, mantendo até forte vontade de evacuar (2 a 5 min).`;
+      conduta = `Via oral desfavorável ou &lt;6 meses: priorizar desimpactação retal — Mini-lax (1 a 2 ampolas)${menor2anos?'':' ou Enema fosfatado 30 mL (1/4 do frasco, apenas se ≥2 anos)'} + simeticona${simFaixa?` ${simFaixa.gotas} 8/8h`:''}. Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados, mantendo até forte vontade de evacuar (2 a 5 min).${menor2anos?' <b>Em &lt;2 anos, o enema fosfatado é contraindicado — usar Mini-lax.</b>':''}`;
       html += `<div class="alert alert-warn"><b>Impactação com via oral desfavorável.</b><br>${conduta}</div>`;
     }
   } else {
@@ -244,7 +242,7 @@ function gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo,
   if(temImp){
     s += `DESIMPACTAÇÃO (consultório/PS)\nOpção 1 — retal:\n`;
     s += `1) Mini-lax retal: 1 ampola agora (2 ampolas se fecaloma palpável ou dor importante em criança maior). Tempo de ação: 5 a 40 min.\n`;
-    s += `   OU Enema retal: 30 mL (1/4 do frasco). Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter até forte vontade de evacuar (2 a 5 min).\n`;
+    s += `   OU Enema fosfatado retal (apenas se ≥2 anos): ${menor2anos?'contraindicado nessa faixa etária — usar Mini-lax.':'30 mL (1/4 do frasco, dose máxima do produto 120 mL). Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter até forte vontade de evacuar (2 a 5 min).'}\n`;
     s += `   Associar: Simeticona (Luftal) ${simFaixa?`${simFaixa.gotas} VO 8/8h (${simFaixa.faixa})`:'— informar idade para dose'}. Apresentação 75 mg/mL = 25 gotas (frasco 15 mL). Dose máxima 166 gotas (500 mg)/dia. Agitar antes de usar; diluir em água/alimento ou ofertar direto na boca.\n\n`;
     s += `Opção 2 — oral:\n`;
     if(!menor6meses){
