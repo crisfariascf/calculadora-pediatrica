@@ -100,29 +100,11 @@
     <div class="btns"><button class="primary" onclick="calcular()">Calcular conduta</button><button class="ghost" onclick="limpar()">Limpar</button><button class="dangerBtn" onclick="marcarImpactacao()">Marcar impactação</button></div>
   </section>
 
-  <section class="card">
-    <h2 class="section-title">Desimpactação imediata em consultório/PS <span class="pill">passo a passo</span></h2>
-    <p class="small">Use quando houver fecaloma/impactação importante e for necessária resolução no atendimento. As doses de PEG-LAX abaixo já usam o peso informado no item 1.</p>
-    <ul>
-      <li><span class="stepnum">1</span><b>Mini-lax</b> (sorbitol + laurilsulfato de sódio) via retal, agora: <b>1 ou 2 ampolas</b>. Na grande maioria dos casos, fazer <b>apenas 1 ampola</b>. Fazer <b>2 ampolas</b> apenas se fecaloma palpável ou dor importante em criança maior. Tempo de ação: <b>5 a 40 minutos</b>.</li>
-      <li><span class="stepnum">2</span><b>Enema</b> via retal: administrar <b>30 mL do frasco (1/4 do frasco)</b>. Posicionar o paciente deitado sobre o <b>lado esquerdo, joelhos em flexão e braços relaxados</b>; manter a posição até sentir forte vontade de evacuar (geralmente <b>2 a 5 minutos</b>). <b>Prescrever também simeticona.</b></li>
-      <li><span class="stepnum">3</span><b>PEG-LAX</b> (Macrogol 3350 ou 4000) via oral — contraindicado em <b>&lt; 6 meses</b>. Apresentação: 0,5 g/mL. Dose de desimpactação: <b>1,5 g/kg/dia</b>, 1x ao dia, por <b>3 dias ou até esvaziamento completo</b> das fezes retidas. <span id="pegImediatoTxt" class="badge"></span></li>
-    </ul>
-  </section>
-
   <section class="card result" id="resultado">
-    <h2 class="section-title">Resultado e prescrição <span class="pill">saída</span></h2>
+    <h2 class="section-title">Protocolo completo — desimpactação, casa e prescrição <span class="pill">saída</span></h2>
+    <p class="small">Preencha peso e idade no item 1 e clique em <b>Calcular conduta</b>. Todas as doses abaixo (consultório/PS e casa) são calculadas automaticamente pelo peso e pela idade informados.</p>
     <div id="saida"></div>
     <div class="copyline"><button class="primary" onclick="copiarPrescricao()">Copiar prescrição</button><span class="small">Confira apresentações, protocolo local e contraindicações antes de prescrever.</span></div>
-  </section>
-
-  <section class="card">
-    <h2 class="section-title">Tratamento para casa <span class="pill">manutenção</span></h2>
-    <ul>
-      <li><b>1ª e melhor opção — PEG-LAX:</b> dose de desimpactação 1,5 g/kg/dia por 3 dias ou até esvaziamento completo; dose de manutenção <b>0,5 a 1 g/kg/dia</b>.</li>
-      <li><b>Opção 2 — Lactulose</b> (apenas quando PEG-LAX não disponível): contraindicação absoluta — galactosemia. Apresentação 667 mg/mL (frasco 200 mL). Dose: 1 a 3 mL/kg/dia (dose máxima 60 mL/dia = 40 g). Por faixa etária: 1 a 5 anos — 5 a 10 mL VO 1x/dia; 6 a 12 anos — 10 a 15 mL VO 1x/dia; &gt; 12 anos — 15 a 30 mL VO 1x/dia.</li>
-      <li><b>Óleo mineral</b> (última opção em pediatria): contraindicado em &lt; 2 anos e em pacientes com risco de aspiração/disfagia. Dose: 1 a 3 mL/kg/dia à noite (dose máxima 90 mL/dia).</li>
-    </ul>
   </section>
 
   <section class="card">
@@ -169,6 +151,14 @@ function faixaLactulose(meses){
   if(anos<=12) return '10 a 15 mL VO 1x/dia (6 a 12 anos)';
   return '15 a 30 mL VO 1x/dia (> 12 anos)';
 }
+function faixaSimeticona(meses){
+  // Simeticona (Luftal) gotas 75 mg/mL = 25 gotas/mL (frasco 15 mL), 8/8h
+  if(meses===null) return null;
+  const anos = meses/12;
+  if(anos<2) return {faixa:'Lactente (&lt; 2 anos)', gotas:'3 a 5 gotas', mg:'10 a 15 mg'};
+  if(anos<12) return {faixa:'&lt; 12 anos', gotas:'5 a 10 gotas', mg:'15 a 30 mg'};
+  return {faixa:'≥ 12 anos', gotas:'13 gotas (dose fixa)', mg:'40 mg'};
+}
 function calcular(){
   const peso=num('peso'), meses=idadeMeses(), al=checks('alarmes'), ro=checks('roma');
   const imp=val('impactacao'), peg=val('pegDisp'), vo=val('vo'), dor=val('dor'), dias=num('diasSemEvacuar');
@@ -192,26 +182,27 @@ function calcular(){
 
   // Doses
   const pegDesFixo = peso*1.5; // dose de desimpactação do protocolo prático (1,5 g/kg/dia)
-  const pegDesMin=peso*1, pegDesMax=peso*1.5; // faixa de referência SBP
   const pegManMin=peso*0.5, pegManMax=peso*1; // manutenção domiciliar (protocolo prático)
   const pegManIni=peso*0.5;
   const lactMin=peso*1, lactMax=Math.min(peso*3,60); // máx 60 mL/dia
   const faixaLact = faixaLactulose(meses);
   const oleoMin=peso*1, oleoMax=Math.min(peso*3,90); // máx 90 mL/dia
-  const enemaSFMenorMin=peso*5, enemaSFMenorMax=peso*10, enemaSFMaior=peso*6, enemaFosf=peso*2.5;
+  const simFaixa = faixaSimeticona(meses);
 
-  document.getElementById('pegImediatoTxt').innerText = `→ Para ${arred(peso)} kg: ${arred(pegDesFixo)} g/dia`;
-
-  html += `<h3>Desimpactação imediata (consultório/PS)</h3><table><tr><th>Opção</th><th>Dose</th><th>Observação</th></tr>
-  <tr><td>Mini-lax retal</td><td>1 ampola (2 se fecaloma palpável ou dor importante em criança maior)</td><td>Sorbitol + laurilsulfato de sódio. Ação em 5 a 40 min.</td></tr>
-  <tr><td>Enema retal</td><td>30 mL (1/4 do frasco)</td><td>DLE, joelhos em flexão, braços relaxados; manter até forte vontade de evacuar (2 a 5 min). Associar simeticona.</td></tr>
-  <tr><td>PEG-LAX oral</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':arred(pegDesFixo)+' g/dia'}</td><td>1x ao dia por 3 dias ou até esvaziamento completo. Apresentação 0,5 g/mL.</td></tr>
+  // 1) DESIMPACTAÇÃO IMEDIATA (consultório/PS)
+  html += `<h3>1) Desimpactação imediata em consultório/PS</h3>
+  <table><tr><th>Opção</th><th>Dose</th><th>Observação</th></tr>
+  <tr><td><b>Opção 1 (retal, ação rápida)</b><br>Mini-lax</td><td>1 ampola<br><span class="small">(2 ampolas se fecaloma palpável ou dor importante em criança maior — geralmente basta 1)</span></td><td>Sorbitol + laurilsulfato de sódio. Ação em 5 a 40 min.</td></tr>
+  <tr><td><b>Opção 1 (retal, alternativa)</b><br>Enema</td><td>30 mL (1/4 do frasco)</td><td>Decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter posição até forte vontade de evacuar (2 a 5 min). <b>Associar simeticona (dose abaixo).</b></td></tr>
+  <tr><td><b>Opção 2 (oral)</b><br>PEG-LAX</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':`<b>${arred(pegDesFixo)} g/dia</b>`}</td><td>Macrogol 3350/4000, apresentação 0,5 g/mL. 1x ao dia por 3 dias ou até esvaziamento completo.</td></tr>
+  <tr><td><b>Simeticona (Luftal)</b><br>a associar ao enema</td><td>${simFaixa?`<b>${simFaixa.gotas}</b>, VO, 8/8h<br><span class="small">(≈ ${simFaixa.mg} — ${simFaixa.faixa})</span>`:'Informe a idade para calcular'}</td><td>Apresentação 75 mg/mL = 25 gotas (frasco 15 mL). Dose máxima: 166 gotas (500 mg)/dia. Agitar o frasco antes de usar; pode diluir em água/alimento ou ofertar direto na boca.</td></tr>
   </table>`;
 
-  html += `<h3>Tratamento para casa</h3><table><tr><th>Item</th><th>Dose calculada</th><th>Observação</th></tr>
-  <tr><td>PEG-LAX — desimpactação</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':arred(pegDesFixo)+' g/dia por 3 dias ou até esvaziamento completo'}</td><td>1,5 g/kg/dia (referência SBP: 1 a 1,5 g/kg/dia).</td></tr>
+  // 2) TRATAMENTO PARA CASA
+  html += `<h3>2) Tratamento para casa (manutenção)</h3><table><tr><th>Item</th><th>Dose calculada</th><th>Observação</th></tr>
+  <tr><td>PEG-LAX — desimpactação</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':arred(pegDesFixo)+' g/dia por 3 dias ou até esvaziamento completo'}</td><td>1,5 g/kg/dia. 1ª e melhor opção.</td></tr>
   <tr><td>PEG-LAX — manutenção</td><td>${menor6meses?'Contraindicado (&lt;6 meses)':`${arred(pegManMin)} a ${arred(pegManMax)} g/dia<br><b>Sugestão inicial:</b> ${arred(pegManIni)} g/dia`}</td><td>0,5 a 1 g/kg/dia. Ajustar conforme consistência das fezes.</td></tr>
-  <tr><td>Lactulose (se PEG-LAX indisponível)</td><td>${arred(lactMin)} a ${arred(lactMax)} mL/dia (máx. 60 mL/dia)${faixaLact?`<br><b>Faixa etária:</b> ${faixaLact}`:''}</td><td>Contraindicação absoluta: galactosemia. Apresentação 667 mg/mL.</td></tr>
+  <tr><td>Lactulose (apenas se PEG-LAX indisponível)</td><td>${arred(lactMin)} a ${arred(lactMax)} mL/dia (máx. 60 mL/dia = 40 g)${faixaLact?`<br><b>Faixa etária:</b> ${faixaLact}`:''}</td><td>Contraindicação absoluta: galactosemia. Apresentação 667 mg/mL (frasco 200 mL).</td></tr>
   <tr><td>Óleo mineral (última opção)</td><td>${menor2anos?'Contraindicado (&lt;2 anos)':`${arred(oleoMin)} a ${arred(oleoMax)} mL/dia à noite (máx. 90 mL/dia)`}</td><td>Contraindicado em &lt;2 anos e em risco de aspiração/disfagia.</td></tr>
   </table>`;
 
@@ -223,7 +214,7 @@ function calcular(){
       conduta = `Desimpactação: Mini-lax retal (1 ampola; 2 se fecaloma palpável/dor importante) e/ou PEG-LAX ${arred(pegDesFixo)} g/dia VO por 3 dias ou até esvaziamento. Depois manter PEG-LAX ${arred(pegManIni)} g/dia e titular entre ${arred(pegManMin)} e ${arred(pegManMax)} g/dia.`;
       html += `<div class="alert alert-warn"><b>Impactação/fecaloma provável.</b><br>${conduta}</div>`;
     } else {
-      conduta = `Via oral desfavorável ou &lt;6 meses: priorizar desimpactação retal — Mini-lax (1 a 2 ampolas) ou Enema 30 mL (1/4 do frasco), com simeticona associada. Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados, mantendo até forte vontade de evacuar (2 a 5 min).`;
+      conduta = `Via oral desfavorável ou &lt;6 meses: priorizar desimpactação retal — Mini-lax (1 a 2 ampolas) ou Enema 30 mL (1/4 do frasco) + simeticona${simFaixa?` ${simFaixa.gotas} 8/8h`:''}. Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados, mantendo até forte vontade de evacuar (2 a 5 min).`;
       html += `<div class="alert alert-warn"><b>Impactação com via oral desfavorável.</b><br>${conduta}</div>`;
     }
   } else {
@@ -231,22 +222,35 @@ function calcular(){
     html += `<div class="alert alert-ok"><b>Sem impactação importante selecionada.</b><br>${conduta}</div>`;
   }
 
-  const rx = gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo, pegManIni, pegManMin, pegManMax, lactMin, lactMax, faixaLact, oleoMin, oleoMax);
+  // 3) ORIENTAÇÕES PARA CASA
+  html += `<h3>3) Orientações para casa</h3>
+  <div class="alert alert-info"><ul>
+    <li>Manter o laxante por pelo menos <b>2 meses</b>.</li>
+    <li>Todos os sintomas devem estar ausentes por pelo menos <b>1 mês</b> antes de suspender; a retirada do laxante deve ser <b>gradual</b>.</li>
+    <li>Ajustar a dose do laxante de acordo com a consistência das fezes da criança (desmame gradual conforme resposta).</li>
+    <li>Orientar ajustes na dieta: água, frutas com casca/bagaço quando possível, verduras, legumes, feijão, aveia e alimentos integrais.</li>
+    <li>Sentar no vaso 5–10 minutos após as refeições, com apoio para os pés, sem bronca ou punição.</li>
+    <li>Se constipação crônica/funcional: encaminhar ao psicólogo.</li>
+    <li>Retornar antes se febre, vômitos biliosos, distensão importante, dor intensa, sangue importante, piora do estado geral ou não eliminação de gases.</li>
+  </ul></div>`;
+
+  const rx = gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo, pegManIni, pegManMin, pegManMax, lactMin, lactMax, faixaLact, oleoMin, oleoMax, simFaixa);
   html += `<h3>Prescrição sugerida</h3><div class="rx" id="rxText">${rx}</div>`;
-  html += `<div class="small"><b>Nota:</b> laxante por pelo menos 2 meses; sintomas ausentes por pelo menos 1 mês antes de reduzir gradualmente a dose até suspender.</div>`;
   out.innerHTML=html; res.classList.add('show'); window.scrollTo({top:document.getElementById('resultado').offsetTop-10,behavior:'smooth'});
 }
-function gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo, pegManIni, pegManMin, pegManMax, lactMin, lactMax, faixaLact, oleoMin, oleoMax){
+function gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo, pegManIni, pegManMin, pegManMax, lactMin, lactMax, faixaLact, oleoMin, oleoMax, simFaixa){
   const temImp = imp==='sim' || imp==='suspeita';
   let s = `PRESCRIÇÃO / CONDUTA — CONSTIPAÇÃO INTESTINAL\nPeso: ${arred(peso)} kg\n\n`;
   if(temImp){
-    s += `DESIMPACTAÇÃO (consultório/PS)\n`;
+    s += `DESIMPACTAÇÃO (consultório/PS)\nOpção 1 — retal:\n`;
     s += `1) Mini-lax retal: 1 ampola agora (2 ampolas se fecaloma palpável ou dor importante em criança maior). Tempo de ação: 5 a 40 min.\n`;
-    s += `2) Se necessário, Enema retal: 30 mL (1/4 do frasco). Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter até forte vontade de evacuar (2 a 5 min). Associar Simeticona.\n`;
+    s += `   OU Enema retal: 30 mL (1/4 do frasco). Posição: decúbito lateral esquerdo, joelhos em flexão, braços relaxados; manter até forte vontade de evacuar (2 a 5 min).\n`;
+    s += `   Associar: Simeticona (Luftal) ${simFaixa?`${simFaixa.gotas} VO 8/8h (${simFaixa.faixa})`:'— informar idade para dose'}. Apresentação 75 mg/mL = 25 gotas (frasco 15 mL). Dose máxima 166 gotas (500 mg)/dia. Agitar antes de usar; diluir em água/alimento ou ofertar direto na boca.\n\n`;
+    s += `Opção 2 — oral:\n`;
     if(!menor6meses){
-      s += `3) PEG-LAX (Macrogol 3350/4000) VO: ${arred(pegDesFixo)} g/dia, 1x ao dia, por 3 dias ou até esvaziamento completo.\n\n`;
+      s += `2) PEG-LAX (Macrogol 3350/4000) VO: ${arred(pegDesFixo)} g/dia, 1x ao dia, por 3 dias ou até esvaziamento completo.\n\n`;
     } else {
-      s += `3) PEG-LAX contraindicado (<6 meses) — não prescrever via oral nessa faixa etária.\n\n`;
+      s += `2) PEG-LAX contraindicado (<6 meses) — não prescrever via oral nessa faixa etária.\n\n`;
     }
     s += `MANUTENÇÃO (após esvaziamento)\n`;
   } else {
@@ -265,7 +269,7 @@ function gerarRx(peso, meses, imp, peg, vo, menor6meses, menor2anos, pegDesFixo,
   return s;
 }
 function copiarPrescricao(){const el=document.getElementById('rxText'); if(!el) return; navigator.clipboard.writeText(el.innerText).then(()=>alert('Prescrição copiada!'))}
-function limpar(){document.querySelectorAll('input').forEach(i=>{if(i.type==='checkbox') i.checked=false; else i.value=''}); document.querySelectorAll('select').forEach(s=>s.selectedIndex=0); document.getElementById('resultado').classList.remove('show'); document.getElementById('pegImediatoTxt').innerText='';}
+function limpar(){document.querySelectorAll('input').forEach(i=>{if(i.type==='checkbox') i.checked=false; else i.value=''}); document.querySelectorAll('select').forEach(s=>s.selectedIndex=0); document.getElementById('resultado').classList.remove('show');}
 function marcarImpactacao(){document.getElementById('impactacao').value='sim'; ['≤2 evacuações/semana','Dor/dificuldade evacuatória','Fezes volumosas','Massa fecal'].forEach(v=>{const cb=Array.from(document.querySelectorAll('#roma input')).find(x=>x.value===v); if(cb) cb.checked=true;});}
 </script>
 </body>
