@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crise Convulsiva Febril — Guia Clínico Pediátrico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#182430;
+  --ink-soft:#4a5666;
+  --paper:#f4f6f5;
+  --paper-card:#ffffff;
+  --line:#dde3e1;
+  --urgencia:#a8321f;
+  --urgencia-deep:#7c2416;
+  --urgencia-tint:#fbeae6;
+  --investigacao:#0e5e57;
+  --investigacao-deep:#0a4640;
+  --investigacao-tint:#e6f1ef;
+  --amber:#b6791f;
+  --amber-tint:#fbf1e0;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+}
+h1,h2,h3,h4{font-family:'Source Serif 4',serif; margin:0; letter-spacing:-0.01em;}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  font-weight:600;
+}
+a{color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+input[type=number]{font-family:'Inter',sans-serif;}
+
+/* ============ HOME ============ */
+#home{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.home-top{
+  padding:64px 24px 40px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(168,50,31,0.05), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(14,94,87,0.06), transparent 45%);
+}
+.home-top .eyebrow{color:var(--ink-soft);margin-bottom:14px;display:block;}
+.home-top h1{font-size:clamp(1.9rem,4vw,2.9rem);font-weight:700;max-width:820px;margin:0 auto 14px;}
+.home-top p{color:var(--ink-soft);max-width:600px;margin:0 auto;font-size:0.98rem;}
+.home-top .badges{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.badge{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  padding:5px 10px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  color:var(--ink-soft);
+  background:var(--paper-card);
+}
+
+.paths{
+  flex:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--line);
+}
+@media (max-width:820px){.paths{grid-template-columns:1fr;}}
+
+.path-card{
+  padding:52px 44px;
+  background:var(--paper-card);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  position:relative;
+  overflow:hidden;
+  transition:background .25s ease;
+}
+.path-card:hover{background:var(--paper);}
+.path-card .glyph{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:4px;
+  width:fit-content;
+}
+#path-urgencia .glyph{background:var(--urgencia-tint);color:var(--urgencia-deep);}
+#path-investigacao .glyph{background:var(--investigacao-tint);color:var(--investigacao-deep);}
+.path-card h2{font-size:2rem;font-weight:700;}
+#path-urgencia h2{color:var(--urgencia-deep);}
+#path-investigacao h2{color:var(--investigacao-deep);}
+.path-card .desc{color:var(--ink-soft);font-size:0.95rem;max-width:420px;}
+.path-card ul{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+.path-card li{font-size:0.88rem;color:var(--ink);display:flex;gap:10px;align-items:baseline;}
+.path-card li::before{content:'—';color:var(--ink-soft);flex-shrink:0;}
+.enter-btn{
+  margin-top:auto;
+  align-self:flex-start;
+  border:none;
+  padding:13px 26px;
+  border-radius:3px;
+  font-weight:700;
+  font-size:0.9rem;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+#path-urgencia .enter-btn{background:var(--urgencia);}
+#path-urgencia .enter-btn:hover{background:var(--urgencia-deep);}
+#path-investigacao .enter-btn{background:var(--investigacao);}
+#path-investigacao .enter-btn:hover{background:var(--investigacao-deep);}
+.home-foot{
+  text-align:center;
+  padding:18px;
+  font-size:0.72rem;
+  color:var(--ink-soft);
+  border-top:1px solid var(--line);
+}
+
+/* ============ SHARED APP SHELL ============ */
+.view{display:none;min-height:100vh;}
+.view.active{display:block;}
+.app-header{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(6px);
+}
+.app-header .brand{display:flex;align-items:center;gap:12px;}
+.app-header .brand-mark{
+  width:34px;height:34px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-family:var(--mono);font-weight:700;font-size:0.85rem;
+}
+.app-header .brand-name{font-weight:700;font-size:0.95rem;}
+.app-header .brand-sub{font-size:0.72rem;color:var(--ink-soft);}
+.back-btn{
+  border:1px solid var(--line);background:var(--paper-card);
+  padding:8px 16px;border-radius:4px;font-size:0.82rem;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+#view-urgencia .app-header{background:rgba(251,234,230,0.55);}
+#view-urgencia .brand-mark{background:var(--urgencia);}
+#view-urgencia .brand-name{color:var(--urgencia-deep);}
+#view-investigacao .app-header{background:rgba(230,241,239,0.55);}
+#view-investigacao .brand-mark{background:var(--investigacao);}
+#view-investigacao .brand-name{color:var(--investigacao-deep);}
+
+.tabs{
+  display:flex;gap:2px;padding:0 24px;
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;
+  background:var(--paper-card);
+}
+.tab-btn{
+  border:none;background:none;padding:14px 16px;font-size:0.82rem;font-weight:600;
+  color:var(--ink-soft);border-bottom:2px solid transparent;white-space:nowrap;
+}
+#view-urgencia .tab-btn.active{color:var(--urgencia-deep);border-bottom-color:var(--urgencia);}
+#view-investigacao .tab-btn.active{color:var(--investigacao-deep);border-bottom-color:var(--investigacao);}
+
+.content{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
+.panel{display:none;}
+.panel.active{display:block;animation:fadein .3s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.card{
+  background:var(--paper-card);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:26px 28px;
+  margin-bottom:20px;
+}
+.card h3{font-size:1.25rem;margin-bottom:14px;}
+.card h4{font-size:1rem;margin:18px 0 8px;font-family:'Inter',sans-serif;font-weight:700;}
+.card p{margin:0 0 10px;font-size:0.92rem;color:var(--ink);}
+.card p.muted{color:var(--ink-soft);font-size:0.85rem;}
+
+.section-title{
+  font-size:1.6rem;margin-bottom:6px;
+}
+.section-lede{color:var(--ink-soft);font-size:0.92rem;margin-bottom:26px;max-width:640px;}
+
+/* timeline for emergency flow */
+.timeline{position:relative;padding-left:28px;border-left:3px solid var(--urgencia);margin:20px 0;}
+.tl-step{position:relative;padding-bottom:34px;}
+.tl-step:last-child{padding-bottom:0;}
+.tl-step::before{
+  content:'';position:absolute;left:-35px;top:2px;width:14px;height:14px;border-radius:50%;
+  background:var(--urgencia);border:3px solid var(--paper-card);box-shadow:0 0 0 2px var(--urgencia);
+}
+.tl-time{font-family:var(--mono);font-size:0.72rem;font-weight:700;color:var(--urgencia-deep);text-transform:uppercase;letter-spacing:0.06em;}
+.tl-step h4{margin:4px 0 8px;font-size:1.05rem;}
+.tl-body{background:var(--urgencia-tint);border-radius:6px;padding:14px 16px;font-size:0.88rem;}
+.tl-body ul{margin:6px 0;padding-left:18px;}
+.tl-body li{margin-bottom:4px;}
+
+/* dose calc */
+.dose-input{
+  display:flex;align-items:center;gap:12px;background:var(--paper);
+  border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin-bottom:18px;
+}
+.dose-input label{font-weight:700;font-size:0.9rem;}
+.dose-input input{
+  width:110px;padding:9px 12px;border:1px solid var(--line);border-radius:4px;font-size:1rem;font-weight:600;
+}
+.dose-input span.unit{color:var(--ink-soft);font-size:0.85rem;}
+.dose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media (max-width:640px){.dose-grid{grid-template-columns:1fr;}}
+.dose-card{
+  border:1px solid var(--line);border-radius:6px;padding:16px 18px;background:var(--paper);
+}
+.dose-card.line1{border-left:4px solid var(--urgencia);}
+.dose-card.line2{border-left:4px solid var(--amber);}
+.dose-card.line3{border-left:4px solid var(--urgencia-deep);background:#f7e2de;}
+.dose-card .drug{font-weight:700;font-size:0.95rem;margin-bottom:2px;}
+.dose-card .route{font-family:var(--mono);font-size:0.68rem;color:var(--ink-soft);text-transform:uppercase;margin-bottom:8px;display:block;}
+.dose-result{font-family:var(--mono);font-size:1.3rem;font-weight:700;color:var(--urgencia-deep);}
+.dose-max{font-size:0.76rem;color:var(--ink-soft);margin-top:2px;}
+.dose-card.line2 .dose-result{color:var(--amber);}
+
+/* alert boxes */
+.alert{border-radius:6px;padding:14px 18px;font-size:0.88rem;margin:14px 0;display:flex;gap:12px;}
+.alert .ico{font-size:1.1rem;line-height:1;flex-shrink:0;}
+.alert.danger{background:var(--urgencia-tint);border:1px solid #f0c7bd;color:var(--urgencia-deep);}
+.alert.info{background:var(--investigacao-tint);border:1px solid #c3e0db;color:var(--investigacao-deep);}
+.alert.warn{background:var(--amber-tint);border:1px solid #edd6a3;color:var(--amber);}
+
+/* classifier tool */
+.q-block{border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:12px;background:var(--paper);}
+.q-block .q-text{font-weight:600;font-size:0.9rem;margin-bottom:10px;}
+.opt-row{display:flex;gap:10px;flex-wrap:wrap;}
+.opt-btn{
+  border:1px solid var(--line);background:var(--paper-card);padding:9px 16px;border-radius:20px;
+  font-size:0.84rem;font-weight:600;color:var(--ink-soft);
+}
+.opt-btn.selected{background:var(--investigacao);border-color:var(--investigacao);color:#fff;}
+#view-investigacao .opt-btn.selected{background:var(--investigacao);border-color:var(--investigacao);}
+
+.result-banner{
+  margin-top:18px;border-radius:8px;padding:20px 22px;display:none;
+}
+.result-banner.show{display:block;}
+.result-banner.simples{background:var(--investigacao-tint);border:1px solid #bfe0da;}
+.result-banner.complexa{background:var(--amber-tint);border:1px solid #edd6a3;}
+.result-banner h4{font-size:1.15rem;margin-bottom:6px;}
+.result-banner.simples h4{color:var(--investigacao-deep);}
+.result-banner.complexa h4{color:var(--amber);}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:10px 0;}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);}
+th{font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-soft);font-weight:600;}
+tr:last-child td{border-bottom:none;}
+
+/* decision tree (investigation) */
+.dtree{display:flex;flex-direction:column;gap:0;}
+.dt-node{
+  border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:8px;background:var(--paper);
+  cursor:pointer;
+}
+.dt-node.active{border-color:var(--investigacao);background:var(--investigacao-tint);}
+.dt-node .dt-q{font-weight:700;font-size:0.9rem;}
+.dt-branches{display:flex;gap:8px;margin-top:10px;}
+.dt-out{
+  display:none;margin-top:10px;padding:14px 16px;border-radius:6px;background:var(--investigacao-tint);
+  border:1px solid #bfe0da;font-size:0.88rem;
+}
+.dt-out.show{display:block;}
+
+.chip-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.chip{
+  font-size:0.78rem;padding:6px 12px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);color:var(--ink-soft);
+}
+
+.footnote{font-size:0.74rem;color:var(--ink-soft);margin-top:30px;border-top:1px solid var(--line);padding-top:14px;}
+
+.pulse-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--urgencia);
+  animation:pulse 1.4s infinite;margin-right:6px;
+}
+@keyframes pulse{0%{opacity:1;}50%{opacity:0.3;}100%{opacity:1;}}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ HOME ============================================================ -->
+<div id="home">
+  <div class="home-top">
+    <span class="eyebrow">Guia clínico interativo · Pediatria</span>
+    <h1>Crise Convulsiva Febril</h1>
+    <p>Classificação, manejo agudo e investigação da criança de 6 a 60 meses com crise febril — baseado em SBP, Hospital Albert Einstein e literatura recente (2024–2026).</p>
+    <div class="badges">
+      <span class="badge">SBP · Doc. Científico nº206</span>
+      <span class="badge">Einstein · Convulsão Febril Benigna</span>
+      <span class="badge">Einstein · Estado de Mal Epiléptico</span>
+      <span class="badge">JMBR 2026 · CF vs Epilepsia</span>
+    </div>
+  </div>
+
+  <div class="paths">
+    <div class="path-card" id="path-urgencia">
+      <span class="glyph">🚨 &nbsp;Fluxo agudo</span>
+      <h2>Na Urgência</h2>
+      <p class="desc">A criança está convulsionando agora ou acabou de convulsionar. Cronômetro, estabilização e calculadora de doses por peso, minuto a minuto.</p>
+      <ul>
+        <li>Cronômetro de crise + estabilização (ABC, MOV, glicemia)</li>
+        <li>Doses calculadas por peso: 1ª, 2ª e 3ª linha</li>
+        <li>Critérios de internação e UTI</li>
+      </ul>
+      <button class="enter-btn" onclick="goTo('urgencia')">Entrar no fluxo de urgência →</button>
+    </div>
+    <div class="path-card" id="path-investigacao">
+      <span class="glyph">🔎 &nbsp;Fluxo ambulatorial</span>
+      <h2>Investigação &amp; Conduta</h2>
+      <p class="desc">A crise já cessou. Classifique simples vs. complexa, decida exames, diferencie de epilepsia e planeje alta e seguimento.</p>
+      <ul>
+        <li>Classificador interativo simples × complexa</li>
+        <li>Árvore de decisão: LP, EEG, neuroimagem, laboratório</li>
+        <li>CF vs. epilepsia · fatores de risco · alta</li>
+      </ul>
+      <button class="enter-btn" onclick="goTo('investigacao')">Entrar na investigação →</button>
+    </div>
+  </div>
+  <div class="home-foot">Ferramenta de apoio à decisão clínica — não substitui o julgamento do profissional de saúde à beira do leito.</div>
+</div>
+
+<!-- ============================================================ URGÊNCIA ============================================================ -->
+<div class="view" id="view-urgencia">
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-mark">🚨</div>
+      <div>
+        <div class="brand-name">Fluxo de Urgência</div>
+        <div class="brand-sub">Crise convulsiva febril / estado de mal</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="goHome()">← Início</button>
+  </div>
+  <div class="tabs" id="tabs-urg">
+    <button class="tab-btn active" data-panel="u-cronometro">Cronômetro &amp; estabilização</button>
+    <button class="tab-btn" data-panel="u-doses">Calculadora de doses</button>
+    <button class="tab-btn" data-panel="u-fluxograma">Fluxograma completo</button>
+    <button class="tab-btn" data-panel="u-alta">Internação &amp; UTI</button>
+  </div>
+
+  <div class="content">
+
+    <!-- CRONÔMETRO -->
+    <div class="panel active" id="u-cronometro">
+      <h2 class="section-title">Cronômetro da crise</h2>
+      <p class="section-lede">A crise tônico-clônica com duração &gt;5 minutos pode ultrapassar os mecanismos de homeostase e evoluir para estado de mal epiléptico. Use o cronômetro para guiar o escalonamento terapêutico.</p>
+
+      <div class="card" style="text-align:center;">
+        <div id="timerDisplay" style="font-family:var(--mono);font-size:3.4rem;font-weight:700;color:var(--urgencia-deep);">00:00</div>
+        <div id="timerPhase" style="font-family:var(--mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin-bottom:16px;">Aguardando início</div>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button class="enter-btn" style="background:var(--urgencia);" onclick="timerStart()">▶ Iniciar</button>
+          <button class="enter-btn" style="background:var(--ink-soft);" onclick="timerReset()">↺ Zerar</button>
+        </div>
+      </div>
+
+      <div class="alert danger"><span class="ico">⚠️</span><div><strong>Evitar investigação excessiva de desencadeantes</strong> em pacientes com diagnóstico prévio de epilepsia. Guiar exames pelos sinais/sintomas: infecção, intoxicação, distúrbio hidroeletrolítico, erro inato do metabolismo, trauma, neoplasia de SNC, uso incorreto de anticonvulsivante.</div></div>
+
+      <div class="card">
+        <h3>0–5 min · Estabilização</h3>
+        <table>
+          <tr><td>Alocar</td><td>Sala de emergência</td></tr>
+          <tr><td>Monitorização</td><td>Contínua: FC, PA, SatO₂</td></tr>
+          <tr><td>Posição</td><td>Decúbito lateral, com proteção da cabeça</td></tr>
+          <tr><td>Vias aéreas</td><td>O₂ em máscara não reinalante — alvo SatO₂ 92–98%; garantir bolsa-valva-máscara (Ambu) disponível</td></tr>
+          <tr><td>Acesso</td><td>Puncionar acesso venoso periférico (AVP)</td></tr>
+          <tr><td>Glicemia</td><td>Glicemia capilar — corrigir hipoglicemia (DX &lt;60–70) com 2–5 mL/kg SG25%</td></tr>
+          <tr><td>Hipotensão</td><td>Corrigir se PAS &lt;p5 com expansão 20 mL/kg SF 0,9%</td></tr>
+          <tr><td>SNC</td><td>Observar sinais de complicação (pupilas, tríade de Cushing)</td></tr>
+        </table>
+        <p class="muted">Coletar líquor se sinais de irritação meníngea, toxemia, pós-ictal prolongado ou rebaixamento persistente do nível de consciência. Se suspeita de hipertensão intracraniana, TC de crânio antes da punção lombar.</p>
+      </div>
+
+      <p class="muted" style="text-align:center;">Vá para a aba <strong>Calculadora de doses</strong> para calcular 1ª, 2ª e 3ª linha pelo peso da criança.</p>
+    </div>
+
+    <!-- DOSES -->
+    <div class="panel" id="u-doses">
+      <h2 class="section-title">Calculadora de doses por peso</h2>
+      <p class="section-lede">Informe o peso para calcular automaticamente as doses de cada linha terapêutica. Não é recomendado usar mais de duas doses consecutivas de benzodiazepínico.</p>
+
+      <div class="dose-input">
+        <label for="pesoUrg">Peso da criança</label>
+        <input type="number" id="pesoUrg" placeholder="ex: 14" min="0" step="0.1" oninput="calcDoses()">
+        <span class="unit">kg</span>
+      </div>
+
+      <div class="alert info"><span class="ico">💉</span><div><strong>Doses práticas ("macete" em mL)</strong> calculadas a partir das apresentações comerciais mais usadas no pronto-socorro. Confira sempre a concentração da ampola disponível na sua unidade antes de administrar.</div></div>
+
+      <h4>1ª linha (5–20 min) — Benzodiazepínico</h4>
+      <p class="muted">Dose completa não fracionada, EV puro (sem diluir). Só administrar até <strong>2 vezes</strong>; na persistência após a 2ª dose, escalonar para 2ª linha.</p>
+      <div class="dose-grid">
+        <div class="dose-card line1">
+          <span class="drug">Midazolam 5 mg/mL</span><span class="route">EV puro (preferencial) — 0,2 mg/kg</span>
+          <div class="dose-result" id="d-midaz-ev">— mg</div>
+          <div class="dose-result" id="d-midaz-ev-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">Macete: Peso × 0,04 mL · máx. 10 mg/dose (2 mL)</div>
+        </div>
+        <div class="dose-card line1">
+          <span class="drug">Diazepam 5 mg/mL</span><span class="route">EV puro (preferencial) — 0,2 mg/kg</span>
+          <div class="dose-result" id="d-diaz-ev">— mg</div>
+          <div class="dose-result" id="d-diaz-ev-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">Macete: Peso × 0,04 mL · máx. 10 mg/dose (2 mL)</div>
+        </div>
+        <div class="dose-card line1">
+          <span class="drug">Midazolam 5 mg/mL</span><span class="route">IM — sem acesso venoso</span>
+          <div class="dose-result" id="d-midaz-im">— mg</div>
+          <div class="dose-result" id="d-midaz-im-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">0,2 mg/kg/dose · máx. 10 mg/dose (2 mL)</div>
+        </div>
+        <div class="dose-card line1">
+          <span class="drug">Midazolam 5 mg/mL</span><span class="route">Intranasal — sem acesso venoso</span>
+          <div class="dose-result" id="d-midaz-in">— mg</div>
+          <div class="dose-result" id="d-midaz-in-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">0,3 mg/kg/dose · máx. 10 mg/dose</div>
+        </div>
+        <div class="dose-card line1">
+          <span class="drug">Diazepam 5 mg/mL</span><span class="route">Via retal — sem acesso venoso (dose dobrada)</span>
+          <div class="dose-result" id="d-diaz-vr">— mL</div>
+          <div class="dose-max">Dobro do volume EV · máx. 20 mg/dose</div>
+        </div>
+      </div>
+      <div class="alert danger" style="margin-top:14px;"><span class="ico">📋</span><div><strong>Exemplo pronto (6 anos, 20 kg):</strong> Midazolam 5 mg/mL — administrar <strong>0,8 mL</strong> via EV bolus AGORA, seguido de flush SF 0,9% 5 mL, se crise &gt;5 min. Repetir após 5 min, se necessário.</div></div>
+
+      <h4>2ª linha (20–40 min) — persistência após 2ª dose de BZD (Estado de Mal Epiléptico)</h4>
+      <p class="muted">Fenitoína é 1ª escolha fora do período neonatal. Fenobarbital se fenitoína indisponível ou uso crônico prévio de fenitoína.</p>
+      <div class="dose-grid">
+        <div class="dose-card line2">
+          <span class="drug">Fenitoína 50 mg/mL</span><span class="route">EV ataque — diluir em SF 0,9% 100 mL, correr em 20 min</span>
+          <div class="dose-result" id="d-fenit-ataque">— mg</div>
+          <div class="dose-result" id="d-fenit-ataque-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">Macete: Peso × 0,4 mL · 20 mg/kg · máx. 1500 mg/dose (30 mL)</div>
+        </div>
+        <div class="dose-card line2">
+          <span class="drug">Fenitoína</span><span class="route">Manutenção — fracionada em 2–3 doses, iniciar 24h após o ataque</span>
+          <div class="dose-result" id="d-fenit-manut">— mg/dia</div>
+          <div class="dose-max">5–10 mg/kg/dia</div>
+        </div>
+        <div class="dose-card line2">
+          <span class="drug">Fenobarbital 100 mg/mL</span><span class="route">EV ataque</span>
+          <div class="dose-result" id="d-feno-ataque">— mg</div>
+          <div class="dose-result" id="d-feno-ataque-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">Macete: Peso × 0,2 mL · 20 mg/kg · máx. total 40 mg/kg (1000 mg/dose)</div>
+        </div>
+        <div class="dose-card line2">
+          <span class="drug">Fenobarbital</span><span class="route">Manutenção — iniciar 24h após ataque</span>
+          <div class="dose-result" id="d-feno-manut">— mg/dia</div>
+          <div class="dose-max">5–10 mg/kg/dia</div>
+        </div>
+      </div>
+      <div class="alert warn"><span class="ico">⚠️</span><div><strong>Atenção:</strong> risco de depressão respiratória se fenobarbital for usado após midazolam. Em <strong>recém-nascidos</strong>, a droga de escolha é o <strong>fenobarbital</strong> — ataque 20 mg/kg, EV em 10–15 min (este fluxo não se aplica a RN para as demais linhas).</div></div>
+      <div class="alert danger" style="margin-top:10px;"><span class="ico">📋</span><div><strong>Exemplo pronto (6 anos, 20 kg), se estado de mal:</strong> acrescentar Fenitoína 50 mg/mL — diluir <strong>8 mL</strong> em SF 0,9% 100 mL e infundir via EV em 20 minutos.</div></div>
+
+      <h4>3ª linha (&gt;60 min) — crise refratária</h4>
+      <div class="dose-grid">
+        <div class="dose-card line3">
+          <span class="drug">Midazolam contínuo</span><span class="route">Infusão EV</span>
+          <div class="dose-result" id="d-midaz-continuo">— mcg/min</div>
+          <div class="dose-max">3–20 mcg/kg/min</div>
+        </div>
+        <div class="dose-card line3">
+          <span class="drug">Conduta obrigatória</span><span class="route">—</span>
+          <div style="font-size:0.85rem;line-height:1.5;">Garantir via aérea definitiva · acionar retaguarda de neurologia · solicitar leito de UTI pediátrica</div>
+        </div>
+      </div>
+
+      <div class="alert warn"><span class="ico">⏱️</span><div><strong>Indicador de qualidade:</strong> administrar a 1ª dose de anticonvulsivante em até 5 minutos da chegada à unidade.</div></div>
+
+      <div class="card" style="margin-top:22px;">
+        <h3>Suporte associado, se necessário</h3>
+        <table>
+          <tr><td>Hipoglicemia</td><td>Glicose 25% — 2,5–5 mL/kg (ex. 20kg: 50 mL) via EV se Dx &lt;70</td></tr>
+          <tr><td>Hipotensão</td><td>Ringer Lactato 10–20 mL/kg via EV em 20 min, se PAS abaixo do p5</td></tr>
+          <tr><td>Oxigenoterapia</td><td>Máscara não reinalante — alvo SatO₂ 92–98%</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- FLUXOGRAMA -->
+    <div class="panel" id="u-fluxograma">
+      <h2 class="section-title">Fluxograma completo por tempo</h2>
+      <p class="section-lede">Este fluxograma não se aplica a pacientes recém-nascidos.</p>
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-time">0 – 5 min</div>
+          <h4>Estabilização</h4>
+          <div class="tl-body">Sala de emergência · MOV · dextro · exames laboratoriais se necessário · corrigir hipotensão/hipoglicemia · avaliar sinais de complicação de SNC</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-time">5 – 20 min</div>
+          <h4>1ª linha — Benzodiazepínico</h4>
+          <div class="tl-body">
+            <strong>Com AVP:</strong> Midazolam 0,2 mg/kg EV (máx 10 mg) ou Diazepam 0,2 mg/kg EV (máx 10 mg)<br>
+            <strong>Sem AVP:</strong> Midazolam 0,2 mg/kg IM ou 0,3 mg/kg intranasal (máx 10 mg) ou Diazepam 0,3–0,5 mg/kg via retal (máx 20 mg)<br>
+            Máximo de 2 doses consecutivas. Tentar AVP em paralelo.
+          </div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-time">20 – 40 min</div>
+          <h4>2ª linha — se crise persiste</h4>
+          <div class="tl-body">
+            <strong>Fenitoína</strong> — ataque 20 mg/kg (5 mg/kg se uso crônico), manutenção 5–10 mg/kg/dia após 12h<br>
+            <strong>Fenobarbital</strong> (alternativa) — ataque 20 mg/kg (5–10 mg/kg se uso crônico), manutenção 5–10 mg/kg/dia após 24h
+          </div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-time">&gt; 60 min</div>
+          <h4>3ª linha — crise refratária</h4>
+          <div class="tl-body">
+            Midazolam contínuo 3–20 mcg/kg/min · garantir via aérea · acionar retaguarda de neurologia · internação em UTI pediátrica
+          </div>
+        </div>
+      </div>
+      <div class="footnote">Fonte: Hospital Israelita Albert Einstein — Guia do Episódio de Cuidado: Crise Epiléptica e Estado de Mal Epiléptico Convulsivo em Crianças e Adolescentes (fluxo UPAs), atualizado 17/09/2025.</div>
+    </div>
+
+    <!-- INTERNAÇÃO -->
+    <div class="panel" id="u-alta">
+      <h2 class="section-title">Internação e UTI</h2>
+      <div class="card">
+        <h3>Critérios de internação (enfermaria)</h3>
+        <p>A maioria das crianças retorna gradualmente ao nível normal de consciência dentro de 1 hora. Esse período de observação deve ser usado para uma anamnese mais detalhada, permitindo manejo mais adequado.</p>
+      </div>
+      <div class="card">
+        <h3>Critérios de internação em UTI</h3>
+        <p><strong>Estado de mal epiléptico</strong> (crise ≥30 min contínua, ou crises recorrentes sem recuperação da consciência entre elas por &gt;30 min; operacionalmente, tratada já a partir de &gt;5 min).</p>
+      </div>
+      <div class="card">
+        <h3>Critérios de alta</h3>
+        <p>Criança desperta, ativa, sem déficit neurológico.</p>
+        <h4>Após crise febril benigna</h4>
+        <p class="muted">Não há recomendação de terapêutica anticonvulsivante contínua ou intermitente após uma ou mais convulsões febris benignas. Não há necessidade de exames de controle. Seguimento ambulatorial de rotina com pediatra para acompanhar recorrências.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ INVESTIGAÇÃO ============================================================ -->
+<div class="view" id="view-investigacao">
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-mark">🔎</div>
+      <div>
+        <div class="brand-name">Investigação &amp; Conduta</div>
+        <div class="brand-sub">Classificação, exames e seguimento</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="goHome()">← Início</button>
+  </div>
+  <div class="tabs" id="tabs-inv">
+    <button class="tab-btn active" data-panel="i-classificador">Classificador</button>
+    <button class="tab-btn" data-panel="i-exames">Indicação de exames</button>
+    <button class="tab-btn" data-panel="i-diferencial">CF × Epilepsia</button>
+    <button class="tab-btn" data-panel="i-risco">Fatores de risco</button>
+    <button class="tab-btn" data-panel="i-febre">Febre &amp; antitérmicos</button>
+  </div>
+
+  <div class="content">
+
+    <!-- CLASSIFICADOR -->
+    <div class="panel active" id="i-classificador">
+      <h2 class="section-title">Classificador: simples × complexa</h2>
+      <p class="section-lede">Crise convulsiva que ocorre em criança de 6 a 60 meses, na vigência de febre (≥38°C), sem evidência de infecção/inflamação do SNC, sem alteração metabólica e sem história prévia de crise afebril.</p>
+
+      <div class="q-block">
+        <div class="q-text">1. Duração da crise</div>
+        <div class="opt-row">
+          <button class="opt-btn" data-q="duracao" data-v="curta" onclick="selectOpt(this)">&lt; 15 minutos</button>
+          <button class="opt-btn" data-q="duracao" data-v="longa" onclick="selectOpt(this)">≥ 15 minutos</button>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-text">2. Tipo de crise</div>
+        <div class="opt-row">
+          <button class="opt-btn" data-q="tipo" data-v="generalizada" onclick="selectOpt(this)">Tônico-clônica generalizada</button>
+          <button class="opt-btn" data-q="tipo" data-v="focal" onclick="selectOpt(this)">Focal / início focal</button>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-text">3. Recorrência em 24 horas</div>
+        <div class="opt-row">
+          <button class="opt-btn" data-q="recorrencia" data-v="nao" onclick="selectOpt(this)">Não — episódio único</button>
+          <button class="opt-btn" data-q="recorrencia" data-v="sim" onclick="selectOpt(this)">Sim — recorreu em &lt;24h</button>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-text">4. Pós-ictal / exame neurológico</div>
+        <div class="opt-row">
+          <button class="opt-btn" data-q="posictal" data-v="normal" onclick="selectOpt(this)">Recuperação espontânea e completa</button>
+          <button class="opt-btn" data-q="posictal" data-v="alterado" onclick="selectOpt(this)">Pós-ictal prolongado / déficit focal (ex: Paralisia de Todd)</button>
+        </div>
+      </div>
+
+      <div class="result-banner" id="classResult">
+        <h4 id="classTitle"></h4>
+        <p id="classText" style="font-size:0.9rem;"></p>
+      </div>
+    </div>
+
+    <!-- EXAMES -->
+    <div class="panel" id="i-exames">
+      <h2 class="section-title">Árvore de decisão: quais exames pedir?</h2>
+      <p class="section-lede">Em geral, a crise febril simples <strong>não requer investigação secundária</strong>. A decisão de exames deve ser individualizada.</p>
+
+      <div class="card">
+        <h3>Regra geral por tipo de exame</h3>
+        <table>
+          <tr><th>Exame</th><th>Recomendação</th></tr>
+          <tr><td>EEG</td><td>Não deve ser realizado em crianças neurologicamente normais — baixa acurácia preditiva para recorrência mesmo em crises simples</td></tr>
+          <tr><td>Neuroimagem (TC/RM)</td><td>Não deve ser realizada rotineiramente; TC não indicada em quadros simples nem complexos</td></tr>
+          <tr><td>Hemograma / eletrólitos (Ca, P, Mg, glicemia)</td><td>Não devem ser realizados rotineiramente; solicitar apenas se histórico de vômitos, diarreia, ingestão anormal de líquidos ou achados de desidratação/edema</td></tr>
+          <tr><td>Punção lombar</td><td>Ver árvore abaixo</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Punção lombar — quando considerar</h3>
+        <div class="chip-list">
+          <span class="chip">História ou exame físico sugerem infecção do SNC</span>
+          <span class="chip">6–12 meses sem vacinação ou vacinação incompleta p/ Hib ou pneumococo</span>
+          <span class="chip">Criança em uso de antimicrobianos (pode mascarar meningite)</span>
+          <span class="chip">Sinais de irritação meníngea / toxemia</span>
+          <span class="chip">Pós-ictal prolongado ou rebaixamento persistente de consciência</span>
+        </div>
+        <p class="muted">Em suspeita de hipertensão intracraniana, realizar TC de crânio antes da punção lombar.</p>
+      </div>
+
+      <div class="card">
+        <h3>Crise complexa</h3>
+        <p>Uma criança sem histórico inicial de convulsão febril e com apresentação complexa exige conduta individualizada — maior probabilidade de etiologia alternativa (ex.: meningite). Avaliação de crises complexas geralmente não se resolve em ambulatório e requer indicação/consulta com neurologista pediátrico.</p>
+      </div>
+
+      <div class="card">
+        <h3>Avaliação da criança febril (contexto geral)</h3>
+        <p class="muted">Sinais de alerta a observar na avaliação inicial (protocolo semáforo — verde/amarelo/vermelho):</p>
+        <table>
+          <tr><th>Parâmetro</th><th>Alerta</th></tr>
+          <tr><td>FC</td><td>&lt;12m ≥160 · 12–24m ≥150 · 2–5a ≥140 bpm</td></tr>
+          <tr><td>FR</td><td>&gt;50 irpm (6–12m) · &gt;40 irpm (&gt;12m)</td></tr>
+          <tr><td>SatO₂</td><td>≤95%</td></tr>
+          <tr><td>Enchimento capilar</td><td>&gt;3 segundos</td></tr>
+          <tr><td>Hidratação</td><td>Avaliar mucosas e turgor da pele</td></tr>
+          <tr><td>Responsividade</td><td>Grau de atividade e resposta a estímulos</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- DIFERENCIAL -->
+    <div class="panel" id="i-diferencial">
+      <h2 class="section-title">Convulsão febril × Epilepsia</h2>
+      <div class="card">
+        <table>
+          <tr><th></th><th>Crise convulsiva febril</th><th>Epilepsia</th></tr>
+          <tr><td>Definição</td><td>Crise associada à febre, 6m–5/6 anos, sem infecção de SNC ou distúrbio metabólico</td><td>Predisposição a crises não provocadas, por alteração crônica da atividade elétrica cerebral</td></tr>
+          <tr><td>Curso</td><td>Benigno, autolimitado</td><td>Crônica, geralmente requer tratamento contínuo</td></tr>
+          <tr><td>EEG de rotina</td><td>Baixa acurácia preditiva — não indicado</td><td>Parte da investigação diagnóstica (descargas epileptiformes)</td></tr>
+          <tr><td>Tratamento</td><td>Sem anticonvulsivante contínuo</td><td>Monoterapia inicial (ex: carbamazepina, valproato, fenitoína)</td></tr>
+        </table>
+      </div>
+      <div class="alert info"><span class="ico">📊</span><div><strong>Risco de epilepsia após crise febril:</strong> ~1–2% na população geral após CF simples (próximo à população geral); maior nas complexas, recorrentes ou com história familiar/atraso do desenvolvimento. Em crianças &gt;5 anos, um estudo turco descreveu risco de até 14% (vs. 2–5% relatado em crianças mais novas).</div></div>
+      <div class="card">
+        <h3>Fatores associados à evolução para epilepsia</h3>
+        <div class="chip-list">
+          <span class="chip">Início da CF antes de 12 meses</span>
+          <span class="chip">Crises prolongadas</span>
+          <span class="chip">Ocorrência precoce após início da febre</span>
+          <span class="chip">Febre &lt;39°C no momento da crise</span>
+          <span class="chip">Atraso no neurodesenvolvimento</span>
+          <span class="chip">Crises complexas</span>
+          <span class="chip">Alterações em EEG (quando realizado)</span>
+          <span class="chip">História familiar de epilepsia</span>
+        </div>
+      </div>
+      <div class="footnote">Fonte: Moura et al. Convulsão febril infantil versus epilepsia: critérios clínicos e implicações diagnósticas. Journal of Medical and Biosciences Research, 2026;3(3):151–157.</div>
+    </div>
+
+    <!-- FATORES DE RISCO -->
+    <div class="panel" id="i-risco">
+      <h2 class="section-title">Fatores de risco para recorrência da crise febril</h2>
+      <div class="card">
+        <div class="chip-list">
+          <span class="chip">Idade &lt; 18 meses no primeiro episódio</span>
+          <span class="chip">Temperatura &lt; 39°C na primeira crise</span>
+          <span class="chip">Intervalo &lt; 1 hora entre início da febre e a crise</span>
+          <span class="chip">Parente de 1º grau com história de crise febril</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Uso de antitérmico para prevenção de crise febril</h3>
+        <p>Metanálise de 3 estudos (540 crianças, 6–72 meses, com CF prévias) não encontrou diferença estatisticamente significativa na taxa de convulsões febris entre antipirético profilático e placebo (OR 0,9; IC95% 0,57–1,43). <strong>Uso preventivo de antitérmico não é recomendado</strong> para prevenção de crise febril (nível de evidência I, força de recomendação E).</p>
+      </div>
+      <div class="card">
+        <h3>Retorno ambulatorial</h3>
+        <p>Crianças que apresentam crise febril devem seguir consultas de rotina com pediatra, para acompanhar recorrências e necessidade de avaliação por especialista.</p>
+      </div>
+    </div>
+
+    <!-- FEBRE / ANTITÉRMICOS -->
+    <div class="panel" id="i-febre">
+      <h2 class="section-title">Febre e antitérmicos — contexto geral</h2>
+      <p class="section-lede">A febre não é doença, é um sinal. A intensidade da febre não deve ser usada como indicador isolado de gravidade (exceto em menores de 3 meses com leucocitose ou PCR elevada).</p>
+
+      <div class="dose-input">
+        <label for="pesoInv">Peso da criança</label>
+        <input type="number" id="pesoInv" placeholder="ex: 14" min="0" step="0.1" oninput="calcAntitermico()">
+        <span class="unit">kg</span>
+      </div>
+
+      <div class="dose-grid">
+        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
+          <span class="drug">Paracetamol 200 mg/mL gotas</span><span class="route">&gt; 3 meses · 4–6h</span>
+          <div class="dose-result" id="d-paracetamol" style="color:var(--investigacao-deep);">— mg/dose</div>
+          <div class="dose-result" id="d-paracetamol-gts" style="font-size:1rem;color:var(--ink-soft);">— gotas</div>
+          <div class="dose-max">Macete: 1 gota/kg (10–15 mg/kg/dose) · máx. 35 gts/dose (75 mg/kg/dia · 4g/dia) · até 5 doses/dia</div>
+        </div>
+        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
+          <span class="drug">Dipirona 500 mg/mL injetável</span><span class="route">&gt; 3 meses e &gt;5 kg · 6/6h</span>
+          <div class="dose-result" id="d-dipirona" style="color:var(--investigacao-deep);">— mg/dose</div>
+          <div class="dose-result" id="d-dipirona-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
+          <div class="dose-max">Macete: Peso × 0,02 a 0,03 mL · EV diluir em SF 0,9% p/ 10–20 mL · IM sem diluição</div>
+        </div>
+        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
+          <span class="drug">Ibuprofeno</span><span class="route">A partir de 6 meses e &gt;5kg · 6–8h</span>
+          <div class="dose-result" id="d-ibuprofeno" style="color:var(--investigacao-deep);">— mg/dose</div>
+          <div class="dose-max">5–10 mg/kg/dose · máx. 40 mg/kg/dia</div>
+        </div>
+      </div>
+      <div class="alert warn"><span class="ico">💉</span><div><strong>Dipirona injetável — via de administração por faixa etária:</strong> crianças entre 3 e 11 meses (ou &lt;9 kg) devem usar <strong>apenas via IM</strong>. Ex. 20 kg: IM aplicar 0,4 mL sem diluição; EV diluir 0,4 mL em SF 0,9% 10 mL e administrar lento.</div></div>
+
+      <div class="alert danger"><span class="ico">🚫</span><div><strong>Não alternar nem combinar antitérmicos.</strong> Mecanismo de ação semelhante (inibição de COX/PGE₂) — sem benefício comprovado e maior risco de erro de dose/intoxicação. Ácido acetilsalicílico contraindicado (risco de Síndrome de Reye).</div></div>
+
+      <div class="card">
+        <h3>Quando tratar</h3>
+        <p>Recomendação de antitérmico quando há desconforto evidente (choro intenso, irritabilidade, redução de atividade/apetite, distúrbio do sono) — <strong>não</strong> baseado em um valor numérico predeterminado de temperatura.</p>
+        <p class="muted">O uso de antitérmico ao primeiro sinal de febre <strong>não previne</strong> convulsões febris recorrentes. Já o uso <em>durante a crise</em> pode aliviar o desconforto associado à febre e reduzir a recorrência de convulsão febril dentro do mesmo episódio febril.</p>
+        <h4>Menores de 1 mês</h4>
+        <p class="muted">Paracetamol é o único antitérmico recomendado, com dose ajustada pela idade gestacional.</p>
+      </div>
+
+      <div class="card">
+        <h3>Febre nas arboviroses (dengue, zika, chikungunya)</h3>
+        <p><strong>Evitar AINEs (incluindo ibuprofeno) e AAS</strong> — risco aumentado de sangramento e insuficiência renal em contexto de extravasamento plasmático, especialmente na dengue.</p>
+        <p>Na dengue, a queda súbita da febre entre o 3º e 5º dia pode indicar transição para a fase crítica — exige vigilância mesmo na ausência de febre. Hidratação oral precoce e abundante é o pilar do manejo.</p>
+        <div class="chip-list">
+          <span class="chip">Dor abdominal intensa e contínua</span>
+          <span class="chip">Vômitos persistentes</span>
+          <span class="chip">Sangramento de mucosas</span>
+          <span class="chip">Alteração do estado de consciência</span>
+          <span class="chip">Hepatomegalia &gt;2cm do rebordo costal</span>
+          <span class="chip">Aumento progressivo do hematócrito</span>
+        </div>
+      </div>
+      <div class="footnote">Fonte: SBP — Abordagem da Febre Aguda em Pediatria e Reflexões sobre a Febre nas Arboviroses, Documento Científico nº206, 15/05/2025.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ---------- navigation ----------
+function goTo(view){
+  document.getElementById('home').style.display='none';
+  document.getElementById('view-urgencia').classList.remove('active');
+  document.getElementById('view-investigacao').classList.remove('active');
+  document.getElementById('view-'+view).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.getElementById('home').style.display='flex';
+  document.getElementById('view-urgencia').classList.remove('active');
+  document.getElementById('view-investigacao').classList.remove('active');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.tabs').forEach(tabgroup=>{
+  tabgroup.addEventListener('click', e=>{
+    const btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    tabgroup.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const parent = tabgroup.closest('.view');
+    parent.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(btn.dataset.panel).classList.add('active');
+    parent.querySelector('.content').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// ---------- timer ----------
+let timerInterval=null, timerSeconds=0, timerRunning=false;
+function timerStart(){
+  if(timerRunning) return;
+  timerRunning=true;
+  timerInterval=setInterval(()=>{
+    timerSeconds++;
+    updateTimerDisplay();
+  },1000);
+}
+function timerReset(){
+  clearInterval(timerInterval);
+  timerRunning=false;
+  timerSeconds=0;
+  updateTimerDisplay();
+}
+function updateTimerDisplay(){
+  const m=String(Math.floor(timerSeconds/60)).padStart(2,'0');
+  const s=String(timerSeconds%60).padStart(2,'0');
+  document.getElementById('timerDisplay').textContent=m+':'+s;
+  const phaseEl=document.getElementById('timerPhase');
+  let phase, color;
+  if(timerSeconds===0){phase='Aguardando início'; color='var(--ink-soft)';}
+  else if(timerSeconds<300){phase='● Estabilização (0–5 min)'; color='var(--ink-soft)';}
+  else if(timerSeconds<1200){phase='● 1ª linha — benzodiazepínico (5–20 min)'; color='var(--urgencia)';}
+  else if(timerSeconds<2400){phase='●● 2ª linha — fenitoína/fenobarbital (20–40 min)'; color='var(--amber)';}
+  else {phase='●●● CRISE REFRATÁRIA — 3ª linha, UTI (>60 min)'; color='var(--urgencia-deep)';}
+  phaseEl.textContent=phase;
+  phaseEl.style.color=color;
+  document.getElementById('timerDisplay').style.color = timerSeconds>=300 ? color : 'var(--urgencia-deep)';
+}
+
+// ---------- dose calc: urgência ----------
+function calcDoses(){
+  const peso=parseFloat(document.getElementById('pesoUrg').value);
+  const mgIds=['d-midaz-ev','d-diaz-ev','d-midaz-im','d-midaz-in','d-fenit-ataque','d-fenit-manut','d-feno-ataque','d-feno-manut','d-midaz-continuo'];
+  const mlIds=['d-midaz-ev-ml','d-diaz-ev-ml','d-midaz-im-ml','d-midaz-in-ml','d-diaz-vr','d-fenit-ataque-ml','d-feno-ataque-ml'];
+  if(!peso || peso<=0){
+    mgIds.forEach(id=>document.getElementById(id).textContent='— mg');
+    mlIds.forEach(id=>document.getElementById(id).textContent='— mL');
+    return;
+  }
+  const set=(id,val,max,unit)=>{
+    const v=Math.min(val,max);
+    document.getElementById(id).textContent=v.toFixed(1)+' '+unit+(val>max?' (limitado ao máx.)':'');
+  };
+  // Midazolam 5mg/mL EV/IM: 0,2mg/kg = peso*0,04 mL
+  set('d-midaz-ev', peso*0.2, 10, 'mg');
+  document.getElementById('d-midaz-ev-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
+  set('d-diaz-ev', peso*0.2, 10, 'mg');
+  document.getElementById('d-diaz-ev-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
+  set('d-midaz-im', peso*0.2, 10, 'mg');
+  document.getElementById('d-midaz-im-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
+  set('d-midaz-in', peso*0.3, 10, 'mg');
+  document.getElementById('d-midaz-in-ml').textContent = Math.min(peso*0.06,2).toFixed(2)+' mL';
+  // Diazepam retal: dose dobrada do volume EV, máx 20mg (4mL a 5mg/mL)
+  document.getElementById('d-diaz-vr').textContent = Math.min(peso*0.08,4).toFixed(2)+' mL (dobro do EV)';
+  // Fenitoína 50mg/mL: 20mg/kg = peso*0,4 mL
+  set('d-fenit-ataque', peso*20, 1500, 'mg');
+  document.getElementById('d-fenit-ataque-ml').textContent = Math.min(peso*0.4,30).toFixed(1)+' mL (diluir em SF 100mL)';
+  document.getElementById('d-fenit-manut').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dia';
+  // Fenobarbital 100mg/mL: 20mg/kg = peso*0,2 mL
+  set('d-feno-ataque', peso*20, 1000, 'mg');
+  document.getElementById('d-feno-ataque-ml').textContent = Math.min(peso*0.2,10).toFixed(2)+' mL';
+  document.getElementById('d-feno-manut').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dia';
+  document.getElementById('d-midaz-continuo').textContent = (peso*3).toFixed(0)+'–'+(peso*20).toFixed(0)+' mcg/min';
+}
+
+// ---------- dose calc: antitérmicos ----------
+function calcAntitermico(){
+  const peso=parseFloat(document.getElementById('pesoInv').value);
+  if(!peso || peso<=0){
+    ['d-paracetamol','d-dipirona','d-ibuprofeno'].forEach(id=>document.getElementById(id).textContent='— mg/dose');
+    ['d-paracetamol-gts','d-dipirona-ml'].forEach(id=>document.getElementById(id).textContent='— ');
+    return;
+  }
+  document.getElementById('d-paracetamol').textContent = (peso*10).toFixed(0)+'–'+(peso*15).toFixed(0)+' mg/dose';
+  document.getElementById('d-paracetamol-gts').textContent = Math.min(peso,35).toFixed(0)+' gotas (1 gota/kg)';
+  document.getElementById('d-dipirona').textContent = (peso*10).toFixed(0)+'–'+(peso*16).toFixed(0)+' mg/dose';
+  document.getElementById('d-dipirona-ml').textContent = (peso*0.02).toFixed(2)+'–'+(peso*0.03).toFixed(2)+' mL';
+  document.getElementById('d-ibuprofeno').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dose';
+}
+
+// ---------- classificador ----------
+const classState={duracao:null, tipo:null, recorrencia:null, posictal:null};
+function selectOpt(btn){
+  const q=btn.dataset.q, v=btn.dataset.v;
+  classState[q]=v;
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  evalClassifier();
+}
+function evalClassifier(){
+  const {duracao,tipo,recorrencia,posictal}=classState;
+  if(!duracao||!tipo||!recorrencia||!posictal) return;
+  const isComplexa = duracao==='longa' || tipo==='focal' || recorrencia==='sim' || posictal==='alterado';
+  const banner=document.getElementById('classResult');
+  banner.classList.add('show');
+  if(isComplexa){
+    banner.className='result-banner show complexa';
+    document.getElementById('classTitle').textContent='⚠️ Crise convulsiva febril COMPLEXA';
+    let motivos=[];
+    if(duracao==='longa') motivos.push('duração ≥15 minutos');
+    if(tipo==='focal') motivos.push('características focais');
+    if(recorrencia==='sim') motivos.push('recorrência em menos de 24h');
+    if(posictal==='alterado') motivos.push('pós-ictal prolongado / déficit focal');
+    document.getElementById('classText').innerHTML='Critério(s) presente(s): <strong>'+motivos.join(', ')+'</strong>. Conduta individualizada — considerar avaliação com neurologia pediátrica; não se resolve rotineiramente em ambulatório. Ver aba "Indicação de exames".';
+  } else {
+    banner.className='result-banner show simples';
+    document.getElementById('classTitle').textContent='✓ Crise convulsiva febril SIMPLES';
+    document.getElementById('classText').innerHTML='Tônico-clônica generalizada, &lt;15 min, sem recorrência em 24h, recuperação espontânea e completa. Em geral <strong>não requer investigação secundária</strong> (sem EEG, neuroimagem ou laboratório de rotina). Seguimento ambulatorial de rotina.';
+  }
+}
+</script>
+</body>
+</html>
