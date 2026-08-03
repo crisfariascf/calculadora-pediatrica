@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora OMA Pediátrica</title>
+<title>Calculadora de Otites Pediátricas</title>
 <style>
 :root{--navy:#17365d;--blue:#315d9b;--light:#eef4fb;--green:#dcebd2;--yellow:#fff1b8;--red:#ffe1df;--gray:#667085}
 *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;margin:0;background:#f5f7fa;color:#172033}
@@ -17,15 +17,22 @@ label{display:block;font-size:13px;font-weight:700;color:#344054;margin-bottom:6
 button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy);color:white;font-size:16px;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.08)}
 .alert{padding:13px;border-radius:10px;margin:10px 0}.info{background:var(--light);border-left:5px solid var(--blue)}.warn{background:var(--yellow);border-left:5px solid #d79b00}.danger{background:var(--red);border-left:5px solid #c9362b}.ok{background:#e6f4e3;border-left:5px solid #4d8b3a}
 .result{display:none}.rx{background:#f8fafc;border:1px solid #dbe2ea;border-radius:10px;padding:14px;margin:10px 0}.rx h3{margin:0 0 8px;color:var(--navy)}.big{font-size:20px;font-weight:850;color:var(--navy)}.muted{color:var(--gray);font-size:13px}.step{padding:10px 12px;border-left:4px solid var(--blue);margin:9px 0;background:#f8fbff}.source{font-size:12px;color:#667085}
-@media(max-width:700px){.grid,.grid3,.checks{grid-template-columns:1fr}h1{font-size:23px}}
+.pathChoice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pathBtn{border:2px solid #cbd5e1;border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;background:#fafbfc;font-weight:800;color:var(--navy);font-size:16px;transition:.15s}
+.pathBtn:hover{border-color:var(--blue)}
+.pathBtn.selected{border-color:var(--navy);background:var(--light);box-shadow:0 0 0 2px var(--navy) inset}
+.pathBtn .sub{display:block;font-weight:500;font-size:12.5px;color:var(--gray);margin-top:6px}
+.hidden{display:none!important}
+@media(max-width:700px){.grid,.grid3,.checks,.pathChoice{grid-template-columns:1fr}h1{font-size:23px}}
 @media print{button,.no-print{display:none!important}body{background:white}.card{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><h1>Calculadora de Otite Média Aguda Pediátrica</h1>
-<div class="subtitle">Diagnóstico → gravidade → observar ou tratar → antimicrobiano e dose calculada</div>
+<header><div class="wrap"><h1>Calculadora de Otites Pediátricas</h1>
+<div class="subtitle">Otite Externa e Otite Média Aguda — diagnóstico → gravidade → conduta e antimicrobiano com dose calculada</div>
 <span class="badge">Uso clínico de apoio • funcionamento offline</span></div></header>
 <main>
+
 <div class="card">
 <h2>1. Dados do paciente</h2>
 <div class="grid3">
@@ -36,7 +43,18 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card">
-<h2>2. A otoscopia sustenta OMA?</h2>
+<h2>2. Qual quadro você está avaliando?</h2>
+<div class="pathChoice">
+<div class="pathBtn" id="pathBtn_externa" onclick="setPath('externa')">OTITE EXTERNA<span class="sub">Conduto auditivo externo / pavilhão auricular — "orelha do nadador", otomicose, pericondrite</span></div>
+<div class="pathBtn" id="pathBtn_oma" onclick="setPath('oma')">OTITE MÉDIA AGUDA<span class="sub">Efusão/inflamação da orelha média — abaulamento ou otorreia pela MT</span></div>
+</div>
+</div>
+
+<!-- ======================= MÓDULO: OTITE MÉDIA AGUDA ======================= -->
+<div id="omaModule" class="path-module hidden">
+
+<div class="card">
+<h2>3. A otoscopia sustenta OMA?</h2>
 <div class="alert info"><b>OMA exige efusão/inflamação de orelha média.</b> Hiperemia isolada da membrana timpânica não fecha diagnóstico.</div>
 <div class="checks">
 <label class="check"><input type="checkbox" id="bulgeMS"> Abaulamento moderado ou severo da MT</label>
@@ -48,7 +66,7 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card">
-<h2>3. Lateralidade e gravidade</h2>
+<h2>4. Lateralidade e gravidade</h2>
 <div class="grid">
 <div><label>Apresentação</label><select id="side"><option value="uni">Unilateral</option><option value="bi">Bilateral</option></select></div>
 <div><label>Alergia a beta-lactâmico/penicilina</label><select id="allergy"><option value="none">Não</option><option value="mild">Reação não grave / não IgE-mediada</option><option value="severe">Anafilaxia, urticária ou angioedema / IgE-mediada</option></select></div>
@@ -64,7 +82,7 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card">
-<h2>4. Modificadores da antibioticoterapia</h2>
+<h2>5. Modificadores da antibioticoterapia</h2>
 <div class="checks">
 <label class="check"><input type="checkbox" id="ab30"> Beta-lactâmico / antibiótico nos últimos 30 dias</label>
 <label class="check"><input type="checkbox" id="conj"> Conjuntivite purulenta associada</label>
@@ -77,14 +95,75 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card no-print">
-<h2>5. Apresentação disponível</h2>
+<h2>6. Apresentação disponível</h2>
 <div class="grid">
 <div><label>Amoxicilina</label><select id="amoxConc"><option value="50">250 mg/5 mL</option><option value="80">400 mg/5 mL</option></select></div>
 <div><label>Amoxicilina + clavulanato</label><select id="clavConc"><option value="80">400 mg amoxicilina/5 mL</option><option value="120">600 mg amoxicilina/5 mL</option><option value="50">250 mg amoxicilina/5 mL</option></select></div>
 <div><label>Cefuroxima axetil</label><select id="cefConc"><option value="25">125 mg/5 mL</option><option value="50">250 mg/5 mL</option></select></div>
 <div><label>Azitromicina</label><select id="aziConc"><option value="40">200 mg/5 mL</option></select></div>
 </div>
-<br><button onclick="calculate()">GERAR CONDUTA E PRESCRIÇÃO</button>
+<br><button onclick="calculateOMA()">GERAR CONDUTA E PRESCRIÇÃO — OMA</button>
+</div>
+
+</div>
+
+<!-- ======================= MÓDULO: OTITE EXTERNA ======================= -->
+<div id="externaModule" class="path-module hidden">
+
+<div class="card">
+<h2>3. Apresentação clínica</h2>
+<div class="checks">
+<label class="check"><input type="checkbox" id="oe_rapid"> Início rápido dos sintomas (≤48 h, dentro das últimas 3 semanas)</label>
+<label class="check"><input type="checkbox" id="oe_otalgia"> Otalgia</label>
+<label class="check"><input type="checkbox" id="oe_pruritus"> Prurido / plenitude aural</label>
+<label class="check"><input type="checkbox" id="oe_jaw"> Dor à mastigação / movimento da mandíbula</label>
+<label class="check"><input type="checkbox" id="oe_tragus"> Dor à tração do pavilhão ou palpação do trágus</label>
+<label class="check"><input type="checkbox" id="oe_erythema_edema"> Eritema e edema do CAE</label>
+<label class="check"><input type="checkbox" id="oe_otorrhea"> Otorreia (clara/serosa a purulenta)</label>
+<label class="check"><input type="checkbox" id="oe_lymph"> Linfadenopatia regional</label>
+<label class="check"><input type="checkbox" id="oe_fever"> Febre</label>
+<label class="check"><input type="checkbox" id="oe_mtview"> MT não visualizável por edema acentuado do CAE</label>
+<label class="check"><input type="checkbox" id="oe_periauricular"> Edema periauricular / do pavilhão</label>
+<label class="check"><input type="checkbox" id="oe_perf"> Perfuração timpânica confirmada / otite média crônica conhecida</label>
+<label class="check"><input type="checkbox" id="oe_risk"> Fator de risco: umidade (piscina/mar), cotonete/trauma, AASI, piercing, corpo estranho</label>
+</div>
+</div>
+
+<div class="card">
+<h2>4. Sinais de alerta — Otite Externa Necrotizante, pericondrite/condrite e otomicose</h2>
+<div class="alert warn">Marque apenas o que estiver presente. Esses sinais têm prioridade sobre o quadro típico de otite externa aguda difusa/localizada.</div>
+
+<h3 style="color:var(--navy);font-size:14px;margin-bottom:6px">Suspeita de Otite Externa Necrotizante (maligna)</h3>
+<div class="checks">
+<label class="check"><input type="checkbox" id="oen_dm"> Diabete melito ou imunossupressão (HIV, quimioterapia, leucemia, desnutrição grave)</label>
+<label class="check"><input type="checkbox" id="oen_granul"> Tecido de granulação visível no assoalho do CAE</label>
+<label class="check"><input type="checkbox" id="oen_persist"> Otalgia e/ou otorreia persistentes e refratárias ao tratamento habitual</label>
+<label class="check"><input type="checkbox" id="oen_cranial"> Paralisia facial ou outro déficit de nervo craniano</label>
+<label class="check"><input type="checkbox" id="oen_necrosis"> Necrose cutânea / suspeita de envolvimento ósseo</label>
+<label class="check"><input type="checkbox" id="oen_toxemia"> Febre alta, toxemia ou sinais sistêmicos importantes</label>
+</div>
+
+<h3 style="color:var(--navy);font-size:14px;margin:14px 0 6px">Suspeita de pericondrite / condrite</h3>
+<div class="checks">
+<label class="check"><input type="checkbox" id="peri_ery"> Eritema/enduração de parte ou de todo o pavilhão auricular</label>
+<label class="check"><input type="checkbox" id="peri_fluct"> Flutuação local / possível abscesso subpericondral</label>
+<label class="check"><input type="checkbox" id="peri_trauma"> História de trauma, piercing ou furúnculo no pavilhão mal tratado</label>
+<label class="check"><input type="checkbox" id="peri_spread"> Extensão para tecidos moles/linfáticos regionais, com febre</label>
+</div>
+
+<h3 style="color:var(--navy);font-size:14px;margin:14px 0 6px">Suspeita de otomicose</h3>
+<div class="checks">
+<label class="check"><input type="checkbox" id="fungal_spores"> Esporos/hifas visíveis à otoscopia</label>
+<label class="check"><input type="checkbox" id="fungal_recur"> Otorreia refratária após ciclos prévios de antibiótico tópico</label>
+<label class="check"><input type="checkbox" id="fungal_itch"> Prurido intenso, desproporcional à dor</label>
+</div>
+</div>
+
+<div class="card no-print">
+<h2>5. Gerar conduta</h2>
+<br><button onclick="calculateExterna()">GERAR CONDUTA E PRESCRIÇÃO — OTITE EXTERNA</button>
+</div>
+
 </div>
 
 <div id="result" class="card result">
@@ -94,8 +173,11 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card source">
-<b>Base documental incorporada:</b> diretriz “Otite Média Aguda em Crianças e Adolescentes – Diretrizes para o Diagnóstico e Tratamento”, revisão 06/08/2025; e “Normatização de Antibioticoterapia Inicial em Pediatria” do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho, seção OMA.<br><br>
-A lógica de diagnóstico/observação e duração segue prioritariamente a diretriz de OMA de 2025. A seção “protocolo local HCA” é mostrada quando há diferença relevante de seleção/dose em relação à diretriz de 2025.
+<b>Base documental incorporada:</b><br>
+• Otite Média Aguda: diretriz "Otite Média Aguda em Crianças e Adolescentes – Diretrizes para o Diagnóstico e Tratamento" (Hospital Israelita Albert Einstein, revisão 06/08/2025) para diagnóstico, estratificação de gravidade e fluxo de observação vs. antibiótico.<br>
+• Otite Externa: "Protocolo de Manejo Clínico das Otites Externas" (HC-UFTM/EBSERH, versão 2, 2025) para apresentação clínica, estadiamento, otomicose, pericondrite/condrite e Otite Externa Necrotizante.<br>
+• Antibióticos e posologias (ambas as seções): "Normatização de Antibioticoterapia Inicial em Pediatria" do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho (HCA), Campina Grande — inclusive a tabela de ajuste de doses (função renal normal) para fármacos sem seção dedicada de otite externa no documento (ex.: ciprofloxacino, ceftazidima).<br><br>
+<b>Critério de prioridade em caso de conflito:</b> a lógica clínica de diagnóstico/gravidade/observação segue a diretriz específica de cada quadro (Einstein para OMA; EBSERH para otite externa); a escolha do antimicrobiano e as doses seguem o protocolo local do HCA sempre que disponível.
 </div>
 </main>
 
@@ -105,10 +187,20 @@ function yes(id){return $(id).checked}
 function round(x,d=1){let p=10**d;return Math.round(x*p)/p}
 function ageMonths(){let a=parseFloat($('age').value);return $('ageUnit').value==='years'?a*12:a}
 function ml(mg,conc){return mg/conc}
-function capDaily(dose, max){return Math.min(dose,max)}
 function rxBox(name, details, calc, note=''){return `<div class="rx"><h3>${name}</h3><div>${details}</div><div class="big">${calc}</div>${note?`<div class="muted">${note}</div>`:''}</div>`}
 
-function calculate(){
+function setPath(p){
+ document.querySelectorAll('.pathBtn').forEach(b=>b.classList.remove('selected'));
+ $('pathBtn_'+p).classList.add('selected');
+ $('omaModule').classList.toggle('hidden', p!=='oma');
+ $('externaModule').classList.toggle('hidden', p!=='externa');
+ $('result').style.display='none';
+ $('out').innerHTML='';
+ (p==='oma'?$('omaModule'):$('externaModule')).scrollIntoView({behavior:'smooth'});
+}
+
+/* ======================= OTITE MÉDIA AGUDA ======================= */
+function calculateOMA(){
  const w=parseFloat($('weight').value), m=ageMonths();
  if(!w||!Number.isFinite(m)){alert('Informe idade e peso.');return}
  const diag=yes('bulgeMS')||yes('otorrheaDx')||(yes('bulgeMild')&&(yes('otalgia48')||yes('markedRed')));
@@ -176,13 +268,102 @@ function calculate(){
        `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 12 h por ${days} dias`,
        `Calculado com 90 mg/kg/dia e apresentação ${c*5} mg/5 mL.`);
      if(m<24 && yes('daycare')){
-       out+=`<div class="alert info"><b>Conferência com protocolo local HCA:</b> para idade &lt;2 anos E frequência à creche, o HCA classifica como “amoxicilina em dose dobrada” 70–90 mg/kg/dia. A dose alta acima já contempla essa faixa.</div>`;
+       out+=`<div class="alert info"><b>Conferência com protocolo local HCA:</b> para idade &lt;2 anos E frequência à creche, o HCA classifica como "amoxicilina em dose dobrada" 70–90 mg/kg/dia. A dose alta acima já contempla essa faixa.</div>`;
      }
    }
  }
  out+=`<div class="step"><b>Duração VO sugerida pela diretriz 2025:</b> ${days} dias — ${m<24?'idade <2 anos':severe?'presença de gravidade':'idade ≥2 anos sem sinais de gravidade'}.</div>`;
  out+=`<div class="step"><b>Reavaliação:</b> obrigatória em 48–72 h. Sem melhora: confirmar diagnóstico, adesão e complicações; após amoxicilina, considerar amoxicilina-clavulanato/cefuroxima; ceftriaxona por 3 dias é opção na diretriz para falha ou dificuldade VO.</div>`;
- out+=`<div class="step"><b>Encaminhar Otorrino:</b> urgência se complicação; ambulatorial se OMA recorrente (≥3 episódios/6 meses ou ≥4/ano, com pelo menos um recente) ou efusão persistente >3 meses.</div>`;
+ out+=`<div class="step"><b>Encaminhar Otorrino:</b> urgência se complicação; ambulatorial se OMA recorrente (≥3 episódios/6 meses ou ≥4/ano, com pelo menos um recente) ou efusão persistente &gt;3 meses.</div>`;
+ $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
+}
+
+/* ======================= OTITE EXTERNA ======================= */
+function calculateExterna(){
+ const w=parseFloat($('weight').value), m=ageMonths();
+ if(!w||!Number.isFinite(m)){alert('Informe idade e peso.');return}
+ let out='';
+
+ const oen = yes('oen_dm') && (yes('oen_granul')||yes('oen_persist')||yes('oen_cranial')||yes('oen_necrosis'));
+ const oenWarnOnly = !oen && (yes('oen_granul')||yes('oen_cranial')||yes('oen_necrosis')||yes('oen_toxemia'));
+ const periSevere = yes('peri_ery') && yes('peri_spread');
+ const periMild = yes('peri_ery') && (yes('peri_fluct')||yes('peri_trauma')) && !periSevere;
+ const fungal = yes('fungal_spores') || (yes('fungal_recur') && yes('fungal_itch'));
+
+ if(oen || oenWarnOnly){
+   out+=`<div class="alert danger"><b>Suspeita de Otite Externa Necrotizante (maligna).</b> Marcas registradas: otalgia/otorreia persistentes + tecido de granulação, diabete melito ou imunossupressão, ± envolvimento de nervo craniano. Conduta: internação, avaliação urgente com Otorrino/Infectologia, TC de mastoide/base de crânio, VHS/PCR, cultura de secreção (agente mais comum: <i>Pseudomonas aeruginosa</i>).</div>`;
+   out+=`<div class="step"><b>Antibioticoterapia (referência HCA/EBSERH):</b><br>
+   • Casos ambulatoriais leves, sem toxemia: Ciprofloxacino VO, dose de referência ${round(20*w,0)}–${round(30*w,0)} mg/dia (20–30 mg/kg/dia, tabela do HCA), dividido a cada 8–12 h. Associar ciprofloxacino tópico.<br>
+   • Casos graves ou internados: Ceftazidima EV, dose de referência ${round(75*w,0)}–${round(150*w,0)} mg/dia (75–150 mg/kg/dia, tabela do HCA), de 8/8h, associada a ciprofloxacino. Considerar vancomicina se houver suspeita de MRSA associado.<br>
+   Duração mínima habitual: 6 semanas, guiada por resposta clínica, VHS/PCR e, se disponível, cintilografia com Gálio a cada 4 semanas.</div>`;
+   out+=`<div class="alert warn">Ciprofloxacino e ceftazidima em pediatria exigem cautela e, preferencialmente, apoio de Infectologia — o HCA reserva o uso de fluoroquinolonas em menores de 18 anos a casos sem alternativa segura e eficaz. Doses acima são referência inicial, não substituem ajuste individualizado.</div>`;
+   $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});return;
+ }
+
+ if(periSevere){
+   out+=`<div class="alert danger"><b>Pericondrite/condrite com extensão a tecidos moles/linfáticos regionais.</b> Indicação de internação e antibioticoterapia parenteral com cobertura para Pseudomonas.</div>`;
+   let cefepimeDose=round(50*w,0);
+   out+=rxBox('Cefepime EV — cobertura Pseudomonas',
+     `50 mg/kg/dose, de 12/12h, EV. Dose máxima 4 g/dia (referência HCA).`,
+     `${cefepimeDose} mg por dose, a cada 12 h`,
+     `Ajustar conforme cultura/antibiograma quando disponíveis. O desbridamento cirúrgico é do âmbito da Otorrinolaringologia.`);
+   $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});return;
+ }
+ if(periMild){
+   out+=`<div class="alert warn"><b>Pericondrite/condrite leve a moderada.</b> Desbridamento (Otorrinolaringologia) + antibiótico tópico e sistêmico cobrindo Pseudomonas até resultado de cultura.</div>`;
+   out+=`<div class="step"><b>Ciprofloxacino VO (referência HCA):</b> ${round(20*w,0)}–${round(30*w,0)} mg/dia (20–30 mg/kg/dia), em 2–3 doses. Sem melhora: novo desbridamento e reavaliação após cultura/antibiograma.</div>`;
+   $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});return;
+ }
+
+ if(fungal){
+   out+=`<div class="alert info"><b>Quadro sugestivo de Otite Externa Fúngica (otomicose).</b> Controlar fatores predisponentes (hiperglicemia, uso prolongado de gotas com esteroide, autoinoculação ao manipular as orelhas) e realizar limpeza do CAE — frequentemente suficiente.</div>`;
+   out+=rxBox('Antifúngico tópico',
+     `Nistatina, cetoconazol OU fluconazol solução 0,2% (3 gotas, 8/8h, 3 semanas) OU clotrimazol solução 1% (4 gotas, 12/12h, 2–4 semanas).`,
+     `Escolha conforme disponibilidade institucional`,
+     `Sem indicação de antibiótico sistêmico nesta apresentação. Se otorreia persistente após ciclos prévios de antibiótico tópico, colher cultura para fungos.`);
+   $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});return;
+ }
+
+ // Otite externa aguda difusa/localizada típica
+ const coreSigns=['oe_tragus','oe_erythema_edema','oe_otorrhea','oe_pruritus','oe_jaw'].filter(id=>yes(id)).length;
+ let stage='pré-inflamatória / muito leve';
+ if(yes('oe_fever')||yes('oe_mtview')||yes('oe_periauricular')||coreSigns>=4) stage='grave';
+ else if(coreSigns>=3) stage='moderada';
+ else if(coreSigns>=1) stage='leve';
+ out+=`<div class="alert ok"><b>Otite Externa Aguda Difusa/Localizada — estágio provável: ${stage}.</b> (classificação orientativa; prevalece o julgamento clínico)</div>`;
+
+ out+=`<div class="step"><b>Medidas gerais (todos os casos):</b> não molhar a orelha (chuveiro, piscina, mar) por 15 dias; analgesia com dipirona, ibuprofeno ou paracetamol conforme avaliação clínica.</div>`;
+
+ if(coreSigns===0 && !yes('oe_otorrhea')){
+   out+=`<div class="step"><b>Fase pré-inflamatória:</b> soluções acidificantes tópicas (ácido acético 2%, álcool boricado 2%, ácido salicílico em álcool a 70% ou acetato de alumínio), associadas à correta higiene do meato, costumam ser suficientes.</div>`;
+ } else {
+   if(yes('oe_perf')){
+     out+=`<div class="alert warn"><b>Perfuração timpânica / otite média crônica conhecida:</b> risco de ototoxicidade por aminoglicosídeos. Usar apenas cloranfenicol ou ciprofloxacino tópico.</div>`;
+     out+=`<div class="step"><b>Gotas otológicas:</b> ciprofloxacino OU cloranfenicol, 3 gotas, de 8/8h, por 1 semana.</div>`;
+   } else {
+     out+=`<div class="step"><b>Antibiótico tópico (MT íntegra ou não avaliável):</b> preferencialmente ciprofloxacino ou ofloxacino (ação contra <i>Pseudomonas aeruginosa</i>); alternativas: neomicina, polimixina B ou cloranfenicol. Posologia: 3 gotas, de 8/8h, por 1 semana.</div>`;
+   }
+   out+=`<div class="step"><b>Corticoide tópico associado:</b> pode ser usado 2–3x/dia para reduzir edema, prurido e dor, mantido até 2 dias após a melhora do quadro.</div>`;
+ }
+
+ if(yes('oe_mtview')){
+   out+=`<div class="alert warn"><b>Edema do CAE impedindo entrada da medicação tópica:</b> considerar curativo local com gaze hidrófila embebida em corticoide/antibiótico, trocado a cada 48h, até redução satisfatória do edema. Encaminhar Otorrinolaringologia.</div>`;
+ }
+
+ const systemic = yes('oe_fever') || yes('oe_mtview') || yes('oe_periauricular');
+ if(systemic){
+   let reasons=[]; if(yes('oe_fever'))reasons.push('febre'); if(yes('oe_mtview'))reasons.push('edema do CAE impedindo visualização da MT'); if(yes('oe_periauricular'))reasons.push('edema periauricular');
+   let daily=Math.min(100*w,2000), dose=daily/4, c=50; // Cefalexina 250 mg/5 mL (HCA)
+   out+=rxBox('Cefalexina VO — antibioticoterapia sistêmica indicada',
+     `50–100 mg/kg/dia, de 6/6h, VO. Dose máxima 2 g/dia. Motivo: ${reasons.join(', ')} (referência: protocolo HCA).`,
+     `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 6 h por 7 dias`,
+     `Calculado para apresentação 250 mg/5 mL. Cefalexina cobre principalmente flora estafilocócica/estreptocócica de pele — não cobre Pseudomonas; se suspeita clínica de Pseudomonas grave (ex.: imunossuprimido, diabetes, evolução desfavorável), encaminhar Otorrino/Infectologia e considerar cobertura antipseudomonas.`);
+ }
+
+ out+=`<div class="step"><b>Reavaliação:</b> em 48–72 h. Sem melhora: reforçar limpeza do CAE, reconsiderar diagnóstico (otomicose, corpo estranho, pericondrite, OEN), trocar classe de antibiótico tópico ou associar antibiótico sistêmico.</div>`;
+ out+=`<div class="step"><b>Estágio crônico</b> (pele espessada, CAE ocluído, impossibilitando limpeza/terapia tópica): encaminhar Otorrinolaringologia — pode ser necessária meatoplastia.</div>`;
+ out+=`<div class="alert info"><b>Critérios de internação/encaminhamento urgente:</b> edema significativo impedindo visualização do tímpano; abscesso do CAE (otite externa furunculosa); pericondrite refratária ao tratamento clínico; diabéticos descompensados com quadro refratário; suspeita de Otite Externa Necrotizante.</div>`;
+
  $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
 }
 </script>
