@@ -5,36 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de Otite Pediátrica — Externa e Média Aguda</title>
 <style>
-:root{--navy:#17365d;--blue:#315d9b;--light:#eef4fb;--green:#dcebd2;--yellow:#fff1b8;--red:#ffe1df;--gray:#667085}
+:root{--navy:#17365d;--blue:#315d9b;--light:#eef4fb;--green:#16a34a;--green-dark:#047857;--green-soft:#ecfdf3;--yellow:#fff7d6;--orange:#ea580c;--orange-soft:#fff3e8;--purple:#7c3aed;--purple-soft:#f4f0ff;--red:#ffe1df;--gray:#667085}
 *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;margin:0;background:#f5f7fa;color:#172033}
 header{background:linear-gradient(135deg,var(--navy),var(--blue));color:white;padding:24px 18px}
 header .wrap,main{max-width:1050px;margin:auto} h1{margin:0 0 7px;font-size:28px} h2{color:var(--navy);margin-top:0}
-.subtitle{opacity:.92}.badge{display:inline-block;background:#fff;color:var(--navy);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;margin-top:10px}
+.subtitle{opacity:.92}.badge{display:inline-block;background:#fff;color:var(--navy);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;margin-top:10px;letter-spacing:.01em}
+.badge-eligible{background:var(--green)!important;color:#fff!important;box-shadow:0 0 0 3px #16a34a24}
+.badge-indicated{background:var(--green-dark)!important;color:#fff!important;box-shadow:0 0 0 3px #04785722}
+.badge-alternative{background:var(--purple)!important;color:#fff!important;box-shadow:0 0 0 3px #7c3aed22}
+.badge-selected{background:#0f766e!important;color:#fff!important;box-shadow:0 0 0 3px #0f766e22}
 main{padding:18px}.card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #1c35551a;border:1px solid #e6eaf0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
 label{display:block;font-size:13px;font-weight:700;color:#344054;margin-bottom:6px} input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:white;font-size:15px}
 .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.check{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid #dde3eb;border-radius:9px;background:#fafbfc}.check input{width:auto;margin-top:3px}
 button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy);color:white;font-size:16px;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.08)}
-.alert{padding:13px;border-radius:10px;margin:10px 0}.info{background:var(--light);border-left:5px solid var(--blue)}.warn{background:var(--yellow);border-left:5px solid #d79b00}.danger{background:var(--red);border-left:5px solid #c9362b}.ok{background:#e6f4e3;border-left:5px solid #4d8b3a}
-.result{display:none}.rx{background:#f8fafc;border:1px solid #dbe2ea;border-radius:10px;padding:14px;margin:10px 0}.rx h3{margin:0 0 8px;color:var(--navy)}.big{font-size:20px;font-weight:850;color:var(--navy)}.muted{color:var(--gray);font-size:13px}.step{padding:10px 12px;border-left:4px solid var(--blue);margin:9px 0;background:#f8fbff}.source{font-size:12px;color:#667085}
+.alert{padding:13px 14px;border-radius:10px;margin:10px 0;border:1px solid transparent;line-height:1.45}.alert.info{background:#edf6ff;border-color:#bfdbfe;border-left:6px solid #2563eb;color:#17365d}.alert.warn{background:#fff8db;border-color:#fde68a;border-left:6px solid #d97706;color:#713f12}.alert.danger{background:#fff0ef;border-color:#fecaca;border-left:6px solid #dc2626;color:#7f1d1d}.alert.ok{background:#ecfdf3;border-color:#bbf7d0;border-left:6px solid #16a34a;color:#14532d}.alert.caution{background:var(--orange-soft);border-color:#fed7aa;border-left:6px solid var(--orange);color:#7c2d12}.alert.special{background:var(--purple-soft);border-color:#ddd6fe;border-left:6px solid var(--purple);color:#4c1d95}
+.result{display:none}.rx{background:#fff;border:1px solid #dbe2ea;border-left:5px solid #94a3b8;border-radius:10px;padding:14px;margin:10px 0;box-shadow:0 2px 8px #1c35550d}.rx.rx-eligible{background:var(--green-soft);border-color:#86efac;border-left-color:var(--green)}.rx.rx-indicated{background:#ecfdf5;border-color:#6ee7b7;border-left-color:var(--green-dark)}.rx.rx-alternative{background:var(--purple-soft);border-color:#c4b5fd;border-left-color:var(--purple)}.rx h3{margin:0 0 8px;color:var(--navy)}.big{font-size:20px;font-weight:850;color:var(--navy)}.muted{color:var(--gray);font-size:13px}.step{padding:11px 13px;border:1px solid #bae6fd;border-left:5px solid #0284c7;border-radius:8px;margin:9px 0;background:#f0f9ff;color:#164e63}.source{font-size:12px;color:#667085}
 .modeGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .modeBtn{background:white;border:2px solid var(--blue);color:var(--navy);padding:24px 16px;border-radius:12px;font-size:17px;font-weight:800;cursor:pointer;text-align:center}
 .modeBtn:hover{background:var(--light)}
 .modeBtn .emoji{font-size:30px;display:block;margin-bottom:8px}
 #switchBar{text-align:right;margin-bottom:10px}
 .switchBtn{width:auto;background:transparent;color:var(--blue);border:1px solid var(--blue);padding:7px 14px;font-size:13px;border-radius:8px;cursor:pointer}
+.rxItem{margin:10px 0}.rxOrientation{margin:14px 0 2px;padding:13px 14px;border:1px solid #fed7aa;border-left:6px solid var(--orange);border-radius:9px;background:var(--orange-soft);color:#7c2d12;line-height:1.45}.rxOrientation h4{margin:0 0 8px;font-size:15px}.rxOrientation ul{margin:6px 0 0;padding-left:21px}.rxOrientation li{margin:4px 0}
 @media(max-width:700px){.grid,.grid3,.checks,.modeGrid{grid-template-columns:1fr}h1{font-size:23px}}
 @media print{button,.no-print{display:none!important}body{background:white}.card{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
 <header><div class="wrap"><h1>Calculadora de Otite Pediátrica</h1>
-<div class="subtitle">Otite Externa e Otite Média Aguda — diagnóstico/tipo → gravidade → conduta → antimicrobiano e dose calculada</div>
+<div class="subtitle">Otite Externa e Otite Média Aguda — diagnóstico/tipo → gravidade → conduta → antimicrobiano, analgesia e prescrição</div>
 <span class="badge">Uso clínico de apoio • funcionamento offline</span></div></header>
 <main>
 
 <div class="card">
-<div class="alert info"><b>Critério de prioridade das fontes:</b> o fluxo clínico e os critérios diagnósticos seguem a diretriz de Otite Média Aguda do Hospital Albert Einstein (2025) e o Protocolo de Manejo Clínico das Otites Externas do HC-UFTM/EBSERH (v.2, 2025). <b>Antibióticos, doses, apresentações e diluições seguem prioritariamente o protocolo local do HCA</b> (Hospital da Criança e do Adolescente, Campina Grande). Quando o HCA não contempla um cenário específico, isso é sinalizado no resultado e a alternativa das demais diretrizes aparece como nota informativa.</div>
+<div class="alert info"><b>Fontes:</b> fluxo clínico — Einstein 2025 (OMA) / EBSERH v.2 2025 (otite externa). Antibióticos e doses — protocolo HCA. Antibiótico tópico, analgesia e prescrição — Guia de Prescrição no PS.
 </div>
 
 <div class="card" id="modeCard">
@@ -51,7 +56,7 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 <h2>Dados do paciente</h2>
 <div class="grid3">
 <div><label>Idade</label><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 18"></div>
-<div><label>Unidade da idade</label><select id="ageUnit"><option value="months">meses</option><option value="years">anos</option></select></div>
+<div><label>Unidade da idade</label><select id="ageUnit"><option value="years">anos</option><option value="months">meses</option></select></div>
 <div><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 12,5"></div>
 </div>
 </div>
@@ -176,11 +181,15 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--navy
 </div>
 
 <div class="card source">
-<b>Base documental incorporada:</b><br>
-• Diretriz "Otite Média Aguda em Crianças e Adolescentes – Diretrizes para o Diagnóstico e Tratamento" (Hospital Israelita Albert Einstein), revisão 06/08/2025.<br>
-• Protocolo "Manejo Clínico das Otites Externas" (HC-UFTM/EBSERH), versão 2, 2025.<br>
-• "Normatização de Antibioticoterapia Inicial em Pediatria" do Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho, Campina Grande (seções de Otite Média Aguda, Celulite e diluições de antibióticos).<br><br>
-O fluxo diagnóstico, de gravidade e de observação segue as diretrizes Einstein (OMA) e EBSERH (otite externa). <b>Antibióticos, doses, apresentações e diluições seguem prioritariamente o protocolo HCA</b>; alternativas das demais diretrizes aparecem como nota informativa quando há diferença relevante, e cenários não contemplados pelo HCA (ex.: seção específica de otite externa) são sinalizados explicitamente no resultado.
+<details>
+<summary style="cursor:pointer;font-weight:700;color:var(--navy)">Base documental incorporada</summary>
+<div style="margin-top:8px">
+• Diretriz de OMA — Hospital Albert Einstein, rev. 06/08/2025.<br>
+• Protocolo de Otites Externas — HC-UFTM/EBSERH, v.2, 2025.<br>
+• "Normatização de Antibioticoterapia Inicial em Pediatria" — HCA Campina Grande.<br>
+• "Guia de Pediatria — Prescrição no Pronto-Socorro", p.198–204.
+</div>
+</details>
 </div>
 </main>
 
@@ -188,9 +197,17 @@ O fluxo diagnóstico, de gravidade e de observação segue as diretrizes Einstei
 const $=id=>document.getElementById(id);
 function yes(id){return $(id).checked}
 function round(x,d=1){let p=10**d;return Math.round(x*p)/p}
-function ageMonths(){let a=parseFloat($('age').value);return $('ageUnit').value==='years'?a*12:a}
+function ageUnit(){
+ const unit=$('ageUnit').value;
+ return unit==='years'?'years':'months';
+}
+function ageMonths(){
+ const a=parseFloat($('age').value);
+ return ageUnit()==='years'?a*12:a;
+}
 function ml(mg,conc){return mg/conc}
-function rxBox(name, details, calc, note=''){return `<div class="rx"><h3>${name}</h3><div>${details}</div><div class="big">${calc}</div>${note?`<div class="muted">${note}</div>`:''}</div>`}
+function rxBox(name, details, calc, note=''){const variant=name.includes('badge-eligible')?' rx-eligible':name.includes('badge-indicated')?' rx-indicated':name.includes('badge-alternative')?' rx-alternative':'';return `<div class="rx${variant}"><h3>${name}</h3><div>${details}</div><div class="big">${calc}</div>${note?`<div class="muted">${note}</div>`:''}</div>`}
+function estimateFrascos(doseMl, timesPerDay, days, size=100){return Math.max(1, Math.ceil((doseMl*timesPerDay*days)/size))}
 
 function selectMode(mode){
  $('modeCard').style.display='none';
@@ -202,6 +219,136 @@ function selectMode(mode){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 
+/* ========================= ANALGESIA (Guia PS) — sempre calcula as 3 opções, seleção automática ========================= */
+function analgesicsData(w,m){
+ const dip_gts=Math.max(1,Math.round(w*0.7));
+ const dip_eligible = m>3 && w>5;
+ const par_gts=Math.min(Math.round(w),35);
+ const par_eligible = m>3;
+ const ibu_low=Math.min(Math.round(w*1),40), ibu_high=Math.min(Math.round(w*2),40);
+ const ibu_eligible = m>6;
+ return {
+  dipirona:{key:'dipirona', label:'Dipirona 500 mg/mL gotas', eligible:dip_eligible,
+    calc:`${dip_gts} gotas VO, de 6/6h se dor ou febre`,
+    note:'Dose padronizada em 0,7 gota/kg, arredondada para a gota inteira mais próxima. Idade >3 meses e peso >5 kg.',
+    rxInstruction:`Dar ${dip_gts} gotas, via oral, de 6/6 horas, se dor ou febre.`},
+  paracetamol:{key:'paracetamol', label:'Paracetamol 200 mg/mL gotas', eligible:par_eligible,
+    calc:`1 gota/kg/dose (10–15 mg/kg) a cada 4–6h → ${par_gts} gotas/dose`,
+    note:'Máx. 75 mg/kg/dia (35 gotas/dose). Idade >3 meses.',
+    rxInstruction:`Dar ${par_gts} gotas, via oral, de 4/4 a 6/6 horas, se dor ou febre.`},
+  ibuprofeno:{key:'ibuprofeno', label:'Ibuprofeno 50 mg/mL gotas', eligible:ibu_eligible,
+    calc:`1–2 gotas/kg/dose (5–10 mg/kg) a cada 6–8h → ${ibu_low}–${ibu_high} gotas/dose`,
+    note:'Máx. 40 mg/kg/dia (160 gotas/dia). Idade mínima 6 meses.',
+    rxInstruction:`Dar ${ibu_high} gotas, via oral, de 6/6 a 8/8 horas, se dor.`}
+ };
+}
+// Escolhe automaticamente o analgésico mais indicado (prioridade clínica: dipirona > paracetamol > ibuprofeno),
+// respeitando elegibilidade por idade/peso — evita exigir seleção manual redundante.
+function pickAnalgesic(w,m){
+ const data=analgesicsData(w,m);
+ for(const k of ['dipirona','paracetamol','ibuprofeno']) if(data[k].eligible) return k;
+ return null;
+}
+function allAnalgesicsHTML(w,m){
+ const data=analgesicsData(w,m), sel=pickAnalgesic(w,m);
+ let html=`<h3 style="color:var(--navy)">Analgesia — opções calculadas para ${w} kg</h3>`;
+ ['dipirona','paracetamol','ibuprofeno'].forEach(k=>{
+   const d=data[k], chosen=sel===k;
+   html+=`<div class="rx" style="${chosen?'border:2px solid var(--navy)':''}">
+   <h3>${d.label} ${chosen?'<span class="badge badge-selected">★ na prescrição</span>':''}</h3>
+   <div class="big">${d.calc}</div>
+   <div class="muted">${d.note}${d.eligible?'':' <b>Idade/peso abaixo do recomendado.</b>'}</div>
+   </div>`;
+ });
+ return html;
+}
+function allAnalgesicsHTMLExterna(w,m){
+ return allAnalgesicsHTML(w,m);
+}
+
+function selectedAnalgesicRx(w,m){
+ const drug=pickAnalgesic(w,m);
+ if(!drug) return null;
+ const d=analgesicsData(w,m)[drug];
+ return {rxLabel:d.label, rxInstruction:d.rxInstruction};
+}
+
+// Dipirona padronizada em 0,7 gota/kg nas prescrições de Otite Externa e OMA.
+function selectedAnalgesicRxExterna(w,m){
+ return selectedAnalgesicRx(w,m);
+}
+
+function orientacoesAlarmeOMA(){
+ return {
+   kind:'orientation',
+   label:'ORIENTAÇÕES GERAIS E SINAIS DE ALARME — OTITE MÉDIA AGUDA',
+   instruction:`
+     <p>Espera-se melhora progressiva da dor, da febre e da irritabilidade nas primeiras <b>48 a 72 horas</b> após o início da conduta. Os sintomas podem durar alguns dias, mas devem apresentar redução gradual.</p>
+
+     <b>Retorne para reavaliação médica se a criança apresentar:</b>
+     <ul>
+       <li>Ausência de melhora ou piora da dor e da febre após <b>48–72 horas</b>.</li>
+       <li>Febre que persiste, reaparece após ter melhorado ou vem acompanhada de prostração importante.</li>
+       <li>Dor intensa que não melhora mesmo com o analgésico prescrito.</li>
+       <li>Irritabilidade intensa, choro inconsolável, sonolência excessiva ou dificuldade para acordar.</li>
+       <li>Recusa persistente de líquidos ou alimentos, vômitos repetidos, boca seca ou diminuição da quantidade de urina.</li>
+       <li>Saída de secreção, pus ou sangue pelo ouvido.</li>
+       <li>Diminuição da audição que persiste após a resolução da infecção ou interfere na comunicação e nas atividades da criança.</li>
+     </ul>
+
+     <b>Procure imediatamente um serviço de urgência se ocorrer:</b>
+     <ul>
+       <li>Vermelhidão, dor ou inchaço atrás da orelha.</li>
+       <li>Orelha deslocada ou projetada para a frente.</li>
+       <li>Dor de cabeça intensa, rigidez na nuca, incômodo com a luz, convulsão ou alteração do comportamento.</li>
+       <li>Tontura intensa, dificuldade para andar ou perda do equilíbrio.</li>
+       <li>Fraqueza ou assimetria de um lado do rosto.</li>
+       <li>Dificuldade para respirar ou sinais de reação alérgica à medicação, como inchaço nos lábios, língua ou rosto.</li>
+     </ul>
+
+     <p><b>Atenção para mastoidite:</b> dor, vermelhidão e inchaço atrás da orelha, especialmente quando ela fica projetada para a frente, podem indicar uma complicação rara que necessita de avaliação hospitalar.</p>
+
+     <p><b>Atenção especial:</b> crianças menores de <b>3 meses</b> com temperatura igual ou superior a <b>38 °C</b> devem ser avaliadas imediatamente, mesmo que já tenham diagnóstico de otite.</p>`
+ };
+}
+
+function orientacoesAlarmeExterna(){
+ return {
+   kind:'orientation',
+   label:'ORIENTAÇÕES GERAIS E SINAIS DE ALARME',
+   instruction:`
+     <b>Durante o tratamento:</b>
+     <ul>
+       <li>Manter o ouvido seco e evitar piscina ou natação.</li>
+       <li>Proteger o ouvido durante o banho, sem introduzir cotonetes, fones ou outros objetos no canal.</li>
+       <li>Usar somente as gotas prescritas e completar o período orientado.</li>
+     </ul>
+     <b>Retornar imediatamente ao serviço de saúde se apresentar:</b>
+     <ul>
+       <li>Febre, prostração ou piora do estado geral.</li>
+       <li>Dor intensa, persistente, desproporcional ao exame ou com piora noturna.</li>
+       <li>Aumento do inchaço ou vermelhidão do canal, ao redor da orelha ou no pavilhão auricular.</li>
+       <li>Secreção purulenta, com odor forte, persistente ou em aumento.</li>
+       <li>Assimetria ou fraqueza da face.</li>
+       <li>Ausência de melhora ou piora após 48–72 horas de tratamento.</li>
+     </ul>`
+ };
+}
+
+function prescricaoBox(items, w, m, caption='Prescrição ambulatorial (modelo)'){
+ if(!items.length) return '';
+ const idadeTxt = ageUnit()==='years'? `${$('age').value} anos` : `${$('age').value} meses`;
+ let medIndex=0;
+ const lines=items.map(it=>{
+   if(it.kind==='orientation'){
+     return `<div class="rxOrientation"><h4>${it.label}</h4>${it.instruction}</div>`;
+   }
+   medIndex++;
+   return `<div class="rxItem"><b>${medIndex}) ${it.label}</b> ---------------------------------------- ${it.qty}<br>${it.instruction}</div>`;
+ }).join('');
+ return `<div class="rx"><h3>${caption}</h3><div class="muted">Criança de ${idadeTxt} — ${w} kg</div>${lines}</div>`;
+}
+
 /* ========================= OTITE MÉDIA AGUDA ========================= */
 function calculateOMA(){
  const w=parseFloat($('weight').value), m=ageMonths();
@@ -210,6 +357,7 @@ function calculateOMA(){
  const severe=[...document.querySelectorAll('.sev')].some(x=>x.checked);
  const comp=yes('complication');
  let out='';
+ let rxItems=[];
  if(!diag){
    out+=`<div class="alert danger"><b>Critérios clínico-otoscópicos informados NÃO sustentam OMA.</b> Hiperemia isolada não é diagnóstico. Se a otoscopia não for sugestiva, a diretriz orienta analgesia, orientações e seguimento.</div>`;
    out+=`<div class="step"><b>Reavaliar a otoscopia.</b> Cerume impactado ou dificuldade técnica: considerar retaguarda de Otorrino, se disponível.</div>`;
@@ -221,14 +369,14 @@ function calculateOMA(){
    out+=`<div class="step">Sepse ou instabilidade hemodinâmica: considerar alocação em UTI.</div>`;
  }
  let mandatory = m<6 || severe || yes('otorrheaSev') || yes('otorrheaDx') || (m>=6&&m<24&&$('side').value==='bi');
- if(m<6) out+=`<div class="alert warn"><b>&lt;6 meses:</b> a tabela terapêutica da diretriz Einstein indica antibiótico.</div>`;
+ if(m<6) out+=`<div class="alert warn"><b>&lt;6 meses:</b> as diretrizes Einstein e o Guia PS indicam antibiótico até em casos suspeitos.</div>`;
  else if(m<24 && $('side').value==='uni' && !severe && !yes('otorrheaDx') && !yes('otorrheaSev'))
    out+=`<div class="alert info"><b>6 meses a &lt;2 anos, OMA unilateral leve:</b> observação por 48–72 h OU antibiótico, com decisão compartilhada e seguimento garantido.</div>`;
  else if(m>=24 && !severe && !yes('otorrheaDx') && !yes('otorrheaSev'))
    out+=`<div class="alert info"><b>≥2 anos, sem gravidade/otorreia:</b> observação por 48–72 h OU antibiótico, com decisão compartilhada e seguimento garantido.</div>`;
  else out+=`<div class="alert danger"><b>Antibioticoterapia indicada pelo fluxograma.</b></div>`;
 
- out+=`<div class="step"><b>Analgesia é prioritária em todos os casos.</b> Usar dipirona, ibuprofeno ou paracetamol conforme avaliação clínica. Evitar gotas tópicas se houver suspeita de perfuração timpânica.</div>`;
+ out+=`<div class="step"><b>Analgesia é prioritária em todos os casos.</b> Evitar gotas tópicas se houver suspeita de perfuração timpânica. Ver opção de analgésico selecionada abaixo.</div>`;
 
  const observe = !mandatory;
  if(observe && !yes('failed') && !yes('ab30') && !yes('conj') && !yes('recurrent') && !yes('noPO')){
@@ -236,60 +384,102 @@ function calculateOMA(){
  }
 
  const allergy=$('allergy').value;
+ const ab30=yes('ab30'), conj=yes('conj'), recurrent=yes('recurrent'), failed=yes('failed'), daycare=yes('daycare'), noPO=yes('noPO');
+ const dobrada = (m<24 && daycare);
+ const habitualMatch = !ab30 && !conj && !recurrent && !failed && !dobrada && !noPO && allergy==='none';
 
- if(yes('noPO')){
-   let dose=Math.min(50*w,1000);
-   out+=rxBox('Ceftriaxona — dificuldade de aceitação/uso via oral (protocolo HCA)',
-    `50 mg/kg/dose IM ou EV, 1x/dia. Dose máxima 1 g/dia.`,
-    `${round(dose,0)} mg, 1x/dia`,
-    `Protocolo HCA cita duração &gt;3 dias. Diretriz Einstein 2025 padroniza esquema de 3 dias para falha terapêutica ou dificuldade de aceitação oral, com posologia idêntica.`);
- } else if(allergy!=='none'){
-   let dailyClari=Math.min(15*w,1000), dose=dailyClari/2;
-   out+=rxBox('Claritromicina — alérgico a amoxicilina/penicilina (protocolo HCA)',
-    `15 mg/kg/dia VO de 12/12h. Dose máxima 1 g/dia. Duração: 10 dias.`,
-    `${round(dose,0)} mg VO a cada 12 h`,
-    `Fonte: protocolo HCA, tabela de Otite Média Aguda.`);
-   if(allergy==='severe'){
-     let d1=Math.min(10*w,500), d25=Math.min(5*w,250), c=parseFloat($('aziConc').value);
-     out+=`<div class="alert info"><b>Alternativa (diretriz Einstein 2025) para alergia grave (anafilaxia/IgE-mediada):</b> Azitromicina — D1: 10 mg/kg VO 1x/dia (${round(d1,0)} mg = ${round(ml(d1,c),1)} mL); D2–D5: 5 mg/kg VO 1x/dia (${round(d25,0)} mg = ${round(ml(d25,c),1)} mL). Considerar resistência local elevada do pneumococo aos macrolídeos antes de optar por essa via.</div>`;
-   } else {
-     let dailyCef=Math.min(30*w,1000), doseCef=dailyCef/2, c=parseFloat($('cefConc').value);
-     out+=`<div class="alert info"><b>Alternativa (diretriz Einstein 2025) para reação leve não IgE-mediada:</b> Axetilcefuroxima 30 mg/kg/dia VO de 12/12h, dose máxima 1 g/dia (${round(doseCef,0)} mg = ${round(ml(doseCef,c),1)} mL por dose, calculado para ${c*5} mg/5 mL).</div>`;
-   }
- } else {
-   const ab30=yes('ab30'), conj=yes('conj'), recurrent=yes('recurrent'), failed=yes('failed'), daycare=yes('daycare');
-   const dobrada = (m<24 && daycare);
-   if(ab30||recurrent||failed){
-     let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('clavConc').value);
-     let reasons=[]; if(ab30)reasons.push('uso de antibiótico beta-lactâmico nos últimos 30 dias'); if(recurrent)reasons.push('OMA recorrente/sem resposta prévia à amoxicilina'); if(failed)reasons.push('falha terapêutica em 48–72 h');
-     out+=rxBox('Amoxicilina em dose dobrada + clavulanato (protocolo HCA)',
-       `80–90 mg/kg/dia de amoxicilina VO em 2 doses (8/8h ou 12/12h). Dose máxima de amoxicilina: 4 g/dia. Indicação: ${reasons.join('; ')}.`,
-       `${round(dose,0)} mg de amoxicilina/dose = ${round(ml(dose,c),1)} mL VO a cada 12 h`,
-       `Calculado para ${c*5} mg de amoxicilina/5 mL. Conferir a proporção de clavulanato do produto disponível.`);
-   } else if(conj){
-     let daily=Math.min(60*w,4000), dose=daily/2, c=parseFloat($('clavConc').value);
-     out+=rxBox('Amoxicilina + clavulanato — dose habitual (protocolo HCA)',
-       `40–60 mg/kg/dia de amoxicilina VO em 2 doses. Dose máxima de amoxicilina: 4 g/dia. Indicação: conjuntivite purulenta bilateral associada.`,
-       `${round(dose,0)} mg de amoxicilina/dose = ${round(ml(dose,c),1)} mL VO a cada 12 h`,
-       `Calculado para ${c*5} mg de amoxicilina/5 mL.`);
-   } else if(dobrada){
-     let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value);
-     out+=rxBox('Amoxicilina em dose dobrada (protocolo HCA)',
-       `70–90 mg/kg/dia VO em 2 doses. Dose máxima 4 g/dia. Indicação: idade &lt;2 anos e frequência à creche.`,
-       `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 12 h`,
-       `Calculado com 90 mg/kg/dia (limite superior da faixa) e apresentação ${c*5} mg/5 mL.`);
-   } else {
-     let daily=Math.min(50*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value);
-     out+=rxBox('Amoxicilina em dose habitual (protocolo HCA)',
-       `40–50 mg/kg/dia VO em 2 doses. Dose máxima 4 g/dia. Indicação: sem uso de antibiótico nos últimos 30 dias e sem os demais critérios de risco.`,
-       `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 12 h`,
-       `Calculado com 50 mg/kg/dia (limite superior da faixa) e apresentação ${c*5} mg/5 mL.`);
-   }
+ out+=`<h3 style="color:var(--navy)">Antibióticos — todas as opções do protocolo HCA, calculadas para ${w} kg / ${m<24?m+' meses':round(m/12,1)+' anos'}</h3>`;
+ out+=`<div class="muted" style="margin-bottom:8px">A opção compatível com os marcadores selecionados acima aparece destacada (★). As demais seguem disponíveis como alternativa clínica.</div>`;
+
+ // 1) Amoxicilina dose habitual
+ { let daily=Math.min(50*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value), doseML=round(ml(dose,c),1);
+   const match = habitualMatch;
+   out+=rxBox(`Amoxicilina em dose habitual (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `40–50 mg/kg/dia VO em 2 doses (8/8h ou 12/12h). Dose máxima 4 g/dia. <b>Indicação:</b> sem uso de antibiótico beta-lactâmico nos últimos 30 dias e sem os demais critérios abaixo.`,
+     `${round(dose,0)} mg = ${doseML} mL VO a cada 12 h, por 10 dias`,
+     `Calculado com 50 mg/kg/dia (limite superior da faixa) e apresentação ${c*5} mg/5 mL.`);
+   if(match) rxItems.push({label:`Amoxicilina ${c*5} mg/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,2,10)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 12/12 horas, por 10 dias.`});
+ }
+ // 2) Amoxicilina dose dobrada
+ { let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value), doseML=round(ml(dose,c),1);
+   const match = dobrada;
+   out+=rxBox(`Amoxicilina em dose dobrada (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `70–90 mg/kg/dia VO em 2 doses. Dose máxima 4 g/dia. <b>Indicação:</b> idade &lt;2 anos E frequenta creche.`,
+     `${round(dose,0)} mg = ${doseML} mL VO a cada 12 h, por 10 dias`,
+     `Calculado com 90 mg/kg/dia (limite superior da faixa) e apresentação ${c*5} mg/5 mL.`);
+   if(match) rxItems.push({label:`Amoxicilina ${c*5} mg/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,2,10)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 12/12 horas, por 10 dias.`});
+ }
+ // 3) Amoxicilina + clavulanato dose habitual
+ { let daily=Math.min(60*w,4000), dose=daily/2, c=parseFloat($('clavConc').value), doseML=round(ml(dose,c),1);
+   const match = conj;
+   out+=rxBox(`Amoxicilina + clavulanato — dose habitual (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `40–60 mg/kg/dia de amoxicilina VO em 2 doses. Dose máxima de amoxicilina: 4 g/dia. <b>Indicação:</b> crianças com conjuntivite purulenta bilateral associada.`,
+     `${round(dose,0)} mg de amoxicilina/dose = ${doseML} mL VO a cada 12 h, por 10 dias`,
+     `Calculado para ${c*5} mg de amoxicilina/5 mL.`);
+   if(match) rxItems.push({label:`Amoxicilina + clavulanato ${c*5} mg amoxicilina/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,2,10)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 12/12 horas, por 10 dias.`});
+ }
+ // 4) Amoxicilina dose dobrada + clavulanato
+ { let daily=Math.min(90*w,4000), dose=daily/2, c=parseFloat($('clavConc').value), doseML=round(ml(dose,c),1);
+   const match = ab30||recurrent||failed;
+   let reasons=[]; if(ab30)reasons.push('uso de antibiótico beta-lactâmico nos últimos 30 dias'); if(recurrent)reasons.push('OMA recorrente/sem resposta prévia à amoxicilina'); if(failed)reasons.push('falha terapêutica em 48–72 h');
+   out+=rxBox(`Amoxicilina em dose dobrada + clavulanato (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `80–90 mg/kg/dia de amoxicilina VO em 2 doses. Dose máxima de amoxicilina: 4 g/dia. <b>Indicação:</b> OMA recorrente; uso de antibiótico beta-lactâmico nos últimos 30 dias; falha do tratamento em 48–72h.${match?` (Marcado: ${reasons.join('; ')})`:''}`,
+     `${round(dose,0)} mg de amoxicilina/dose = ${doseML} mL VO a cada 12 h, por 10 dias`,
+     `Calculado para ${c*5} mg de amoxicilina/5 mL. Conferir a proporção de clavulanato do produto disponível.`);
+   if(match) rxItems.push({label:`Amoxicilina + clavulanato ${c*5} mg amoxicilina/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,2,10)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 12/12 horas, por 10 dias.`});
+ }
+ // 5) Ceftriaxona (não ingere VO)
+ { let dose=Math.min(50*w,1000);
+   const match = noPO;
+   out+=rxBox(`Ceftriaxona (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `50 mg/kg/dose IM ou EV, 1x/dia. Dose máxima 1 g/dia. <b>Indicação:</b> não ingere/não aceita medicação via oral.`,
+     `${round(dose,0)} mg, 1x/dia, por &gt;3 dias`,
+     `Protocolo HCA cita duração &gt;3 dias. Diretriz Einstein 2025 padroniza 3 dias para falha terapêutica ou dificuldade de aceitação oral, com posologia idêntica.`);
+   if(match) rxItems.push({label:'Ceftriaxona (frasco-ampola 1 g)', qty:'conforme apresentação disponível', instruction:`Aplicar ${round(dose,0)} mg IM ou EV, 1x/dia, por pelo menos 3 dias — reavaliar transição para via oral.`});
+ }
+ // 6) Claritromicina (alérgico)
+ { let dailyClari=Math.min(15*w,1000), dose=dailyClari/2;
+   const match = allergy!=='none' && !noPO;
+   out+=rxBox(`Claritromicina (protocolo HCA)${match?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+     `15 mg/kg/dia VO de 12/12h. Dose máxima 1 g/dia. <b>Indicação:</b> alérgico a amoxicilina/penicilina.`,
+     `${round(dose,0)} mg VO a cada 12 h, por 10 dias`,
+     `Fonte: protocolo HCA, tabela de Otite Média Aguda.`);
+   if(match) rxItems.push({label:'Claritromicina suspensão oral', qty:'conforme apresentação disponível', instruction:`Dar dose equivalente a ${round(dose,0)} mg, via oral, de 12/12 horas, por 10 dias.`});
+ }
+ // 7) Azitromicina (Guia PS — alternativa para alergia grave)
+ { let d1=Math.min(10*w,500), d25=Math.min(5*w,250), c=parseFloat($('aziConc').value);
+   const match = allergy==='severe' && !noPO;
+   out+=rxBox(`Azitromicina 200 mg/5 mL (Guia de Prescrição no PS)${match?' <span class="badge badge-alternative">★ alternativa recomendada</span>':''}`,
+     `<b>SOMENTE se alergia a beta-lactâmicos.</b> D1: 10 mg/kg VO 1x/dia (máx. 500 mg); D2–D5: 5 mg/kg VO 1x/dia (máx. 250 mg).`,
+     `D1: ${round(d1,0)} mg = ${round(ml(d1,c),1)} mL | D2–D5: ${round(d25,0)} mg = ${round(ml(d25,c),1)} mL`,
+     `Alternativa citada pela diretriz Einstein 2025 para alergia grave (anafilaxia/IgE-mediada) — considerar resistência local elevada do pneumococo aos macrolídeos antes de optar por essa via. Calculado para ${c*5} mg/5 mL.`);
+   if(match && !rxItems.some(it=>it.label.startsWith('Claritromicina'))) rxItems.push({label:'Azitromicina 200 mg/5 mL suspensão oral', qty:'1 frasco', instruction:`D1: dar ${round(ml(d1,c),1)} mL, via oral, 1x/dia. D2 a D5: dar ${round(ml(d25,c),1)} mL, via oral, 1x/dia.`});
  }
 
- out+=`<div class="step"><b>Duração:</b> 10 dias para todos os esquemas orais de OMA (protocolo HCA). <span class="muted">Diretriz Einstein 2025: 7 dias é aceitável se ≥2 anos e quadro leve a moderado sem sinais de gravidade; 10 dias se &lt;2 anos ou quadro grave — considerar conforme critério clínico/institucional.</span></div>`;
+ out+=`<div class="step"><b>Duração:</b> 10 dias para todos os esquemas orais de OMA (protocolo HCA). <span class="muted">Diretriz Einstein 2025: 7 dias é aceitável se ≥2 anos e quadro leve a moderado sem sinais de gravidade; 10 dias se &lt;2 anos ou quadro grave. Guia PS (referência complementar): &lt;2 anos 10 dias, 2–5 anos 7 dias, ≥6 anos 5–7 dias.</span></div>`;
  out+=`<div class="step"><b>Reavaliação:</b> obrigatória em 48–72 h. Sem melhora: confirmar diagnóstico, adesão e complicações; escalonar conforme indicado acima.</div>`;
  out+=`<div class="step"><b>Encaminhar Otorrino:</b> urgência se complicação; ambulatorial se OMA recorrente (≥3 episódios/6 meses ou ≥4/ano, com pelo menos um recente) ou efusão persistente &gt;3 meses.</div>`;
+
+ out+=allAnalgesicsHTML(w,m);
+ const alg=selectedAnalgesicRx(w,m);
+ if(alg){ rxItems.push({label:alg.rxLabel, qty:'1 frasco', instruction:alg.rxInstruction}); }
+
+ // Inserir as orientações de OMA imediatamente abaixo da dipirona na prescrição.
+ const orientacaoOMA=orientacoesAlarmeOMA();
+ const indiceDipironaOMA=rxItems.findIndex(it=>it.kind!=='orientation' && /Dipirona/i.test(it.label||''));
+ if(indiceDipironaOMA>=0) rxItems.splice(indiceDipironaOMA+1,0,orientacaoOMA);
+ else rxItems.push(orientacaoOMA);
+
+ if(!rxItems.some(it=>/Amoxicilina|Ceftriaxona|Claritromicina|Azitromicina/.test(it.label))){
+   // nenhum antibiótico "matched" pelos modificadores (ex.: caso em observação) — a amoxicilina em dose habitual entra como referência-padrão do protocolo
+   let daily=Math.min(50*w,4000), dose=daily/2, c=parseFloat($('amoxConc').value), doseML=round(ml(dose,c),1);
+   rxItems.unshift({label:`Amoxicilina ${c*5} mg/5 mL suspensão oral (esquema padrão — confirmar indicação)`, qty:`${estimateFrascos(doseML,2,10)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 12/12 horas, por 10 dias.`});
+ }
+
+ out+=prescricaoBox(rxItems, w, m, observe? 'PRESCRIÇÃO AMBULATORIAL (modelo — caso opte por tratar agora)':'PRESCRIÇÃO AMBULATORIAL (modelo)');
+
+ out+=conferenciaHCA('oma');
+
  $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
 }
 
@@ -300,6 +490,7 @@ function calculateExterna(){
  const alarmIds=['dmImuno','persistOtalgia','granTissue','purulentFetid','boneInvolv','edemaImportanteOE','abscessoOE','pericondriteGrave','descompensado','desnutridaOE'];
  const alarm = alarmIds.some(id=>yes(id));
  let out='';
+ let rxItems=[];
 
  if(alarm){
    out+=`<div class="alert danger"><b>Sinais de alarme identificados.</b> Afastar Otite Externa Necrotizante (maligna) e/ou complicação grave (abscesso, pericondrite disseminada). Referenciar de modo urgente para hospital de nível terciário.</div>`;
@@ -318,36 +509,52 @@ function calculateExterna(){
  }
 
  out+=`<div class="alert ok"><b>Sem sinais de alarme informados para OEN/complicação grave.</b></div>`;
- out+=`<div class="step"><b>Medidas gerais (todos os casos):</b> não molhar a orelha (chuveiro, piscina, mar) por 15 dias; analgésicos e anti-inflamatórios (hormonais ou não) para controle da dor; limpeza cuidadosa do CAE quando possível, preferencialmente sob magnificação.</div>`;
+ out+=`<div class="step"><b>Medidas gerais (todos os casos):</b> limpeza cuidadosa do CAE quando possível, preferencialmente sob magnificação; ver orientações durante o tratamento e analgesia ao final do resultado.</div>`;
 
  const type=$('oeType').value, perf=yes('perfMT');
  const needSystemic = yes('feverOE')||yes('edemaCAE')||yes('edemaPeriauricular')||yes('failedTopical');
+ const topicalMap = {
+   cipro_hidro:{label:'Ciprofloxacino + Hidrocortisona 2+5 mg/5 mL suspensão otológica', minAgeMonths:12, freq:'12/12h', days:7, amino:false},
+   cipro_dexa:{label:'Ciprofloxacino + Dexametasona 3,5+1 mg/mL solução oftálmica (uso off-label otológico)', minAgeMonths:6, freq:'12/12h', days:7, amino:false},
+   otosylase:{label:'Otosylase (fluocinolona acetonida + polimixina B + neomicina + lidocaína)', minAgeMonths:0, freq:'8/8h', days:7, amino:true}
+ };
 
  if(type==='oead' || type==='oeal'){
-   out+=`<div class="alert info"><b>${type==='oead'?'Otite externa aguda difusa (OEAD).':'Otite externa aguda localizada — foliculite/furúnculo.'}</b> Antibioticoterapia tópica é a base do tratamento no estágio inflamatório agudo.</div>`;
-   if(perf){
-     out+=`<div class="step"><b>Perfuração de MT conhecida/suspeita:</b> usar apenas <b>cloranfenicol</b> ou <b>ciprofloxacino</b> tópico — evitar aminoglicosídeos (neomicina/polimixina B) pelo risco de ototoxicidade.</div>`;
-   } else {
-     out+=`<div class="step"><b>MT íntegra:</b> qualquer gota otológica disponível pode ser usada — neomicina, polimixina B, cloranfenicol ou ciprofloxacino, 3 gotas de 8/8h, por 7 dias. O SUS disponibiliza a associação polimixina B 10.000 UI + neomicina 3,5 mg/mL + fluocinolona acetonida 0,25 mg/mL + lidocaína 20 mg/mL.</div>`;
-   }
-   out+=`<div class="step"><b>Corticoide tópico</b> (associado à gota antibiótica) ajuda na melhora do edema, prurido e dor: 2–3x/dia, mantido por 2 dias após a melhora do quadro. Se o edema do CAE for intenso e impedir a entrada da medicação tópica, considerar curativo com gaze hidrófila embebida no medicamento, trocada a cada 48 h.</div>`;
+   out+=`<div class="alert info"><b>${type==='oead'?'Otite externa aguda difusa (OEAD).':'Otite externa aguda localizada — foliculite/furúnculo.'}</b> Antibioticoterapia tópica é a base do tratamento no estágio inflamatório agudo (Guia de Prescrição no Pronto-Socorro).</div>`;
+   out+=`<h3 style="color:var(--navy)">Antibiótico tópico — todas as opções calculadas para ${w} kg / ${m<24?m+' meses':round(m/12,1)+' anos'}</h3>`;
+   let topicalChosen=null;
+   Object.keys(topicalMap).forEach(k=>{
+     const sel=topicalMap[k];
+     const ageOk = m>=sel.minAgeMonths;
+     const perfOk = !(perf && sel.amino);
+     const eligible = ageOk && perfOk;
+     let flags=[];
+     if(!ageOk) flags.push(`idade abaixo do mínimo recomendado (${sel.minAgeMonths} meses)`);
+     if(!perfOk) flags.push('contém aminoglicosídeo (neomicina/polimixina B) — evitar com perfuração de MT conhecida/suspeita');
+     out+=rxBox(`${sel.label}${eligible?' <span class="badge badge-eligible">★ elegível</span>':''}`,
+       `Aplicar 3 gotas na orelha afetada, de ${sel.freq}, por ${sel.days} dias. Idade mínima: ${sel.minAgeMonths} meses.${flags.length?` <b>Atenção: ${flags.join('; ')}.</b>`:''}`,
+       `3 gotas de ${sel.freq}, por ${sel.days} dias`,
+       `Fonte: Guia de Prescrição no Pronto-Socorro — Otite Externa.`);
+     if(eligible && !topicalChosen){ topicalChosen=sel; rxItems.push({label:sel.label, qty:'1 frasco', instruction:`Aplicar 3 gotas em orelha afetada, de ${sel.freq}, por ${sel.days} dias.`}); }
+   });
    if(type==='oeal'){
-     out+=`<div class="step">Se houver furúnculo com abscesso flutuante, considerar drenagem pelo Otorrino, além das medidas tópicas acima.</div>`;
+     out+=`<div class="step">Se houver furúnculo com abscesso flutuante, considerar drenagem pelo Otorrino, além da medida tópica acima.</div>`;
    }
-   if(needSystemic){
+   {
      let reasons=[]; if(yes('feverOE'))reasons.push('febre'); if(yes('edemaCAE'))reasons.push('edema do CAE impedindo visualizar a MT'); if(yes('edemaPeriauricular'))reasons.push('edema periauricular'); if(yes('failedTopical'))reasons.push('falha do tratamento tópico em 48–72 h');
-     let daily=Math.min(75*w,2000), dose=daily/4, c=parseFloat($('cefalexConc').value);
-     out+=rxBox('Cefalexina VO — antibiótico sistêmico indicado',
-       `50–100 mg/kg/dia VO de 6/6h. Dose máxima 2 g/dia. Indicação: ${reasons.join('; ')}.`,
-       `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 6 h por 7 dias`,
+     let daily=Math.min(75*w,2000), dose=daily/4, c=parseFloat($('cefalexConc').value), doseML=round(ml(dose,c),1);
+     out+=rxBox(`Cefalexina VO — antibiótico sistêmico (além do tópico)${needSystemic?' <span class="badge badge-indicated">★ indicada neste caso</span>':''}`,
+       `50–100 mg/kg/dia VO de 6/6h. Dose máxima 2 g/dia. <b>Indicação:</b> febre; edema do CAE impedindo visualizar a MT; edema periauricular; ou falha do tratamento tópico em 48–72h.${needSystemic?` (Marcado: ${reasons.join('; ')})`:''}`,
+       `${round(dose,0)} mg = ${doseML} mL VO a cada 6 h por 7 dias`,
        `Extrapolado da tabela de Celulite (tratamento ambulatorial) do protocolo HCA, pois o documento não traz seção específica para Otite Externa — confirmar com Otorrino/Infectologia. Calculado para ${c*5} mg/5 mL.`);
-     out+=`<div class="alert info">Para casos mais acentuados ou refratários ao antibiótico tópico isolado, o protocolo EBSERH cita fluorquinolonas orais (ciprofloxacino, levofloxacino) associadas ao tópico como opção contra <i>Pseudomonas</i> — uso reservado/cauteloso em pediatria, sob avaliação de Otorrino/Infectologia.</div>`;
+     if(needSystemic) rxItems.push({label:`Cefalexina ${c*5} mg/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,4,7)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 6/6 horas, por 7 dias.`});
+     out+=`<div class="alert caution"><b>Atenção — opção reservada:</b> Para casos mais acentuados ou refratários ao antibiótico tópico isolado, o protocolo EBSERH cita fluorquinolonas orais (ciprofloxacino, levofloxacino) associadas ao tópico como opção contra <i>Pseudomonas</i> — uso reservado/cauteloso em pediatria, sob avaliação de Otorrino/Infectologia.</div>`;
    }
    out+=`<div class="step"><b>Reavaliação:</b> a cada 72 horas ou, no mínimo, semanalmente. Sem melhora após 48–72 h: reforçar limpeza do CAE, trocar classe de gota tópica e considerar antibiótico sistêmico/avaliação do Otorrino.</div>`;
  }
 
  else if(type==='otomicose'){
-   out+=`<div class="alert info"><b>Suspeita de otomicose (OEF).</b> Controlar fatores predisponentes: hiperglicemia, uso prolongado de gotas otológicas com esteroide, autoinoculação de fungos ao manipular as orelhas. Limpeza cuidadosa e repetida do CAE costuma ser suficiente.</div>`;
+   out+=`<div class="alert special"><b>Suspeita de otomicose (OEF).</b> Controlar fatores predisponentes: hiperglicemia, uso prolongado de gotas otológicas com esteroide, autoinoculação de fungos ao manipular as orelhas. Limpeza cuidadosa e repetida do CAE costuma ser suficiente.</div>`;
    out+=`<div class="step"><b>Antifúngico tópico (se necessário):</b> nistatina, cetoconazol ou fluconazol solução 0,2% — 3 gotas de 8/8h por 3 semanas; ou clotrimazol solução 1% — 4 gotas de 12/12h por 2 a 4 semanas.</div>`;
    out+=`<div class="step">Antibiótico não é indicado nesse cenário, exceto se houver suspeita concreta de infecção bacteriana secundária.</div>`;
    out+=`<div class="step"><b>Reavaliação:</b> semanal, com limpeza do CAE a cada consulta; otorreia persistente ou refratariedade após ciclos de antibiótico tópico reforça a indicação de cultura para fungos.</div>`;
@@ -356,27 +563,66 @@ function calculateExterna(){
  else if(type==='pericondrite'){
    out+=`<div class="alert warn"><b>Pericondrite/condrite.</b> Sem sinais de alarme informados, mas é uma condição que pode evoluir para abscesso subpericondral e necrose de cartilagem — acompanhamento próximo é necessário.</div>`;
    out+=`<div class="step"><b>Casos leves:</b> desbridamento completo (Otorrino) + antibiótico tópico e sistêmico cobrindo <i>Pseudomonas</i>. O protocolo HCA não traz uma cefalosporina/quinolona antipseudomonas oral padronizada para este cenário; o protocolo EBSERH cita ciprofloxacino oral como antimicrobiano de escolha em adultos — em pediatria, reservar para avaliação conjunta com Otorrino/Infectologia.</div>`;
-   let daily=Math.min(75*w,2000), dose=daily/4, c=parseFloat($('cefalexConc').value);
+   let daily=Math.min(75*w,2000), dose=daily/4, c=parseFloat($('cefalexConc').value), doseML=round(ml(dose,c),1);
    out+=rxBox('Cefalexina VO — cobertura inicial disponível no protocolo HCA',
      `50–100 mg/kg/dia VO de 6/6h. Dose máxima 2 g/dia.`,
-     `${round(dose,0)} mg = ${round(ml(dose,c),1)} mL VO a cada 6 h por 7 dias`,
+     `${round(dose,0)} mg = ${doseML} mL VO a cada 6 h por 7 dias`,
      `Extrapolado da tabela de Celulite do protocolo HCA. Reavaliar cobertura anti-<i>Pseudomonas</i> com Otorrino/Infectologia, especialmente se história de trauma, piercing ou furúnculo mal tratado.`);
+   rxItems.push({label:`Cefalexina ${c*5} mg/5 mL suspensão oral`, qty:`${estimateFrascos(doseML,4,7)} frasco(s)`, instruction:`Dar ${doseML} mL, via oral, de 6/6 horas, por 7 dias.`});
    out+=`<div class="step"><b>Se não houver resposta, ou se a infecção envolver tecidos moles/linfáticos regionais:</b> hospitalizar e tratar por via parenteral com cobertura para <i>Pseudomonas</i> (esquema de Cefepime EV, ver seção de alarme desta calculadora) + avaliação cirúrgica para desbridamento/drenagem de eventual abscesso subpericondral.</div>`;
  }
 
  else if(type==='dermatite'){
-   out+=`<div class="alert info"><b>Dermatite de contato/eczematosa.</b> Não é uma infecção primária — o foco é eliminar o agente etiológico (níquel de brincos, borracha de fones, corantes, fármacos tópicos como neomicina).</div>`;
+   out+=`<div class="alert special"><b>Dermatite de contato/eczematosa.</b> Não é uma infecção primária — o foco é eliminar o agente etiológico (níquel de brincos, borracha de fones, corantes, fármacos tópicos como neomicina).</div>`;
    out+=`<div class="step"><b>Conduta:</b> gotas otológicas com corticosteroide e adstringentes. Antibioticoterapia tópica ou sistêmica apenas se houver suspeita de infecção secundária; corticoide sistêmico reservado para os casos mais acentuados.</div>`;
  }
 
  else if(type==='viral'){
-   out+=`<div class="alert info"><b>Miringite bolhosa ou herpes-zóster ótico (Ramsay Hunt) — quadros de etiologia viral.</b></div>`;
+   out+=`<div class="alert special"><b>Miringite bolhosa ou herpes-zóster ótico (Ramsay Hunt) — quadros de etiologia viral.</b></div>`;
    out+=`<div class="step"><b>Miringite bolhosa:</b> tratamento sintomático e analgesia; não indicar antibiótico rotineiramente, exceto se houver suspeita concreta de OMA bacteriana concomitante.</div>`;
    out+=`<div class="step"><b>Herpes-zóster ótico (paralisia facial + vesículas no CAE/pina):</b> antivirais (aciclovir, famciclovir ou valaciclovir), agentes secativos tópicos (ex.: peróxido de hidrogênio) para as crostas, proteção ocular se houver paralisia facial, e acompanhamento cuidadoso da função do nervo facial. Encaminhar Otorrino/Neurologia se paralisia facial presente.</div>`;
  }
 
  out+=`<div class="step"><b>Critérios de internação:</b> edema significativo do CAE impossibilitando a visualização do tímpano; abscesso do CAE; pericondrite refratária; diabéticos descompensados refratários ao tratamento clínico.</div>`;
+
+ out+=`<div class="step"><b>Orientações durante o tratamento</b> (Guia de Prescrição no Pronto-Socorro):<br>• Evitar nadar.<br>• Proteger o ouvido afetado durante o banho (pode-se usar tampão de algodão embebido em óleo).<br>• Evitar inserir dispositivos no ouvido afetado, como fones de ouvido.</div>`;
+
+ out+=allAnalgesicsHTMLExterna(w,m);
+ const alg=selectedAnalgesicRxExterna(w,m);
+ if(alg){
+   rxItems.push({label:alg.rxLabel, qty:'1 frasco', instruction:alg.rxInstruction});
+ }
+ // Inserção determinística: as orientações aparecem imediatamente abaixo da dipirona.
+ const orientacao=orientacoesAlarmeExterna();
+ const indiceDipirona=rxItems.findIndex(it=>it.kind!=='orientation' && /Dipirona/i.test(it.label||''));
+ if(indiceDipirona>=0) rxItems.splice(indiceDipirona+1,0,orientacao);
+ else rxItems.push(orientacao);
+
+ out+=prescricaoBox(rxItems, w, m, 'PRESCRIÇÃO AMBULATORIAL (modelo) — OTITE EXTERNA');
+
+ out+=conferenciaHCA('externa');
+
  $('out').innerHTML=out;$('result').style.display='block';$('result').scrollIntoView({behavior:'smooth'});
+}
+
+/* ========================= CONFERÊNCIA FINAL COM O PDF "ATB assinado" DO HCA ========================= */
+function conferenciaHCA(mode){
+ if(mode==='oma'){
+   return `<div class="card source" style="margin-top:14px"><details>
+   <summary style="cursor:pointer;font-weight:700;color:var(--navy)">✔ Conferência com o protocolo HCA (Otite Média Aguda)</summary>
+   <div class="muted" style="margin-top:6px">
+   Doses/vias/durações conferem linha a linha com a tabela assinada do HCA para as 6 opções locais (amoxicilina habitual e dobrada, ±clavulanato, ceftriaxona, claritromicina).<br>
+   • Azitromicina <b>não consta no HCA</b> — incluída como alternativa do Guia PS/Einstein para alergia grave, sinalizada como fonte externa.</div>
+   </details></div>`;
+ }
+ return `<div class="card source" style="margin-top:14px"><details>
+ <summary style="cursor:pointer;font-weight:700;color:var(--navy)">✔ Conferência com o protocolo HCA (Otite Externa)</summary>
+ <div class="muted" style="margin-top:6px">
+ O HCA <b>não tem seção própria para Otite Externa</b>. Por isso:<br>
+ • Antibiótico tópico e analgesia seguem o <b>Guia de Prescrição no PS</b> (p.198–200).<br>
+ • Cefalexina sistêmica foi <b>extrapolada da tabela de Celulite</b> do HCA (dose/via/máximo conferem; duração de 7 dias é extrapolação clínica).<br>
+ • Cefepime EV (OEN) segue a dose e diluição padrão do HCA — <b>confere</b>.</div>
+ </details></div>`;
 }
 </script>
 </body>
