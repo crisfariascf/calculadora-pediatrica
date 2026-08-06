@@ -1,149 +1,253 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FSSL — Fluxograma e Prescrição</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora FSSL Pediátrica</title>
 <style>
-:root{--b:#174f7f;--bb:#eaf3fb;--bg:#f5f7fa;--ink:#172033;--line:#d5dbe5;--r:#b42318;--y:#9a6700;--g:#067647}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink)}
-header{background:linear-gradient(135deg,#123f68,#2679b7);color:#fff;padding:20px}header h1{margin:0;font-size:23px}header p{margin:5px 0 0;opacity:.9}
-main{max-width:1200px;margin:auto;padding:15px;display:grid;grid-template-columns:390px 1fr;gap:14px}@media(max-width:850px){main{grid-template-columns:1fr}}
-.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 3px 15px #0000000b}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:17px 0 7px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field{margin:8px 0}label{display:block;font-size:13px;font-weight:650;margin-bottom:4px}input,select{width:100%;padding:9px;border:1px solid #c8d0dc;border-radius:9px;background:#fff;font-size:14px}
-.check label{display:flex;gap:7px;align-items:flex-start;font-weight:500;margin:7px 0}.check input{width:auto;margin-top:2px}
-button{width:100%;border:0;border-radius:10px;padding:12px;font-weight:750;font-size:14px;color:#fff;background:var(--b);cursor:pointer;margin-top:10px}
-.secondary{background:#475467}.print{background:#067647}.box{border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0}.blue{background:#f5fbff;border-color:#b2ddff}.red{background:#fffbfa;border-color:#fecdca}.yellow{background:#fffcf5;border-color:#fedf89}.green{background:#f6fef9;border-color:#abefc6}
-.title{font-weight:800;margin-bottom:5px}.muted{color:#667085;font-size:12px}.pill{display:inline-block;background:var(--bb);color:var(--b);padding:4px 8px;border-radius:99px;font-size:12px;font-weight:700;margin:2px}
-.flow{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:8px 0}.node{border:1px solid #98a2b3;border-radius:9px;padding:6px 9px;font-size:12px;background:#fff}.arrow{color:#667085;font-weight:bold}
-.rx{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f8fafc;border:1px solid #d0d5dd;border-radius:10px;padding:12px;font-size:13px;line-height:1.5}
-small{color:#667085}.dose{font-family:ui-monospace,monospace;background:#eef2f6;padding:2px 5px;border-radius:5px}
-@media print{header,.input,.buttons{display:none}main{display:block;padding:0}.card{box-shadow:none;border:0}}
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9e0ea;--blue:#175cd3;--blue2:#eaf2ff;--green:#067647;--green2:#ecfdf3;--amber:#b54708;--amber2:#fffaeb;--red:#b42318;--red2:#fef3f2;--purple:#6938ef;--shadow:0 10px 28px rgba(16,24,40,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#eef4ff);color:var(--ink)}
+.wrap{max-width:1180px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#1849a9,#0b74b8);color:#fff;border-radius:22px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:16px}.hero h1{margin:0 0 6px;font-size:clamp(25px,4vw,38px)}.hero p{margin:0;opacity:.9;line-height:1.45}
+.layout{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:16px;align-items:start}@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}.card h2{font-size:18px;margin:0 0 12px;color:#163a63}.card h3{font-size:15px;margin:16px 0 9px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid.one{grid-template-columns:1fr}@media(max-width:520px){.grid{grid-template-columns:1fr}}
+label{font-size:12.5px;font-weight:700;color:#344054;display:block;margin-bottom:5px}input,select{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#172033;font:inherit}input:focus,select:focus{outline:3px solid rgba(23,92,211,.12);border-color:#175cd3}
+.checks{display:grid;gap:7px}.check{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid #e2e8f0;border-radius:11px;background:#fafcff}.check input{width:auto;margin-top:2px}.check span{font-size:13px;line-height:1.35}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:11px;padding:11px 14px;font-weight:800;cursor:pointer;font-size:13px}.primary{background:#175cd3;color:#fff}.secondary{background:#edf2f7;color:#344054}.copy{background:#0f766e;color:#fff}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;margin:2px 4px 2px 0}.b-blue{background:var(--blue2);color:var(--blue)}.b-green{background:var(--green2);color:var(--green)}.b-amber{background:var(--amber2);color:var(--amber)}.b-red{background:var(--red2);color:var(--red)}
+.alert{border-radius:13px;padding:12px 13px;margin:9px 0;border-left:5px solid}.alert h3{margin:0 0 5px;font-size:15px}.alert p,.alert li{font-size:13px;line-height:1.45}.alert ul{margin:6px 0 0;padding-left:19px}.info{background:#eff8ff;border-color:#2e90fa}.ok{background:var(--green2);border-color:#12b76a}.warn{background:var(--amber2);border-color:#f79009}.danger{background:var(--red2);border-color:#f04438}
+.result-title{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}.big-status{font-size:23px;font-weight:900;margin:4px 0}.muted{color:var(--muted);font-size:12.5px;line-height:1.45}.section{border-top:1px solid #e7edf4;padding-top:12px;margin-top:12px}.section:first-child{border-top:0;padding-top:0;margin-top:0}.section h3{margin:0 0 8px;color:#163a63}.rx{white-space:pre-wrap;background:#101828;color:#e5e7eb;border-radius:14px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;overflow:auto}.pill{display:inline-block;padding:3px 7px;border-radius:7px;background:#f2f4f7;font-size:11px;margin:2px}.tiny{font-size:11px;color:#667085}.footer{font-size:11px;color:#667085;line-height:1.5;padding:4px 2px 20px}.hidden{display:none}.dose-table{width:100%;border-collapse:collapse;font-size:12.5px}.dose-table th,.dose-table td{text-align:left;border-bottom:1px solid #e6ebf1;padding:8px 6px;vertical-align:top}.dose-table th{color:#475467;background:#f8fafc}.source-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.source-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}.src-br{background:#eaf7ef;color:#146c43;border:1px solid #a7d7b8}.src-int{background:#f3efff;color:#6941c6;border:1px solid #c9b8ff}.international-note{border-left:5px solid #7f56d9;background:#f7f4ff;border-radius:13px;padding:11px 13px;margin:9px 0}.international-note h3{margin:0 0 5px;color:#53389e;font-size:14px}.international-note p,.international-note li{font-size:13px;line-height:1.45}.src-star{color:#7f56d9;font-weight:900}.sticky{position:sticky;top:10px}@media(max-width:900px){.sticky{position:static}}
 </style>
 </head>
 <body>
-<header><h1>Febre sem sinais localizatórios — FSSL</h1><p>Fluxograma decisório + exames + conduta + prescrição calculada por peso.</p></header>
-<main>
-<section class="card" style="grid-column:1/-1">
-<h2>O que é FSSL?</h2>
-<div class="box blue" style="margin-bottom:0">
-<div class="title">Febre sem sinais localizatórios (FSSL)</div>
-Segundo a definição da Sociedade Brasileira de Pediatria (SBP), é a <b>ocorrência de febre com menos de 7 dias de duração em uma criança na qual a história clínica e o exame físico não revelam a causa da febre</b>.
-<br><br>
-<span class="muted"><b>Importante:</b> FSSL não significa “febre sem diagnóstico laboratorial”. O ponto central é a ausência de um foco identificável após anamnese e exame físico. A partir daí, idade, estado geral, vacinação e risco de infecção bacteriana grave direcionam a investigação e a conduta.</span>
+<div class="wrap">
+  <header class="hero">
+    <h1>🌡️ Febre sem Sinais Localizatórios</h1>
+    <p>Estratificação de 0 a 36 meses, exames, risco de ITU/doença bacteriana grave, destino e cálculo de antibioticoterapia quando indicada.</p>
+  </header>
+  <div class="card" style="padding:12px 14px">
+    <strong style="font-size:13px">Hierarquia das recomendações</strong>
+    <div class="source-legend">
+      <span class="source-tag src-br">🇧🇷 Base principal — protocolos nacionais/institucionais</span>
+      <span class="source-tag src-int">★ Complemento internacional — UpToDate 2026</span>
+    </div>
+    <p class="tiny" style="margin:8px 0 0">As recomendações nacionais permanecem como fluxo principal. Itens com <span class="src-star">★</span> acrescentam evidência internacional, sem substituir o protocolo local.</p>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <h2>1. Dados do paciente</h2>
+        <div class="grid">
+          <div><label>Idade</label><input id="age" type="number" min="0" step="1" placeholder="Ex.: 45"></div>
+          <div><label>Unidade da idade</label><select id="ageUnit"><option value="days">dias</option><option value="months" selected>meses</option><option value="years">anos</option></select></div>
+          <div><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 8,5"></div>
+          <div><label>Temperatura máxima (°C)</label><input id="temp" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 39,2"></div>
+          <div><label>Via de aferição</label><select id="tempRoute"><option value="axillary">Axilar</option><option value="rectal">Retal</option><option value="other">Outra</option></select></div>
+          <div><label>Duração da febre (dias)</label><input id="feverDays" type="number" min="0" step="0.5" placeholder="Ex.: 2"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2. Elegibilidade e gravidade</h2>
+        <div class="checks">
+          <label class="check"><input id="noFocus" type="checkbox" checked><span>Sem foco após anamnese e exame físico completo</span></label>
+          <label class="check"><input id="wellAppearance" type="checkbox" checked><span>Bom estado geral / sem toxemia</span></label>
+          <label class="check"><input id="sepsis" type="checkbox"><span>Sinais de sepse, choque, alteração importante da perfusão ou consciência</span></label>
+          <label class="check"><input id="immunocomp" type="checkbox"><span>Imunocomprometido, doença crônica relevante ou prematuridade</span></label>
+          <label class="check"><input id="meningoContact" type="checkbox"><span>Contato/suspeita clínica de doença meningocócica</span></label>
+          <label class="check"><input id="followupUnsafe" type="checkbox"><span>Seguimento/reavaliação em 24 h não é seguro ou garantido</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>3. Vacinação e risco urinário</h2>
+        <div class="grid one">
+          <div><label>Vacinação Hib e pneumococo</label><select id="vaccines"><option value="complete">Completa para a idade</option><option value="twoDoses">Recebeu ≥2 doses conjugadas, mas série ainda em curso</option><option value="incomplete">Incompleta, 0–1 dose ou desconhecida</option></select></div>
+          <div><label>Sexo</label><select id="sex"><option value="female">Feminino</option><option value="male">Masculino</option></select></div>
+        </div>
+        <div class="checks" style="margin-top:10px">
+          <label class="check female-opt"><input id="whiteGirl" type="checkbox"><span>Menina branca</span></label>
+          <label class="check male-opt hidden"><input id="uncirc" type="checkbox"><span>Menino não circuncidado</span></label>
+          <label class="check"><input id="urinarySymptoms" type="checkbox"><span>Há sintomas urinários (nesse caso, deixa de ser FSSL estrita)</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>4. Exames disponíveis</h2>
+        <div class="grid">
+          <div><label>Leucócitos (/mm³)</label><input id="wbc" type="number" min="0" step="100"></div>
+          <div><label>Neutrófilos absolutos (/mm³)</label><input id="anc" type="number" min="0" step="100"></div>
+          <div><label>PCR (mg/L)</label><input id="crp" type="number" min="0" step="0.1"></div>
+          <div><label>Procalcitonina (ng/mL)</label><input id="pct" type="number" min="0" step="0.01"></div>
+          <div><label>SpO₂ em ar ambiente (%)</label><input id="spo2" type="number" min="50" max="100" step="1"></div>
+          <div><label>Leucócitos na urina (/mL)</label><input id="urineWbc" type="number" min="0" step="1000"></div>
+          <div><label>Urina</label><select id="urine"><option value="unknown">Não coletada</option><option value="normal">Normal</option><option value="abnormal">Alterada</option></select></div>
+          <div><label>Nitrito</label><select id="nitrite"><option value="unknown">Não informado</option><option value="negative">Negativo</option><option value="positive">Positivo</option></select></div>
+          <div><label>LCR</label><select id="csf"><option value="notdone">Não coletado</option><option value="normal">Normal</option><option value="abnormal">Alterado</option></select></div>
+        </div>
+        <div class="checks" style="margin-top:10px">
+          <label class="check"><input id="esterase" type="checkbox"><span>Esterase leucocitária positiva</span></label>
+          <label class="check"><input id="bacteriuria" type="checkbox"><span>Bacteriúria ou piúria</span></label>
+          <label class="check"><input id="herpesRisk" type="checkbox"><span>Risco/suspeita de herpes neonatal</span></label>
+          <label class="check"><input id="respSymptoms" type="checkbox"><span>Sintomas respiratórios ou indicação clínica de radiografia de tórax</span></label>
+        </div>
+        <div class="actions"><button class="primary" onclick="calculate()">Calcular conduta</button><button class="secondary" onclick="resetForm()">Limpar</button></div>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="card" id="resultCard">
+        <div class="result-title"><h2>Resultado</h2><span id="ageBadge" class="badge b-blue">Aguardando dados</span></div>
+        <div id="result"><div class="alert info"><h3>Preencha os dados</h3><p>A calculadora organiza a abordagem por idade, gravidade, vacinação e exames. Não substitui julgamento clínico nem protocolo institucional.</p></div></div>
+      </div>
+
+      <div class="card">
+        <h2>Prescrição calculada</h2>
+        <div id="rx" class="rx">Informe o peso e calcule a conduta.</div>
+        <div class="actions"><button class="copy" onclick="copyRx()">Copiar prescrição</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Doses de referência usadas</h2>
+        <table class="dose-table">
+          <tr><th>Medicamento</th><th>Regime</th></tr>
+          <tr><td>Ceftriaxona</td><td>50 mg/kg/dia (infecção sem meningite); 100 mg/kg/dia quando meningite/LCR alterado, conforme fluxo-base.</td></tr>
+          <tr><td>Cefotaxima</td><td>150 mg/kg/dia no guia FSSL; em meningite neonatal, protocolo ATB traz doses maiores.</td></tr>
+          <tr><td>Ampicilina</td><td>200 mg/kg/dia no guia FSSL se LCR alterado.</td></tr>
+          <tr><td>Aciclovir</td><td>10 mg/kg/dose EV 8/8 h se suspeita herpética.</td></tr>
+          <tr><td>Axetilcefuroxima</td><td>30 mg/kg/dia VO, dividida 12/12 h.</td></tr>
+          <tr><td>Amoxicilina + clavulanato</td><td>50 mg/kg/dia de amoxicilina, dividida 12/12 h no guia FSSL.</td></tr>
+        </table>
+        <p class="tiny"><span class="src-star">★</span> Os cortes internacionais não alteram automaticamente a dose; apenas sinalizam uma alternativa de estratificação. A calculadora informa mg e, para suspensões usuais, mL. Confirme apresentação disponível, diluição, dose máxima e protocolo local antes de prescrever.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Base clínica:</strong> protocolos brasileiros de FSSL e antibioticoterapia são priorizados. Recomendações do UpToDate 2026 aparecem marcadas com <span class="src-star">★</span>, em cor lilás, como complemento internacional. Quando houver divergência, a calculadora mantém a conduta nacional como eixo principal e expõe a alternativa internacional para julgamento médico. FSSL aguda e febre prolongada são fluxos distintos.
+  </div>
 </div>
-</section>
-<section class="card input">
-<h2>Paciente</h2>
-<div class="row"><div class="field"><label>Idade</label><input id="idade" type="number" min="0" value="6"></div><div class="field"><label>Unidade</label><select id="unidade"><option value="dias">dias</option><option value="meses" selected>meses</option><option value="anos">anos</option></select></div></div>
-<div class="row"><div class="field"><label>Peso (kg)</label><input id="peso" type="number" step=".1" value="8"></div><div class="field"><label>Temperatura axilar °C</label><input id="temp" type="number" step=".1" value="39"></div></div>
-<div class="row"><div class="field"><label>Sexo</label><select id="sexo"><option value="f">Menina</option><option value="m">Menino</option></select></div><div class="field"><label>Vacinação ≥3 meses</label><select id="vac"><option value="sim">≥2 doses pneumo + Hib</option><option value="nao">Incompleta/desconhecida</option></select></div></div>
-<div class="field"><label>Duração da febre (h)</label><input id="horas" type="number" min="0" value="24"></div>
-<h3>Clínica / risco</h3><div class="check">
-<label><input id="geral" type="checkbox"> Queda do estado geral / toxemia</label>
-<label><input id="sepse" type="checkbox"> Sinais de sepse ou choque</label>
-<label><input id="base" type="checkbox"> Prematuridade, imunocomprometimento, doença de base ou contato meningocócico</label>
-<label><input id="branca" type="checkbox"> Menina branca</label>
-<label><input id="naocirc" type="checkbox"> Menino não circuncidado</label>
-<label><input id="vomita" type="checkbox"> Vômitos / incapacidade de ingesta VO</label>
-<label><input id="herpes" type="checkbox"> Risco clínico de infecção herpética</label>
-</div>
-<h3>Resultados disponíveis</h3>
-<div class="row"><div class="field"><label>Leucócitos/mm³</label><input id="leuco" type="number" placeholder="não informado"></div><div class="field"><label>Neutrófilos/mm³</label><input id="neutro" type="number" placeholder="não informado"></div></div>
-<div class="row"><div class="field"><label>PCR mg/L</label><input id="pcr" type="number" step=".1" placeholder="não informado"></div><div class="field"><label>PCT ng/mL</label><input id="pct" type="number" step=".01" placeholder="não informado"></div></div>
-<div class="row"><div class="field"><label>Urina I</label><select id="urina"><option value="na">Não coletada</option><option value="normal">Normal</option><option value="alt">Alterada</option></select></div><div class="field"><label>LCR</label><select id="lcr"><option value="na">Não coletado</option><option value="normal">Normal</option><option value="alt">Alterado</option></select></div></div>
-<div class="field"><label>Via oral</label><select id="vo"><option value="sim">Aceita VO</option><option value="nao">Recusa / não tolera VO</option></select></div>
-<button onclick="calcular()">GERAR CONDUTA E PRESCRIÇÃO</button>
-</section>
-<section class="card"><h2>Resultado do fluxo</h2><div id="out"><div class="box blue">Preencha os dados e gere a conduta.</div></div>
-<div class="buttons"><button class="secondary" onclick="copiar()">COPIAR PRESCRIÇÃO</button><button class="print" onclick="window.print()">IMPRIMIR</button></div>
-</section>
-</main>
 <script>
-const $=id=>document.getElementById(id), n=id=>{let v=parseFloat($(id).value);return isNaN(v)?null:v};
-function idadeDias(){let i=n('idade')||0,u=$('unidade').value;return u==='dias'?i:u==='meses'?i*30.4375:i*365.25}
-function fmt(x,d=1){return Number(x.toFixed(d)).toLocaleString('pt-BR',{maximumFractionDigits:d})}
-function box(c,t,s){return `<div class="box ${c}"><div class="title">${t}</div>${s}</div>`}
-function li(a){return '<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>'}
-function rxCeftria(p,dose,via='EV'){let mg=Math.min(p*dose,dose===100?4000:2000);let mlEV=mg/100,mlIM=mg/250;return `CEFTRIAXONA 1 g — ${fmt(mg,0)} mg ${via} 1x/dia.\n`+(via==='IM'?`Reconstituir 1 FR com 3,5 mL de AD ou lidocaína (volume final 4 mL = 250 mg/mL). Administrar ${fmt(mlIM,2)} mL IM.`:`Reconstituir 1 FR com 10 mL de AD (100 mg/mL). Aspirar ${fmt(mlEV,2)} mL. Administrar EV em bolus ou 15–30 min.`)}
-function rxCefotax(p){let dia=p*150,dose=dia/3;return `CEFOTAXIMA 1 g — ${fmt(dose,0)} mg EV 8/8h (${fmt(dia,0)} mg/dia = 150 mg/kg/dia).\nDose calculada pelo protocolo FSSL.`}
-function rxAmp(p){let dia=p*200,dose=dia/4,ml=dose/200;return `AMPICILINA 1 g — ${fmt(dose,0)} mg EV 6/6h (${fmt(dia,0)} mg/dia).\nReconstituir 1 FR com 5 mL AD (~200 mg/mL). Aspirar ${fmt(ml,2)} mL. Administrar em 3–5 min se dose <500 mg; 10–15 min se >500 mg.`}
-function rxAci(p){let mg=p*10;return `ACICLOVIR — ${fmt(mg,0)} mg EV 8/8h (10 mg/kg/dose). Usar se suspeita/risco de herpes.`}
-function rxAxetil(p){let dia=Math.min(p*30,500),dose=dia/2,ml=dose/50;return `AXETILCEFUROXIMA suspensão 250 mg/5 mL — administrar ${fmt(ml,1)} mL VO 12/12h (${fmt(dose,0)} mg/dose; 30 mg/kg/dia, máximo 500 mg/dia).`}
-function rxAmoxClav50(p){let dia=Math.min(p*50,4000),dose=dia/2,ml400=dose/80,ml250=dose/50;return `AMOXICILINA + CLAVULANATO — dose pelo componente amoxicilina: ${fmt(dose,0)} mg VO 12/12h (50 mg/kg/dia).\nSe 400 mg + 57 mg/5 mL: ${fmt(ml400,1)} mL VO 12/12h.\nSe 250 mg + 62,5 mg/5 mL: ${fmt(ml250,1)} mL VO 12/12h.`}
-function rxITUvo(p){return `RAMO ITU FEBRIL / URINA I ALTERADA
-Escolher UM esquema VO conforme disponibilidade e perfil clínico:
-
-1ª opção:
-${rxAxetil(p)}
-
-2ª opção:
-${rxAmoxClav50(p)}
-
-Reavaliar com resultado da urocultura.`}
-
-function calcular(){
- let d=idadeDias(),meses=d/30.4375,p=n('peso'),t=n('temp'),h=n('horas')||0;
- if(!p||p<=0||t===null){$('out').innerHTML=box('red','Dados insuficientes','Informe peso e temperatura.');return}
- let rn=d<30, jovem=d>=30&&meses<3, maior=meses>=3&&meses<=36;
- let sep=$('sepse').checked, geral=$('geral').checked, base=$('base').checked;
- let ur=$('urina').value,lcr=$('lcr').value, le=n('leuco'),ne=n('neutro'),pct=n('pct'),pcr=n('pcr');
- let hmgAlt=(le!==null&&le>20000)||(ne!==null&&ne>10000), infl=(pct!==null&&pct>0.3)||(pcr!==null&&pcr>5);
- let riscoITU=$('sexo').value==='f'?($('branca').checked||h>48||t>39||meses<12):($('naocirc').checked||h>24||t>39);
- let flow=[], exames=[], cond='', prescr=[], classe='blue';
- if(!maior&&!rn&&!jovem){$('out').innerHTML=box('yellow','Fora da população do protocolo','Este algoritmo foi construído para FSSL até 36 meses.');return}
- if(sep){flow=['FSSL','Sepse/choque','UTI'];classe='red';cond='Sinais de sepse/choque: indicação de UTI. Acionar protocolo de sepse; o módulo FSSL isolado não deve atrasar estabilização nem antibioticoterapia adequada.'}
- else if(rn){
-   flow=['FSSL','Recém-nascido','Internação hospitalar'];
-   exames=['HMG','HMC','PCR','PCT','Urina I + UROC por sondagem','LCR: quimiocitológico/cultura/látex; PCR herpes/enterovírus se indicado','RX tórax','Vírus respiratórios, se disponível'];
-   cond='Internação hospitalar. Coletar culturas/exames antes do antibiótico quando isso não atrasar tratamento.';
-   if(lcr==='alt'){prescr=[rxCeftria(p,100,'EV'),rxAmp(p)];if($('herpes').checked)prescr.push(rxAci(p))}
-   else {prescr=[rxCefotax(p)];if($('herpes').checked)prescr.push(rxAci(p))}
-   classe='red';
- } else if(jovem){
-   flow=['FSSL','1–3 meses'];
-   exames=['HMG','HMC','PCR','PCT','Urina I + UROC por sondagem','Ponderar LCR; especialmente <2 meses','Ponderar RX tórax se sintoma respiratório','Vírus respiratórios, se disponível'];
-   if(lcr==='alt'){flow.push('LCR alterado → meningite');cond='Internação hospitalar. Fluxo de meningite.';prescr=[rxCeftria(p,100,'EV'),rxAmp(p)];if($('herpes').checked)prescr.push(rxAci(p));classe='red'}
-   else if(ur==='alt'){flow.push('Urina I alterada → ITU');cond='Internação hospitalar. Em maiores de 2 meses, o fluxograma permite ponderar alta com reavaliação diária e terapia VO/IM conforme tolerância e seguimento.';prescr=meses>=2&&$('vo').value==='sim'?[rxITUvo(p)]:[rxCeftria(p,50,'EV')];classe='yellow'}
-   else if(hmgAlt||infl||base){flow.push('Alto risco / exames alterados');cond='Internação hospitalar. Se HMG alterado e urina normal: coletar/avaliar LCR e iniciar ceftriaxona 50 mg/kg/dia.';prescr=[rxCeftria(p,50,'EV')];classe='red'}
-   else {flow.push('Baixo risco');cond='Sem necessidade de antibiótico pelo fluxograma. Ponderar internação se <2 meses ou avaliação diária até culturas.';classe='green'}
+const $=id=>document.getElementById(id);
+$('sex').addEventListener('change',()=>{document.querySelector('.female-opt').classList.toggle('hidden',$('sex').value!=='female');document.querySelector('.male-opt').classList.toggle('hidden',$('sex').value!=='male')});
+function n(id){const v=parseFloat($(id).value);return Number.isFinite(v)?v:null}
+function ageDays(){const a=n('age'); if(a===null)return null; return $('ageUnit').value==='days'?a:$('ageUnit').value==='months'?a*30.4375:a*365.25}
+function ageMonths(){const d=ageDays();return d===null?null:d/30.4375}
+function fmt(v,d=1){return Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:d})}
+function capped(mg,max){return max?Math.min(mg,max):mg}
+function doseLine(name,totalMg,frequency,route,details=''){return `• ${name}: ${fmt(totalMg)} mg ${frequency} ${route}${details?` — ${details}`:''}.`}
+function mlFrom(totalMg,mgPerMl){return totalMg/mgPerMl}
+function category(months){if(months<1)return 'Recém-nascido (<30 dias)';if(months<3)return 'Lactente jovem (1–3 meses)';if(months<=36)return 'Criança de 3–36 meses';return '>36 meses (fora do escopo)'}
+function calculate(){
+ const d=ageDays(), m=ageMonths(), w=n('weight'), t=n('temp'), fd=n('feverDays');
+ if(d===null||w===null||t===null||fd===null){$('result').innerHTML='<div class="alert danger"><h3>Dados incompletos</h3><p>Informe idade, peso, temperatura e duração da febre.</p></div>';return}
+ const cat=category(m); $('ageBadge').textContent=cat;
+ if(m>36){$('result').innerHTML='<div class="alert warn"><h3>Fora do escopo</h3><p>Esta ferramenta foi construída para crianças até 36 meses.</p></div>';$('rx').textContent='Sem prescrição automática.';return}
+ const feverThreshold=$('tempRoute').value==='rectal'?38:37.8;
+ const fever=t>=feverThreshold;
+ const strictFssl=$('noFocus').checked && fd<7 && fever;
+ const ill=!$('wellAppearance').checked || $('sepsis').checked;
+ const highHostRisk=$('immunocomp').checked;
+ const followUnsafe=$('followupUnsafe').checked;
+ const vaccineStatus=$('vaccines').value;
+ const vaccIncomplete=vaccineStatus==='incomplete';
+ const partialProtected=vaccineStatus==='twoDoses';
+ const wbc=n('wbc'), anc=n('anc'), crp=n('crp'), pct=n('pct'), spo2=n('spo2'), uw=n('urineWbc');
+ const urineAbn=$('urine').value==='abnormal'||$('nitrite').value==='positive'||$('esterase').checked||$('bacteriuria').checked||(uw!==null&&uw>10000);
+ const inflammatoryBR=(wbc!==null&&wbc>20000)||(anc!==null&&anc>10000)||(pct!==null&&pct>0.3)||(crp!==null&&crp>5);
+ const inflammatoryUTD=(wbc!==null&&wbc>=15000)||(anc!==null&&anc>=10000)||(pct!==null&&pct>0.5)||(crp!==null&&crp>20);
+ const inflammatory=inflammatoryBR;
+ const csfAbn=$('csf').value==='abnormal';
+ const fever39=t>=39;
+ const girlRisk=$('sex').value==='female' && ($('whiteGirl').checked || fd>2 || fever39 || m<12);
+ const boyRisk=$('sex').value==='male' && ($('uncirc').checked || fd>1 || fever39);
+ const utiRisk=girlRisk||boyRisk;
+ let badges=[], alerts=[], exams=[], destination=[], treatment=[], rationale=[];
+ if(!fever)alerts.push(['warn','Temperatura abaixo do limiar do protocolo',`O valor informado está abaixo de ${fmt(feverThreshold)} °C para a via selecionada.`]);
+ if(fd>=5)alerts.push(['international','★ Febre por 5 dias ou mais', 'Complemento UpToDate: reavaliar ativamente doença de Kawasaki típica/incompleta e causas de febre persistente.']);
+ if(fd>=7)alerts.push(['warn','Não é FSSL aguda', 'Pelos protocolos nacionais utilizados, febre por 7 dias ou mais exige investigação de febre prolongada; este fluxo não deve ser aplicado isoladamente.']);
+ if(fd>=8)alerts.push(['international','★ Critério clínico de FUO', 'O UpToDate utiliza febre >38,3 °C diariamente por pelo menos 8 dias, sem diagnóstico após avaliação inicial, como definição prática de febre de origem indeterminada.']);
+ if(!$('noFocus').checked)alerts.push(['warn','Há foco clínico', 'Conduza de acordo com o diagnóstico localizado, e não como FSSL.']);
+ if($('urinarySymptoms').checked)alerts.push(['info','Sintomas urinários presentes', 'O quadro deixa de ser estritamente “sem sinais localizatórios”; seguir protocolo de ITU.']);
+ if($('meningoContact').checked)alerts.push(['danger','Suspeita/contato meningocócico', 'Não aguardar exames para tratar quando houver suspeita clínica relevante; aplicar protocolo de sepse/meningococcemia.']);
+ if(ill){
+   badges.push('<span class="badge b-red">ALTO RISCO / TOXEMIA</span>');
+   exams=['Hemograma','PCR e/ou PCT','Hemocultura','Urina tipo I + urocultura','Punção lombar se não houver contraindicação','Radiografia de tórax se indicada','Pesquisa viral quando disponível'];
+   destination=['Internação hospitalar imediata','UTI se sinais de sepse, choque ou disfunção orgânica'];
+   treatment=['Antibioticoterapia empírica parenteral após culturas, sem atrasar em paciente instável'];
+ } else if(m<1){
+   badges.push('<span class="badge b-red">RN — INTERNAR</span>');
+   exams=['Hemograma','Hemocultura','PCR','PCT conforme julgamento','Urina I + urocultura por sondagem','LCR: citologia, bioquímica e cultura; considerar PCR viral','Radiografia de tórax','Pesquisa de vírus respiratórios, se disponível'];
+   destination=['Internação hospitalar','Manter até culturas negativas, afebril e com boa evolução clínica'];
+   treatment=['Cefalosporina de 3ª geração conforme protocolo institucional','Associar ampicilina se LCR alterado','Associar aciclovir se risco de herpes'];
+ } else if(m<3){
+   const highYoung=ill||highHostRisk||inflammatoryBR||urineAbn||csfAbn;
+   badges.push(`<span class="badge ${highYoung?'b-red':'b-amber'}">${highYoung?'ALTO RISCO':'BAIXO RISCO APARENTE'}</span>`);
+   exams=['Hemograma','Hemocultura','PCR','PCT conforme disponibilidade','Urina I + urocultura por sondagem','Ponderar LCR, especialmente <2 meses ou com marcadores alterados','RX de tórax se sintomas respiratórios','Pesquisa viral, se disponível'];
+   if(highYoung||followUnsafe){destination=['Internação hospitalar'];treatment=['Ceftriaxona 50 mg/kg/dia se exames alterados/alto risco','Se LCR alterado: ceftriaxona 100 mg/kg/dia + ampicilina','Aciclovir se risco herpético'];}
+   else{destination=['Reavaliação diária e garantia de acesso','Ponderar internação em menores de 2 meses'];treatment=['Sem antibiótico se baixo risco, exames normais e seguimento seguro'];}
  } else {
-   flow=['FSSL','≥3 meses'];
-   if($('vac').value==='sim'){
-     flow.push('Vacinação completa');
-     if(t<39){flow.push('T <39°C → baixo risco');cond='Alta hospitalar, sem exames ou antibioticoterapia pelo fluxograma; orientação e reavaliação clínica.';classe='green'}
-     else if(riscoITU){
-       flow.push('Febre ≥39°C','Risco ITU presente','Urina I/UROC');
-       exames=['Urina I + urocultura','Vírus respiratórios, se disponível'];
-       if(ur==='alt'){flow.push('Urina alterada');cond='RAMO ITU: Urina I alterada. Tratar como ITU febril e reavaliar com resultado da cultura.';prescr=$('vo').value==='sim'?[rxITUvo(p)]:[rxCeftria(p,50,'IM')];classe='yellow'}
-       else if(ur==='normal'){flow.push('Urina normal → baixo risco');cond='Alta sem antibiótico pelo fluxograma; reavaliação clínica.';classe='green'}
-       else cond='Aguardar Urina I/UROC para completar a bifurcação do fluxograma.'
-     } else {flow.push('Febre ≥39°C','Sem fatores de risco ITU → baixo risco');cond='Alta hospitalar, sem antibioticoterapia ou exames pelo fluxograma.';classe='green'}
+   if(!fever39 && !ill && !highHostRisk){
+     badges.push('<span class="badge b-green">BAIXO RISCO</span>');
+     exams=['Em geral, sem exames sistemáticos','Considerar urina se fatores de risco para ITU ou julgamento clínico','Pesquisa viral quando disponível'];
+     destination=['Alta com orientações; reavaliar em 24 h se persistência/piora. ★ Após antibiótico parenteral, UpToDate recomenda nova revisão também em 48 h'];
+     treatment=['Sem antibioticoterapia empírica'];
    } else {
-     flow.push('Vacinação incompleta/desconhecida');
-     if(t<39){flow.push('T <39°C → baixo risco');cond='Alta hospitalar, sem exames ou antibiótico pelo fluxograma.';classe='green'}
-     else {
-       flow.push('Febre ≥39°C');
-       exames=riscoITU?['HMG','HMC','Urina I + UROC','Vírus respiratórios, se disponível']:['HMG','HMC','Vírus respiratórios, se disponível'];
-       if(hmgAlt){
-         flow.push('HMG alterado');
-         if(ur==='alt'){flow.push('Urina alterada → ITU');cond='RAMO ITU: Urina I alterada. Tratar ITU e reavaliar com cultura.';prescr=$('vo').value==='sim'?[rxITUvo(p)]:[rxCeftria(p,50,'IM')];classe='yellow'}
-         else {flow.push('Urina normal/sem ITU','RX se leucócitos >20 mil','Ceftriaxona 50');if(le!==null&&le>20000)exames.push('RX tórax');cond='HMG alterado com Urina I normal/sem evidência de ITU: Ceftriaxona 50 mg/kg/dia e reavaliação diária até resultado de cultura. Solicitar RX de tórax se leucócitos >20.000/mm³.';prescr=[rxCeftria(p,50,'EV')];classe='red'}
-       } else if(le!==null||ne!==null) {flow.push('HMG normal');if(ur==='alt'){flow.push('Urina alterada → ITU');cond='RAMO ITU: Urina I alterada. Tratar ITU e reavaliar com cultura.';prescr=$('vo').value==='sim'?[rxITUvo(p)]:[rxCeftria(p,50,'IM')];classe='yellow'}else{flow.push('Urina normal → baixo risco');cond='Alta sem antibiótico pelo fluxograma.';classe='green'}}
-       else cond='Coletar HMG/HMC e, se houver risco para ITU, Urina I/UROC. O resultado do HMG/urina define a próxima bifurcação.'
-     }
+     const needsUrine=fever39&&utiRisk;
+     if(needsUrine)exams.push('Urina I + urocultura por método adequado');
+     if(vaccIncomplete&&fever39){exams.push('Hemograma e hemocultura — recomendação do fluxo nacional/institucional');if(utiRisk){}else exams.push('Considerar urina conforme risco clínico');}
+     if(partialProtected)exams.push('★ UpToDate: em 4–6 meses, ≥2 doses pneumocócicas podem permitir abordagem menos agressiva, conforme estado geral e seguimento');
+     if(vaccineStatus==='complete')exams.push('★ UpToDate: no totalmente imunizado e com bom estado geral, não solicitar rotineiramente hemograma, PCR, PCT ou hemocultura apenas pela febre');
+     if(inflammatoryBR)exams.push('Radiografia de tórax para pneumonia oculta (protocolo nacional: especialmente leucócitos >20.000/mm³)');
+     if(spo2!==null&&spo2<=95)exams.push('★ Radiografia de tórax: UpToDate acrescenta SpO₂ ≤95% como indicação, mesmo sem ausculta focal');
+     if(!exams.length)exams.push('Avaliação urinária conforme risco e julgamento clínico');
+     if(urineAbn){badges.push('<span class="badge b-red">PROVÁVEL ITU</span>');treatment=['Tratar ITU após coleta de urocultura; escolha oral ou parenteral conforme idade, toxemia, vômitos e capacidade de seguimento'];destination=[followUnsafe?'Internação/observação hospitalar':'Tratamento ambulatorial com reavaliação e revisão da cultura'];}
+     else if(inflammatoryBR&&vaccIncomplete){badges.push('<span class="badge b-red">RISCO BACTERIANO AUMENTADO</span>');treatment=['Ceftriaxona 50 mg/kg/dia IM/EV pode ser considerada conforme protocolo nacional, após hemocultura'];destination=[followUnsafe?'Internação hospitalar':'Reavaliação diária até culturas'];}
+     else if(inflammatoryUTD&&vaccIncomplete){badges.push('<span class="badge b-amber">★ ALERTA INTERNACIONAL</span>');treatment=['★ UpToDate considera ceftriaxona 50 mg/kg IM em não/imunizado incompleto com PCT >0,5 ng/mL, PCR >20 mg/L, leucócitos ≥15.000/mm³ ou ANC ≥10.000/mm³, após culturas'];destination=[followUnsafe?'Internação hospitalar':'Reavaliação obrigatória em 24 h e 48 h'];}
+     else{badges.push(`<span class="badge ${highHostRisk||vaccIncomplete?'b-amber':'b-green'}">${highHostRisk||vaccIncomplete?'RISCO INTERMEDIÁRIO':'BAIXO RISCO'}</span>`);treatment=['Sem antibiótico empírico na ausência de evidência bacteriana'];destination=[followUnsafe?'Observação/internação por impossibilidade de seguimento':'Alta com reavaliação diária se persistência'];}
    }
  }
- if(geral&&maior){cond='Queda do estado geral em 3–36 meses: critério de internação. '+cond;classe='red'}
- let html=box(classe,'Caminho no fluxograma',`<div class="flow">${flow.map((x,i)=>`${i?'<span class="arrow">→</span>':''}<span class="node">${x}</span>`).join('')}</div>`);
- html+=box('blue','Conduta',cond);
- if(exames.length)html+=box('blue','Exames indicados',li([...new Set(exames)]));
- html+=box('blue','Parâmetros interpretados',`<span class="pill">HMG ${hmgAlt?'ALTERADO':'não alterado/sem critério'}</span><span class="pill">Risco ITU ${riscoITU?'PRESENTE':'AUSENTE'}</span><span class="pill">PCT/PCR ${infl?'ALTERADAS':'sem critério/indisponíveis'}</span>`);
- if(prescr.length)html+=box('yellow','Prescrição calculada — ramo selecionado pelo fluxograma',`<div id="rx" class="rx">${prescr.join('\n\n')}</div><div class="muted">A prescrição abaixo corresponde ao ramo selecionado pelo fluxograma. Confirmar alergias, função renal, disponibilidade/apresentação e adequação clínica.</div>`);
- else html+=box('green','Antibioticoterapia','O ramo atual não indica antibiótico empírico pelo fluxograma FSSL.');
- html+=`<div class="muted">Base interna da ferramenta: fluxogramas FSSL até 90 dias e ≥3 meses; protocolo local do HCA para apresentações/diluições e esquema de ITU febril. Ferramenta de apoio médico, não substitui avaliação clínica.</div>`;
- $('out').innerHTML=html;
+ if(highHostRisk)rationale.push('Comorbidade/imunossupressão reduz o limiar para investigação e internação.');
+ if(followUnsafe)rationale.push('Sem seguimento seguro, o protocolo recomenda optar por regime hospitalar.');
+ if(utiRisk)rationale.push('Há fatores de risco para ITU conforme sexo, duração da febre, temperatura, idade e circuncisão.');
+ if(inflammatoryBR)rationale.push('Há marcador laboratorial acima do ponto de alerta do protocolo nacional/institucional.');
+ if(inflammatoryUTD&&!inflammatoryBR)rationale.push('★ Há marcador acima do limiar internacional do UpToDate, embora não ultrapasse todos os cortes nacionais selecionados.');
+ if(spo2!==null&&spo2<=95)rationale.push('★ SpO₂ ≤95% amplia a indicação de radiografia de tórax no UpToDate.');
+ let html=`<div class="big-status">${badges.join(' ')||'<span class="badge b-blue">AVALIAÇÃO CLÍNICA</span>'}</div>`;
+ alerts.forEach(a=>{if(a[0]==='international')html+=`<div class="international-note"><h3>${a[1]}</h3><p>${a[2]}</p></div>`;else html+=`<div class="alert ${a[0]}"><h3>${a[1]}</h3><p>${a[2]}</p></div>`});
+ html+=section('Enquadramento', [strictFssl?'Compatível com FSSL aguda no escopo da calculadora.':'Rever critérios de FSSL antes de aplicar o fluxo.',`Faixa etária: ${cat}.`,`Temperatura: ${fmt(t)} °C; febre há ${fmt(fd)} dia(s).`]);
+ html+=section('Exames sugeridos — 🇧🇷 base nacional; ★ complemento internacional',exams);html+=section('Destino',destination);html+=section('Tratamento',treatment);if(rationale.length)html+=section('Fatores que influenciaram a decisão',rationale);
+ html+=`<div class="alert info"><h3>Reavaliação obrigatória</h3><p>Orientar retorno imediato por prostração, irritabilidade inconsolável, dificuldade respiratória, recusa alimentar, vômitos persistentes, redução da diurese, convulsão, rigidez de nuca, petéquias/púrpura, extremidades frias, enchimento capilar lento ou piora do estado geral.</p></div>`;
+ $('result').innerHTML=html;
+ $('rx').textContent=buildRx(m,w,ill,urineAbn,inflammatory,csfAbn,$('herpesRisk').checked,vaccIncomplete,followUnsafe);
 }
-function copiar(){let e=$('rx');navigator.clipboard.writeText(e?e.innerText:$('out').innerText);alert('Conteúdo copiado.')}
-calcular();
+function section(title,items){if(!items||!items.length)return'';return `<div class="section"><h3>${title}</h3><ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
+function buildRx(m,w,ill,urineAbn,inflammatory,csfAbn,herpes,vaccIncomplete,followUnsafe){
+ let out=[];out.push(`FSSL PEDIÁTRICA — Peso: ${fmt(w)} kg | Idade aproximada: ${fmt(m,1)} meses`);out.push('');
+ if(m<1||ill){
+   let cef=csfAbn?100*w:100*w; out.push(doseLine('Ceftriaxona',capped(cef,4000),'1x/dia','EV',`${fmt(csFml(cef))} mL se solução final 100 mg/mL`));
+   out.push('OU');
+   let cfd=150*w;out.push(doseLine('Cefotaxima',capped(cfd,6000),'dividir 8/8 h','EV',`${fmt(cfd/3)} mg por dose`));
+   if(csfAbn){let amp=200*w;out.push(doseLine('Ampicilina',capped(amp,8000),'dividir 6/6 h','EV',`${fmt(amp/4)} mg por dose`));}
+   if(herpes){let ac=10*w;out.push(doseLine('Aciclovir',ac,'8/8 h','EV',`${fmt(ac)} mg por dose`));}
+   out.push('');out.push('Coletar culturas e demais exames antes do antibiótico quando isso não atrasar estabilização/tratamento.');
+ } else if(m<3){
+   if(urineAbn||inflammatory||csfAbn||followUnsafe){let cef=(csfAbn?100:50)*w;out.push(doseLine('Ceftriaxona',capped(cef,csfAbn?4000:2000),'1x/dia','EV/IM',`${fmt(csFml(cef))} mL se solução final 100 mg/mL`));if(csfAbn){let amp=200*w;out.push(doseLine('Ampicilina',capped(amp,8000),'dividir 6/6 h','EV',`${fmt(amp/4)} mg por dose`));}if(herpes){let ac=10*w;out.push(doseLine('Aciclovir',ac,'8/8 h','EV'));}}
+   else out.push('Sem antibiótico automático: baixo risco aparente, exames normais e seguimento diário seguro.');
+ } else {
+   if(urineAbn){
+     let cefuroDay=Math.min(30*w,500), cefuroDose=cefuroDay/2;out.push(doseLine('Axetilcefuroxima',cefuroDay,'dividir 12/12 h','VO',`${fmt(cefuroDose)} mg por dose; suspensão 250 mg/5 mL: ${fmt(cefuroDose/50)} mL por dose`));
+     out.push('OU');
+     let amoxDay=Math.min(50*w,4000), amoxDose=amoxDay/2;out.push(doseLine('Amoxicilina + clavulanato (componente amoxicilina)',amoxDay,'dividir 12/12 h','VO',`${fmt(amoxDose)} mg de amoxicilina por dose; 400 mg/57 mg em 5 mL: ${fmt(amoxDose/80)} mL por dose`));
+     out.push('OU, se não tolera VO / indicação parenteral');let cef= Math.min(50*w,2000);out.push(doseLine('Ceftriaxona',cef,'1x/dia','IM/EV',`${fmt(csFml(cef))} mL se solução final 100 mg/mL`));
+   } else if(inflammatory&&vaccIncomplete){let cef=Math.min(50*w,2000);out.push(doseLine('Ceftriaxona',cef,'1x/dia','IM/EV',`${fmt(csFml(cef))} mL se solução final 100 mg/mL`));out.push('Reavaliar diariamente e revisar hemocultura.');}
+   else out.push('Sem indicação de antibiótico empírico pela calculadora. Tratamento sintomático voltado ao conforto e acompanhamento clínico.');
+ }
+ out.push('');out.push('ATENÇÃO: confirmar alergias, função renal, apresentação disponível, compatibilidade/diluição, dose máxima e protocolo institucional. A decisão final é médica.');return out.join('\n');
+}
+function csFml(mg){return mg/100}
+function copyRx(){navigator.clipboard.writeText($('rx').textContent).then(()=>{const b=document.querySelector('.copy');const old=b.textContent;b.textContent='Copiado ✓';setTimeout(()=>b.textContent=old,1200)})}
+function resetForm(){document.querySelectorAll('input').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value=''});$('noFocus').checked=true;$('wellAppearance').checked=true;$('ageUnit').value='months';$('tempRoute').value='axillary';$('vaccines').value='complete';$('sex').value='female';$('urine').value='unknown';$('nitrite').value='unknown';$('csf').value='notdone';$('result').innerHTML='<div class="alert info"><h3>Preencha os dados</h3><p>A calculadora organiza a abordagem por idade, gravidade, vacinação e exames.</p></div>';$('rx').textContent='Informe o peso e calcule a conduta.';$('ageBadge').textContent='Aguardando dados';}
 </script>
-</body></html>
+</body>
+</html>
