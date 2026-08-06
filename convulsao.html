@@ -1,933 +1,317 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crise Convulsiva Febril — Guia Clínico Pediátrico</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crise Convulsiva Febril — PediCalc</title>
 <style>
-:root{
-  --ink:#182430;
-  --ink-soft:#4a5666;
-  --paper:#f4f6f5;
-  --paper-card:#ffffff;
-  --line:#dde3e1;
-  --urgencia:#a8321f;
-  --urgencia-deep:#7c2416;
-  --urgencia-tint:#fbeae6;
-  --investigacao:#0e5e57;
-  --investigacao-deep:#0a4640;
-  --investigacao-tint:#e6f1ef;
-  --amber:#b6791f;
-  --amber-tint:#fbf1e0;
-  --mono:'JetBrains Mono',monospace;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:var(--paper);
-  color:var(--ink);
-  line-height:1.5;
-}
-h1,h2,h3,h4{font-family:'Source Serif 4',serif; margin:0; letter-spacing:-0.01em;}
-.eyebrow{
-  font-family:var(--mono);
-  font-size:0.72rem;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  font-weight:600;
-}
-a{color:inherit;}
-button{font-family:inherit;cursor:pointer;}
-input[type=number]{font-family:'Inter',sans-serif;}
-
-/* ============ HOME ============ */
-#home{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-.home-top{
-  padding:64px 24px 40px;
-  text-align:center;
-  border-bottom:1px solid var(--line);
-  background:
-    radial-gradient(circle at 20% 0%, rgba(168,50,31,0.05), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(14,94,87,0.06), transparent 45%);
-}
-.home-top .eyebrow{color:var(--ink-soft);margin-bottom:14px;display:block;}
-.home-top h1{font-size:clamp(1.9rem,4vw,2.9rem);font-weight:700;max-width:820px;margin:0 auto 14px;}
-.home-top p{color:var(--ink-soft);max-width:600px;margin:0 auto;font-size:0.98rem;}
-.home-top .badges{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.badge{
-  font-family:var(--mono);
-  font-size:0.68rem;
-  padding:5px 10px;
-  border:1px solid var(--line);
-  border-radius:20px;
-  color:var(--ink-soft);
-  background:var(--paper-card);
-}
-
-.paths{
-  flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1px;
-  background:var(--line);
-}
-@media (max-width:820px){.paths{grid-template-columns:1fr;}}
-
-.path-card{
-  padding:52px 44px;
-  background:var(--paper-card);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  position:relative;
-  overflow:hidden;
-  transition:background .25s ease;
-}
-.path-card:hover{background:var(--paper);}
-.path-card .glyph{
-  font-family:var(--mono);
-  font-size:0.72rem;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 12px;
-  border-radius:4px;
-  width:fit-content;
-}
-#path-urgencia .glyph{background:var(--urgencia-tint);color:var(--urgencia-deep);}
-#path-investigacao .glyph{background:var(--investigacao-tint);color:var(--investigacao-deep);}
-.path-card h2{font-size:2rem;font-weight:700;}
-#path-urgencia h2{color:var(--urgencia-deep);}
-#path-investigacao h2{color:var(--investigacao-deep);}
-.path-card .desc{color:var(--ink-soft);font-size:0.95rem;max-width:420px;}
-.path-card ul{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
-.path-card li{font-size:0.88rem;color:var(--ink);display:flex;gap:10px;align-items:baseline;}
-.path-card li::before{content:'—';color:var(--ink-soft);flex-shrink:0;}
-.enter-btn{
-  margin-top:auto;
-  align-self:flex-start;
-  border:none;
-  padding:13px 26px;
-  border-radius:3px;
-  font-weight:700;
-  font-size:0.9rem;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-#path-urgencia .enter-btn{background:var(--urgencia);}
-#path-urgencia .enter-btn:hover{background:var(--urgencia-deep);}
-#path-investigacao .enter-btn{background:var(--investigacao);}
-#path-investigacao .enter-btn:hover{background:var(--investigacao-deep);}
-.home-foot{
-  text-align:center;
-  padding:18px;
-  font-size:0.72rem;
-  color:var(--ink-soft);
-  border-top:1px solid var(--line);
-}
-
-/* ============ SHARED APP SHELL ============ */
-.view{display:none;min-height:100vh;}
-.view.active{display:block;}
-.app-header{
-  position:sticky;top:0;z-index:30;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 24px;
-  border-bottom:1px solid var(--line);
-  backdrop-filter:blur(6px);
-}
-.app-header .brand{display:flex;align-items:center;gap:12px;}
-.app-header .brand-mark{
-  width:34px;height:34px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-family:var(--mono);font-weight:700;font-size:0.85rem;
-}
-.app-header .brand-name{font-weight:700;font-size:0.95rem;}
-.app-header .brand-sub{font-size:0.72rem;color:var(--ink-soft);}
-.back-btn{
-  border:1px solid var(--line);background:var(--paper-card);
-  padding:8px 16px;border-radius:4px;font-size:0.82rem;font-weight:600;
-  display:flex;align-items:center;gap:6px;
-}
-#view-urgencia .app-header{background:rgba(251,234,230,0.55);}
-#view-urgencia .brand-mark{background:var(--urgencia);}
-#view-urgencia .brand-name{color:var(--urgencia-deep);}
-#view-investigacao .app-header{background:rgba(230,241,239,0.55);}
-#view-investigacao .brand-mark{background:var(--investigacao);}
-#view-investigacao .brand-name{color:var(--investigacao-deep);}
-
-.tabs{
-  display:flex;gap:2px;padding:0 24px;
-  border-bottom:1px solid var(--line);
-  overflow-x:auto;
-  background:var(--paper-card);
-}
-.tab-btn{
-  border:none;background:none;padding:14px 16px;font-size:0.82rem;font-weight:600;
-  color:var(--ink-soft);border-bottom:2px solid transparent;white-space:nowrap;
-}
-#view-urgencia .tab-btn.active{color:var(--urgencia-deep);border-bottom-color:var(--urgencia);}
-#view-investigacao .tab-btn.active{color:var(--investigacao-deep);border-bottom-color:var(--investigacao);}
-
-.content{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
-.panel{display:none;}
-.panel.active{display:block;animation:fadein .3s ease;}
-@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
-
-.card{
-  background:var(--paper-card);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:26px 28px;
-  margin-bottom:20px;
-}
-.card h3{font-size:1.25rem;margin-bottom:14px;}
-.card h4{font-size:1rem;margin:18px 0 8px;font-family:'Inter',sans-serif;font-weight:700;}
-.card p{margin:0 0 10px;font-size:0.92rem;color:var(--ink);}
-.card p.muted{color:var(--ink-soft);font-size:0.85rem;}
-
-.section-title{
-  font-size:1.6rem;margin-bottom:6px;
-}
-.section-lede{color:var(--ink-soft);font-size:0.92rem;margin-bottom:26px;max-width:640px;}
-
-/* timeline for emergency flow */
-.timeline{position:relative;padding-left:28px;border-left:3px solid var(--urgencia);margin:20px 0;}
-.tl-step{position:relative;padding-bottom:34px;}
-.tl-step:last-child{padding-bottom:0;}
-.tl-step::before{
-  content:'';position:absolute;left:-35px;top:2px;width:14px;height:14px;border-radius:50%;
-  background:var(--urgencia);border:3px solid var(--paper-card);box-shadow:0 0 0 2px var(--urgencia);
-}
-.tl-time{font-family:var(--mono);font-size:0.72rem;font-weight:700;color:var(--urgencia-deep);text-transform:uppercase;letter-spacing:0.06em;}
-.tl-step h4{margin:4px 0 8px;font-size:1.05rem;}
-.tl-body{background:var(--urgencia-tint);border-radius:6px;padding:14px 16px;font-size:0.88rem;}
-.tl-body ul{margin:6px 0;padding-left:18px;}
-.tl-body li{margin-bottom:4px;}
-
-/* dose calc */
-.dose-input{
-  display:flex;align-items:center;gap:12px;background:var(--paper);
-  border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin-bottom:18px;
-}
-.dose-input label{font-weight:700;font-size:0.9rem;}
-.dose-input input{
-  width:110px;padding:9px 12px;border:1px solid var(--line);border-radius:4px;font-size:1rem;font-weight:600;
-}
-.dose-input span.unit{color:var(--ink-soft);font-size:0.85rem;}
-.dose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-@media (max-width:640px){.dose-grid{grid-template-columns:1fr;}}
-.dose-card{
-  border:1px solid var(--line);border-radius:6px;padding:16px 18px;background:var(--paper);
-}
-.dose-card.line1{border-left:4px solid var(--urgencia);}
-.dose-card.line2{border-left:4px solid var(--amber);}
-.dose-card.line3{border-left:4px solid var(--urgencia-deep);background:#f7e2de;}
-.dose-card .drug{font-weight:700;font-size:0.95rem;margin-bottom:2px;}
-.dose-card .route{font-family:var(--mono);font-size:0.68rem;color:var(--ink-soft);text-transform:uppercase;margin-bottom:8px;display:block;}
-.dose-result{font-family:var(--mono);font-size:1.3rem;font-weight:700;color:var(--urgencia-deep);}
-.dose-max{font-size:0.76rem;color:var(--ink-soft);margin-top:2px;}
-.dose-card.line2 .dose-result{color:var(--amber);}
-
-/* alert boxes */
-.alert{border-radius:6px;padding:14px 18px;font-size:0.88rem;margin:14px 0;display:flex;gap:12px;}
-.alert .ico{font-size:1.1rem;line-height:1;flex-shrink:0;}
-.alert.danger{background:var(--urgencia-tint);border:1px solid #f0c7bd;color:var(--urgencia-deep);}
-.alert.info{background:var(--investigacao-tint);border:1px solid #c3e0db;color:var(--investigacao-deep);}
-.alert.warn{background:var(--amber-tint);border:1px solid #edd6a3;color:var(--amber);}
-
-/* classifier tool */
-.q-block{border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:12px;background:var(--paper);}
-.q-block .q-text{font-weight:600;font-size:0.9rem;margin-bottom:10px;}
-.opt-row{display:flex;gap:10px;flex-wrap:wrap;}
-.opt-btn{
-  border:1px solid var(--line);background:var(--paper-card);padding:9px 16px;border-radius:20px;
-  font-size:0.84rem;font-weight:600;color:var(--ink-soft);
-}
-.opt-btn.selected{background:var(--investigacao);border-color:var(--investigacao);color:#fff;}
-#view-investigacao .opt-btn.selected{background:var(--investigacao);border-color:var(--investigacao);}
-
-.result-banner{
-  margin-top:18px;border-radius:8px;padding:20px 22px;display:none;
-}
-.result-banner.show{display:block;}
-.result-banner.simples{background:var(--investigacao-tint);border:1px solid #bfe0da;}
-.result-banner.complexa{background:var(--amber-tint);border:1px solid #edd6a3;}
-.result-banner h4{font-size:1.15rem;margin-bottom:6px;}
-.result-banner.simples h4{color:var(--investigacao-deep);}
-.result-banner.complexa h4{color:var(--amber);}
-
-/* tables */
-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:10px 0;}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);}
-th{font-family:var(--mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-soft);font-weight:600;}
-tr:last-child td{border-bottom:none;}
-
-/* decision tree (investigation) */
-.dtree{display:flex;flex-direction:column;gap:0;}
-.dt-node{
-  border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:8px;background:var(--paper);
-  cursor:pointer;
-}
-.dt-node.active{border-color:var(--investigacao);background:var(--investigacao-tint);}
-.dt-node .dt-q{font-weight:700;font-size:0.9rem;}
-.dt-branches{display:flex;gap:8px;margin-top:10px;}
-.dt-out{
-  display:none;margin-top:10px;padding:14px 16px;border-radius:6px;background:var(--investigacao-tint);
-  border:1px solid #bfe0da;font-size:0.88rem;
-}
-.dt-out.show{display:block;}
-
-.chip-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
-.chip{
-  font-size:0.78rem;padding:6px 12px;border-radius:20px;background:var(--paper);
-  border:1px solid var(--line);color:var(--ink-soft);
-}
-
-.footnote{font-size:0.74rem;color:var(--ink-soft);margin-top:30px;border-top:1px solid var(--line);padding-top:14px;}
-
-.pulse-dot{
-  display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--urgencia);
-  animation:pulse 1.4s infinite;margin-right:6px;
-}
-@keyframes pulse{0%{opacity:1;}50%{opacity:0.3;}100%{opacity:1;}}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--primary:#5b5bd6;--primary2:#7c3aed;--ok:#067647;--okbg:#ecfdf3;--warn:#b54708;--warnbg:#fffaeb;--danger:#b42318;--dangerbg:#fef3f2;--info:#175cd3;--infobg:#eff8ff;--shadow:0 10px 30px rgba(16,24,40,.08)}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(145deg,#f8f7ff,#f4f8fb 45%,#f7fbfa);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
+.wrap{max-width:1260px;margin:auto;padding:18px}.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}.eyebrow{display:inline-flex;padding:6px 10px;border:1px solid #dedcff;background:#f4f3ff;color:#5145cd;border-radius:999px;font-size:12px;font-weight:800}.hero h1{margin:8px 0 4px;font-size:clamp(27px,4vw,42px);line-height:1.05}.hero p{margin:0;color:var(--muted);max-width:760px}.badge-date{font-size:12px;color:var(--muted);white-space:nowrap;padding-top:8px}
+.layout{display:grid;grid-template-columns:minmax(330px,430px) 1fr;gap:16px;align-items:start}.panel,.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.panel{padding:16px;position:sticky;top:12px}.card{padding:16px;margin-bottom:13px}.section-title{font-size:16px;font-weight:850;margin:0 0 12px}.sub{font-size:12px;color:var(--muted);margin:-7px 0 12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:11px}.field label{display:block;font-size:12px;font-weight:750;color:#344054;margin-bottom:5px}.field input,.field select{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:12px;background:#fff;color:var(--text);font:inherit;outline:none}.field input:focus,.field select:focus{border-color:#9b8afb;box-shadow:0 0 0 3px #eeeafe}.checks{display:grid;gap:7px}.check{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#fcfcfd}.check input{margin-top:3px}.check span{font-size:13px}.actions{display:flex;gap:8px;margin-top:14px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;flex:1}.btn.ghost{background:#f2f4f7;color:#344054}
+.result-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.result-head h2{margin:0 0 4px;font-size:22px}.pill{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}.pill.ok{background:var(--okbg);color:var(--ok)}.pill.warn{background:var(--warnbg);color:var(--warn)}.pill.danger{background:var(--dangerbg);color:var(--danger)}.pill.info{background:var(--infobg);color:var(--info)}
+.alert{border-radius:13px;padding:12px 13px;margin:10px 0;border:1px solid}.alert.danger{background:var(--dangerbg);color:#7a271a;border-color:#fecdca}.alert.warn{background:var(--warnbg);color:#7a2e0e;border-color:#fedf89}.alert.info{background:var(--infobg);color:#1849a9;border-color:#b2ddff}.alert.ok{background:var(--okbg);color:#05603a;border-color:#abefc6}.alert strong{display:block;margin-bottom:2px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.kpi{padding:12px;border:1px solid var(--line);border-radius:13px;background:#fafafa}.kpi .v{font-size:19px;font-weight:900}.kpi .l{font-size:11px;color:var(--muted)}
+.steps{counter-reset:s}.step{position:relative;padding:0 0 13px 37px}.step:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:#eeecff;color:#5145cd;font-weight:900;display:grid;place-items:center}.step h3{font-size:14px;margin:0 0 3px}.step p{margin:0;color:#475467;font-size:13px}.dose-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}.dose-table th,.dose-table td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}.dose-table th{color:#475467;font-size:11px;text-transform:uppercase;letter-spacing:.03em}.dose-table tr:last-child td{border-bottom:0}.dose{font-weight:850;color:#42307d}.mini{font-size:11px;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:13px}.list{margin:0;padding-left:18px}.list li{margin:5px 0}.tag{display:inline-block;padding:3px 7px;border-radius:7px;background:#f2f4f7;font-size:11px;font-weight:750;margin:2px}.footer{font-size:11px;color:var(--muted);padding:4px 3px 24px}.hidden{display:none!important}
+.fssl-launch{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:13px;border:1px solid #b2ddff;background:#eff8ff;border-radius:14px;margin-top:10px}
+.fssl-launch h3{margin:0 0 3px;font-size:14px;color:#1849a9}.fssl-launch p{margin:0;font-size:12px;color:#344054}
+.fssl-btn{border:0;border-radius:11px;padding:10px 13px;background:#175cd3;color:#fff;font-weight:850;cursor:pointer}
+.fssl-panel{display:none;margin-top:12px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.fssl-panel.open{display:block}.fssl-panel iframe{display:block;width:100%;height:980px;border:0;background:#fff}
+.etiology-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.etiology-box{padding:14px 15px;border:1px solid var(--line);border-radius:14px;background:#fcfcfd;min-height:92px}.etiology-box b{display:block;margin-bottom:6px;font-size:14px;line-height:1.3}.etiology-box span{font-size:12.5px;line-height:1.5;color:#475467}#etiologyCard{grid-column:1/-1;padding:20px}#etiologyCard .sub{max-width:900px;margin-bottom:14px}#etiologyResult .alert{padding:14px 16px;margin:10px 0}.fssl-launch{margin-top:14px;padding:15px 16px}.fssl-launch>div{flex:1 1 420px}.fssl-btn{flex:0 0 auto;white-space:nowrap}
+@media(max-width:700px){.etiology-grid{grid-template-columns:1fr}#etiologyCard{padding:16px}.fssl-launch{align-items:stretch}.fssl-btn{width:100%}.fssl-panel iframe{height:1100px}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static}.hero{display:block}.badge-date{margin-top:8px}.two-col{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.grid2{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.wrap{padding:11px}.grid2{grid-template-columns:1fr}.panel,.card{border-radius:15px;padding:13px}.dose-table{font-size:12px}.dose-table th,.dose-table td{padding:8px 5px}}
+@media print{body{background:#fff}.panel,.actions,.footer{display:none}.layout{display:block}.card{box-shadow:none;break-inside:avoid}.wrap{max-width:none}}
 </style>
 </head>
 <body>
-
-<!-- ============================================================ HOME ============================================================ -->
-<div id="home">
-  <div class="home-top">
-    <span class="eyebrow">Guia clínico interativo · Pediatria</span>
-    <h1>Crise Convulsiva Febril</h1>
-    <p>Classificação, manejo agudo e investigação da criança de 6 a 60 meses com crise febril — baseado em SBP, Hospital Albert Einstein e literatura recente (2024–2026).</p>
-    <div class="badges">
-      <span class="badge">SBP · Doc. Científico nº206</span>
-      <span class="badge">Einstein · Convulsão Febril Benigna</span>
-      <span class="badge">Einstein · Estado de Mal Epiléptico</span>
-      <span class="badge">JMBR 2026 · CF vs Epilepsia</span>
-    </div>
+<div class="wrap">
+  <div class="hero">
+    <div><span class="eyebrow">PediCalc • Neurologia Pediátrica</span><h1>Crise Convulsiva Febril</h1><p>Classificação clínica, tratamento agudo, investigação, disposição e estimativa de risco com base nos tópicos UpToDate 2026, com complementação e conferência por fontes brasileiras.</p></div>
+    <div class="badge-date">Uso profissional • funciona offline</div>
   </div>
 
-  <div class="paths">
-    <div class="path-card" id="path-urgencia">
-      <span class="glyph">🚨 &nbsp;Fluxo agudo</span>
-      <h2>Na Urgência</h2>
-      <p class="desc">A criança está convulsionando agora ou acabou de convulsionar. Cronômetro, estabilização e calculadora de doses por peso, minuto a minuto.</p>
-      <ul>
-        <li>Cronômetro de crise + estabilização (ABC, MOV, glicemia)</li>
-        <li>Doses calculadas por peso: 1ª, 2ª e 3ª linha</li>
-        <li>Critérios de internação e UTI</li>
-      </ul>
-      <button class="enter-btn" onclick="goTo('urgencia')">Entrar no fluxo de urgência →</button>
-    </div>
-    <div class="path-card" id="path-investigacao">
-      <span class="glyph">🔎 &nbsp;Fluxo ambulatorial</span>
-      <h2>Investigação &amp; Conduta</h2>
-      <p class="desc">A crise já cessou. Classifique simples vs. complexa, decida exames, diferencie de epilepsia e planeje alta e seguimento.</p>
-      <ul>
-        <li>Classificador interativo simples × complexa</li>
-        <li>Árvore de decisão: LP, EEG, neuroimagem, laboratório</li>
-        <li>CF vs. epilepsia · fatores de risco · alta</li>
-      </ul>
-      <button class="enter-btn" onclick="goTo('investigacao')">Entrar na investigação →</button>
-    </div>
-  </div>
-  <div class="home-foot">Ferramenta de apoio à decisão clínica — não substitui o julgamento do profissional de saúde à beira do leito.</div>
-</div>
-
-<!-- ============================================================ URGÊNCIA ============================================================ -->
-<div class="view" id="view-urgencia">
-  <div class="app-header">
-    <div class="brand">
-      <div class="brand-mark">🚨</div>
-      <div>
-        <div class="brand-name">Fluxo de Urgência</div>
-        <div class="brand-sub">Crise convulsiva febril / estado de mal</div>
-      </div>
-    </div>
-    <button class="back-btn" onclick="goHome()">← Início</button>
-  </div>
-  <div class="tabs" id="tabs-urg">
-    <button class="tab-btn active" data-panel="u-cronometro">Cronômetro &amp; estabilização</button>
-    <button class="tab-btn" data-panel="u-doses">Calculadora de doses</button>
-    <button class="tab-btn" data-panel="u-fluxograma">Fluxograma completo</button>
-    <button class="tab-btn" data-panel="u-alta">Internação &amp; UTI</button>
-  </div>
-
-  <div class="content">
-
-    <!-- CRONÔMETRO -->
-    <div class="panel active" id="u-cronometro">
-      <h2 class="section-title">Cronômetro da crise</h2>
-      <p class="section-lede">A crise tônico-clônica com duração &gt;5 minutos pode ultrapassar os mecanismos de homeostase e evoluir para estado de mal epiléptico. Use o cronômetro para guiar o escalonamento terapêutico.</p>
-
-      <div class="card" style="text-align:center;">
-        <div id="timerDisplay" style="font-family:var(--mono);font-size:3.4rem;font-weight:700;color:var(--urgencia-deep);">00:00</div>
-        <div id="timerPhase" style="font-family:var(--mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin-bottom:16px;">Aguardando início</div>
-        <div style="display:flex;gap:10px;justify-content:center;">
-          <button class="enter-btn" style="background:var(--urgencia);" onclick="timerStart()">▶ Iniciar</button>
-          <button class="enter-btn" style="background:var(--ink-soft);" onclick="timerReset()">↺ Zerar</button>
-        </div>
+  <div class="layout">
+    <aside class="panel">
+      <h2 class="section-title">Dados do paciente e do evento</h2>
+      <div class="grid2">
+        <div class="field"><label>Idade (meses)</label><input id="age" type="number" min="0" max="216" step="1" value="18"></div>
+        <div class="field"><label>Peso (kg)</label><input id="weight" type="number" min="1" max="120" step="0.1" value="12"></div>
+        <div class="field"><label>Temperatura máxima (°C)</label><input id="temp" type="number" min="35" max="43" step="0.1" value="39"></div>
+        <div class="field"><label>Duração da crise (min)</label><input id="duration" type="number" min="0" max="240" step="0.5" value="3"></div>
+        <div class="field"><label>Nº de crises em 24 h</label><input id="count24" type="number" min="1" max="20" step="1" value="1"></div>
+        <div class="field"><label>Tempo febre → crise</label><select id="feverLatency"><option value="gt24">&gt;24 h</option><option value="1to24">1–24 h</option><option value="lt1">≤1 h</option><option value="unknown">Desconhecido</option></select></div>
+        <div class="field"><label>Foco infeccioso após exame</label><select id="infectiousFocus"><option value="defined">Foco definido</option><option value="none">Sem foco localizado</option><option value="uncertain">Duvidoso / investigação incompleta</option></select></div>
+        <div class="field"><label>Duração da febre (dias)</label><input id="feverDays" type="number" min="0" max="30" step="0.5" value="1"></div>
       </div>
 
-      <div class="alert danger"><span class="ico">⚠️</span><div><strong>Evitar investigação excessiva de desencadeantes</strong> em pacientes com diagnóstico prévio de epilepsia. Guiar exames pelos sinais/sintomas: infecção, intoxicação, distúrbio hidroeletrolítico, erro inato do metabolismo, trauma, neoplasia de SNC, uso incorreto de anticonvulsivante.</div></div>
-
-      <div class="card">
-        <h3>0–5 min · Estabilização</h3>
-        <table>
-          <tr><td>Alocar</td><td>Sala de emergência</td></tr>
-          <tr><td>Monitorização</td><td>Contínua: FC, PA, SatO₂</td></tr>
-          <tr><td>Posição</td><td>Decúbito lateral, com proteção da cabeça</td></tr>
-          <tr><td>Vias aéreas</td><td>O₂ em máscara não reinalante — alvo SatO₂ 92–98%; garantir bolsa-valva-máscara (Ambu) disponível</td></tr>
-          <tr><td>Acesso</td><td>Puncionar acesso venoso periférico (AVP)</td></tr>
-          <tr><td>Glicemia</td><td>Glicemia capilar — corrigir hipoglicemia (DX &lt;60–70) com 2–5 mL/kg SG25%</td></tr>
-          <tr><td>Hipotensão</td><td>Corrigir se PAS &lt;p5 com expansão 20 mL/kg SF 0,9%</td></tr>
-          <tr><td>SNC</td><td>Observar sinais de complicação (pupilas, tríade de Cushing)</td></tr>
-        </table>
-        <p class="muted">Coletar líquor se sinais de irritação meníngea, toxemia, pós-ictal prolongado ou rebaixamento persistente do nível de consciência. Se suspeita de hipertensão intracraniana, TC de crânio antes da punção lombar.</p>
+      <div class="checks">
+        <label class="check"><input id="ongoing" type="checkbox"><span><b>Crise ainda em curso</b> ou sem recuperação neurológica entre episódios</span></label>
+        <label class="check"><input id="focal" type="checkbox"><span>Início ou sinais <b>focais</b> (desvio ocular, unilateralidade etc.)</span></label>
+        <label class="check"><input id="baseline" type="checkbox" checked><span>Retornou ao estado neurológico basal</span></label>
+        <label class="check"><input id="todd" type="checkbox"><span>Paresia de Todd / déficit focal pós-ictal</span></label>
+        <label class="check"><input id="cnsSigns" type="checkbox"><span>Sinais de meningite/encefalite: rigidez nucal, fontanela abaulada, petéquias, alteração persistente da consciência</span></label>
+        <label class="check"><input id="development" type="checkbox"><span>Atraso do desenvolvimento ou exame neurológico basal anormal</span></label>
+        <label class="check"><input id="priorAfebrile" type="checkbox"><span>História prévia de crise <b>afebril</b></span></label>
+        <label class="check"><input id="familyFS" type="checkbox"><span>História familiar de crise febril</span></label>
+        <label class="check"><input id="familyEp" type="checkbox"><span>História familiar de epilepsia</span></label>
+        <label class="check"><input id="immunization" type="checkbox" checked><span>Vacinação Hib e pneumococo adequada/conhecida</span></label>
+        <label class="check"><input id="antibiotic" type="checkbox"><span>Uso prévio de antibiótico (pode mascarar meningite)</span></label>
+        <label class="check"><input id="giLoss" type="checkbox"><span>Vômitos/diarreia, hidratação anormal, letargia, edema ou desidratação</span></label>
+        <label class="check"><input id="toxic" type="checkbox"><span>Mau estado geral, toxemia, perfusão alterada ou suspeita de sepse</span></label>
+        <label class="check"><input id="followupUnsafe" type="checkbox"><span>Reavaliação em 24 horas não é segura ou garantida</span></label>
       </div>
+      <div class="actions"><button class="btn primary" onclick="calculate()">Calcular conduta</button><button class="btn ghost" onclick="resetForm()">Limpar</button></div>
+    </aside>
 
-      <p class="muted" style="text-align:center;">Vá para a aba <strong>Calculadora de doses</strong> para calcular 1ª, 2ª e 3ª linha pelo peso da criança.</p>
-    </div>
+    <main>
+      <section class="card">
+        <div class="result-head"><div><h2 id="classification">Crise febril simples</h2><div id="classReason" class="sub">Evento generalizado, breve e único em 24 horas.</div></div><span id="classPill" class="pill ok">BAIXO RISCO IMEDIATO</span></div>
+        <div id="alerts"></div>
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="ageKpi">18 meses</div><div class="l">Faixa etária</div></div>
+          <div class="kpi"><div class="v" id="recurrenceKpi">30–35%</div><div class="l">Recorrência global aproximada</div></div>
+          <div class="kpi"><div class="v" id="epilepsyKpi">1–2%</div><div class="l">Risco estimado de epilepsia</div></div>
+        </div>
+      </section>
 
-    <!-- DOSES -->
-    <div class="panel" id="u-doses">
-      <h2 class="section-title">Calculadora de doses por peso</h2>
-      <p class="section-lede">Informe o peso para calcular automaticamente as doses de cada linha terapêutica. Não é recomendado usar mais de duas doses consecutivas de benzodiazepínico.</p>
+      <section class="card" id="acuteCard">
+        <h2 class="section-title">Conduta aguda</h2>
+        <div id="acuteSteps" class="steps"></div>
+        <div id="doseWrap">
+          <table class="dose-table">
+            <thead><tr><th>Opção</th><th>Dose calculada</th><th>Observação</th></tr></thead>
+            <tbody id="doseBody"></tbody>
+          </table>
+          <div class="mini" style="margin-top:8px">As concentrações comerciais variam. O volume deve ser calculado a partir da apresentação disponível e conferido antes da administração.</div>
+        </div>
+      </section>
 
-      <div class="dose-input">
-        <label for="pesoUrg">Peso da criança</label>
-        <input type="number" id="pesoUrg" placeholder="ex: 14" min="0" step="0.1" oninput="calcDoses()">
-        <span class="unit">kg</span>
-      </div>
-
-      <div class="alert info"><span class="ico">💉</span><div><strong>Doses práticas ("macete" em mL)</strong> calculadas a partir das apresentações comerciais mais usadas no pronto-socorro. Confira sempre a concentração da ampola disponível na sua unidade antes de administrar.</div></div>
-
-      <h4>1ª linha (5–20 min) — Benzodiazepínico</h4>
-      <p class="muted">Dose completa não fracionada, EV puro (sem diluir). Só administrar até <strong>2 vezes</strong>; na persistência após a 2ª dose, escalonar para 2ª linha.</p>
-      <div class="dose-grid">
-        <div class="dose-card line1">
-          <span class="drug">Midazolam 5 mg/mL</span><span class="route">EV puro (preferencial) — 0,2 mg/kg</span>
-          <div class="dose-result" id="d-midaz-ev">— mg</div>
-          <div class="dose-result" id="d-midaz-ev-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">Macete: Peso × 0,04 mL · máx. 10 mg/dose (2 mL)</div>
-        </div>
-        <div class="dose-card line1">
-          <span class="drug">Diazepam 5 mg/mL</span><span class="route">EV puro (preferencial) — 0,2 mg/kg</span>
-          <div class="dose-result" id="d-diaz-ev">— mg</div>
-          <div class="dose-result" id="d-diaz-ev-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">Macete: Peso × 0,04 mL · máx. 10 mg/dose (2 mL)</div>
-        </div>
-        <div class="dose-card line1">
-          <span class="drug">Midazolam 5 mg/mL</span><span class="route">IM — sem acesso venoso</span>
-          <div class="dose-result" id="d-midaz-im">— mg</div>
-          <div class="dose-result" id="d-midaz-im-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">0,2 mg/kg/dose · máx. 10 mg/dose (2 mL)</div>
-        </div>
-        <div class="dose-card line1">
-          <span class="drug">Midazolam 5 mg/mL</span><span class="route">Intranasal — sem acesso venoso</span>
-          <div class="dose-result" id="d-midaz-in">— mg</div>
-          <div class="dose-result" id="d-midaz-in-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">0,3 mg/kg/dose · máx. 10 mg/dose</div>
-        </div>
-        <div class="dose-card line1">
-          <span class="drug">Diazepam 5 mg/mL</span><span class="route">Via retal — sem acesso venoso (dose dobrada)</span>
-          <div class="dose-result" id="d-diaz-vr">— mL</div>
-          <div class="dose-max">Dobro do volume EV · máx. 20 mg/dose</div>
-        </div>
-      </div>
-      <div class="alert danger" style="margin-top:14px;"><span class="ico">📋</span><div><strong>Exemplo pronto (6 anos, 20 kg):</strong> Midazolam 5 mg/mL — administrar <strong>0,8 mL</strong> via EV bolus AGORA, seguido de flush SF 0,9% 5 mL, se crise &gt;5 min. Repetir após 5 min, se necessário.</div></div>
-
-      <h4>2ª linha (20–40 min) — persistência após 2ª dose de BZD (Estado de Mal Epiléptico)</h4>
-      <p class="muted">Fenitoína é 1ª escolha fora do período neonatal. Fenobarbital se fenitoína indisponível ou uso crônico prévio de fenitoína.</p>
-      <div class="dose-grid">
-        <div class="dose-card line2">
-          <span class="drug">Fenitoína 50 mg/mL</span><span class="route">EV ataque — diluir em SF 0,9% 100 mL, correr em 20 min</span>
-          <div class="dose-result" id="d-fenit-ataque">— mg</div>
-          <div class="dose-result" id="d-fenit-ataque-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">Macete: Peso × 0,4 mL · 20 mg/kg · máx. 1500 mg/dose (30 mL)</div>
-        </div>
-        <div class="dose-card line2">
-          <span class="drug">Fenitoína</span><span class="route">Manutenção — fracionada em 2–3 doses, iniciar 24h após o ataque</span>
-          <div class="dose-result" id="d-fenit-manut">— mg/dia</div>
-          <div class="dose-max">5–10 mg/kg/dia</div>
-        </div>
-        <div class="dose-card line2">
-          <span class="drug">Fenobarbital 100 mg/mL</span><span class="route">EV ataque</span>
-          <div class="dose-result" id="d-feno-ataque">— mg</div>
-          <div class="dose-result" id="d-feno-ataque-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">Macete: Peso × 0,2 mL · 20 mg/kg · máx. total 40 mg/kg (1000 mg/dose)</div>
-        </div>
-        <div class="dose-card line2">
-          <span class="drug">Fenobarbital</span><span class="route">Manutenção — iniciar 24h após ataque</span>
-          <div class="dose-result" id="d-feno-manut">— mg/dia</div>
-          <div class="dose-max">5–10 mg/kg/dia</div>
-        </div>
-      </div>
-      <div class="alert warn"><span class="ico">⚠️</span><div><strong>Atenção:</strong> risco de depressão respiratória se fenobarbital for usado após midazolam. Em <strong>recém-nascidos</strong>, a droga de escolha é o <strong>fenobarbital</strong> — ataque 20 mg/kg, EV em 10–15 min (este fluxo não se aplica a RN para as demais linhas).</div></div>
-      <div class="alert danger" style="margin-top:10px;"><span class="ico">📋</span><div><strong>Exemplo pronto (6 anos, 20 kg), se estado de mal:</strong> acrescentar Fenitoína 50 mg/mL — diluir <strong>8 mL</strong> em SF 0,9% 100 mL e infundir via EV em 20 minutos.</div></div>
-
-      <h4>3ª linha (&gt;60 min) — crise refratária</h4>
-      <div class="dose-grid">
-        <div class="dose-card line3">
-          <span class="drug">Midazolam contínuo</span><span class="route">Infusão EV</span>
-          <div class="dose-result" id="d-midaz-continuo">— mcg/min</div>
-          <div class="dose-max">3–20 mcg/kg/min</div>
-        </div>
-        <div class="dose-card line3">
-          <span class="drug">Conduta obrigatória</span><span class="route">—</span>
-          <div style="font-size:0.85rem;line-height:1.5;">Garantir via aérea definitiva · acionar retaguarda de neurologia · solicitar leito de UTI pediátrica</div>
-        </div>
-      </div>
-
-      <div class="alert warn"><span class="ico">⏱️</span><div><strong>Indicador de qualidade:</strong> administrar a 1ª dose de anticonvulsivante em até 5 minutos da chegada à unidade.</div></div>
-
-      <div class="card" style="margin-top:22px;">
-        <h3>Suporte associado, se necessário</h3>
-        <table>
-          <tr><td>Hipoglicemia</td><td>Glicose 25% — 2,5–5 mL/kg (ex. 20kg: 50 mL) via EV se Dx &lt;70</td></tr>
-          <tr><td>Hipotensão</td><td>Ringer Lactato 10–20 mL/kg via EV em 20 min, se PAS abaixo do p5</td></tr>
-          <tr><td>Oxigenoterapia</td><td>Máscara não reinalante — alvo SatO₂ 92–98%</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- FLUXOGRAMA -->
-    <div class="panel" id="u-fluxograma">
-      <h2 class="section-title">Fluxograma completo por tempo</h2>
-      <p class="section-lede">Este fluxograma não se aplica a pacientes recém-nascidos.</p>
-      <div class="timeline">
-        <div class="tl-step">
-          <div class="tl-time">0 – 5 min</div>
-          <h4>Estabilização</h4>
-          <div class="tl-body">Sala de emergência · MOV · dextro · exames laboratoriais se necessário · corrigir hipotensão/hipoglicemia · avaliar sinais de complicação de SNC</div>
-        </div>
-        <div class="tl-step">
-          <div class="tl-time">5 – 20 min</div>
-          <h4>1ª linha — Benzodiazepínico</h4>
-          <div class="tl-body">
-            <strong>Com AVP:</strong> Midazolam 0,2 mg/kg EV (máx 10 mg) ou Diazepam 0,2 mg/kg EV (máx 10 mg)<br>
-            <strong>Sem AVP:</strong> Midazolam 0,2 mg/kg IM ou 0,3 mg/kg intranasal (máx 10 mg) ou Diazepam 0,3–0,5 mg/kg via retal (máx 20 mg)<br>
-            Máximo de 2 doses consecutivas. Tentar AVP em paralelo.
+      <section class="two-col">
+        <div class="card" id="etiologyCard">
+          <h2 class="section-title">Investigação etiológica da febre</h2>
+          <p class="sub">A crise orienta a avaliação neurológica; a causa da febre deve ser investigada de forma independente.</p>
+          <div id="etiologyResult"></div>
+          <div class="fssl-launch" id="fsslLaunch">
+            <div>
+              <h3>🌡️ Sem foco infeccioso?</h3>
+              <p>Abrir fluxo FSSL para 0–36 meses.</p>
+            </div>
+            <button class="fssl-btn" type="button" onclick="toggleFSSL()">Abrir FSSL</button>
+          </div>
+          <div class="fssl-panel" id="fsslPanel">
+            <iframe id="fsslFrame" title="Calculadora de Febre sem Sinais Localizatórios"></iframe>
           </div>
         </div>
-        <div class="tl-step">
-          <div class="tl-time">20 – 40 min</div>
-          <h4>2ª linha — se crise persiste</h4>
-          <div class="tl-body">
-            <strong>Fenitoína</strong> — ataque 20 mg/kg (5 mg/kg se uso crônico), manutenção 5–10 mg/kg/dia após 12h<br>
-            <strong>Fenobarbital</strong> (alternativa) — ataque 20 mg/kg (5–10 mg/kg se uso crônico), manutenção 5–10 mg/kg/dia após 24h
-          </div>
-        </div>
-        <div class="tl-step">
-          <div class="tl-time">&gt; 60 min</div>
-          <h4>3ª linha — crise refratária</h4>
-          <div class="tl-body">
-            Midazolam contínuo 3–20 mcg/kg/min · garantir via aérea · acionar retaguarda de neurologia · internação em UTI pediátrica
-          </div>
-        </div>
-      </div>
-      <div class="footnote">Fonte: Hospital Israelita Albert Einstein — Guia do Episódio de Cuidado: Crise Epiléptica e Estado de Mal Epiléptico Convulsivo em Crianças e Adolescentes (fluxo UPAs), atualizado 17/09/2025.</div>
-    </div>
 
-    <!-- INTERNAÇÃO -->
-    <div class="panel" id="u-alta">
-      <h2 class="section-title">Internação e UTI</h2>
-      <div class="card">
-        <h3>Critérios de internação (enfermaria)</h3>
-        <p>A maioria das crianças retorna gradualmente ao nível normal de consciência dentro de 1 hora. Esse período de observação deve ser usado para uma anamnese mais detalhada, permitindo manejo mais adequado.</p>
-      </div>
-      <div class="card">
-        <h3>Critérios de internação em UTI</h3>
-        <p><strong>Estado de mal epiléptico</strong> (crise ≥30 min contínua, ou crises recorrentes sem recuperação da consciência entre elas por &gt;30 min; operacionalmente, tratada já a partir de &gt;5 min).</p>
-      </div>
-      <div class="card">
-        <h3>Critérios de alta</h3>
-        <p>Criança desperta, ativa, sem déficit neurológico.</p>
-        <h4>Após crise febril benigna</h4>
-        <p class="muted">Não há recomendação de terapêutica anticonvulsivante contínua ou intermitente após uma ou mais convulsões febris benignas. Não há necessidade de exames de controle. Seguimento ambulatorial de rotina com pediatra para acompanhar recorrências.</p>
-      </div>
-    </div>
+        <div class="card"><h2 class="section-title">Investigação sugerida</h2><div id="investigation"></div></div>
+        <div class="card"><h2 class="section-title">Observação e destino</h2><div id="disposition"></div></div>
+      </section>
 
+      <section class="two-col">
+        <div class="card"><h2 class="section-title">Risco de recorrência</h2><div id="recurrence"></div></div>
+        <div class="card"><h2 class="section-title">Risco de epilepsia futura</h2><div id="epilepsy"></div></div>
+      </section>
+
+      <section class="card"><h2 class="section-title">Orientações aos responsáveis</h2><div class="two-col"><ul class="list"><li>Manter a calma, proteger a criança de trauma e colocá-la em decúbito lateral.</li><li>Não conter os movimentos e não colocar objetos ou dedos na boca.</li><li>Marcar o tempo; quando possível, registrar um vídeo curto para caracterizar o evento.</li></ul><ul class="list"><li>Acionar emergência se durar mais de 5 minutos, houver dificuldade respiratória, focalidade, paresia pós-ictal ou recuperação inadequada.</li><li>Antitérmico trata desconforto e pode reduzir recorrência na mesma doença febril, mas não previne crises em episódios febris futuros.</li><li>Profilaxia antiepiléptica contínua não é indicada na crise febril simples.</li></ul></div></section>
+
+      <section class="card"><h2 class="section-title">Alertas para outro diagnóstico</h2><div id="differential"></div></section>
+
+      <section class="card">
+        <h2 class="section-title">Convergência com fontes brasileiras</h2>
+        <div class="alert info"><strong>Escopo nacional encontrado</strong>Não foi identificada uma diretriz recente e abrangente da SBP ou um PCDT do Ministério da Saúde dedicado exclusivamente à crise febril. As fontes nacionais localizadas foram usadas como apoio e concordância, sem substituir o detalhamento clínico do UpToDate.</div>
+        <ul class="list">
+          <li><b>Sociedade Brasileira de Pediatria:</b> material educacional descreve a crise febril como geralmente benigna, associada à predisposição individual/familiar e sem indicação rotineira de medicamento preventivo.</li>
+          <li><b>Revista Residência Pediátrica/SBP:</b> revisão brasileira “Crise febril na infância” aborda diagnóstico, tratamento e fatores de recorrência, incluindo início antes de 18 meses e história familiar.</li>
+          <li><b>Ministério da Saúde/Conitec:</b> o PCDT de epilepsia diferencia crise febril simples de epilepsia; portanto, não se deve iniciar tratamento crônico apenas por uma crise febril simples.</li>
+          <li><b>Critério etário:</b> algumas comunicações brasileiras utilizam até 6 anos; esta ferramenta mantém o critério clínico principal do UpToDate de 6 meses a &lt;5 anos e sinaliza eventos fora dessa faixa para investigação individualizada.</li>
+        </ul>
+      </section>
+      <div class="footer">Base principal: UpToDate, “Febrile seizures: Clinical features and evaluation” (17/04/2026), “Febrile seizures: Treatment and prognosis” (29/04/2026) e “Overview of infantile epilepsy syndromes” (20/03/2026). Complementação nacional: Sociedade Brasileira de Pediatria/Residência Pediátrica e PCDT de Epilepsia do Ministério da Saúde/Conitec. Ferramenta de apoio; não substitui avaliação clínica, protocolos institucionais ou consulta à neurologia pediátrica.</div>
+    </main>
   </div>
 </div>
-
-<!-- ============================================================ INVESTIGAÇÃO ============================================================ -->
-<div class="view" id="view-investigacao">
-  <div class="app-header">
-    <div class="brand">
-      <div class="brand-mark">🔎</div>
-      <div>
-        <div class="brand-name">Investigação &amp; Conduta</div>
-        <div class="brand-sub">Classificação, exames e seguimento</div>
-      </div>
-    </div>
-    <button class="back-btn" onclick="goHome()">← Início</button>
-  </div>
-  <div class="tabs" id="tabs-inv">
-    <button class="tab-btn active" data-panel="i-classificador">Classificador</button>
-    <button class="tab-btn" data-panel="i-exames">Indicação de exames</button>
-    <button class="tab-btn" data-panel="i-diferencial">CF × Epilepsia</button>
-    <button class="tab-btn" data-panel="i-risco">Fatores de risco</button>
-    <button class="tab-btn" data-panel="i-febre">Febre &amp; antitérmicos</button>
-  </div>
-
-  <div class="content">
-
-    <!-- CLASSIFICADOR -->
-    <div class="panel active" id="i-classificador">
-      <h2 class="section-title">Classificador: simples × complexa</h2>
-      <p class="section-lede">Crise convulsiva que ocorre em criança de 6 a 60 meses, na vigência de febre (≥38°C), sem evidência de infecção/inflamação do SNC, sem alteração metabólica e sem história prévia de crise afebril.</p>
-
-      <div class="q-block">
-        <div class="q-text">1. Duração da crise</div>
-        <div class="opt-row">
-          <button class="opt-btn" data-q="duracao" data-v="curta" onclick="selectOpt(this)">&lt; 15 minutos</button>
-          <button class="opt-btn" data-q="duracao" data-v="longa" onclick="selectOpt(this)">≥ 15 minutos</button>
-        </div>
-      </div>
-      <div class="q-block">
-        <div class="q-text">2. Tipo de crise</div>
-        <div class="opt-row">
-          <button class="opt-btn" data-q="tipo" data-v="generalizada" onclick="selectOpt(this)">Tônico-clônica generalizada</button>
-          <button class="opt-btn" data-q="tipo" data-v="focal" onclick="selectOpt(this)">Focal / início focal</button>
-        </div>
-      </div>
-      <div class="q-block">
-        <div class="q-text">3. Recorrência em 24 horas</div>
-        <div class="opt-row">
-          <button class="opt-btn" data-q="recorrencia" data-v="nao" onclick="selectOpt(this)">Não — episódio único</button>
-          <button class="opt-btn" data-q="recorrencia" data-v="sim" onclick="selectOpt(this)">Sim — recorreu em &lt;24h</button>
-        </div>
-      </div>
-      <div class="q-block">
-        <div class="q-text">4. Pós-ictal / exame neurológico</div>
-        <div class="opt-row">
-          <button class="opt-btn" data-q="posictal" data-v="normal" onclick="selectOpt(this)">Recuperação espontânea e completa</button>
-          <button class="opt-btn" data-q="posictal" data-v="alterado" onclick="selectOpt(this)">Pós-ictal prolongado / déficit focal (ex: Paralisia de Todd)</button>
-        </div>
-      </div>
-
-      <div class="result-banner" id="classResult">
-        <h4 id="classTitle"></h4>
-        <p id="classText" style="font-size:0.9rem;"></p>
-      </div>
-    </div>
-
-    <!-- EXAMES -->
-    <div class="panel" id="i-exames">
-      <h2 class="section-title">Árvore de decisão: quais exames pedir?</h2>
-      <p class="section-lede">Em geral, a crise febril simples <strong>não requer investigação secundária</strong>. A decisão de exames deve ser individualizada.</p>
-
-      <div class="card">
-        <h3>Regra geral por tipo de exame</h3>
-        <table>
-          <tr><th>Exame</th><th>Recomendação</th></tr>
-          <tr><td>EEG</td><td>Não deve ser realizado em crianças neurologicamente normais — baixa acurácia preditiva para recorrência mesmo em crises simples</td></tr>
-          <tr><td>Neuroimagem (TC/RM)</td><td>Não deve ser realizada rotineiramente; TC não indicada em quadros simples nem complexos</td></tr>
-          <tr><td>Hemograma / eletrólitos (Ca, P, Mg, glicemia)</td><td>Não devem ser realizados rotineiramente; solicitar apenas se histórico de vômitos, diarreia, ingestão anormal de líquidos ou achados de desidratação/edema</td></tr>
-          <tr><td>Punção lombar</td><td>Ver árvore abaixo</td></tr>
-        </table>
-      </div>
-
-      <div class="card">
-        <h3>Punção lombar — quando considerar</h3>
-        <div class="chip-list">
-          <span class="chip">História ou exame físico sugerem infecção do SNC</span>
-          <span class="chip">6–12 meses sem vacinação ou vacinação incompleta p/ Hib ou pneumococo</span>
-          <span class="chip">Criança em uso de antimicrobianos (pode mascarar meningite)</span>
-          <span class="chip">Sinais de irritação meníngea / toxemia</span>
-          <span class="chip">Pós-ictal prolongado ou rebaixamento persistente de consciência</span>
-        </div>
-        <p class="muted">Em suspeita de hipertensão intracraniana, realizar TC de crânio antes da punção lombar.</p>
-      </div>
-
-      <div class="card">
-        <h3>Crise complexa</h3>
-        <p>Uma criança sem histórico inicial de convulsão febril e com apresentação complexa exige conduta individualizada — maior probabilidade de etiologia alternativa (ex.: meningite). Avaliação de crises complexas geralmente não se resolve em ambulatório e requer indicação/consulta com neurologista pediátrico.</p>
-      </div>
-
-      <div class="card">
-        <h3>Avaliação da criança febril (contexto geral)</h3>
-        <p class="muted">Sinais de alerta a observar na avaliação inicial (protocolo semáforo — verde/amarelo/vermelho):</p>
-        <table>
-          <tr><th>Parâmetro</th><th>Alerta</th></tr>
-          <tr><td>FC</td><td>&lt;12m ≥160 · 12–24m ≥150 · 2–5a ≥140 bpm</td></tr>
-          <tr><td>FR</td><td>&gt;50 irpm (6–12m) · &gt;40 irpm (&gt;12m)</td></tr>
-          <tr><td>SatO₂</td><td>≤95%</td></tr>
-          <tr><td>Enchimento capilar</td><td>&gt;3 segundos</td></tr>
-          <tr><td>Hidratação</td><td>Avaliar mucosas e turgor da pele</td></tr>
-          <tr><td>Responsividade</td><td>Grau de atividade e resposta a estímulos</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- DIFERENCIAL -->
-    <div class="panel" id="i-diferencial">
-      <h2 class="section-title">Convulsão febril × Epilepsia</h2>
-      <div class="card">
-        <table>
-          <tr><th></th><th>Crise convulsiva febril</th><th>Epilepsia</th></tr>
-          <tr><td>Definição</td><td>Crise associada à febre, 6m–5/6 anos, sem infecção de SNC ou distúrbio metabólico</td><td>Predisposição a crises não provocadas, por alteração crônica da atividade elétrica cerebral</td></tr>
-          <tr><td>Curso</td><td>Benigno, autolimitado</td><td>Crônica, geralmente requer tratamento contínuo</td></tr>
-          <tr><td>EEG de rotina</td><td>Baixa acurácia preditiva — não indicado</td><td>Parte da investigação diagnóstica (descargas epileptiformes)</td></tr>
-          <tr><td>Tratamento</td><td>Sem anticonvulsivante contínuo</td><td>Monoterapia inicial (ex: carbamazepina, valproato, fenitoína)</td></tr>
-        </table>
-      </div>
-      <div class="alert info"><span class="ico">📊</span><div><strong>Risco de epilepsia após crise febril:</strong> ~1–2% na população geral após CF simples (próximo à população geral); maior nas complexas, recorrentes ou com história familiar/atraso do desenvolvimento. Em crianças &gt;5 anos, um estudo turco descreveu risco de até 14% (vs. 2–5% relatado em crianças mais novas).</div></div>
-      <div class="card">
-        <h3>Fatores associados à evolução para epilepsia</h3>
-        <div class="chip-list">
-          <span class="chip">Início da CF antes de 12 meses</span>
-          <span class="chip">Crises prolongadas</span>
-          <span class="chip">Ocorrência precoce após início da febre</span>
-          <span class="chip">Febre &lt;39°C no momento da crise</span>
-          <span class="chip">Atraso no neurodesenvolvimento</span>
-          <span class="chip">Crises complexas</span>
-          <span class="chip">Alterações em EEG (quando realizado)</span>
-          <span class="chip">História familiar de epilepsia</span>
-        </div>
-      </div>
-      <div class="footnote">Fonte: Moura et al. Convulsão febril infantil versus epilepsia: critérios clínicos e implicações diagnósticas. Journal of Medical and Biosciences Research, 2026;3(3):151–157.</div>
-    </div>
-
-    <!-- FATORES DE RISCO -->
-    <div class="panel" id="i-risco">
-      <h2 class="section-title">Fatores de risco para recorrência da crise febril</h2>
-      <div class="card">
-        <div class="chip-list">
-          <span class="chip">Idade &lt; 18 meses no primeiro episódio</span>
-          <span class="chip">Temperatura &lt; 39°C na primeira crise</span>
-          <span class="chip">Intervalo &lt; 1 hora entre início da febre e a crise</span>
-          <span class="chip">Parente de 1º grau com história de crise febril</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Uso de antitérmico para prevenção de crise febril</h3>
-        <p>Metanálise de 3 estudos (540 crianças, 6–72 meses, com CF prévias) não encontrou diferença estatisticamente significativa na taxa de convulsões febris entre antipirético profilático e placebo (OR 0,9; IC95% 0,57–1,43). <strong>Uso preventivo de antitérmico não é recomendado</strong> para prevenção de crise febril (nível de evidência I, força de recomendação E).</p>
-      </div>
-      <div class="card">
-        <h3>Retorno ambulatorial</h3>
-        <p>Crianças que apresentam crise febril devem seguir consultas de rotina com pediatra, para acompanhar recorrências e necessidade de avaliação por especialista.</p>
-      </div>
-    </div>
-
-    <!-- FEBRE / ANTITÉRMICOS -->
-    <div class="panel" id="i-febre">
-      <h2 class="section-title">Febre e antitérmicos — contexto geral</h2>
-      <p class="section-lede">A febre não é doença, é um sinal. A intensidade da febre não deve ser usada como indicador isolado de gravidade (exceto em menores de 3 meses com leucocitose ou PCR elevada).</p>
-
-      <div class="dose-input">
-        <label for="pesoInv">Peso da criança</label>
-        <input type="number" id="pesoInv" placeholder="ex: 14" min="0" step="0.1" oninput="calcAntitermico()">
-        <span class="unit">kg</span>
-      </div>
-
-      <div class="dose-grid">
-        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
-          <span class="drug">Paracetamol 200 mg/mL gotas</span><span class="route">&gt; 3 meses · 4–6h</span>
-          <div class="dose-result" id="d-paracetamol" style="color:var(--investigacao-deep);">— mg/dose</div>
-          <div class="dose-result" id="d-paracetamol-gts" style="font-size:1rem;color:var(--ink-soft);">— gotas</div>
-          <div class="dose-max">Macete: 1 gota/kg (10–15 mg/kg/dose) · máx. 35 gts/dose (75 mg/kg/dia · 4g/dia) · até 5 doses/dia</div>
-        </div>
-        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
-          <span class="drug">Dipirona 500 mg/mL injetável</span><span class="route">&gt; 3 meses e &gt;5 kg · 6/6h</span>
-          <div class="dose-result" id="d-dipirona" style="color:var(--investigacao-deep);">— mg/dose</div>
-          <div class="dose-result" id="d-dipirona-ml" style="font-size:1rem;color:var(--ink-soft);">— mL</div>
-          <div class="dose-max">Macete: Peso × 0,02 a 0,03 mL · EV diluir em SF 0,9% p/ 10–20 mL · IM sem diluição</div>
-        </div>
-        <div class="dose-card" style="border-left:4px solid var(--investigacao);">
-          <span class="drug">Ibuprofeno</span><span class="route">A partir de 6 meses e &gt;5kg · 6–8h</span>
-          <div class="dose-result" id="d-ibuprofeno" style="color:var(--investigacao-deep);">— mg/dose</div>
-          <div class="dose-max">5–10 mg/kg/dose · máx. 40 mg/kg/dia</div>
-        </div>
-      </div>
-      <div class="alert warn"><span class="ico">💉</span><div><strong>Dipirona injetável — via de administração por faixa etária:</strong> crianças entre 3 e 11 meses (ou &lt;9 kg) devem usar <strong>apenas via IM</strong>. Ex. 20 kg: IM aplicar 0,4 mL sem diluição; EV diluir 0,4 mL em SF 0,9% 10 mL e administrar lento.</div></div>
-
-      <div class="alert danger"><span class="ico">🚫</span><div><strong>Não alternar nem combinar antitérmicos.</strong> Mecanismo de ação semelhante (inibição de COX/PGE₂) — sem benefício comprovado e maior risco de erro de dose/intoxicação. Ácido acetilsalicílico contraindicado (risco de Síndrome de Reye).</div></div>
-
-      <div class="card">
-        <h3>Quando tratar</h3>
-        <p>Recomendação de antitérmico quando há desconforto evidente (choro intenso, irritabilidade, redução de atividade/apetite, distúrbio do sono) — <strong>não</strong> baseado em um valor numérico predeterminado de temperatura.</p>
-        <p class="muted">O uso de antitérmico ao primeiro sinal de febre <strong>não previne</strong> convulsões febris recorrentes. Já o uso <em>durante a crise</em> pode aliviar o desconforto associado à febre e reduzir a recorrência de convulsão febril dentro do mesmo episódio febril.</p>
-        <h4>Menores de 1 mês</h4>
-        <p class="muted">Paracetamol é o único antitérmico recomendado, com dose ajustada pela idade gestacional.</p>
-      </div>
-
-      <div class="card">
-        <h3>Febre nas arboviroses (dengue, zika, chikungunya)</h3>
-        <p><strong>Evitar AINEs (incluindo ibuprofeno) e AAS</strong> — risco aumentado de sangramento e insuficiência renal em contexto de extravasamento plasmático, especialmente na dengue.</p>
-        <p>Na dengue, a queda súbita da febre entre o 3º e 5º dia pode indicar transição para a fase crítica — exige vigilância mesmo na ausência de febre. Hidratação oral precoce e abundante é o pilar do manejo.</p>
-        <div class="chip-list">
-          <span class="chip">Dor abdominal intensa e contínua</span>
-          <span class="chip">Vômitos persistentes</span>
-          <span class="chip">Sangramento de mucosas</span>
-          <span class="chip">Alteração do estado de consciência</span>
-          <span class="chip">Hepatomegalia &gt;2cm do rebordo costal</span>
-          <span class="chip">Aumento progressivo do hematócrito</span>
-        </div>
-      </div>
-      <div class="footnote">Fonte: SBP — Abordagem da Febre Aguda em Pediatria e Reflexões sobre a Febre nas Arboviroses, Documento Científico nº206, 15/05/2025.</div>
-    </div>
-
-  </div>
-</div>
-
 <script>
-// ---------- navigation ----------
-function goTo(view){
-  document.getElementById('home').style.display='none';
-  document.getElementById('view-urgencia').classList.remove('active');
-  document.getElementById('view-investigacao').classList.remove('active');
-  document.getElementById('view-'+view).classList.add('active');
-  window.scrollTo(0,0);
-}
-function goHome(){
-  document.getElementById('home').style.display='flex';
-  document.getElementById('view-urgencia').classList.remove('active');
-  document.getElementById('view-investigacao').classList.remove('active');
-  window.scrollTo(0,0);
-}
-document.querySelectorAll('.tabs').forEach(tabgroup=>{
-  tabgroup.addEventListener('click', e=>{
-    const btn = e.target.closest('.tab-btn');
-    if(!btn) return;
-    tabgroup.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const parent = tabgroup.closest('.view');
-    parent.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById(btn.dataset.panel).classList.add('active');
-    parent.querySelector('.content').scrollIntoView({behavior:'smooth', block:'start'});
-  });
-});
+const $=id=>document.getElementById(id); const val=id=>parseFloat($(id).value)||0; const chk=id=>$(id).checked;
+function fmt(n,d=1){return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:d})}
+function alertBox(type,title,text){return `<div class="alert ${type}"><strong>${title}</strong>${text}</div>`}
+function li(items){return `<ul class="list">${items.map(x=>`<li>${x}</li>`).join('')}</ul>`}
 
-// ---------- timer ----------
-let timerInterval=null, timerSeconds=0, timerRunning=false;
-function timerStart(){
-  if(timerRunning) return;
-  timerRunning=true;
-  timerInterval=setInterval(()=>{
-    timerSeconds++;
-    updateTimerDisplay();
-  },1000);
-}
-function timerReset(){
-  clearInterval(timerInterval);
-  timerRunning=false;
-  timerSeconds=0;
-  updateTimerDisplay();
-}
-function updateTimerDisplay(){
-  const m=String(Math.floor(timerSeconds/60)).padStart(2,'0');
-  const s=String(timerSeconds%60).padStart(2,'0');
-  document.getElementById('timerDisplay').textContent=m+':'+s;
-  const phaseEl=document.getElementById('timerPhase');
-  let phase, color;
-  if(timerSeconds===0){phase='Aguardando início'; color='var(--ink-soft)';}
-  else if(timerSeconds<300){phase='● Estabilização (0–5 min)'; color='var(--ink-soft)';}
-  else if(timerSeconds<1200){phase='● 1ª linha — benzodiazepínico (5–20 min)'; color='var(--urgencia)';}
-  else if(timerSeconds<2400){phase='●● 2ª linha — fenitoína/fenobarbital (20–40 min)'; color='var(--amber)';}
-  else {phase='●●● CRISE REFRATÁRIA — 3ª linha, UTI (>60 min)'; color='var(--urgencia-deep)';}
-  phaseEl.textContent=phase;
-  phaseEl.style.color=color;
-  document.getElementById('timerDisplay').style.color = timerSeconds>=300 ? color : 'var(--urgencia-deep)';
+const FSSL_BASE64='PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPgo8dGl0bGU+RlNTTCBQZWRpw6F0cmljYSDigJQgRmx1eG9ncmFtYSBJbnRlcmF0aXZvPC90aXRsZT4KPHN0eWxlPgo6cm9vdHsKICAtLWJnOiNmNGY3ZmI7LS1jYXJkOiNmZmY7LS1pbms6IzE3MjAzMzstLW11dGVkOiM2NjcwODU7LS1saW5lOiNkOWUyZWM7CiAgLS1ibHVlOiMxNzVjZDM7LS1ibHVlLXNvZnQ6I2VmZjZmZjstLWdyZWVuOiMwNjc2NDc7LS1ncmVlbi1zb2Z0OiNlY2ZkZjM7CiAgLS1hbWJlcjojYjU0NzA4Oy0tYW1iZXItc29mdDojZmZmYWViOy0tcmVkOiNiNDIzMTg7LS1yZWQtc29mdDojZmVmM2YyOwogIC0tcHVycGxlOiM2OTQxYzY7LS1wdXJwbGUtc29mdDojZjdmNGZmOy0tc2hhZG93OjAgMTBweCAyOHB4IHJnYmEoMTYsMjQsNDAsLjA4KQp9Cip7Ym94LXNpemluZzpib3JkZXItYm94fQpib2R5e21hcmdpbjowO2ZvbnQtZmFtaWx5OkludGVyLHN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLFNlZ29lIFVJLFJvYm90byxBcmlhbCxzYW5zLXNlcmlmO2JhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDEzNWRlZywjZjhmYWZjLCNlZWY0ZmYpO2NvbG9yOnZhcigtLWluayl9Ci53cmFwe21heC13aWR0aDoxMjIwcHg7bWFyZ2luOmF1dG87cGFkZGluZzoxOHB4fQouaGVyb3tiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxMzVkZWcsIzE3NGVhNiwjMDg3NWI3KTtjb2xvcjojZmZmO2JvcmRlci1yYWRpdXM6MjJweDtwYWRkaW5nOjIxcHggMjRweDtib3gtc2hhZG93OnZhcigtLXNoYWRvdyl9Ci5oZXJvIGgxe21hcmdpbjowIDAgNXB4O2ZvbnQtc2l6ZTpjbGFtcCgyNHB4LDR2dywzNnB4KX0KLmhlcm8gcHttYXJnaW46MDtvcGFjaXR5Oi45MjtsaW5lLWhlaWdodDoxLjQ1fQoubGVnZW5ke2JhY2tncm91bmQ6I2ZmZjtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO2JvcmRlci1yYWRpdXM6MTVweDtwYWRkaW5nOjExcHggMTRweDttYXJnaW46MTNweCAwO2JveC1zaGFkb3c6dmFyKC0tc2hhZG93KX0KLnRhZ3N7ZGlzcGxheTpmbGV4O2dhcDo3cHg7ZmxleC13cmFwOndyYXB9Ci50YWd7ZGlzcGxheTppbmxpbmUtZmxleDthbGlnbi1pdGVtczpjZW50ZXI7Z2FwOjVweDtib3JkZXItcmFkaXVzOjk5OXB4O3BhZGRpbmc6NXB4IDlweDtmb250LXNpemU6MTFweDtmb250LXdlaWdodDo4MDB9Ci5icntiYWNrZ3JvdW5kOiNlYWY3ZWY7Y29sb3I6IzE0NmM0Mztib3JkZXI6MXB4IHNvbGlkICNhN2Q3Yjh9Ci5pbnR7YmFja2dyb3VuZDp2YXIoLS1wdXJwbGUtc29mdCk7Y29sb3I6dmFyKC0tcHVycGxlKTtib3JkZXI6MXB4IHNvbGlkICNjOWI4ZmZ9Ci5sYXlvdXR7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczptaW5tYXgoMzUwcHgsNDMwcHgpIG1pbm1heCgwLDFmcik7Z2FwOjE2cHg7YWxpZ24taXRlbXM6c3RhcnR9CkBtZWRpYShtYXgtd2lkdGg6OTAwcHgpey5sYXlvdXR7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcn19Ci5jYXJke2JhY2tncm91bmQ6dmFyKC0tY2FyZCk7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1saW5lKTtib3JkZXItcmFkaXVzOjE4cHg7cGFkZGluZzoxNnB4O2JveC1zaGFkb3c6dmFyKC0tc2hhZG93KX0KLnN0aWNreXtwb3NpdGlvbjpzdGlja3k7dG9wOjEwcHh9QG1lZGlhKG1heC13aWR0aDo5MDBweCl7LnN0aWNreXtwb3NpdGlvbjpzdGF0aWN9fQpoMntmb250LXNpemU6MThweDttYXJnaW46MCAwIDEycHg7Y29sb3I6IzE2M2E2M30KaDN7Zm9udC1zaXplOjE1cHg7bWFyZ2luOjAgMCA4cHh9CmxhYmVse2Rpc3BsYXk6YmxvY2s7Zm9udC1zaXplOjEyLjVweDtmb250LXdlaWdodDo3NTA7Y29sb3I6IzM0NDA1NDttYXJnaW4tYm90dG9tOjVweH0KaW5wdXQsc2VsZWN0e3dpZHRoOjEwMCU7cGFkZGluZzoxMXB4IDEycHg7Ym9yZGVyOjFweCBzb2xpZCAjY2JkNWUxO2JvcmRlci1yYWRpdXM6MTFweDtiYWNrZ3JvdW5kOiNmZmY7Y29sb3I6dmFyKC0taW5rKTtmb250OmluaGVyaXR9CmlucHV0OmZvY3VzLHNlbGVjdDpmb2N1c3tvdXRsaW5lOjNweCBzb2xpZCByZ2JhKDIzLDkyLDIxMSwuMTIpO2JvcmRlci1jb2xvcjp2YXIoLS1ibHVlKX0KLmdyaWR7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyO2dhcDo5cHh9Lm9uZXtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfQpAbWVkaWEobWF4LXdpZHRoOjUyMHB4KXsuZ3JpZHtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfX0KLnF1ZXN0aW9ue2JvcmRlcjoxcHggc29saWQgI2RjZTZmMjtiYWNrZ3JvdW5kOiNmYmZkZmY7Ym9yZGVyLXJhZGl1czoxNXB4O3BhZGRpbmc6MTRweDttYXJnaW4tdG9wOjEycHh9Ci5xdWVzdGlvbi10aXRsZXtmb250LXNpemU6MThweDtmb250LXdlaWdodDo5MDA7bGluZS1oZWlnaHQ6MS4yNTttYXJnaW4tYm90dG9tOjZweH0KLnF1ZXN0aW9uLWhlbHB7Zm9udC1zaXplOjEyLjVweDtjb2xvcjp2YXIoLS1tdXRlZCk7bGluZS1oZWlnaHQ6MS40NTttYXJnaW4tYm90dG9tOjEycHh9Ci5vcHRpb25ze2Rpc3BsYXk6Z3JpZDtnYXA6OHB4fQoub3B0aW9ue2Rpc3BsYXk6ZmxleDtnYXA6MTBweDthbGlnbi1pdGVtczpmbGV4LXN0YXJ0O2JvcmRlcjoxcHggc29saWQgI2RjZTNlYztib3JkZXItcmFkaXVzOjEycHg7cGFkZGluZzoxMXB4O2JhY2tncm91bmQ6I2ZmZjtjdXJzb3I6cG9pbnRlcn0KLm9wdGlvbjpob3Zlcntib3JkZXItY29sb3I6Izk4YjhlODtiYWNrZ3JvdW5kOiNmOGZiZmZ9Lm9wdGlvbiBpbnB1dHt3aWR0aDphdXRvO21hcmdpbi10b3A6MnB4fQoub3B0aW9uIGJ7ZGlzcGxheTpibG9jaztmb250LXNpemU6MTNweH0ub3B0aW9uIHNtYWxse2Rpc3BsYXk6YmxvY2s7Y29sb3I6dmFyKC0tbXV0ZWQpO2xpbmUtaGVpZ2h0OjEuMzU7bWFyZ2luLXRvcDoycHh9Ci5hY3Rpb25ze2Rpc3BsYXk6ZmxleDtnYXA6OHB4O2ZsZXgtd3JhcDp3cmFwO21hcmdpbi10b3A6MTNweH0KYnV0dG9ue2JvcmRlcjowO2JvcmRlci1yYWRpdXM6MTFweDtwYWRkaW5nOjEwcHggMTRweDtmb250LXNpemU6MTNweDtmb250LXdlaWdodDo4NTA7Y3Vyc29yOnBvaW50ZXJ9Ci5wcmltYXJ5e2JhY2tncm91bmQ6dmFyKC0tYmx1ZSk7Y29sb3I6I2ZmZn0uc2Vjb25kYXJ5e2JhY2tncm91bmQ6I2VkZjJmNztjb2xvcjojMzQ0MDU0fS5kYW5nZXItYnRue2JhY2tncm91bmQ6I2ZmZjFmMDtjb2xvcjp2YXIoLS1yZWQpfQoucHJvZ3Jlc3N7aGVpZ2h0OjdweDtiYWNrZ3JvdW5kOiNlOWVlZjU7Ym9yZGVyLXJhZGl1czo5OTlweDtvdmVyZmxvdzpoaWRkZW47bWFyZ2luOjlweCAwIDRweH0KLnByb2dyZXNzPmRpdntoZWlnaHQ6MTAwJTtiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCg5MGRlZywjMmU5MGZhLCMxMmI3NmEpO3RyYW5zaXRpb246LjI1c30KLm11dGVke2ZvbnQtc2l6ZToxMnB4O2NvbG9yOnZhcigtLW11dGVkKTtsaW5lLWhlaWdodDoxLjQ1fQoucGF0aHtkaXNwbGF5OmdyaWQ7Z2FwOjlweH0KLm5vZGV7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1saW5lKTtib3JkZXItbGVmdDo1cHggc29saWQgIzk4YTJiMztib3JkZXItcmFkaXVzOjE0cHg7cGFkZGluZzoxMXB4IDEycHg7YmFja2dyb3VuZDojZmZmfQoubm9kZS5hY3RpdmV7Ym9yZGVyLWxlZnQtY29sb3I6dmFyKC0tYmx1ZSk7YmFja2dyb3VuZDp2YXIoLS1ibHVlLXNvZnQpfQoubm9kZS5va3tib3JkZXItbGVmdC1jb2xvcjojMTJiNzZhO2JhY2tncm91bmQ6dmFyKC0tZ3JlZW4tc29mdCl9Ci5ub2RlLndhcm57Ym9yZGVyLWxlZnQtY29sb3I6I2Y3OTAwOTtiYWNrZ3JvdW5kOnZhcigtLWFtYmVyLXNvZnQpfQoubm9kZS5kYW5nZXJ7Ym9yZGVyLWxlZnQtY29sb3I6I2YwNDQzODtiYWNrZ3JvdW5kOnZhcigtLXJlZC1zb2Z0KX0KLm5vZGUuaW50ZXJuYXRpb25hbHtib3JkZXItbGVmdC1jb2xvcjojN2Y1NmQ5O2JhY2tncm91bmQ6dmFyKC0tcHVycGxlLXNvZnQpfQoubm9kZSAua2lja2Vye2ZvbnQtc2l6ZToxMHB4O2ZvbnQtd2VpZ2h0OjkwMDtsZXR0ZXItc3BhY2luZzouMDVlbTt0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7Y29sb3I6IzY2NzA4NX0KLm5vZGUgLnRpdGxle2ZvbnQtc2l6ZToxNXB4O2ZvbnQtd2VpZ2h0OjkwMDttYXJnaW4tdG9wOjNweH0KLm5vZGUgcCwubm9kZSBsaXtmb250LXNpemU6MTIuOHB4O2xpbmUtaGVpZ2h0OjEuNDV9Ci5ub2RlIHVse21hcmdpbjo3cHggMCAwO3BhZGRpbmctbGVmdDoxOXB4fQouYmFkZ2V7ZGlzcGxheTppbmxpbmUtZmxleDtib3JkZXItcmFkaXVzOjk5OXB4O3BhZGRpbmc6NHB4IDhweDtmb250LXNpemU6MTBweDtmb250LXdlaWdodDo5MDA7bWFyZ2luOjJweCA0cHggMnB4IDB9Ci5iLWJsdWV7YmFja2dyb3VuZDojZWFmMmZmO2NvbG9yOiMxNzVjZDN9LmItZ3JlZW57YmFja2dyb3VuZDojZGZmN2U5O2NvbG9yOiMwNjc2NDd9LmItcmVke2JhY2tncm91bmQ6I2ZlZTRlMjtjb2xvcjojYjQyMzE4fS5iLWFtYmVye2JhY2tncm91bmQ6I2ZmZjFjYztjb2xvcjojYjU0NzA4fQoucnh7d2hpdGUtc3BhY2U6cHJlLXdyYXA7YmFja2dyb3VuZDojMTAxODI4O2NvbG9yOiNlNWU3ZWI7Ym9yZGVyLXJhZGl1czoxNHB4O3BhZGRpbmc6MTRweDtmb250LWZhbWlseTp1aS1tb25vc3BhY2UsU0ZNb25vLVJlZ3VsYXIsTWVubG8sQ29uc29sYXMsbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMi4zcHg7bGluZS1oZWlnaHQ6MS41O292ZXJmbG93OmF1dG99Ci5oaWRkZW57ZGlzcGxheTpub25lIWltcG9ydGFudH0ubWluaS10aXRsZXtmb250LXNpemU6MTJweDtmb250LXdlaWdodDo5MDA7Y29sb3I6IzQ3NTQ2Nzt0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7bGV0dGVyLXNwYWNpbmc6LjA0ZW07bWFyZ2luOjEzcHggMCA3cHh9Ci5jaGVjay1ncmlke2Rpc3BsYXk6Z3JpZDtnYXA6N3B4fQouY2hlY2t7ZGlzcGxheTpmbGV4O2dhcDo5cHg7YWxpZ24taXRlbXM6ZmxleC1zdGFydDtwYWRkaW5nOjlweCAxMHB4O2JvcmRlcjoxcHggc29saWQgI2UyZThmMDtib3JkZXItcmFkaXVzOjExcHg7YmFja2dyb3VuZDojZmZmfQouY2hlY2sgaW5wdXR7d2lkdGg6YXV0bzttYXJnaW4tdG9wOjJweH0uY2hlY2sgc3Bhbntmb250LXNpemU6MTIuNXB4O2xpbmUtaGVpZ2h0OjEuMzV9Ci5mb290ZXJ7Zm9udC1zaXplOjExcHg7Y29sb3I6IzY2NzA4NTtsaW5lLWhlaWdodDoxLjU7bWFyZ2luLXRvcDoxNHB4fQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJ3cmFwIj4KPGhlYWRlciBjbGFzcz0iaGVybyI+CiAgPGgxPvCfjKHvuI8gRlNTTCDigJQgRmx1eG9ncmFtYSBJbnRlcmF0aXZvPC9oMT4KICA8cD5BcyBwZXJndW50YXMgYXBhcmVjZW0gYXBlbmFzIHF1YW5kbyBvIGNhbWluaG8gY2zDrW5pY28gZXhpZ2UuIE8gcGFpbmVsIMOgIGRpcmVpdGEgcmVnaXN0cmEgY2FkYSBkZWNpc8OjbyBlIGFicmUgYSBwcsOzeGltYSBldGFwYSBkbyBmbHV4b2dyYW1hLjwvcD4KPC9oZWFkZXI+Cgo8ZGl2IGNsYXNzPSJsZWdlbmQiPgogIDxkaXYgY2xhc3M9InRhZ3MiPgogICAgPHNwYW4gY2xhc3M9InRhZyBiciI+8J+Hp/Cfh7cgRmx1eG8gcHJpbmNpcGFsOiBwcm90b2NvbG9zIG5hY2lvbmFpcy9pbnN0aXR1Y2lvbmFpczwvc3Bhbj4KICAgIDxzcGFuIGNsYXNzPSJ0YWcgaW50Ij7imIUgQ29tcGxlbWVudG8gaW50ZXJuYWNpb25hbDogVXBUb0RhdGUgMjAyNjwvc3Bhbj4KICA8L2Rpdj4KPC9kaXY+Cgo8ZGl2IGNsYXNzPSJsYXlvdXQiPgo8c2VjdGlvbiBjbGFzcz0iY2FyZCBzdGlja3kiPgogIDxoMj5FdGFwYSBhdHVhbDwvaDI+CiAgPGRpdiBjbGFzcz0icHJvZ3Jlc3MiPjxkaXYgaWQ9InByb2dyZXNzQmFyIiBzdHlsZT0id2lkdGg6OCUiPjwvZGl2PjwvZGl2PgogIDxkaXYgaWQ9InByb2dyZXNzVGV4dCIgY2xhc3M9Im11dGVkIj5JbsOtY2lvIGRvIGZsdXhvPC9kaXY+CgogIDxkaXYgaWQ9ImJhc2VGb3JtIj4KICAgIDxkaXYgY2xhc3M9Im1pbmktdGl0bGUiPkRhZG9zIG3DrW5pbW9zPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJncmlkIj4KICAgICAgPGRpdj48bGFiZWw+SWRhZGU8L2xhYmVsPjxpbnB1dCBpZD0iYWdlIiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iMSIgcGxhY2Vob2xkZXI9IkV4LjogNDUiPjwvZGl2PgogICAgICA8ZGl2PjxsYWJlbD5VbmlkYWRlPC9sYWJlbD48c2VsZWN0IGlkPSJhZ2VVbml0Ij48b3B0aW9uIHZhbHVlPSJkYXlzIj5kaWFzPC9vcHRpb24+PG9wdGlvbiB2YWx1ZT0ibW9udGhzIiBzZWxlY3RlZD5tZXNlczwvb3B0aW9uPjxvcHRpb24gdmFsdWU9InllYXJzIj5hbm9zPC9vcHRpb24+PC9zZWxlY3Q+PC9kaXY+CiAgICAgIDxkaXY+PGxhYmVsPlBlc28gKGtnKTwvbGFiZWw+PGlucHV0IGlkPSJ3ZWlnaHQiIHR5cGU9Im51bWJlciIgbWluPSIuNSIgc3RlcD0iLjEiIHBsYWNlaG9sZGVyPSJFeC46IDgsNSI+PC9kaXY+CiAgICAgIDxkaXY+PGxhYmVsPlRlbXBlcmF0dXJhIG3DoXhpbWE8L2xhYmVsPjxpbnB1dCBpZD0idGVtcCIgdHlwZT0ibnVtYmVyIiBtaW49IjM0IiBtYXg9IjQzIiBzdGVwPSIuMSIgcGxhY2Vob2xkZXI9IkV4LjogMzksMiI+PC9kaXY+CiAgICAgIDxkaXY+PGxhYmVsPlZpYTwvbGFiZWw+PHNlbGVjdCBpZD0idGVtcFJvdXRlIj48b3B0aW9uIHZhbHVlPSJheGlsbGFyeSI+QXhpbGFyPC9vcHRpb24+PG9wdGlvbiB2YWx1ZT0icmVjdGFsIj5SZXRhbDwvb3B0aW9uPjxvcHRpb24gdmFsdWU9Im90aGVyIj5PdXRyYTwvb3B0aW9uPjwvc2VsZWN0PjwvZGl2PgogICAgICA8ZGl2PjxsYWJlbD5EaWFzIGRlIGZlYnJlPC9sYWJlbD48aW5wdXQgaWQ9ImZldmVyRGF5cyIgdHlwZT0ibnVtYmVyIiBtaW49IjAiIHN0ZXA9Ii41IiBwbGFjZWhvbGRlcj0iRXguOiAyIj48L2Rpdj4KICAgIDwvZGl2PgogIDwvZGl2PgoKICA8ZGl2IGlkPSJxdWVzdGlvbkJveCIgY2xhc3M9InF1ZXN0aW9uIj48L2Rpdj4KCiAgPGRpdiBjbGFzcz0iYWN0aW9ucyI+CiAgICA8YnV0dG9uIGlkPSJuZXh0QnRuIiBjbGFzcz0icHJpbWFyeSIgb25jbGljaz0iYWR2YW5jZSgpIj5Db250aW51YXI8L2J1dHRvbj4KICAgIDxidXR0b24gaWQ9ImJhY2tCdG4iIGNsYXNzPSJzZWNvbmRhcnkiIG9uY2xpY2s9ImdvQmFjaygpIj5Wb2x0YXI8L2J1dHRvbj4KICAgIDxidXR0b24gY2xhc3M9ImRhbmdlci1idG4iIG9uY2xpY2s9InJlc3RhcnQoKSI+UmVpbmljaWFyPC9idXR0b24+CiAgPC9kaXY+Cjwvc2VjdGlvbj4KCjxzZWN0aW9uPgogIDxkaXYgY2xhc3M9ImNhcmQiPgogICAgPGgyPkNhbWluaG8gcGVyY29ycmlkbzwvaDI+CiAgICA8ZGl2IGlkPSJwYXRoIiBjbGFzcz0icGF0aCI+PC9kaXY+CiAgPC9kaXY+CgogIDxkaXYgaWQ9InByZXNjcmlwdGlvbkNhcmQiIGNsYXNzPSJjYXJkIGhpZGRlbiI+CiAgICA8aDI+Q29uZHV0YSAvIHByZXNjcmnDp8OjbyBjYWxjdWxhZGE8L2gyPgogICAgPGRpdiBpZD0icngiIGNsYXNzPSJyeCI+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJhY3Rpb25zIj48YnV0dG9uIGNsYXNzPSJwcmltYXJ5IiBvbmNsaWNrPSJjb3B5UngoKSI+Q29waWFyPC9idXR0b24+PC9kaXY+CiAgPC9kaXY+Cjwvc2VjdGlvbj4KPC9kaXY+Cgo8ZGl2IGNsYXNzPSJmb290ZXIiPgpGZXJyYW1lbnRhIGRlIGFwb2lvIMOgIGRlY2lzw6NvLiBPIGZsdXhvIG5hY2lvbmFsL2luc3RpdHVjaW9uYWwgw6kgbWFudGlkbyBjb21vIGVpeG8uIFJlY29tZW5kYcOnw7VlcyBpbnRlcm5hY2lvbmFpcyBhcGFyZWNlbSBlbSBsaWzDoXMgY29tIOKYhSBlIG7Do28gc3Vic3RpdHVlbSBvIHByb3RvY29sbyBsb2NhbCwganVsZ2FtZW50byBjbMOtbmljbywgYXZhbGlhw6fDo28gZGUgYWxlcmdpYXMsIGZ1bsOnw6NvIHJlbmFsLCBkaXNwb25pYmlsaWRhZGUgZGUgYXByZXNlbnRhw6fDtWVzIGUgcmV2aXPDo28gZGUgY3VsdHVyYXMuCjwvZGl2Pgo8L2Rpdj4KCjxzY3JpcHQ+CmNvbnN0ICQ9aWQ9PmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsKY29uc3Qgc3RhdGU9e2Fuc3dlcnM6e30saGlzdG9yeTpbXSxub2RlczpbXSxzdGVwOidlbGlnaWJpbGl0eScsZmluaXNoZWQ6ZmFsc2V9OwoKZnVuY3Rpb24gbihpZCl7Y29uc3Qgdj1wYXJzZUZsb2F0KCQoaWQpLnZhbHVlKTtyZXR1cm4gTnVtYmVyLmlzRmluaXRlKHYpP3Y6bnVsbH0KZnVuY3Rpb24gYWdlRGF5cygpe2NvbnN0IGE9bignYWdlJyk7aWYoYT09PW51bGwpcmV0dXJuIG51bGw7cmV0dXJuICQoJ2FnZVVuaXQnKS52YWx1ZT09PSdkYXlzJz9hOiQoJ2FnZVVuaXQnKS52YWx1ZT09PSdtb250aHMnP2EqMzAuNDM3NTphKjM2NS4yNX0KZnVuY3Rpb24gYWdlTW9udGhzKCl7Y29uc3QgZD1hZ2VEYXlzKCk7cmV0dXJuIGQ9PT1udWxsP251bGw6ZC8zMC40Mzc1fQpmdW5jdGlvbiBmbXQodixkPTEpe3JldHVybiBOdW1iZXIodikudG9Mb2NhbGVTdHJpbmcoJ3B0LUJSJyx7bWF4aW11bUZyYWN0aW9uRGlnaXRzOmR9KX0KZnVuY3Rpb24gcmFkaW8obmFtZSl7Y29uc3QgeD1kb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBpbnB1dFtuYW1lPSIke25hbWV9Il06Y2hlY2tlZGApO3JldHVybiB4P3gudmFsdWU6bnVsbH0KZnVuY3Rpb24gY2hlY2tlZChpZCl7cmV0dXJuICQoaWQpPy5jaGVja2VkfHxmYWxzZX0KZnVuY3Rpb24gYWRkTm9kZSh0eXBlLGtpY2tlcix0aXRsZSxib2R5KXsKIHN0YXRlLm5vZGVzLnB1c2goe3R5cGUsa2lja2VyLHRpdGxlLGJvZHl9KTsKIHJlbmRlclBhdGgoKTsKfQpmdW5jdGlvbiByZW5kZXJQYXRoKCl7CiAkKCdwYXRoJykuaW5uZXJIVE1MPXN0YXRlLm5vZGVzLm1hcCgoeCxpKT0+YDxkaXYgY2xhc3M9Im5vZGUgJHt4LnR5cGV9Ij4KIDxkaXYgY2xhc3M9ImtpY2tlciI+JHt4LmtpY2tlcn08L2Rpdj48ZGl2IGNsYXNzPSJ0aXRsZSI+JHt4LnRpdGxlfTwvZGl2PgogPGRpdj4ke3guYm9keX08L2Rpdj48L2Rpdj5gKS5qb2luKCcnKTsKfQpmdW5jdGlvbiBzZXRRdWVzdGlvbih0aXRsZSxoZWxwLGh0bWwpewogJCgncXVlc3Rpb25Cb3gnKS5pbm5lckhUTUw9YDxkaXYgY2xhc3M9InF1ZXN0aW9uLXRpdGxlIj4ke3RpdGxlfTwvZGl2PjxkaXYgY2xhc3M9InF1ZXN0aW9uLWhlbHAiPiR7aGVscHx8Jyd9PC9kaXY+JHtodG1sfWA7Cn0KZnVuY3Rpb24gc2V0UHJvZ3Jlc3ModGV4dCxwY3QpeyQoJ3Byb2dyZXNzVGV4dCcpLnRleHRDb250ZW50PXRleHQ7JCgncHJvZ3Jlc3NCYXInKS5zdHlsZS53aWR0aD1wY3QrJyUnfQpmdW5jdGlvbiBiYXNlVmFsaWQoKXsKIGNvbnN0IHZhbHM9W24oJ2FnZScpLG4oJ3dlaWdodCcpLG4oJ3RlbXAnKSxuKCdmZXZlckRheXMnKV07CiByZXR1cm4gdmFscy5ldmVyeSh2PT52IT09bnVsbCk7Cn0KZnVuY3Rpb24gcmVuZGVyU3RlcCgpewogJCgnYmFja0J0bicpLmRpc2FibGVkPXN0YXRlLmhpc3RvcnkubGVuZ3RoPT09MDsKIGNvbnN0IHM9c3RhdGUuc3RlcDsKIGlmKHM9PT0nZWxpZ2liaWxpdHknKXsKICAgc2V0UHJvZ3Jlc3MoJzEuIENvbmZpcm1hciBzZSDDqSBGU1NMJywxMCk7CiAgIHNldFF1ZXN0aW9uKCdPIGNhc28gw6kgZWxlZ8OtdmVsIHBhcmEgbyBmbHV4byBkZSBGU1NMPycsJ0NvbmZpcm1lIGF1c8OqbmNpYSBkZSBmb2NvIGFww7NzIGFuYW1uZXNlIGUgZXhhbWUgZsOtc2ljbyBjb21wbGV0b3MuJywKICAgYDxkaXYgY2xhc3M9Im9wdGlvbnMiPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0iZWxpZyIgdmFsdWU9InllcyI+PHNwYW4+PGI+U2ltLCBuw6NvIGjDoSBmb2NvIGlkZW50aWZpY2FkbzwvYj48c21hbGw+RmVicmUgYWd1ZGEsIGNyaWFuw6dhIGF0w6kgMzYgbWVzZXMsIGV4YW1lIHNlbSBjYXVzYSBkZWZpbmlkYS48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0iZWxpZyIgdmFsdWU9Im5vIj48c3Bhbj48Yj5Ow6NvLCBleGlzdGUgZm9jbyBjbMOtbmljbzwvYj48c21hbGw+Q29uZHV6aXIgcGVsbyBkaWFnbsOzc3RpY28gbG9jYWxpemFkby48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj5gKTsKIH0gZWxzZSBpZihzPT09J3RveGVtaWEnKXsKICAgc2V0UHJvZ3Jlc3MoJzIuIEF2YWxpYXIgdG94ZW1pYSAvIHNlcHNlJywyMCk7CiAgIHNldFF1ZXN0aW9uKCdIw6EgdG94ZW1pYSBvdSBzaW5haXMgZGUgc2Vwc2U/JywnQ29uc2lkZXJlIHBlcmZ1c8OjbyBydWltLCBhbHRlcmHDp8OjbyBkZSBjb25zY2nDqm5jaWEsIGNob3F1ZSwgcGV0w6lxdWlhcy9ww7pycHVyYSwgZGVzY29uZm9ydG8gZ3JhdmUgb3UgYXBhcsOqbmNpYSBtdWl0byBkb2VudGUuJywKICAgYDxkaXYgY2xhc3M9Im9wdGlvbnMiPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0idG94IiB2YWx1ZT0ieWVzIj48c3Bhbj48Yj5TaW08L2I+PHNtYWxsPlJhbW8gZGUgYWx0byByaXNjbyBjb20gaW50ZXJuYcOnw6NvIGUgYW50aWJpb3RpY290ZXJhcGlhIGVtcMOtcmljYS48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0idG94IiB2YWx1ZT0ibm8iPjxzcGFuPjxiPk7Do28sIGJvbSBlc3RhZG8gZ2VyYWw8L2I+PHNtYWxsPlByb3NzZWd1aXIgY29uZm9ybWUgaWRhZGUuPC9zbWFsbD48L3NwYW4+PC9sYWJlbD4KICAgPC9kaXY+YCk7CiB9IGVsc2UgaWYocz09PSdyb2NoZXN0ZXJDbGluaWNhbCcpewogICBzZXRQcm9ncmVzcygnMy4gQ3JpdMOpcmlvcyBjbMOtbmljb3MgZGUgUm9jaGVzdGVyJywzNSk7CiAgIHNldFF1ZXN0aW9uKCdDcml0w6lyaW9zIGNsw61uaWNvcyBkZSBiYWl4byByaXNjbyDigJQgUm9jaGVzdGVyJywnTWFycXVlIHRvZG9zIG9zIGNyaXTDqXJpb3MgcHJlc2VudGVzLiBPIGZsdXhvIHPDsyBjbGFzc2lmaWNhIGNvbW8gYmFpeG8gcmlzY28gc2UgdG9kb3MgZm9yZW0gYXRlbmRpZG9zLicsCiAgIGA8ZGl2IGNsYXNzPSJjaGVjay1ncmlkIj4KICAgIDxsYWJlbCBjbGFzcz0iY2hlY2siPjxpbnB1dCBpZD0iclByZXZIZWFsdGh5IiB0eXBlPSJjaGVja2JveCI+PHNwYW4+UHJldmlhbWVudGUgc2F1ZMOhdmVsPC9zcGFuPjwvbGFiZWw+CiAgICA8bGFiZWwgY2xhc3M9ImNoZWNrIj48aW5wdXQgaWQ9InJUZXJtIiB0eXBlPSJjaGVja2JveCI+PHNwYW4+TmFzY2lkbyBhIHRlcm1vIGUgc2VtIGNvbXBsaWNhw6fDtWVzIHJlbGV2YW50ZXMgbm8gYmVyw6fDoXJpbzwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJjaGVjayI+PGlucHV0IGlkPSJyTm9Ub3hpYyIgdHlwZT0iY2hlY2tib3giPjxzcGFuPlNlbSBhcGFyw6puY2lhIHTDs3hpY2EgZSBzZW0gZXZpZMOqbmNpYSBkZSBpbmZlY8Onw6NvIGJhY3RlcmlhbmEgZm9jYWw8L3NwYW4+PC9sYWJlbD4KICAgIDxsYWJlbCBjbGFzcz0iY2hlY2siPjxpbnB1dCBpZD0ick5vQ2hyb25pYyIgdHlwZT0iY2hlY2tib3giPjxzcGFuPlNlbSBkb2Vuw6dhIGNyw7RuaWNhIHJlbGV2YW50ZTwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj5gKTsKIH0gZWxzZSBpZihzPT09J3JvY2hlc3RlckxhYnMnKXsKICAgc2V0UHJvZ3Jlc3MoJzQuIENyaXTDqXJpb3MgbGFib3JhdG9yaWFpcyBkZSBSb2NoZXN0ZXInLDUwKTsKICAgc2V0UXVlc3Rpb24oJ0V4YW1lcyBwYXJhIFJvY2hlc3RlcicsJ0luZm9ybWUgb3MgdmFsb3JlcyBkaXNwb27DrXZlaXMuIEEgY2xhc3NpZmljYcOnw6NvIGRlIGJhaXhvIHJpc2NvIHJlcXVlciB0b2RvcyBkZW50cm8gZG9zIGxpbWl0ZXMuJywKICAgYDxkaXYgY2xhc3M9ImdyaWQiPgogICAgPGRpdj48bGFiZWw+TGV1Y8OzY2l0b3MgKC9tbcKzKTwvbGFiZWw+PGlucHV0IGlkPSJyV2JjIiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iMTAwIiBwbGFjZWhvbGRlcj0iNS4wMDDigJMxNS4wMDAiPjwvZGl2PgogICAgPGRpdj48bGFiZWw+QmFzdG9uZXRlcyBhYnNvbHV0b3MgKC9tbcKzKTwvbGFiZWw+PGlucHV0IGlkPSJyQmFuZHMiIHR5cGU9Im51bWJlciIgbWluPSIwIiBzdGVwPSI1MCIgcGxhY2Vob2xkZXI9IjwxLjUwMCI+PC9kaXY+CiAgICA8ZGl2PjxsYWJlbD5MZXVjw7NjaXRvcyBuYSB1cmluYSAvIGNhbXBvPC9sYWJlbD48aW5wdXQgaWQ9InJVcmluZSIgdHlwZT0ibnVtYmVyIiBtaW49IjAiIHN0ZXA9IjEiIHBsYWNlaG9sZGVyPSLiiaQxMCI+PC9kaXY+CiAgICA8ZGl2PjxsYWJlbD5TZSBkaWFycmVpYTogbGV1Y8OzY2l0b3MgZmVjYWlzIC8gY2FtcG88L2xhYmVsPjxpbnB1dCBpZD0iclN0b29sIiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iMSIgcGxhY2Vob2xkZXI9IuKJpDU7IGRlaXhlIHZhemlvIHNlbSBkaWFycmVpYSI+PC9kaXY+CiAgIDwvZGl2PmApOwogfSBlbHNlIGlmKHM9PT0ndGVtcDM5Jyl7CiAgIHNldFByb2dyZXNzKCczLiBUZW1wZXJhdHVyYSBkZWZpbmUgbyBwcsOzeGltbyByYW1vJywzNSk7CiAgIHNldFF1ZXN0aW9uKCdBIHRlbXBlcmF0dXJhIGF4aWxhciDDqSDiiaUzOSDCsEM/JywnTm8gZmx1eG9ncmFtYSBuYWNpb25hbCwgZXNzZSBsaW1pYXIgYWJyZSBpbnZlc3RpZ2HDp8OjbyBhZGljaW9uYWwgZW0gY3JpYW7Dp2FzIGRlIDPigJMzNiBtZXNlcy4nLAogICBgPGRpdiBjbGFzcz0ib3B0aW9ucyI+CiAgICA8bGFiZWwgY2xhc3M9Im9wdGlvbiI+PGlucHV0IHR5cGU9InJhZGlvIiBuYW1lPSJ0MzkiIHZhbHVlPSJ5ZXMiPjxzcGFuPjxiPlNpbSwg4omlMzkgwrBDPC9iPjwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0idDM5IiB2YWx1ZT0ibm8iPjxzcGFuPjxiPk7Do28sIDwzOSDCsEM8L2I+PC9zcGFuPjwvbGFiZWw+CiAgIDwvZGl2PmApOwogfSBlbHNlIGlmKHM9PT0ndXRpUmlzaycpewogICBzZXRQcm9ncmVzcygnNC4gQXZhbGlhciByaXNjbyBkZSBJVFUnLDQ4KTsKICAgc2V0UXVlc3Rpb24oJ0jDoSBmYXRvcmVzIGRlIHJpc2NvIHBhcmEgSVRVPycsJ1VzZSBvIHJhbW8gZG8gZmx1eG9ncmFtYSBjb25mb3JtZSBzZXhvLCBkdXJhw6fDo28gZGEgZmVicmUsIGlkYWRlIGUgY2lyY3VuY2lzw6NvLicsCiAgIGA8ZGl2IGNsYXNzPSJncmlkIG9uZSI+CiAgICA8ZGl2PjxsYWJlbD5TZXhvPC9sYWJlbD48c2VsZWN0IGlkPSJzZXgiPjxvcHRpb24gdmFsdWU9ImZlbWFsZSI+RmVtaW5pbm88L29wdGlvbj48b3B0aW9uIHZhbHVlPSJtYWxlIj5NYXNjdWxpbm88L29wdGlvbj48L3NlbGVjdD48L2Rpdj4KICAgPC9kaXY+CiAgIDxkaXYgY2xhc3M9ImNoZWNrLWdyaWQiIHN0eWxlPSJtYXJnaW4tdG9wOjlweCI+CiAgICA8bGFiZWwgY2xhc3M9ImNoZWNrIiBpZD0iZ2lybFdoaXRlUm93Ij48aW5wdXQgaWQ9ImdpcmxXaGl0ZSIgdHlwZT0iY2hlY2tib3giPjxzcGFuPk1lbmluYSBicmFuY2E8L3NwYW4+PC9sYWJlbD4KICAgIDxsYWJlbCBjbGFzcz0iY2hlY2sgaGlkZGVuIiBpZD0idW5jaXJjUm93Ij48aW5wdXQgaWQ9InVuY2lyYyIgdHlwZT0iY2hlY2tib3giPjxzcGFuPk1lbmlubyBuw6NvIGNpcmN1bmNpZGFkbzwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJjaGVjayI+PGlucHV0IGlkPSJwcmlvclVUSSIgdHlwZT0iY2hlY2tib3giPjxzcGFuPklUVSBwcsOpdmlhIG91IGFub21hbGlhIGdlbml0dXJpbsOhcmlhIOKYhTwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj4KICAgPGRpdiBjbGFzcz0ibXV0ZWQiIHN0eWxlPSJtYXJnaW4tdG9wOjhweCI+TmFjaW9uYWw6IG1lbmluYXMg4oCUIGJyYW5jYSwgZmVicmUgPjQ4IGgsIFQgPjM5IMKwQywgaWRhZGUgPDEgYW5vOyBtZW5pbm9zIOKAlCBuw6NvIGNpcmN1bmNpZGFkbywgZmVicmUgPjI0IGgsIFQgPjM5IMKwQy4g4piFIFVwVG9EYXRlIHRhbWLDqW0gdmFsb3JpemEgSVRVIHByw6l2aWEvYW5vbWFsaWEgZSBmZWJyZSBwcm9sb25nYWRhLjwvZGl2PmApOwogICBzZXRUaW1lb3V0KCgpPT57JCgnc2V4Jykub25jaGFuZ2U9KCk9Pntjb25zdCBtYWxlPSQoJ3NleCcpLnZhbHVlPT09J21hbGUnOyQoJ2dpcmxXaGl0ZVJvdycpLmNsYXNzTGlzdC50b2dnbGUoJ2hpZGRlbicsbWFsZSk7JCgndW5jaXJjUm93JykuY2xhc3NMaXN0LnRvZ2dsZSgnaGlkZGVuJywhbWFsZSl9fSwwKTsKIH0gZWxzZSBpZihzPT09J3VyaW5lUmVzdWx0Jyl7CiAgIHNldFByb2dyZXNzKCc1LiBJbnRlcnByZXRhciB1cmluYScsNjApOwogICBzZXRRdWVzdGlvbignUXVhbCBmb2kgbyByZXN1bHRhZG8gZGEgdXJpbmE/JywnQ29uc2lkZXJlIG5pdHJpdG8sIGVzdGVyYXNlIGxldWNvY2l0w6FyaWEsIGJhY3RlcmnDunJpYSBlIHBpw7pyaWEvbGV1Y29jaXTDunJpYS4nLAogICBgPGRpdiBjbGFzcz0ib3B0aW9ucyI+CiAgICA8bGFiZWwgY2xhc3M9Im9wdGlvbiI+PGlucHV0IHR5cGU9InJhZGlvIiBuYW1lPSJ1cmluZSIgdmFsdWU9ImFibm9ybWFsIj48c3Bhbj48Yj5BbHRlcmFkYTwvYj48c21hbGw+UHJvc3NlZ3VpciBjb21vIHByb3bDoXZlbCBJVFUgYXDDs3MgY29sZXRhIGRlIHVyb2N1bHR1cmEuPC9zbWFsbD48L3NwYW4+PC9sYWJlbD4KICAgIDxsYWJlbCBjbGFzcz0ib3B0aW9uIj48aW5wdXQgdHlwZT0icmFkaW8iIG5hbWU9InVyaW5lIiB2YWx1ZT0ibm9ybWFsIj48c3Bhbj48Yj5Ob3JtYWw8L2I+PHNtYWxsPlByb3NzZWd1aXIgcGFyYSBoZW1vZ3JhbWEgcXVhbmRvIGluZGljYWRvIHBlbG8gcmFtby48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj5gKTsKIH0gZWxzZSBpZihzPT09J2NiY1Jlc3VsdCcpewogICBzZXRQcm9ncmVzcygnNi4gSW50ZXJwcmV0YXIgaGVtb2dyYW1hJyw3MCk7CiAgIHNldFF1ZXN0aW9uKCdPIGhlbW9ncmFtYSBlc3TDoSBhbHRlcmFkbz8nLCdGbHV4byBuYWNpb25hbDogbGV1Y8OzY2l0b3MgPjIwLjAwMC9tbcKzIG91IG5ldXRyw7NmaWxvcyBhYnNvbHV0b3MgPjEwLjAwMC9tbcKzLicsCiAgIGA8ZGl2IGNsYXNzPSJncmlkIj4KICAgIDxkaXY+PGxhYmVsPkxldWPDs2NpdG9zICgvbW3Csyk8L2xhYmVsPjxpbnB1dCBpZD0id2JjIiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iMTAwIj48L2Rpdj4KICAgIDxkaXY+PGxhYmVsPk5ldXRyw7NmaWxvcyBhYnNvbHV0b3MgKC9tbcKzKTwvbGFiZWw+PGlucHV0IGlkPSJhbmMiIHR5cGU9Im51bWJlciIgbWluPSIwIiBzdGVwPSIxMDAiPjwvZGl2PgogICAgPGRpdj48bGFiZWw+UENSIChtZy9MKSDimIU8L2xhYmVsPjxpbnB1dCBpZD0iY3JwIiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iLjEiPjwvZGl2PgogICAgPGRpdj48bGFiZWw+UHJvY2FsY2l0b25pbmEgKG5nL21MKSDimIU8L2xhYmVsPjxpbnB1dCBpZD0icGN0IiB0eXBlPSJudW1iZXIiIG1pbj0iMCIgc3RlcD0iLjAxIj48L2Rpdj4KICAgPC9kaXY+CiAgIDxkaXYgY2xhc3M9Im11dGVkIiBzdHlsZT0ibWFyZ2luLXRvcDo4cHgiPuKYhSBVcFRvRGF0ZTogZW0gbsOjby9pbXVuaXphZG8gaW5jb21wbGV0bywgUENUID4wLDUgbmcvbUwsIFBDUiA+MjAgbWcvTCwgbGV1Y8OzY2l0b3Mg4omlMTUuMDAwIG91IEFOQyDiiaUxMC4wMDAgZWxldmFtIG8gcmlzY28uPC9kaXY+YCk7CiB9IGVsc2UgaWYocz09PSdjeHInKXsKICAgc2V0UHJvZ3Jlc3MoJzcuIFJhZGlvZ3JhZmlhIGUgcmlzY28gZGUgYmFjdGVyZW1pYScsODApOwogICBzZXRRdWVzdGlvbignUXVhbCBvIHJlc3VsdGFkbyBkYSByYWRpb2dyYWZpYSBkZSB0w7NyYXg/JywnTyBmbHV4b2dyYW1hIGFicmUgZXN0ZSBwb250byBhcMOzcyBoZW1vZ3JhbWEgYWx0ZXJhZG8gcGFyYSBwZXNxdWlzYXIgcG5ldW1vbmlhIG9jdWx0YS4nLAogICBgPGRpdiBjbGFzcz0ib3B0aW9ucyI+CiAgICA8bGFiZWwgY2xhc3M9Im9wdGlvbiI+PGlucHV0IHR5cGU9InJhZGlvIiBuYW1lPSJjeHIiIHZhbHVlPSJhYm5vcm1hbCI+PHNwYW4+PGI+QWx0ZXJhZGEgLyBpbmZpbHRyYWRvIGNvbXBhdMOtdmVsPC9iPjxzbWFsbD5UcmF0YXIgY29tbyBwbmV1bW9uaWEuPC9zbWFsbD48L3NwYW4+PC9sYWJlbD4KICAgIDxsYWJlbCBjbGFzcz0ib3B0aW9uIj48aW5wdXQgdHlwZT0icmFkaW8iIG5hbWU9ImN4ciIgdmFsdWU9Im5vcm1hbCI+PHNwYW4+PGI+Tm9ybWFsPC9iPjxzbWFsbD5Qcm9zc2VndWlyIHBhcmEgcmlzY28gZGUgYmFjdGVyZW1pYSBjb25mb3JtZSB2YWNpbmHDp8Ojby48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj4KICAgPGRpdiBjbGFzcz0iaW50ZXJuYXRpb25hbC1ub3RlIG5vZGUgaW50ZXJuYXRpb25hbCIgc3R5bGU9Im1hcmdpbi10b3A6OXB4Ij48Yj7imIUgQ29tcGxlbWVudG8gVXBUb0RhdGU6PC9iPiB0YW1iw6ltIGNvbnNpZGVyYXIgUlggY29tIHRhcXVpcG5laWEsIGRlc2NvbmZvcnRvIHJlc3BpcmF0w7NyaW8gb3UgU3BP4oKCIOKJpDk1JS48L2Rpdj5gKTsKIH0gZWxzZSBpZihzPT09J3ZhY2NpbmF0aW9uJyl7CiAgIHNldFByb2dyZXNzKCc4LiBEZWZpbmlyIHJpc2NvIGRlIGJhY3RlcmVtaWEnLDkwKTsKICAgc2V0UXVlc3Rpb24oJ0EgdmFjaW5hw6fDo28gcGFyYSBIaWIgZSBwbmV1bW9jb2NvIGVzdMOhIGNvbXBsZXRhPycsJ0Fww7NzIFJYIG5vcm1hbCBlIGhlbW9ncmFtYSBhbHRlcmFkbywgbyBmbHV4b2dyYW1hIHVzYSBvIGVzdGFkbyB2YWNpbmFsIHBhcmEgZGVjaWRpciBvYnNlcnZhw6fDo28gdmVyc3VzIGFudGliacOzdGljbyBlbXDDrXJpY28uJywKICAgYDxkaXYgY2xhc3M9Im9wdGlvbnMiPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0idmFjYyIgdmFsdWU9ImNvbXBsZXRlIj48c3Bhbj48Yj5Db21wbGV0YSBwYXJhIGEgaWRhZGU8L2I+PHNtYWxsPlJlYXZhbGlhw6fDo28gY2zDrW5pY2EgZSBhY29tcGFuaGFtZW50byBkZSBjdWx0dXJhcy48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICAgPGxhYmVsIGNsYXNzPSJvcHRpb24iPjxpbnB1dCB0eXBlPSJyYWRpbyIgbmFtZT0idmFjYyIgdmFsdWU9ImluY29tcGxldGUiPjxzcGFuPjxiPkluY29tcGxldGEgb3UgZGVzY29uaGVjaWRhPC9iPjxzbWFsbD5NYWlvciByaXNjbyBkZSBiYWN0ZXJlbWlhIG9jdWx0YTsgY29uc2lkZXJhciBjZWZ0cmlheG9uYSBhcMOzcyBoZW1vY3VsdHVyYS48L3NtYWxsPjwvc3Bhbj48L2xhYmVsPgogICA8L2Rpdj5gKTsKIH0KfQoKZnVuY3Rpb24gYWR2YW5jZSgpewogaWYoc3RhdGUuZmluaXNoZWQpe3JldHVybn0KIGlmKHN0YXRlLnN0ZXA9PT0nZWxpZ2liaWxpdHknKXsKICAgaWYoIWJhc2VWYWxpZCgpKXJldHVybiBhbGVydCgnSW5mb3JtZSBpZGFkZSwgcGVzbywgdGVtcGVyYXR1cmEgZSBkdXJhw6fDo28gZGEgZmVicmUuJyk7CiAgIGNvbnN0IG09YWdlTW9udGhzKCksZmQ9bignZmV2ZXJEYXlzJyksdD1uKCd0ZW1wJyk7CiAgIGlmKG0+MzYpcmV0dXJuIGZpbmlzaCgnd2FybicsJ0ZvcmEgZG8gZXNjb3BvJywnQSBjYWxjdWxhZG9yYSBmb2kgY29uc3RydcOtZGEgcGFyYSBjcmlhbsOnYXMgYXTDqSAzNiBtZXNlcy4nLCdTZW0gcHJlc2NyacOnw6NvIGF1dG9tw6F0aWNhLicpOwogICBjb25zdCBhPXJhZGlvKCdlbGlnJyk7aWYoIWEpcmV0dXJuIGFsZXJ0KCdTZWxlY2lvbmUgdW1hIG9ww6fDo28uJyk7CiAgIHNhdmVIaXN0b3J5KCk7CiAgIGFkZE5vZGUoYT09PSd5ZXMnPydhY3RpdmUnOid3YXJuJywnRW50cmFkYScsYT09PSd5ZXMnPydGU1NMIGNvbmZpcm1hZGEgY2xpbmljYW1lbnRlJzonSMOhIGZvY28gY2zDrW5pY28nLGE9PT0neWVzJz9gSWRhZGU6ICR7Zm10KG0sMSl9IG1lc2VzOyBUbcOheCAke2ZtdCh0KX0gwrBDOyBmZWJyZSBow6EgJHtmbXQoZmQpfSBkaWEocykuYDonQ29uZHV6aXIgY29uZm9ybWUgbyBmb2NvIGlkZW50aWZpY2FkbzsgbsOjbyBhcGxpY2FyIG8gZmx1eG8gZGUgRlNTTC4nKTsKICAgaWYoYT09PSdubycpcmV0dXJuIGZpbmlzaCgnd2FybicsJ0ZsdXhvIGVuY2VycmFkbycsJ0jDoSBmb2NvIGNsw61uaWNvIGlkZW50aWZpY2Fkby4nLCdUcmF0YXIgY29uZm9ybWUgbyBkaWFnbsOzc3RpY28gbG9jYWxpemFkby4nKTsKICAgaWYoZmQ+PTUpYWRkTm9kZSgnaW50ZXJuYXRpb25hbCcsJ+KYhSBVcFRvRGF0ZScsJ0ZlYnJlIOKJpTUgZGlhcycsJ1JlYXZhbGlhciBkb2Vuw6dhIGRlIEthd2FzYWtpIHTDrXBpY2EvaW5jb21wbGV0YSBlIG91dHJhcyBjYXVzYXMgZGUgZmVicmUgcGVyc2lzdGVudGUuJyk7CiAgIGlmKGZkPj03KWFkZE5vZGUoJ3dhcm4nLCdMaW1pdGUgZG8gZmx1eG8nLCdGZWJyZSBwcm9sb25nYWRhJywnRmVicmUg4omlNyBkaWFzIGRlaXhhIGRlIHNlciBGU1NMIGFndWRhIGUgZXhpZ2UgaW52ZXN0aWdhw6fDo28gZXNwZWPDrWZpY2EuJyk7CiAgIHN0YXRlLnN0ZXA9J3RveGVtaWEnOwogfSBlbHNlIGlmKHN0YXRlLnN0ZXA9PT0ndG94ZW1pYScpewogICBjb25zdCBhPXJhZGlvKCd0b3gnKTtpZighYSlyZXR1cm4gYWxlcnQoJ1NlbGVjaW9uZSB1bWEgb3DDp8Ojby4nKTsKICAgc2F2ZUhpc3RvcnkoKTthZGROb2RlKGE9PT0neWVzJz8nZGFuZ2VyJzonb2snLCdHcmF2aWRhZGUnLGE9PT0neWVzJz8nVG94ZW1pYSAvIHNlcHNlJzonQm9tIGVzdGFkbyBnZXJhbCcsYT09PSd5ZXMnPydJbnRlcm5hw6fDo28sIHJhc3RyZWlvIGRlIHNlcHNlIGUgYW50aWJpw7N0aWNvIGVtcMOtcmljbyBwYXJlbnRlcmFsLic6J1Byb3NzZWd1aXIgY29uZm9ybWUgYSBmYWl4YSBldMOhcmlhLicpOwogICBpZihhPT09J3llcycpcmV0dXJuIGZpbmlzaFRveGVtaWEoKTsKICAgY29uc3QgbT1hZ2VNb250aHMoKTsKICAgaWYobTwxKXJldHVybiBmaW5pc2hOZW9uYXRlKCk7CiAgIHN0YXRlLnN0ZXA9bTwzPydyb2NoZXN0ZXJDbGluaWNhbCc6J3RlbXAzOSc7CiB9IGVsc2UgaWYoc3RhdGUuc3RlcD09PSdyb2NoZXN0ZXJDbGluaWNhbCcpewogICBjb25zdCBhbGw9Y2hlY2tlZCgnclByZXZIZWFsdGh5JykmJmNoZWNrZWQoJ3JUZXJtJykmJmNoZWNrZWQoJ3JOb1RveGljJykmJmNoZWNrZWQoJ3JOb0Nocm9uaWMnKTsKICAgc2F2ZUhpc3RvcnkoKTtzdGF0ZS5hbnN3ZXJzLnJvY2hlc3RlckNsaW5pY2FsPWFsbDsKICAgYWRkTm9kZShhbGw/J29rJzonZGFuZ2VyJywnUm9jaGVzdGVyIOKAlCBjbMOtbmljYScsYWxsPydUb2RvcyBvcyBjcml0w6lyaW9zIGNsw61uaWNvcyBwcmVzZW50ZXMnOidDcml0w6lyaW8gY2zDrW5pY28gZGUgYmFpeG8gcmlzY28gbsOjbyBwcmVlbmNoaWRvJyxhbGw/J1Byb3NzZWd1aXIgcGFyYSBvcyBjcml0w6lyaW9zIGxhYm9yYXRvcmlhaXMuJzonQ2xhc3NpZmljYXIgY29tbyBhbHRvIHJpc2NvIG5vIGZsdXhvIGluc3RpdHVjaW9uYWwuJyk7CiAgIGlmKCFhbGwpcmV0dXJuIGZpbmlzaFlvdW5nSGlnaCgnRmFsaGEgZW0gY3JpdMOpcmlvIGNsw61uaWNvIGRlIFJvY2hlc3RlcicpOwogICBzdGF0ZS5zdGVwPSdyb2NoZXN0ZXJMYWJzJzsKIH0gZWxzZSBpZihzdGF0ZS5zdGVwPT09J3JvY2hlc3RlckxhYnMnKXsKICAgY29uc3Qgdz1uKCdyV2JjJyksYj1uKCdyQmFuZHMnKSx1PW4oJ3JVcmluZScpLHM9bignclN0b29sJyk7CiAgIGlmKHc9PT1udWxsfHxiPT09bnVsbHx8dT09PW51bGwpcmV0dXJuIGFsZXJ0KCdJbmZvcm1lIGxldWPDs2NpdG9zLCBiYXN0b25ldGVzIGUgbGV1Y8OzY2l0b3MgdXJpbsOhcmlvcy4nKTsKICAgY29uc3QgbG93PXc+PTUwMDAmJnc8PTE1MDAwJiZiPDE1MDAmJnU8PTEwJiYocz09PW51bGx8fHM8PTUpOwogICBzYXZlSGlzdG9yeSgpOwogICBhZGROb2RlKGxvdz8nb2snOidkYW5nZXInLCdSb2NoZXN0ZXIg4oCUIGxhYm9yYXTDs3JpbycsbG93PydCYWl4byByaXNjbyBsYWJvcmF0b3JpYWwnOidBbHRvIHJpc2NvIGxhYm9yYXRvcmlhbCcsCiAgIGA8dWw+PGxpPkxldWPDs2NpdG9zOiAke2ZtdCh3LDApfS9tbcKzPC9saT48bGk+QmFzdG9uZXRlczogJHtmbXQoYiwwKX0vbW3CszwvbGk+PGxpPlVyaW5hOiAke2ZtdCh1LDApfSBsZXVjw7NjaXRvcy9jYW1wbzwvbGk+JHtzIT09bnVsbD9gPGxpPkZlemVzOiAke2ZtdChzLDApfSBsZXVjw7NjaXRvcy9jYW1wbzwvbGk+YDonJ308L3VsPmApOwogICByZXR1cm4gbG93P2ZpbmlzaFlvdW5nTG93KCk6ZmluaXNoWW91bmdIaWdoKCdDcml0w6lyaW8gbGFib3JhdG9yaWFsIGRlIFJvY2hlc3RlciBhbHRlcmFkbycpOwogfSBlbHNlIGlmKHN0YXRlLnN0ZXA9PT0ndGVtcDM5Jyl7CiAgIGNvbnN0IGE9cmFkaW8oJ3QzOScpO2lmKCFhKXJldHVybiBhbGVydCgnU2VsZWNpb25lIHVtYSBvcMOnw6NvLicpOwogICBzYXZlSGlzdG9yeSgpO2FkZE5vZGUoYT09PSd5ZXMnPyd3YXJuJzonb2snLCcz4oCTMzYgbWVzZXMnLGE9PT0neWVzJz8nRmVicmUg4omlMzkgwrBDJzonRmVicmUgPDM5IMKwQycsYT09PSd5ZXMnPydBYnJpciBhdmFsaWHDp8OjbyBkZSByaXNjbyB1cmluw6FyaW8uJzonQmFpeG8gcmlzY28gbm8gZmx1eG9ncmFtYSwgc2UgcGVybWFuZWNlciBlbSBib20gZXN0YWRvIGdlcmFsLicpOwogICBpZihhPT09J25vJylyZXR1cm4gZmluaXNoTG93UmlzaygpOwogICBzdGF0ZS5zdGVwPSd1dGlSaXNrJzsKIH0gZWxzZSBpZihzdGF0ZS5zdGVwPT09J3V0aVJpc2snKXsKICAgY29uc3Qgc2V4PSQoJ3NleCcpLnZhbHVlLG09YWdlTW9udGhzKCksZmQ9bignZmV2ZXJEYXlzJyksdGVtcD1uKCd0ZW1wJyk7CiAgIGNvbnN0IHJpc2s9c2V4PT09J2ZlbWFsZSc/KGNoZWNrZWQoJ2dpcmxXaGl0ZScpfHxmZD4yfHx0ZW1wPjM5fHxtPDEyfHxjaGVja2VkKCdwcmlvclVUSScpKTooY2hlY2tlZCgndW5jaXJjJyl8fGZkPjF8fHRlbXA+Mzl8fGNoZWNrZWQoJ3ByaW9yVVRJJykpOwogICBzYXZlSGlzdG9yeSgpO3N0YXRlLmFuc3dlcnMudXRpUmlzaz1yaXNrOwogICBhZGROb2RlKHJpc2s/J3dhcm4nOidvaycsJ1Jpc2NvIGRlIElUVScscmlzaz8nRmF0b3JlcyBwcmVzZW50ZXMnOidGYXRvcmVzIGF1c2VudGVzJyxyaXNrPydTb2xpY2l0YXIgdXJpbmEgSSBlIHVyb2N1bHR1cmEgcG9yIG3DqXRvZG8gYWRlcXVhZG8uJzonTm8gcmFtbyB2YWNpbmFkbyBjb21wbGV0bywgcG9kZSBzZWd1aXIgc2VtIHVyaW5hOyBlbSB2YWNpbmHDp8OjbyBpbmNvbXBsZXRhLCBhaW5kYSBzZXLDoSBuZWNlc3PDoXJpbyBoZW1vZ3JhbWEvaGVtb2N1bHR1cmEuJyk7CiAgIGlmKHJpc2spe3N0YXRlLnN0ZXA9J3VyaW5lUmVzdWx0J30KICAgZWxzZXsKICAgICBzdGF0ZS5hbnN3ZXJzLnVyaW5lPSdub3RfaW5kaWNhdGVkJzsKICAgICBzdGF0ZS5zdGVwPSd2YWNjaW5hdGlvblByZUNCQyc7CiAgICAgY29uc3QgdmFjY0tub3duPWNvbmZpcm0oJ1ZhY2luYcOnw6NvIHBhcmEgSGliIGUgcG5ldW1vY29jbyBlc3TDoSBjb21wbGV0YSBwYXJhIGEgaWRhZGU/XG5cbk9LID0gY29tcGxldGEgfCBDYW5jZWxhciA9IGluY29tcGxldGEvZGVzY29uaGVjaWRhJyk7CiAgICAgc3RhdGUuYW5zd2Vycy52YWNjPXZhY2NLbm93bj8nY29tcGxldGUnOidpbmNvbXBsZXRlJzsKICAgICBpZih2YWNjS25vd24pcmV0dXJuIGZpbmlzaExvd1Jpc2soKTsKICAgICBhZGROb2RlKCd3YXJuJywnVmFjaW5hw6fDo28nLCdJbmNvbXBsZXRhL2Rlc2NvbmhlY2lkYScsJ1NvbGljaXRhciBoZW1vZ3JhbWEgZSBoZW1vY3VsdHVyYSBjb25mb3JtZSBmbHV4byBuYWNpb25hbC4nKTsKICAgICBzdGF0ZS5zdGVwPSdjYmNSZXN1bHQnOwogICB9CiB9IGVsc2UgaWYoc3RhdGUuc3RlcD09PSd1cmluZVJlc3VsdCcpewogICBjb25zdCBhPXJhZGlvKCd1cmluZScpO2lmKCFhKXJldHVybiBhbGVydCgnU2VsZWNpb25lIHVtYSBvcMOnw6NvLicpOwogICBzYXZlSGlzdG9yeSgpO3N0YXRlLmFuc3dlcnMudXJpbmU9YTsKICAgYWRkTm9kZShhPT09J2Fibm9ybWFsJz8nZGFuZ2VyJzonb2snLCdVcmluYScsYT09PSdhYm5vcm1hbCc/J1VyaW5hIGFsdGVyYWRhJzonVXJpbmEgbm9ybWFsJyxhPT09J2Fibm9ybWFsJz8nUHJvdsOhdmVsIElUVTsgY29saGVyIHVyb2N1bHR1cmEgZSB0cmF0YXIgY29uZm9ybWUgaWRhZGUvZXN0YWRvIGNsw61uaWNvLic6J1Byb3NzZWd1aXIgY29uZm9ybWUgdmFjaW5hw6fDo28gZSBoZW1vZ3JhbWEuJyk7CiAgIGlmKGE9PT0nYWJub3JtYWwnKXJldHVybiBmaW5pc2hVVEkoKTsKICAgY29uc3QgdmFjY0tub3duPWNvbmZpcm0oJ1ZhY2luYcOnw6NvIHBhcmEgSGliIGUgcG5ldW1vY29jbyBlc3TDoSBjb21wbGV0YSBwYXJhIGEgaWRhZGU/XG5cbk9LID0gY29tcGxldGEgfCBDYW5jZWxhciA9IGluY29tcGxldGEvZGVzY29uaGVjaWRhJyk7CiAgIHN0YXRlLmFuc3dlcnMudmFjYz12YWNjS25vd24/J2NvbXBsZXRlJzonaW5jb21wbGV0ZSc7CiAgIGlmKHZhY2NLbm93bilyZXR1cm4gZmluaXNoTG93UmlzaygnVXJpbmEgbm9ybWFsIGUgdmFjaW5hw6fDo28gY29tcGxldGEnKTsKICAgYWRkTm9kZSgnd2FybicsJ1ZhY2luYcOnw6NvJywnSW5jb21wbGV0YS9kZXNjb25oZWNpZGEnLCdTb2xpY2l0YXIgaGVtb2dyYW1hIGUgaGVtb2N1bHR1cmEuJyk7CiAgIHN0YXRlLnN0ZXA9J2NiY1Jlc3VsdCc7CiB9IGVsc2UgaWYoc3RhdGUuc3RlcD09PSdjYmNSZXN1bHQnKXsKICAgY29uc3Qgdz1uKCd3YmMnKSxhPW4oJ2FuYycpO2lmKHc9PT1udWxsJiZhPT09bnVsbClyZXR1cm4gYWxlcnQoJ0luZm9ybWUgbGV1Y8OzY2l0b3MgZS9vdSBuZXV0csOzZmlsb3MgYWJzb2x1dG9zLicpOwogICBjb25zdCBuYXRpb25hbD0odyE9PW51bGwmJnc+MjAwMDApfHwoYSE9PW51bGwmJmE+MTAwMDApOwogICBjb25zdCBjcnA9bignY3JwJykscGN0PW4oJ3BjdCcpOwogICBjb25zdCB1dGQ9KHchPT1udWxsJiZ3Pj0xNTAwMCl8fChhIT09bnVsbCYmYT49MTAwMDApfHwoY3JwIT09bnVsbCYmY3JwPjIwKXx8KHBjdCE9PW51bGwmJnBjdD4wLjUpOwogICBzYXZlSGlzdG9yeSgpO3N0YXRlLmFuc3dlcnMuY2JjQWx0ZXJlZD1uYXRpb25hbDtzdGF0ZS5hbnN3ZXJzLnV0ZEFsZXJ0PXV0ZDsKICAgYWRkTm9kZShuYXRpb25hbD8nZGFuZ2VyJzonb2snLCdIZW1vZ3JhbWEnLG5hdGlvbmFsPydBbHRlcmFkbyBwZWxvIGNvcnRlIG5hY2lvbmFsJzonU2VtIGFsdGVyYcOnw6NvIHBlbG8gY29ydGUgbmFjaW9uYWwnLAogICBgPHVsPiR7dyE9PW51bGw/YDxsaT5MZXVjw7NjaXRvczogJHtmbXQodywwKX0vbW3CszwvbGk+YDonJ30ke2EhPT1udWxsP2A8bGk+QU5DOiAke2ZtdChhLDApfS9tbcKzPC9saT5gOicnfTwvdWw+YCk7CiAgIGlmKHV0ZCYmIW5hdGlvbmFsKWFkZE5vZGUoJ2ludGVybmF0aW9uYWwnLCfimIUgVXBUb0RhdGUnLCdNYXJjYWRvciBpbnRlcm5hY2lvbmFsIHBvc2l0aXZvJywnSMOhIG1hcmNhZG9yIGFjaW1hIGRvIGNvcnRlIGludGVybmFjaW9uYWwsIGVtYm9yYSBvIGNvcnRlIG5hY2lvbmFsIHByaW5jaXBhbCBuw6NvIHRlbmhhIHNpZG8gdWx0cmFwYXNzYWRvLicpOwogICBpZighbmF0aW9uYWwpcmV0dXJuIGZpbmlzaExvd1Jpc2soJ0hlbW9ncmFtYSBzZW0gY3JpdMOpcmlvcyBuYWNpb25haXMgZGUgYWx0byByaXNjbycpOwogICBzdGF0ZS5zdGVwPSdjeHInOwogfSBlbHNlIGlmKHN0YXRlLnN0ZXA9PT0nY3hyJyl7CiAgIGNvbnN0IGE9cmFkaW8oJ2N4cicpO2lmKCFhKXJldHVybiBhbGVydCgnU2VsZWNpb25lIHVtYSBvcMOnw6NvLicpOwogICBzYXZlSGlzdG9yeSgpO3N0YXRlLmFuc3dlcnMuY3hyPWE7CiAgIGFkZE5vZGUoYT09PSdhYm5vcm1hbCc/J2Rhbmdlcic6J29rJywnUmFkaW9ncmFmaWEgZGUgdMOzcmF4JyxhPT09J2Fibm9ybWFsJz8nUlggYWx0ZXJhZG8nOidSWCBub3JtYWwnLGE9PT0nYWJub3JtYWwnPydUcmF0YXIgY29tbyBwbmV1bW9uaWE7IGFqdXN0YXIgZGVzdGlubyBjb25mb3JtZSBncmF2aWRhZGUuJzonUHJvc3NlZ3VpciBwYXJhIHJpc2NvIGRlIGJhY3RlcmVtaWEgb2N1bHRhIHNlZ3VuZG8gdmFjaW5hw6fDo28uJyk7CiAgIGlmKGE9PT0nYWJub3JtYWwnKXJldHVybiBmaW5pc2hQbmV1bW9uaWEoKTsKICAgc3RhdGUuc3RlcD0ndmFjY2luYXRpb24nOwogfSBlbHNlIGlmKHN0YXRlLnN0ZXA9PT0ndmFjY2luYXRpb24nKXsKICAgY29uc3QgYT1yYWRpbygndmFjYycpO2lmKCFhKXJldHVybiBhbGVydCgnU2VsZWNpb25lIHVtYSBvcMOnw6NvLicpOwogICBzYXZlSGlzdG9yeSgpO3N0YXRlLmFuc3dlcnMudmFjYz1hOwogICBhZGROb2RlKGE9PT0nY29tcGxldGUnPydvayc6J2RhbmdlcicsJ1Jpc2NvIGRlIGJhY3RlcmVtaWEnLGE9PT0nY29tcGxldGUnPydWYWNpbmHDp8OjbyBjb21wbGV0YSc6J1ZhY2luYcOnw6NvIGluY29tcGxldGEvZGVzY29uaGVjaWRhJyxhPT09J2NvbXBsZXRlJz8nQmFpeG8gcmlzY28gZGUgYmFjdGVyZW1pYSBvY3VsdGE7IG9ic2VydmFyIGUgYWNvbXBhbmhhciBjdWx0dXJhcy4nOidNYWlvciByaXNjbyBkZSBiYWN0ZXJlbWlhIG9jdWx0YTsgY2VmdHJpYXhvbmEgZW1ww61yaWNhIHBvZGUgc2VyIGNvbnNpZGVyYWRhIGFww7NzIGhlbW9jdWx0dXJhLicpOwogICByZXR1cm4gYT09PSdjb21wbGV0ZSc/ZmluaXNoT2JzZXJ2ZUFmdGVyQ1hSKCk6ZmluaXNoQmFjdGVyZW1pYSgpOwogfQogcmVuZGVyU3RlcCgpOwp9CgpmdW5jdGlvbiBzYXZlSGlzdG9yeSgpe3N0YXRlLmhpc3RvcnkucHVzaCh7c3RlcDpzdGF0ZS5zdGVwLG5vZGVzOkpTT04ucGFyc2UoSlNPTi5zdHJpbmdpZnkoc3RhdGUubm9kZXMpKSxhbnN3ZXJzOkpTT04ucGFyc2UoSlNPTi5zdHJpbmdpZnkoc3RhdGUuYW5zd2VycykpfSl9CmZ1bmN0aW9uIGdvQmFjaygpewogaWYoIXN0YXRlLmhpc3RvcnkubGVuZ3RoKXJldHVybjsKIGNvbnN0IGg9c3RhdGUuaGlzdG9yeS5wb3AoKTtzdGF0ZS5zdGVwPWguc3RlcDtzdGF0ZS5ub2Rlcz1oLm5vZGVzO3N0YXRlLmFuc3dlcnM9aC5hbnN3ZXJzO3N0YXRlLmZpbmlzaGVkPWZhbHNlOwogJCgnYmFzZUZvcm0nKS5jbGFzc0xpc3QucmVtb3ZlKCdoaWRkZW4nKTskKCduZXh0QnRuJykuY2xhc3NMaXN0LnJlbW92ZSgnaGlkZGVuJyk7JCgncHJlc2NyaXB0aW9uQ2FyZCcpLmNsYXNzTGlzdC5hZGQoJ2hpZGRlbicpOwogcmVuZGVyUGF0aCgpO3JlbmRlclN0ZXAoKTsKfQpmdW5jdGlvbiByZXN0YXJ0KCl7CiBzdGF0ZS5hbnN3ZXJzPXt9O3N0YXRlLmhpc3Rvcnk9W107c3RhdGUubm9kZXM9W107c3RhdGUuc3RlcD0nZWxpZ2liaWxpdHknO3N0YXRlLmZpbmlzaGVkPWZhbHNlOwogZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnaW5wdXQnKS5mb3JFYWNoKGk9PmkudmFsdWU9JycpOwogJCgnYWdlVW5pdCcpLnZhbHVlPSdtb250aHMnOyQoJ3RlbXBSb3V0ZScpLnZhbHVlPSdheGlsbGFyeSc7CiAkKCdiYXNlRm9ybScpLmNsYXNzTGlzdC5yZW1vdmUoJ2hpZGRlbicpOyQoJ25leHRCdG4nKS5jbGFzc0xpc3QucmVtb3ZlKCdoaWRkZW4nKTskKCdwcmVzY3JpcHRpb25DYXJkJykuY2xhc3NMaXN0LmFkZCgnaGlkZGVuJyk7CiByZW5kZXJQYXRoKCk7cmVuZGVyU3RlcCgpOwp9CmZ1bmN0aW9uIGZpbmlzaCh0eXBlLHRpdGxlLGJvZHkscngpewogc3RhdGUuZmluaXNoZWQ9dHJ1ZTthZGROb2RlKHR5cGUsJ0Rlc2ZlY2hvJyx0aXRsZSxib2R5KTtzZXRQcm9ncmVzcygnRmx1eG8gY29uY2x1w61kbycsMTAwKTsKIHNldFF1ZXN0aW9uKHRpdGxlLGJvZHksYDxkaXYgY2xhc3M9Im11dGVkIj5Vc2Ug4oCcVm9sdGFy4oCdIHBhcmEgcmV2aXNhciBvIMO6bHRpbW8gcG9udG8gb3Ug4oCcUmVpbmljaWFy4oCdIHBhcmEgdW0gbm92byBwYWNpZW50ZS48L2Rpdj5gKTsKICQoJ25leHRCdG4nKS5jbGFzc0xpc3QuYWRkKCdoaWRkZW4nKTskKCdwcmVzY3JpcHRpb25DYXJkJykuY2xhc3NMaXN0LnJlbW92ZSgnaGlkZGVuJyk7JCgncngnKS50ZXh0Q29udGVudD1yeDsKfQpmdW5jdGlvbiBjb21tb25IZWFkZXIoKXtyZXR1cm4gYEZTU0wgUEVEScOBVFJJQ0FcblBlc286ICR7Zm10KG4oJ3dlaWdodCcpKX0ga2cgfCBJZGFkZTogJHtmbXQoYWdlTW9udGhzKCksMSl9IG1lc2VzXG5cbmB9CmZ1bmN0aW9uIGZpbmlzaFRveGVtaWEoKXsKIGNvbnN0IHc9bignd2VpZ2h0Jyk7ZmluaXNoKCdkYW5nZXInLCdBbHRvIHJpc2NvIC8gdG94ZW1pYScsJ0ludGVybmFyLCByYXN0cmVhciBzZXBzZSBlIGluaWNpYXIgYW50aWJpw7N0aWNvIGVtcMOtcmljbyBzZW0gYXRyYXNhciBlc3RhYmlsaXphw6fDo28uJywKIGNvbW1vbkhlYWRlcigpK2BDT05EVVRBXG7igKIgSW50ZXJuYcOnw6NvIGltZWRpYXRhOyBVVEkgc2UgY2hvcXVlL2Rpc2Z1bsOnw6NvIG9yZ8OibmljYS5cbuKAoiBIZW1vZ3JhbWEsIFBDUi9QQ1QsIGhlbW9jdWx0dXJhLCB1cmluYSBJICsgdXJvY3VsdHVyYSwgTENSIHNlIHNlZ3VybywgUlggY29uZm9ybWUgY2zDrW5pY2EuXG7igKIgQ2VmdHJpYXhvbmE6ICR7Zm10KE1hdGgubWluKDEwMCp3LDQwMDApKX0gbWcgRVYgMXgvZGlhIChjb25maXJtYXIgaW5kaWNhw6fDo28vZG9zZSBsb2NhbCkuXG5cbkNvbmZpcm1hciBhbGVyZ2lhcywgZnVuw6fDo28gcmVuYWwsIGRpbHVpw6fDo28gZSBwcm90b2NvbG8gaW5zdGl0dWNpb25hbC5gKTsKfQpmdW5jdGlvbiBmaW5pc2hOZW9uYXRlKCl7CiBjb25zdCB3PW4oJ3dlaWdodCcpO2ZpbmlzaCgnZGFuZ2VyJywnUmVjw6ltLW5hc2NpZG8g4oCUIGludGVybmHDp8OjbycsJ1RvZG8gUk4gY29tIEZTU0wgZGV2ZSBwZXJtYW5lY2VyIGVtIGFtYmllbnRlIGhvc3BpdGFsYXIsIHJlYWxpemFyIHJhc3RyZWlvIGRlIHNlcHNlIGUgcmVjZWJlciBhbnRpYmlvdGljb3RlcmFwaWEgZW1ww61yaWNhLicsCiBjb21tb25IZWFkZXIoKStgUk4gQ09NIEZTU0xcbuKAoiBJbnRlcm5hw6fDo28gaG9zcGl0YWxhci5cbuKAoiBITUcsIEhNQywgUENSL1BDVCwgdXJpbmEgSSArIFVST0MgcG9yIHNvbmRhZ2VtLCBMQ1IsIFJYIGRlIHTDs3JheCBlIHBlc3F1aXNhIHZpcmFsIHF1YW5kbyBkaXNwb27DrXZlbC5cbuKAoiBDZWZvdGF4aW1hOiAke2ZtdCgxNTAqdyl9IG1nL2RpYSBFViwgZGl2aWRpciA4LzggaC5cbuKAoiBBc3NvY2lhciBhbXBpY2lsaW5hIHNlIExDUiBhbHRlcmFkbzsgY29uc2lkZXJhciBhY2ljbG92aXIgc2UgcmlzY28gaGVycMOpdGljby5cblxuUmV2aXNhciBlc3F1ZW1hIG5lb25hdGFsIHNlZ3VuZG8gcHJvdG9jb2xvIGxvY2FsLmApOwp9CmZ1bmN0aW9uIGZpbmlzaFlvdW5nTG93KCl7CiBmaW5pc2goJ29rJywnUm9jaGVzdGVyOiBiYWl4byByaXNjbycsJ09ic2VydmHDp8Ojby9yZWF2YWxpYcOnw6NvIGRpw6FyaWEgcG9kZSBzZXIgY29uc2lkZXJhZGEgc2UgZXhhbWVzIG5vcm1haXMgZSBzZWd1aW1lbnRvIHNlZ3Vyby4nLAogY29tbW9uSGVhZGVyKCkrYDHigJMzIE1FU0VTIOKAlCBCQUlYTyBSSVNDTyBQRUxPIFJPQ0hFU1RFUlxu4oCiIFNlbSBhbnRpYmnDs3RpY28gYXV0b23DoXRpY28uXG7igKIgR2FyYW50aXIgcmVhdmFsaWHDp8OjbyBkacOhcmlhIGUgYWNlc3NvIHLDoXBpZG8gYW8gc2VydmnDp28uXG7igKIgUG9uZGVyYXIgaW50ZXJuYcOnw6NvIG5vcyBtZW5vcmVzIGRlIDIgbWVzZXMgb3Ugc2Ugc2VndWltZW50byBuw6NvIGZvciBzZWd1cm8uYCk7Cn0KZnVuY3Rpb24gZmluaXNoWW91bmdIaWdoKHJlYXNvbil7CiBjb25zdCB3PW4oJ3dlaWdodCcpO2ZpbmlzaCgnZGFuZ2VyJywnMeKAkzMgbWVzZXM6IGFsdG8gcmlzY28nLGAke3JlYXNvbn0uIEludGVybmHDp8OjbywgZXhhbWVzIGNvbXBsZXRvcyBlIGNlZmFsb3Nwb3JpbmEgZGUgM8KqIGdlcmHDp8Ojby5gLAogY29tbW9uSGVhZGVyKCkrYDHigJMzIE1FU0VTIOKAlCBBTFRPIFJJU0NPXG7igKIgSW50ZXJuYcOnw6NvIGhvc3BpdGFsYXIuXG7igKIgSE1HLCBITUMsIFBDUi9QQ1QsIHVyaW5hIEkgKyBVUk9DOyBwb25kZXJhciBMQ1IgZSBSWC5cbuKAoiBDZWZ0cmlheG9uYTogJHtmbXQoTWF0aC5taW4oNTAqdywyMDAwKSl9IG1nIEVWL0lNIDF4L2RpYS5cbuKAoiBTZSBMQ1IgYWx0ZXJhZG86IGNlZnRyaWF4b25hIGVtIGRvc2UgbWVuw61uZ2VhICsgYW1waWNpbGluYSBjb25mb3JtZSBwcm90b2NvbG8uXG5cblJldmlzYXIgY3VsdHVyYXMgZSBldm9sdcOnw6NvIGRpYXJpYW1lbnRlLmApOwp9CmZ1bmN0aW9uIGZpbmlzaExvd1Jpc2soZXh0cmE9JycpewogZmluaXNoKCdvaycsJ0JhaXhvIHJpc2NvIC8gb2JzZXJ2YcOnw6NvJyxgJHtleHRyYT9leHRyYSsnLiAnOicnfVNlbSBpbmRpY2HDp8OjbyBhdXRvbcOhdGljYSBkZSBhbnRpYmnDs3RpY287IG9yaWVudGFyIHJldG9ybm8gZSByZWF2YWxpYcOnw6NvLmAsCiBjb21tb25IZWFkZXIoKStgM+KAkzM2IE1FU0VTIOKAlCBCQUlYTyBSSVNDT1xu4oCiIFNlbSBhbnRpYmnDs3RpY28gZW1ww61yaWNvLlxu4oCiIFRyYXRhbWVudG8gZGUgc3Vwb3J0ZSBlIG9yaWVudGHDp8OjbyBkZSBzaW5haXMgZGUgYWxhcm1lLlxu4oCiIFJlYXZhbGlhciBlbSAyNCBoIHNlIGZlYnJlIHBlcnNpc3RpciBvdSBhbnRlcyBzZSBob3V2ZXIgcGlvcmEuXG5cbuKYhSBObyBjb21wbGV0YW1lbnRlIGltdW5pemFkbyBlIGNvbSBib20gZXN0YWRvIGdlcmFsLCBvIFVwVG9EYXRlIG7Do28gcmVjb21lbmRhIGV4YW1lcyBzYW5ndcOtbmVvcyByb3RpbmVpcm9zIGFwZW5hcyBwZWxhIGFsdHVyYSBkYSBmZWJyZS5gKTsKfQpmdW5jdGlvbiBmaW5pc2hVVEkoKXsKIGNvbnN0IHc9bignd2VpZ2h0JyksY2VmdXJvPU1hdGgubWluKDMwKncsNTAwKSxkb3NlPWNlZnVyby8yLGFtb3g9TWF0aC5taW4oNTAqdyw0MDAwKSxhbW94RG9zZT1hbW94LzI7CiBmaW5pc2goJ2RhbmdlcicsJ1Byb3bDoXZlbCBJVFUnLCdDb2xldGFyIHVyb2N1bHR1cmEgYW50ZXMgZG8gYW50aWJpw7N0aWNvIGUgdHJhdGFyIGNvbmZvcm1lIGlkYWRlLCB2w7RtaXRvcywgdG94ZW1pYSBlIHBvc3NpYmlsaWRhZGUgZGUgc2VndWltZW50by4nLAogY29tbW9uSGVhZGVyKCkrYFBST1bDgVZFTCBJVFVcbuKAoiBVcm9jdWx0dXJhIHBvciBtw6l0b2RvIGFkZXF1YWRvIGFudGVzIGRvIGFudGliacOzdGljby5cbuKAoiBBeGV0aWxjZWZ1cm94aW1hOiAke2ZtdChjZWZ1cm8pfSBtZy9kaWEgVk8sIDEyLzEyIGggPSAke2ZtdChkb3NlKX0gbWcvZG9zZSAoJHtmbXQoZG9zZS81MCl9IG1ML2Rvc2UgZGEgc3VzcGVuc8OjbyAyNTAgbWcvNSBtTCkuXG5PVVxu4oCiIEFtb3hpY2lsaW5hICsgY2xhdnVsYW5hdG86ICR7Zm10KGFtb3gpfSBtZy9kaWEgZGUgYW1veGljaWxpbmEsIDEyLzEyIGggPSAke2ZtdChhbW94RG9zZSl9IG1nL2Rvc2UgKCR7Zm10KGFtb3hEb3NlLzgwKX0gbUwvZG9zZSBkYSBzdXNwZW5zw6NvIDQwMC81NyBtZyBlbSA1IG1MKS5cbuKAoiBTZSBuw6NvIHRvbGVyYSBWTy9pbmRpY2HDp8OjbyBwYXJlbnRlcmFsOiBjZWZ0cmlheG9uYSAke2ZtdChNYXRoLm1pbig1MCp3LDIwMDApKX0gbWcgSU0vRVYgMXgvZGlhLlxuXG5BanVzdGFyIMOgIGN1bHR1cmEgZSBwcm90b2NvbG8gbG9jYWwuYCk7Cn0KZnVuY3Rpb24gZmluaXNoUG5ldW1vbmlhKCl7CiBjb25zdCB3PW4oJ3dlaWdodCcpLGFtb3g9TWF0aC5taW4oOTAqdyw0MDAwKTsKIGZpbmlzaCgnZGFuZ2VyJywnUG5ldW1vbmlhIG9jdWx0YSAvIFJYIGFsdGVyYWRvJywnVHJhdGFyIGNvbW8gcG5ldW1vbmlhOyBhdmFsaWFyIGludGVybmHDp8OjbyBjb25mb3JtZSBncmF2aWRhZGUsIGhpcMOzeGlhLCBpZGFkZSBlIGNvbW9yYmlkYWRlcy4nLAogY29tbW9uSGVhZGVyKCkrYFBORVVNT05JQSDigJQgUlggQUxURVJBRE9cbuKAoiBBbW94aWNpbGluYSBlbSBhbHRhIGRvc2U6ICR7Zm10KGFtb3gpfSBtZy9kaWEgVk8sIGRpdmlkaXIgMTIvMTIgaCBvdSBjb25mb3JtZSBwcm90b2NvbG8gbG9jYWwuXG7igKIgU2UgZ3JhdmUsIGhpcMOzeGlhLCBpbmNhcGFjaWRhZGUgVk8gb3UgbmVjZXNzaWRhZGUgZGUgc3Vwb3J0ZTogaW50ZXJuYcOnw6NvIGUgZXNxdWVtYSBwYXJlbnRlcmFsLlxuXG7imIUgUlggbsOjbyBkaWZlcmVuY2lhIGRlIGZvcm1hIGNvbmZpw6F2ZWwgZXRpb2xvZ2lhIHZpcmFsIGRlIGJhY3RlcmlhbmE7IGludGVncmFyIGNvbSBjbMOtbmljYSBlIGxldWNvY2l0b3NlLmApOwp9CmZ1bmN0aW9uIGZpbmlzaE9ic2VydmVBZnRlckNYUigpewogZmluaXNoKCdvaycsJ1JYIG5vcm1hbCArIHZhY2luYcOnw6NvIGNvbXBsZXRhJywnQmFpeG8gcmlzY28gZGUgYmFjdGVyZW1pYSBvY3VsdGE7IGFjb21wYW5oYXIgY2xpbmljYW1lbnRlIGUgcmV2aXNhciBjdWx0dXJhcy4nLAogY29tbW9uSGVhZGVyKCkrYFJYIE5PUk1BTCArIFZBQ0lOQcOHw4NPIENPTVBMRVRBXG7igKIgU2VtIGFudGliacOzdGljbyBlbXDDrXJpY28gYXV0b23DoXRpY28uXG7igKIgUmVhdmFsaWHDp8OjbyBkacOhcmlhIGVucXVhbnRvIGZlYnJpbC5cbuKAoiBDb25mZXJpciBoZW1vY3VsdHVyYSwgc2UgY29sZXRhZGEuXG7igKIgSW50ZXJuYXIgc2Ugc2VndWltZW50byBuw6NvIGZvciBzZWd1cm8uYCk7Cn0KZnVuY3Rpb24gZmluaXNoQmFjdGVyZW1pYSgpewogY29uc3Qgdz1uKCd3ZWlnaHQnKSxjZWY9TWF0aC5taW4oNTAqdywyMDAwKTsKIGZpbmlzaCgnZGFuZ2VyJywnUmlzY28gZGUgYmFjdGVyZW1pYSBvY3VsdGEnLCdBcMOzcyBoZW1vY3VsdHVyYSwgY29uc2lkZXJhciBjZWZ0cmlheG9uYSBlIGdhcmFudGlyIHJlYXZhbGlhw6fDo28gZGnDoXJpYS4nLAogY29tbW9uSGVhZGVyKCkrYFJJU0NPIERFIEJBQ1RFUkVNSUEgT0NVTFRBXG7igKIgQ29sZXRhciBoZW1vY3VsdHVyYSBhbnRlcyBkbyBhbnRpYmnDs3RpY28uXG7igKIgQ2VmdHJpYXhvbmE6ICR7Zm10KGNlZil9IG1nIElNL0VWIDF4L2RpYSAoJHtmbXQoY2VmLzEwMCl9IG1MIHNlIHNvbHXDp8OjbyBmaW5hbCAxMDAgbWcvbUwpLlxu4oCiIFJlYXZhbGlhw6fDo28gZW0gMjQgaCBlIHJldmlzw6NvIGF0aXZhIGRhIGN1bHR1cmEuXG7igKIgSW50ZXJuYXIgc2Ugc2VndWltZW50byBuw6NvIGZvciBnYXJhbnRpZG8uXG5cbuKYhSBVcFRvRGF0ZSByZWNvbWVuZGEgbm92YSByZXZpc8OjbyB0YW1iw6ltIGVtIDQ4IGggYXDDs3MgYW50aWJpw7N0aWNvIHBhcmVudGVyYWwuYCk7Cn0KZnVuY3Rpb24gY29weVJ4KCl7bmF2aWdhdG9yLmNsaXBib2FyZC53cml0ZVRleHQoJCgncngnKS50ZXh0Q29udGVudCl9CnJlbmRlclN0ZXAoKTsKPC9zY3JpcHQ+CjwvYm9keT4KPC9odG1sPg==';
+let fsslLoaded=false;
+
+function getFSSLDocument(){
+  let doc=decodeURIComponent(escape(atob(FSSL_BASE64)));
+  const compactStyle=`<style>
+    .hero,.legend,.footer{display:none!important}
+    .wrap{padding:8px!important;max-width:none!important}
+    .layout{gap:12px!important}
+    .card{box-shadow:none!important}
+    @media(max-width:900px){.sticky{position:static!important}}
+  </style>`;
+  return doc.replace('</head>',compactStyle+'</head>');
 }
 
-// ---------- dose calc: urgência ----------
-function calcDoses(){
-  const peso=parseFloat(document.getElementById('pesoUrg').value);
-  const mgIds=['d-midaz-ev','d-diaz-ev','d-midaz-im','d-midaz-in','d-fenit-ataque','d-fenit-manut','d-feno-ataque','d-feno-manut','d-midaz-continuo'];
-  const mlIds=['d-midaz-ev-ml','d-diaz-ev-ml','d-midaz-im-ml','d-midaz-in-ml','d-diaz-vr','d-fenit-ataque-ml','d-feno-ataque-ml'];
-  if(!peso || peso<=0){
-    mgIds.forEach(id=>document.getElementById(id).textContent='— mg');
-    mlIds.forEach(id=>document.getElementById(id).textContent='— mL');
-    return;
-  }
-  const set=(id,val,max,unit)=>{
-    const v=Math.min(val,max);
-    document.getElementById(id).textContent=v.toFixed(1)+' '+unit+(val>max?' (limitado ao máx.)':'');
+function syncFSSL(){
+  const frame=$('fsslFrame');
+  const d=frame.contentDocument;
+  if(!d)return;
+
+  const setValue=(id,value)=>{
+    const el=d.getElementById(id);
+    if(el && value!==null && value!==undefined && value!=='') el.value=value;
   };
-  // Midazolam 5mg/mL EV/IM: 0,2mg/kg = peso*0,04 mL
-  set('d-midaz-ev', peso*0.2, 10, 'mg');
-  document.getElementById('d-midaz-ev-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
-  set('d-diaz-ev', peso*0.2, 10, 'mg');
-  document.getElementById('d-diaz-ev-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
-  set('d-midaz-im', peso*0.2, 10, 'mg');
-  document.getElementById('d-midaz-im-ml').textContent = Math.min(peso*0.04,2).toFixed(2)+' mL';
-  set('d-midaz-in', peso*0.3, 10, 'mg');
-  document.getElementById('d-midaz-in-ml').textContent = Math.min(peso*0.06,2).toFixed(2)+' mL';
-  // Diazepam retal: dose dobrada do volume EV, máx 20mg (4mL a 5mg/mL)
-  document.getElementById('d-diaz-vr').textContent = Math.min(peso*0.08,4).toFixed(2)+' mL (dobro do EV)';
-  // Fenitoína 50mg/mL: 20mg/kg = peso*0,4 mL
-  set('d-fenit-ataque', peso*20, 1500, 'mg');
-  document.getElementById('d-fenit-ataque-ml').textContent = Math.min(peso*0.4,30).toFixed(1)+' mL (diluir em SF 100mL)';
-  document.getElementById('d-fenit-manut').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dia';
-  // Fenobarbital 100mg/mL: 20mg/kg = peso*0,2 mL
-  set('d-feno-ataque', peso*20, 1000, 'mg');
-  document.getElementById('d-feno-ataque-ml').textContent = Math.min(peso*0.2,10).toFixed(2)+' mL';
-  document.getElementById('d-feno-manut').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dia';
-  document.getElementById('d-midaz-continuo').textContent = (peso*3).toFixed(0)+'–'+(peso*20).toFixed(0)+' mcg/min';
+
+  setValue('age',val('age'));
+  setValue('ageUnit','months');
+  setValue('weight',val('weight'));
+  setValue('temp',val('temp'));
+  setValue('feverDays',val('feverDays'));
+
+  const noFocus=$('infectiousFocus').value!=='defined';
+  const elig=d.querySelector(`input[name="elig"][value="${noFocus?'yes':'no'}"]`);
+  if(elig) elig.checked=true;
+
+  const toxic=chk('toxic');
+  const tox=d.querySelector(`input[name="tox"][value="${toxic?'yes':'no'}"]`);
+  if(tox) tox.checked=true;
 }
 
-// ---------- dose calc: antitérmicos ----------
-function calcAntitermico(){
-  const peso=parseFloat(document.getElementById('pesoInv').value);
-  if(!peso || peso<=0){
-    ['d-paracetamol','d-dipirona','d-ibuprofeno'].forEach(id=>document.getElementById(id).textContent='— mg/dose');
-    ['d-paracetamol-gts','d-dipirona-ml'].forEach(id=>document.getElementById(id).textContent='— ');
-    return;
+function toggleFSSL(){
+  const panel=$('fsslPanel');
+  panel.classList.toggle('open');
+
+  if(panel.classList.contains('open')){
+    if(!fsslLoaded){
+      const frame=$('fsslFrame');
+      frame.onload=()=>{syncFSSL();};
+      frame.srcdoc=getFSSLDocument();
+      fsslLoaded=true;
+    }else{
+      syncFSSL();
+    }
   }
-  document.getElementById('d-paracetamol').textContent = (peso*10).toFixed(0)+'–'+(peso*15).toFixed(0)+' mg/dose';
-  document.getElementById('d-paracetamol-gts').textContent = Math.min(peso,35).toFixed(0)+' gotas (1 gota/kg)';
-  document.getElementById('d-dipirona').textContent = (peso*10).toFixed(0)+'–'+(peso*16).toFixed(0)+' mg/dose';
-  document.getElementById('d-dipirona-ml').textContent = (peso*0.02).toFixed(2)+'–'+(peso*0.03).toFixed(2)+' mL';
-  document.getElementById('d-ibuprofeno').textContent = (peso*5).toFixed(0)+'–'+(peso*10).toFixed(0)+' mg/dose';
+
+  const btn=document.querySelector('.fssl-btn');
+  btn.textContent=panel.classList.contains('open')?'Fechar FSSL':'Abrir FSSL';
 }
 
-// ---------- classificador ----------
-const classState={duracao:null, tipo:null, recorrencia:null, posictal:null};
-function selectOpt(btn){
-  const q=btn.dataset.q, v=btn.dataset.v;
-  classState[q]=v;
-  btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  evalClassifier();
-}
-function evalClassifier(){
-  const {duracao,tipo,recorrencia,posictal}=classState;
-  if(!duracao||!tipo||!recorrencia||!posictal) return;
-  const isComplexa = duracao==='longa' || tipo==='focal' || recorrencia==='sim' || posictal==='alterado';
-  const banner=document.getElementById('classResult');
-  banner.classList.add('show');
-  if(isComplexa){
-    banner.className='result-banner show complexa';
-    document.getElementById('classTitle').textContent='⚠️ Crise convulsiva febril COMPLEXA';
-    let motivos=[];
-    if(duracao==='longa') motivos.push('duração ≥15 minutos');
-    if(tipo==='focal') motivos.push('características focais');
-    if(recorrencia==='sim') motivos.push('recorrência em menos de 24h');
-    if(posictal==='alterado') motivos.push('pós-ictal prolongado / déficit focal');
-    document.getElementById('classText').innerHTML='Critério(s) presente(s): <strong>'+motivos.join(', ')+'</strong>. Conduta individualizada — considerar avaliação com neurologia pediátrica; não se resolve rotineiramente em ambulatório. Ver aba "Indicação de exames".';
+function calculate(){
+  if(fsslLoaded && $('fsslPanel').classList.contains('open')) setTimeout(syncFSSL,0);
+  const age=val('age'), w=val('weight'), temp=val('temp'), dur=val('duration'), n=val('count24');
+  const ongoing=chk('ongoing'), focal=chk('focal'), baseline=chk('baseline'), todd=chk('todd'), cns=chk('cnsSigns'), dev=chk('development'), afebrile=chk('priorAfebrile'), famFS=chk('familyFS'), famEp=chk('familyEp'), imm=chk('immunization'), abx=chk('antibiotic'), gi=chk('giLoss');
+  const focus=$('infectiousFocus').value, feverDays=val('feverDays')||0, toxic=chk('toxic'), followUnsafe=chk('followupUnsafe');
+  const ageTypical=age>=6&&age<60, status=ongoing || dur>=5, complex=focal||dur>=5||n>1, simple=!complex&&!ongoing;
+  let classification,reason,pill,pillClass;
+  if(afebrile||!ageTypical){classification='Evento febril atípico — não classificar automaticamente';reason=afebrile?'História de crise afebril exclui a definição usual de crise febril.':'Idade fora da faixa típica de 6 a <60 meses exige diagnóstico de exclusão.';pill='REAVALIAR DIAGNÓSTICO';pillClass='danger';}
+  else if(status){classification='Estado de mal epiléptico febril / crise prolongada';reason=ongoing?'Crise em curso ou episódios sem recuperação neurológica interictal.':`Duração de ${fmt(dur)} minutos: tratar emergencialmente a partir de 5 minutos.`;pill='EMERGÊNCIA';pillClass='danger';}
+  else if(complex){classification='Crise convulsiva febril complexa';const rs=[];if(focal)rs.push('focal');if(dur>=5)rs.push('prolongada');if(n>1)rs.push('recorrente em 24 h');reason='Critérios: '+rs.join(', ')+'.';pill='AVALIAÇÃO INDIVIDUALIZADA';pillClass='warn';}
+  else{classification='Crise convulsiva febril simples';reason='Generalizada, duração <5 minutos, evento único em 24 horas e recuperação esperada.';pill='BAIXO RISCO IMEDIATO';pillClass='ok';}
+  $('classification').textContent=classification;$('classReason').textContent=reason;$('classPill').textContent=pill;$('classPill').className='pill '+pillClass;
+  $('ageKpi').textContent=age+' meses';
+
+  let alerts='';
+  if(cns)alerts+=alertBox('danger','Suspeita de infecção do SNC','Realizar avaliação urgente para meningite/encefalite; considerar punção lombar e tratamento empírico conforme quadro clínico.');
+  if(!baseline)alerts+=alertBox('danger','Recuperação neurológica inadequada','Alteração persistente não é típica de crise febril simples. Considerar crise não convulsiva em curso, infecção do SNC, distúrbio metabólico ou lesão estrutural.');
+  if(todd)alerts+=alertBox('warn','Déficit focal pós-ictal','Paresia de Todd pode durar até 24 h, mas costuma justificar observação prolongada e neuroimagem, especialmente se persistente.');
+  if(afebrile)alerts+=alertBox('danger','Definição de crise febril não preenchida','Crise prévia afebril sugere epilepsia ou outra etiologia; conduzir como crise em criança com febre, não como crise febril típica.');
+  if(!ageTypical)alerts+=alertBox('warn','Idade atípica',age<6?'Abaixo de 6 meses: limiar baixo para investigação de infecção, causa metabólica ou síndrome epiléptica.':'A partir de 5 anos: crise febril é diagnóstico de exclusão e há maior preocupação com crises afebris futuras.');
+  if(ageTypical&&simple&&baseline&&!cns)alerts+=alertBox('ok','Padrão tranquilizador','Em criança neurologicamente saudável, bem aparente e de volta ao basal, exames de rotina geralmente não são necessários.');
+  $('alerts').innerHTML=alerts;
+
+  // acute management
+  let steps=[];
+  if(ongoing||dur>=5){steps.push(['ABCDE e segurança','Posicionar, oxigênio se necessário, monitor cardiorrespiratório, glicemia capilar e acesso vascular sem atrasar benzodiazepínico.']);steps.push(['Benzodiazepínico agora','Administrar uma opção de primeira linha; pode repetir uma vez após 5–10 minutos se a crise persistir, com vigilância ventilatória.']);steps.push(['Persistência após benzodiazepínico','Tratar como estado de mal: levetiracetam, fosfenitoína, valproato ou fenobarbital conforme contraindicações e protocolo local.']);steps.push(['Refratariedade','Acionar suporte avançado, neurologia/UTI e protocolo de estado de mal epiléptico refratário.']);}
+  else{steps.push(['Crise cessou espontaneamente','Não há indicação de benzodiazepínico ou carga antiepiléptica apenas por ter ocorrido a crise.']);steps.push(['Avaliar a causa da febre','História e exame físico direcionados para o foco infeccioso e sinais de infecção do SNC.']);steps.push(['Conforto e hidratação','Tratar febre para conforto, evitar hidratação hipotônica agressiva e corrigir alterações metabólicas quando presentes.']);}
+  $('acuteSteps').innerHTML=steps.map(x=>`<div class="step"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('');
+  const doses=[
+    ['Diazepam IV',`${fmt(w*.1)}–${fmt(w*.2)} mg`,'0,1–0,2 mg/kg IV; repetir uma vez em 5–10 min se necessário.'],
+    ['Lorazepam IV',`${fmt(w*.05,2)}–${fmt(w*.1)} mg`,'0,05–0,1 mg/kg IV; repetir uma vez em 5–10 min se necessário.'],
+    ['Midazolam bucal',`${fmt(Math.min(w*.2,10))} mg`,'0,2 mg/kg; máximo 10 mg quando acesso IV indisponível.'],
+    ['Diazepam retal (resgate domiciliar)',`${fmt(w*.5)} mg`,'0,5 mg/kg se crise >5 min; prescrição individualizada e orientação da neurologia.'],
+    ['Levetiracetam IV',`${fmt(w*60,0)} mg`,'60 mg/kg IV — opção de segunda linha.'],
+    ['Fosfenitoína IV',`${fmt(w*20,0)} mg PE`,'20 mg PE/kg IV — considerar contraindicações.'],
+    ['Valproato IV',`${fmt(w*20,0)}–${fmt(w*40,0)} mg`,'20–40 mg/kg IV — evitar conforme contraindicações clínicas.'],
+    ['Fenobarbital IV',`${fmt(w*20,0)} mg`,'20 mg/kg IV — maior atenção à depressão respiratória.']
+  ];
+  $('doseBody').innerHTML=doses.map(r=>`<tr><td><b>${r[0]}</b></td><td class="dose">${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+
+  // investigation
+  let inv=[];
+  if(simple&&baseline&&!cns&&!dev&&!afebrile){inv.push('<b>Sem exames neurológicos de rotina:</b> EEG, TC/RM e exames laboratoriais não são indicados apenas pela crise.');}
+  if(gi)inv.push('<b>Metabólicos:</b> glicemia, sódio/eletrólitos, cálcio, ureia e avaliação de hidratação devido a perdas ou achados clínicos.');
+  if(complex||status)inv.push('<b>Crise complexa/prolongada:</b> considerar hemograma, eletrólitos, glicemia, cálcio e ureia; investigar o foco febril conforme história/exame.');
+  if(cns||(!imm&&age>=6&&age<=12)||abx)inv.push('<b>Punção lombar:</b> indicada se sinais de meningite/encefalite; limiar mais baixo entre 6–12 meses com imunização Hib/pneumococo incompleta/desconhecida ou uso prévio de antibiótico.');
+  if(todd||(!baseline)||cns)inv.push('<b>Neuroimagem urgente:</b> considerar se exame neurológico persistentemente anormal/focal, macrocefalia anormal ou sinais de hipertensão intracraniana/lesão expansiva.');
+  if((complex||status)&&(dev||focal||todd))inv.push('<b>RM eletiva:</b> pode ser útil no seguimento, sobretudo com desenvolvimento anormal ou focalidade.');
+  if(dev||famEp||status||todd||n>1)inv.push('<b>EEG eletivo + neurologia:</b> considerar por maior risco de epilepsia; EEG urgente se suspeita de crise subclínica ou ausência de recuperação mental adequada.');
+  if(!inv.length)inv.push('Avaliar apenas o foco da febre e reexaminar após o período pós-ictal.');
+  $('investigation').innerHTML=li(inv);
+
+  let eti='';
+  if(toxic){
+    eti+=alertBox('danger','Possível infecção bacteriana grave / sepse','A estabilização e a investigação etiológica têm prioridade: hemograma, marcadores inflamatórios, hemocultura, urina/urocultura, avaliação do foco e antimicrobiano empírico sem atraso quando clinicamente indicado.');
+  }
+  if(focus==='defined'){
+    eti+=`<div class="etiology-grid">
+      <div class="etiology-box"><b>Foco infeccioso definido</b><span>Investigar e tratar conforme o diagnóstico localizado; não solicitar exames apenas por causa da crise febril.</span></div>
+      <div class="etiology-box"><b>Reavaliar após o período pós-ictal</b><span>Confirmar que a evolução neurológica é compatível e que não surgiram sinais de infecção do SNC.</span></div>
+    </div>`;
   } else {
-    banner.className='result-banner show simples';
-    document.getElementById('classTitle').textContent='✓ Crise convulsiva febril SIMPLES';
-    document.getElementById('classText').innerHTML='Tônico-clônica generalizada, &lt;15 min, sem recorrência em 24h, recuperação espontânea e completa. Em geral <strong>não requer investigação secundária</strong> (sem EEG, neuroimagem ou laboratório de rotina). Seguimento ambulatorial de rotina.';
+    eti+=alertBox(focus==='none'?'warn':'info',focus==='none'?'Febre sem foco localizado':'Foco ainda incerto','Aplicar a abordagem de Febre sem Sinais Localizatórios conforme idade, estado geral, vacinação, risco urinário e possibilidade de seguimento. A calculadora FSSL está incorporada abaixo.');
+    if(age>36) eti+=alertBox('info','Fora do escopo principal da FSSL incorporada','A ferramenta integrada foi construída principalmente para 0–36 meses; em crianças maiores, a investigação deve permanecer guiada pela clínica e epidemiologia.');
   }
+  if(feverDays>=5) eti+=alertBox('warn','Febre por 5 dias ou mais','Reavaliar doença de Kawasaki típica/incompleta e outras causas de febre persistente; não aplicar isoladamente um fluxo de FSSL aguda.');
+  if(feverDays>=7) eti+=alertBox('danger','Febre prolongada','O quadro ultrapassa o escopo de FSSL aguda e exige investigação própria de febre prolongada.');
+  if(followUnsafe) eti+=alertBox('warn','Seguimento inseguro','A impossibilidade de reavaliação confiável reduz o limiar para observação hospitalar ou internação.');
+  $('etiologyResult').innerHTML=eti;
+
+  let disp=[];
+  if(simple&&baseline&&!cns&&!gi){disp.push('<b>Alta provável</b> após observação de 1–2 horas, retorno completo ao basal, foco febril abordado e responsáveis orientados.');}
+  if(complex||status)disp.push('<b>Observação prolongada / considerar internação</b> pela característica complexa, especialmente se focal ou prolongada.');
+  if(!baseline||todd)disp.push('Manter observação; déficit focal persistente ou recuperação tardia favorecem internação e investigação.');
+  if(cns)disp.push('Internação e investigação/tratamento urgente por possível infecção do SNC.');
+  if(gi)disp.push('Destino depende da gravidade da doença febril, hidratação e tolerância oral.');
+  if(toxic)disp.push('<b>Internação imediata</b> por mau estado geral/toxemia ou suspeita de sepse.');
+  if(focus!=='defined'&&age<=36)disp.push('Sem foco infeccioso: o destino também deve seguir a estratificação da calculadora FSSL integrada.');
+  if(followUnsafe)disp.push('Considerar observação/internação porque o seguimento ambulatorial não é garantido.');
+  disp.push('Considerar também segurança do seguimento ambulatorial e conforto/capacidade dos responsáveis.');
+  $('disposition').innerHTML=li(disp);
+
+  // recurrence
+  let recFactors=0, recTags=[];
+  if(age<18){recFactors++;recTags.push('idade <18 meses')}
+  if(famFS||famEp){recFactors++;recTags.push('história familiar')}
+  if(temp<39){recFactors++;recTags.push('temperatura <39°C')}
+  if($('feverLatency').value==='lt1'){recFactors++;recTags.push('febre ≤1 h antes')}
+  let recText='Risco global aproximado de 30–35%. ';
+  if(age<12)recText+='Na primeira crise antes de 1 ano, a recorrência pode chegar a 50–65%. ';
+  if(recFactors===0)recText+='Nenhum dos quatro principais fatores clínicos foi marcado.'; else recText+=`${recFactors} fator(es) de recorrência: ${recTags.join(', ')}.`;
+  $('recurrenceKpi').textContent=age<12?'50–65%':'30–35%';
+  $('recurrence').innerHTML=`<p>${recText}</p><div>${recTags.map(t=>`<span class="tag">${t}</span>`).join('')}</div><p class="mini">A maioria das recorrências ocorre no primeiro ano e quase todas dentro de dois anos. Esta seção estratifica fatores, não calcula probabilidade individual validada.</p>`;
+
+  // epilepsy
+  let triad=(focal?1:0)+(dur>=5?1:0)+(n>1?1:0); let epiRisk=['2,4%','6–8%','17–22%','49%'][triad];
+  if(simple&&!dev&&!famEp&&!afebrile) epiRisk='1–2%';
+  $('epilepsyKpi').textContent=epiRisk;
+  let epi=`<p><b>Estimativa apresentada: ${epiRisk}.</b></p>`;
+  if(simple&&!dev&&!famEp&&!afebrile) epi+=`<p>Em criança neurologicamente normal com crise febril simples, o risco é apenas discretamente superior ao da população geral.</p>`;
+  else epi+=`<p>Fatores associados: ${[focal&&'focalidade',dur>=5&&'duração prolongada',n>1&&'repetição em 24 h',dev&&'alteração do desenvolvimento',famEp&&'história familiar de epilepsia',status&&'estado de mal febril'].filter(Boolean).join(', ')||'nenhum adicional marcado'}.</p>`;
+  epi+=`<p class="mini">As faixas 2,4%; 6–8%; 17–22%; 49% vêm de uma coorte histórica conforme 0, 1, 2 ou 3 características (focal, prolongada, repetida em 24 h). Não constituem escore prospectivamente validado para decisão isolada.</p>`;
+  $('epilepsy').innerHTML=epi;
+
+  let diff=[];
+  if(age<6)diff.push('Síndrome epiléptica do lactente, infecção do SNC, distúrbio metabólico ou crise neonatal tardia — febre pode ser apenas concomitante.');
+  if(age>=60)diff.push('Epilepsia desencadeada por febre ou outra causa estrutural/metabólica; crise febril típica é diagnóstico de exclusão.');
+  if(afebrile)diff.push('Epilepsia: crises febris não incluem crianças com crise afebril prévia.');
+  if(cns||!baseline)diff.push('Meningite/encefalite ou encefalopatia infecciosa.');
+  if(dev||focal||status)diff.push('Considerar síndrome genética (por exemplo, Dravet/GEFS+) quando houver múltiplas crises febris focais/prolongadas, outros tipos de crise e início antes de 12–18 meses.');
+  if(age<20&&focal&&baseline)diff.push('Epilepsia focal autolimitada da infância pode ocorrer entre 3–20 meses e exige avaliação de alternativa estrutural/epiléptica.');
+  if(!diff.length)diff.push('Nenhum alerta maior selecionado. Manter diagnóstico diferencial guiado pelo exame e pelo foco da febre.');
+  $('differential').innerHTML=li(diff);
 }
+function resetForm(){document.querySelectorAll('input[type=checkbox]').forEach(x=>x.checked=false);$('baseline').checked=true;$('immunization').checked=true;$('age').value=18;$('weight').value=12;$('temp').value=39;$('duration').value=3;$('count24').value=1;$('feverLatency').value='gt24';$('infectiousFocus').value='defined';$('feverDays').value=1;calculate()}
+document.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',calculate));calculate();
 </script>
-</body>
-</html>
+</body></html>
