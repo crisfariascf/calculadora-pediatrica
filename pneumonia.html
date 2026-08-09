@@ -1,0 +1,806 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora PAC Pediátrica</title>
+<style>
+:root{
+  --bg:#eef3f4; --card:#fff; --ink:#122127; --muted:#5b6b70;
+  --brand:#0e7c72; --brand-dark:#0a5f57; --brand-light:#e3f5f2;
+  --warn:#b45309; --warn-light:#fef3c7; --danger:#b91c1c; --danger-light:#fee2e2;
+  --ok:#15803d; --ok-light:#dcfce7; --info:#075985; --info-light:#e0f2fe; --line:#dbe7e6;
+  --intl:#6d28d9; --intl-dark:#4c1d95; --intl-light:#f3e8ff; --intl-line:#c4b5fd;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#0a5f57,#0e7c72 55%,#1499a0);color:#fff;padding:20px 18px 18px}
+header .wrap{width:min(96vw,1680px);margin:0 auto}
+header h1{font-size:25px;margin:0 0 5px;display:flex;align-items:center;gap:10px;letter-spacing:-.25px}
+header .sub{font-size:14px;opacity:.92;max-width:760px}
+header .src{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.source-chip{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);font-size:11px;font-weight:700;line-height:1}
+.source-chip.intl-chip{background:rgba(243,232,255,.18);border-color:rgba(233,213,255,.35)}
+main{width:min(96vw,1680px);max-width:none;margin:0 auto;padding:18px 0}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 3px 14px #0e7c7212;border-top:4px solid var(--brand)}
+.card.alt{border-top-color:#1499a0}
+.card.dark{border-top-color:#334155}
+.span3{grid-column:span 3}.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+@media(max-width:900px){main,header .wrap{width:min(94vw,1680px)}main{padding:12px 0}.span3,.span4,.span5,.span6,.span7,.span8{grid-column:span 12}}
+@media(min-width:1400px){.card{padding:20px}.grid{gap:16px}.span3{grid-column:span 3}.span5{grid-column:span 5}.span4{grid-column:span 4}}
+.step{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:#fff;font-size:12.5px;font-weight:800;margin-right:8px}
+h2{font-size:16.5px;margin:0 0 12px;display:flex;align-items:center}
+h3{font-size:15px;margin:18px 0 8px;color:var(--brand-dark)}
+h4{font-size:13px;margin:12px 0 6px;color:var(--brand-dark);font-weight:800}
+label{font-weight:650;font-size:13.5px;display:block;margin:9px 0 4px;color:#324047}
+input,select{width:100%;padding:10px 11px;border:1.5px solid #cdd9d8;border-radius:10px;background:#fbfdfd;font-size:14.5px}
+input:focus,select:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+.check{display:flex;gap:9px;align-items:flex-start;margin:6px 0;padding:7px 9px;border-radius:10px;transition:.15s}
+.check:hover{background:var(--brand-light)}
+.check input{width:auto;margin-top:3px;accent-color:var(--brand)}
+.check span{font-size:13.5px;line-height:1.35}
+button{border:0;border-radius:12px;background:var(--brand);color:#fff;padding:13px 18px;font-weight:750;cursor:pointer;font-size:14.5px;box-shadow:0 3px 10px #0e7c7240}
+button:hover{background:var(--brand-dark)}
+.btn2{background:#475569;box-shadow:0 3px 10px #47556940}
+.actionbar{position:sticky;bottom:0;background:linear-gradient(0deg,var(--bg) 60%,transparent);padding:10px 0 4px;display:flex;gap:10px;margin-top:6px}
+.pill{display:inline-block;padding:7px 12px;border-radius:999px;font-weight:750;font-size:12.5px;margin:3px}
+.ok{background:var(--ok-light);color:var(--ok)}.warn{background:var(--warn-light);color:var(--warn)}.danger{background:var(--danger-light);color:var(--danger)}.info{background:var(--info-light);color:var(--info)}
+.small{color:var(--muted);font-size:12.3px}
+.rx{white-space:pre-wrap;background:#0b1a1e;color:#dff5f0;border-radius:14px;padding:15px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.8px;line-height:1.55;border:1px solid #123}
+.rx.no-atb{background:#f0fdf4;color:#14532d;border:1px solid #86efac;border-left:5px solid var(--ok);font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:14px;line-height:1.5}
+.rx.rx-report{white-space:normal;background:#fff;color:var(--ink);border:1px solid #d7e1e1;padding:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;overflow:hidden;box-shadow:0 4px 16px #0f172a0b}
+.rx-head{padding:18px 20px;background:linear-gradient(90deg,#f0fdfa,#fff);border-bottom:1px solid #d7e1e1}
+.rx-head-title{font-size:18px;font-weight:850;color:var(--brand-dark);margin-bottom:3px}
+.rx-head-sub{font-size:13.5px;color:#475569}
+.rx-source-base{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:999px;background:#dff5f0;color:var(--brand-dark);font-size:10.5px;font-weight:800}
+.rx-row{display:grid;grid-template-columns:minmax(160px,22%) 1fr;border-bottom:1px solid #e5ecec;min-height:58px}
+.rx-row:last-child{border-bottom:0}
+.rx-label{display:flex;align-items:center;gap:9px;padding:13px 16px;background:#f8fbfb;color:var(--brand-dark);font-size:13px;font-weight:800;border-right:1px solid #e5ecec}
+.rx-icon{font-size:18px;width:22px;text-align:center}
+.rx-value{padding:13px 18px;font-size:14px;line-height:1.5;align-self:center}
+.rx-value strong{font-size:15px;color:#0f3f3a}
+.rx-intl-mark{color:var(--intl);font-weight:850}
+.rx-row.intl-row{background:var(--intl-light)}
+.rx-row.intl-row .rx-label{background:#ede9fe;color:var(--intl-dark)}
+.rx-row.intl-row .rx-value{color:var(--intl-dark)}
+@media(max-width:650px){.rx-row{grid-template-columns:1fr}.rx-label{border-right:0;border-bottom:1px solid #edf2f2;padding:9px 13px}.rx-value{padding:11px 13px}.rx-head{padding:15px}}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.alert{padding:12px 14px;border-radius:12px;margin:8px 0;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.alert.ok{background:var(--ok-light);color:var(--ok)}
+.alert.warn{background:var(--warn-light);color:var(--warn)}
+.alert.danger{background:var(--danger-light);color:var(--danger)}
+.table{width:100%;border-collapse:collapse;font-size:12.8px}
+.table th,.table td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.table th{background:var(--brand-light);color:var(--brand-dark)}
+.hidden{display:none}
+.footer{font-size:11px;color:var(--muted);margin-top:16px;line-height:1.55}
+details{border:1px solid var(--line);border-radius:12px;padding:11px 15px;margin:9px 0;background:#f8fcfb}
+details[open]{background:var(--brand-light)}
+summary{font-weight:750;cursor:pointer;font-size:13.5px;color:var(--brand-dark)}
+ul{margin:6px 0;padding-left:20px}li{margin:4px 0;font-size:13.3px}
+.tag{font-size:10.5px;background:#eef2ff;color:#3730a3;padding:2px 8px;border-radius:8px;font-weight:750;margin-left:6px;vertical-align:middle}
+.note{background:var(--info-light);border-left:4px solid var(--info);border-radius:10px;padding:10px 13px;font-size:13px;margin:8px 0;color:#0c4a6e}
+.intl{background:var(--intl-light);border:1px solid var(--intl-line);border-left:5px solid var(--intl);border-radius:12px;padding:12px 14px;margin:10px 0;color:var(--intl-dark);font-size:13px;line-height:1.45}
+.intl strong{color:var(--intl-dark)}
+.intl-title{font-weight:850;margin-bottom:4px}
+.card.intl-card{border-top-color:var(--intl);background:#fdfaff}
+.pill.intl-pill{background:var(--intl-light);color:var(--intl-dark)}
+.divider{border:none;border-top:1px dashed var(--line);margin:14px 0}
+
+/* ===== MÓDULO MANUAL DE RX ===== */
+.rxmanual-card{border-top-color:#1d4ed8;background:linear-gradient(180deg,#fff,#f8fbff)}
+.rxmanual-card h2{color:#173b75}
+.rxmanual-layout{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.rxmanual-panel{grid-column:span 4;border:1px solid #d8e3ef;border-radius:14px;background:#fff;padding:13px}
+.rxmanual-panel.wide{grid-column:span 8}
+.rxmanual-panel.full{grid-column:span 12}
+.rxmanual-panel h3{margin:0 0 9px;color:#173b75;font-size:14px}
+.rxmanual-panel h4{margin:12px 0 6px;color:#334155;font-size:12.5px}
+.rxmanual-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rxmanual-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.rxmanual-check{display:flex;gap:8px;align-items:flex-start;padding:5px 6px;margin:2px 0;border-radius:8px}
+.rxmanual-check:hover{background:#eef6ff}
+.rxmanual-check input{width:auto;margin-top:3px;accent-color:#1d4ed8}
+.rxmanual-check span{font-size:12.8px;line-height:1.35}
+.rxmanual-output{white-space:pre-wrap;background:#0b1a1e;color:#e2f7f4;border-radius:12px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.8px;line-height:1.55;min-height:150px}
+.rxmanual-impression{margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-left:5px solid #1d4ed8;border-radius:11px;padding:12px;color:#1e3a8a;font-size:13px;line-height:1.5}
+.rxmanual-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rxmanual-actions button{padding:10px 13px;font-size:12.5px;box-shadow:none}
+.rxmanual-actions .secondary{background:#475569}.rxmanual-actions .light{background:#e8eff7;color:#173b75}.rxmanual-actions .preset{background:#334155}
+.rxmanual-note{background:#fff7ed;border-left:4px solid #ea580c;border-radius:9px;padding:9px 11px;font-size:12px;color:#7c2d12;line-height:1.45}
+.rxmanual-badge{display:inline-block;padding:5px 8px;border-radius:999px;background:#dbeafe;color:#1e3a8a;font-size:10.5px;font-weight:800;margin:2px}
+.rxmanual-status{font-size:11.5px;color:#64748b;margin-top:7px}
+@media(max-width:1000px){.rxmanual-panel,.rxmanual-panel.wide{grid-column:span 6}}
+@media(max-width:650px){.rxmanual-panel,.rxmanual-panel.wide,.rxmanual-panel.full{grid-column:span 12}.rxmanual-grid2,.rxmanual-grid3{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>🩺 Calculadora de PAC Pediátrica</h1>
+<div class="sub">Avaliação clínica, gravidade e tratamento com doses calculadas.</div>
+<div class="src"><span class="source-chip">Base: SBP + protocolos nacionais</span><span class="source-chip intl-chip">✦ UpToDate 2026</span></div>
+</div></header>
+<main>
+<div class="grid">
+
+
+<section class="card rxmanual-card span12" id="moduloRxManual">
+  <h2><span class="step" style="background:#1d4ed8">🩻</span>Descrição manual do RX de tórax</h2>
+  <div class="note">Marque apenas os achados que você realmente identifica na radiografia. O texto abaixo é gerado automaticamente para facilitar o registro em prontuário; o padrão radiográfico isolado não define etiologia viral versus bacteriana.</div>
+
+  <div class="rxmanual-layout" style="margin-top:12px">
+    <div class="rxmanual-panel">
+      <h3>1. Técnica / qualidade</h3>
+      <div class="rxmanual-grid2">
+        <div><label>Incidência</label><select id="mrxInc"><option value="">Não informada</option><option>PA</option><option>AP</option><option value="AP supino">AP supino</option><option>Lateral</option></select></div>
+        <div><label>Qualidade</label><select id="mrxQual"><option value="adequada">Adequada</option><option value="limitada">Limitada</option><option value="inadequada">Inadequada</option></select></div>
+      </div>
+      <div class="rxmanual-check"><input id="mrxRot" type="checkbox"><span>Rotação significativa</span></div>
+      <div class="rxmanual-check"><input id="mrxHipoinsp" type="checkbox"><span>Hipoinspiração / baixo volume pulmonar</span></div>
+      <div class="rxmanual-check"><input id="mrxPenet" type="checkbox"><span>Penetração/exposição inadequada</span></div>
+      <div class="rxmanual-check"><input id="mrxArtef" type="checkbox"><span>Artefatos limitando parcialmente a avaliação</span></div>
+    </div>
+
+    <div class="rxmanual-panel wide">
+      <h3>2. Localização predominante</h3>
+      <div class="rxmanual-grid3">
+        <div><label>Lateralidade</label><select id="mrxSide"><option value="">Não definida</option><option value="à direita">Direita</option><option value="à esquerda">Esquerda</option><option value="bilateralmente">Bilateral</option></select></div>
+        <div><label>Região / zona</label><select id="mrxZone"><option value="">Não definida</option><option value="nos campos superiores">Superior</option><option value="nas regiões perihilares">Perihilar</option><option value="nos campos médios">Média</option><option value="nas bases pulmonares">Basal/inferior</option><option value="difusamente">Difusa</option></select></div>
+        <div><label>Lobo / segmento (se aplicável)</label><select id="mrxLobe"><option value="">—</option><option value="em lobo superior direito">LSD</option><option value="em lobo médio">Lobo médio</option><option value="em lobo inferior direito">LID</option><option value="em lobo superior esquerdo">LSE</option><option value="na língula">Língula</option><option value="em lobo inferior esquerdo">LIE</option></select></div>
+      </div>
+      <div class="small" style="margin-top:7px">A localização será incorporada aos achados focais (consolidação, atelectasia, opacidade) quando marcada.</div>
+    </div>
+
+    <div class="rxmanual-panel">
+      <h3>3. Volume pulmonar / vias aéreas</h3>
+      <div class="rxmanual-check"><input id="mrxHyper" type="checkbox"><span>Hiperinsuflação pulmonar</span></div>
+      <div class="rxmanual-check"><input id="mrxAirtrap" type="checkbox"><span>Aprisionamento aéreo / assimetria de transparência</span></div>
+      <div class="rxmanual-check"><input id="mrxPerib" type="checkbox"><span>Espessamento peribrônquico / perihilar</span></div>
+      <div class="rxmanual-check"><input id="mrxHilar" type="checkbox"><span>Reforço / proeminência hilar</span></div>
+      <div class="rxmanual-check"><input id="mrxBronch" type="checkbox"><span>Broncograma aéreo</span></div>
+    </div>
+
+    <div class="rxmanual-panel">
+      <h3>4. Parênquima pulmonar</h3>
+      <div class="rxmanual-check"><input id="mrxNormal" type="checkbox"><span>Sem alteração pulmonar aguda evidente</span></div>
+      <div class="rxmanual-check"><input id="mrxInterst" type="checkbox"><span>Opacidades / infiltrado intersticial</span></div>
+      <div class="rxmanual-check"><input id="mrxPerihilar" type="checkbox"><span>Opacidades perihilares</span></div>
+      <div class="rxmanual-check"><input id="mrxFocalOp" type="checkbox"><span>Opacidade focal</span></div>
+      <div class="rxmanual-check"><input id="mrxConsol" type="checkbox"><span>Consolidação alveolar / focal</span></div>
+      <div class="rxmanual-check"><input id="mrxMulti" type="checkbox"><span>Acometimento multifocal / multilobar</span></div>
+      <div class="rxmanual-check"><input id="mrxRound" type="checkbox"><span>Opacidade arredondada (pneumonia redonda — correlacionar)</span></div>
+    </div>
+
+    <div class="rxmanual-panel">
+      <h3>5. Atelectasia / complicações</h3>
+      <div class="rxmanual-check"><input id="mrxAtelect" type="checkbox"><span>Atelectasia laminar / subsegmentar</span></div>
+      <div class="rxmanual-check"><input id="mrxVolLoss" type="checkbox"><span>Sinais de perda de volume / retração</span></div>
+      <div class="rxmanual-check"><input id="mrxEff" type="checkbox"><span>Derrame pleural</span></div>
+      <div class="rxmanual-check"><input id="mrxPtx" type="checkbox"><span>Pneumotórax</span></div>
+      <div class="rxmanual-check"><input id="mrxCav" type="checkbox"><span>Cavitação / pneumatoceles</span></div>
+      <div class="rxmanual-check"><input id="mrxNec" type="checkbox"><span>Aspecto sugestivo de complicação necrosante</span></div>
+    </div>
+
+    <div class="rxmanual-panel">
+      <h3>6. Cardiomediastino / diafragma / ossos</h3>
+      <div class="rxmanual-check"><input id="mrxCardio" type="checkbox"><span>Aumento aparente da área cardíaca</span></div>
+      <div class="rxmanual-check"><input id="mrxMediast" type="checkbox"><span>Alargamento / alteração mediastinal aparente</span></div>
+      <div class="rxmanual-check"><input id="mrxDiaph" type="checkbox"><span>Alteração diafragmática / seios costofrênicos</span></div>
+      <div class="rxmanual-check"><input id="mrxBone" type="checkbox"><span>Alteração óssea / partes moles visível</span></div>
+    </div>
+
+    <div class="rxmanual-panel wide">
+      <h3>7. Características adicionais</h3>
+      <div class="rxmanual-grid2">
+        <div>
+          <div class="rxmanual-check"><input id="mrxDiffuse" type="checkbox"><span>Distribuição difusa/bilateral</span></div>
+          <div class="rxmanual-check"><input id="mrxAsym" type="checkbox"><span>Distribuição assimétrica</span></div>
+          <div class="rxmanual-check"><input id="mrxBasal" type="checkbox"><span>Predomínio basal</span></div>
+          <div class="rxmanual-check"><input id="mrxPara" type="checkbox"><span>Opacidade paracardíaca</span></div>
+        </div>
+        <div>
+          <div class="rxmanual-check"><input id="mrxSilhouette" type="checkbox"><span>Apagamento de contorno / sinal da silhueta</span></div>
+          <div class="rxmanual-check"><input id="mrxLinear" type="checkbox"><span>Opacidades lineares / laminares</span></div>
+          <div class="rxmanual-check"><input id="mrxNoEff" type="checkbox" checked><span>Sem derrame pleural evidente</span></div>
+          <div class="rxmanual-check"><input id="mrxNoPtx" type="checkbox" checked><span>Sem pneumotórax evidente</span></div>
+        </div>
+      </div>
+      <label>Observação livre</label><input id="mrxObs" type="text" placeholder="Ex.: discreta opacidade paracardíaca direita, sem broncograma aéreo">
+    </div>
+
+    <div class="rxmanual-panel full">
+      <h3>8. Atalhos de padrão (opcional)</h3>
+      <div class="rxmanual-actions">
+        <button type="button" class="preset" onclick="mrxPreset('normal')">RX SEM ALTERAÇÕES AGUDAS</button>
+        <button type="button" class="preset" onclick="mrxPreset('vias')">PEQUENAS VIAS AÉREAS / BVA</button>
+        <button type="button" class="preset" onclick="mrxPreset('asma')">HIPERINSUFLAÇÃO / ASMA</button>
+        <button type="button" class="preset" onclick="mrxPreset('consol')">PNEUMONIA / PADRÃO ALVEOLAR</button>
+        <button type="button" class="preset" onclick="mrxPreset('interst')">PADRÃO INTERSTICIAL</button>
+        <button type="button" class="preset" onclick="mrxPreset('atelect')">ATELECTASIA</button>
+        <button type="button" class="preset" onclick="mrxPreset('derrame')">DERRAME / PARAPNEUMÔNICO</button>
+        <button type="button" class="preset" onclick="mrxPreset('complicada')">PNEUMONIA COMPLICADA</button>
+      </div>
+      <div class="small" style="margin-top:7px">Os atalhos apenas marcam combinações frequentes; você pode alterar qualquer item depois.</div>
+    </div>
+
+    <div class="rxmanual-panel full">
+      <h3>📝 Texto pronto para evolução</h3>
+      <div id="mrxBadges"></div>
+      <div id="mrxOutput" class="rxmanual-output">Selecione os achados radiográficos.</div>
+      <div id="mrxImpression" class="rxmanual-impression">IMPRESSÃO: aguardando seleção dos achados.</div>
+      <div class="rxmanual-actions">
+        <button type="button" onclick="mrxGenerate()">ATUALIZAR TEXTO</button>
+        <button type="button" class="secondary" onclick="mrxCopyAll()">📋 COPIAR TUDO</button>
+        <button type="button" class="light" onclick="mrxCopyDescription()">COPIAR SÓ DESCRIÇÃO</button>
+        <button type="button" class="light" onclick="mrxClear()">LIMPAR</button>
+      </div>
+      <div id="mrxStatus" class="rxmanual-status"></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="card span3"><h2><span class="step">1</span>Dados</h2>
+<label>Idade</label><div class="row"><input id="idade" type="number" min="0" step="1" value="24" style="flex:1"><select id="idadeUn" style="flex:1"><option value="m">meses</option><option value="a">anos</option></select></div>
+<label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" value="12">
+<label>FR (irpm)</label><input id="fr" type="number" min="0" step="1" value="48">
+<label>SpO₂ em ar ambiente (%)</label><input id="spo2" type="number" min="0" max="100" step="1" value="96">
+<label>Temperatura (°C)</label><input id="temp" type="number" step="0.1" value="38.5">
+<label>Seguimento domiciliar em 24–48 horas</label><select id="seguimento"><option value="sim">Garantido</option><option value="incerto">Incerto</option><option value="nao">Não garantido</option></select>
+<div class="intl"><div class="intl-title">✦ UpToDate 2026 — complemento internacional</div>O seguimento pode ser presencial ou por telefone. Se não estiver garantido, reavaliar também a segurança do tratamento domiciliar.</div>
+</section>
+
+<section class="card alt span5"><h2><span class="step">2</span>Achados clínicos e gravidade</h2>
+<div class="check"><input id="tosse" type="checkbox" checked><span>Tosse e/ou dificuldade respiratória</span></div>
+<div class="check"><input id="tiragem" type="checkbox"><span>Desconforto respiratório moderado-grave: tiragem subcostal, batimento de asas nasais, gemência ou apneia (FR&gt;70 se &lt;12m / FR&gt;50 se maior)</span></div>
+<div class="check"><input id="perigo" type="checkbox"><span>Sinal de perigo / toxemia: sonolência, rebaixamento do nível de consciência, convulsão, choque, cianose, aparência tóxica (quadro grave/séptico)</span></div>
+<div class="check"><input id="oral" type="checkbox"><span>Recusa alimentar, vômitos importantes, desidratação ou incapacidade de ingesta VO</span></div>
+<div class="check"><input id="comorb" type="checkbox"><span>Doença subjacente (cardiopulmonar, síndrome genética, distúrbio neurológico) ou imunodeficiência primária/secundária</span></div>
+<div class="check"><input id="extensa" type="checkbox"><span>Pneumonia extensa/multilobar à radiografia (se realizada)</span></div>
+<div class="check"><input id="sibilo" type="checkbox"><span>Sibilância predominante</span></div>
+<div class="check"><input id="melhorouBdl" type="checkbox"><span>Melhorou após broncodilatador de ação rápida (3x, 15/15min)</span></div>
+<div class="check"><input id="conjuntivite" type="checkbox"><span>Conjuntivite associada (RN/lactente &lt;2 meses — sugere <i>C. trachomatis</i>)</span></div>
+
+<hr class="divider">
+<label>Perfil clínico predominante</label><select id="perfil"><option value="automatico" selected>Automático assistido</option><option value="tipico">Típico bacteriano — seleção manual</option><option value="atipico">Atípico — seleção manual</option><option value="viral">Predominantemente viral — seleção manual</option><option value="indeterminado">Indeterminado ou misto — seleção manual</option></select>
+<div class="check"><input id="inicioAbrupto" type="checkbox"><span>Início abrupto, com piora em horas ou poucos dias</span></div>
+<div class="check"><input id="foco" type="checkbox"><span>Dor torácica/abdominal ou ausculta focal (crepitações focais, sopro tubário, murmúrio reduzido/assimétrico)</span></div>
+<div class="check"><input id="inicioGradual" type="checkbox"><span>Início gradual ou evolução subaguda</span></div>
+<div class="check"><input id="tosseSeca" type="checkbox"><span>Tosse seca progressiva ou pouco produtiva</span></div>
+<div class="check"><input id="extrapulm" type="checkbox"><span>Cefaleia, mal-estar, mialgia, odinofagia/faringite, rouquidão ou exantema</span></div>
+<div class="check"><input id="prodromoViral" type="checkbox"><span>Pródromo viral predominante: coriza, congestão, sintomas difusos ou contato/surto viral</span></div>
+<div class="check"><input id="testeViral" type="checkbox"><span>Teste viral positivo (não exclui coinfecção bacteriana)</span></div>
+<div id="perfilLive" class="intl" aria-live="polite"><div class="intl-title">✦ Perfil sugerido agora</div>Marque os achados para atualizar a classificação.</div>
+<details><summary>Ajuda para interpretar o perfil: típico, atípico e viral</summary>
+<ul>
+<li><b>Sugere atípico:</b> escolar (&gt;5 anos, mas possível em pré-escolar), tosse seca ou pouco produtiva de evolução <b>subaguda/crônica</b> (dias a semanas), <b>ausência de febre alta</b> ou queda leve do estado geral, sintomas extrapulmonares (cefaleia, mialgia, faringite, exantema — inclusive Stevens-Johnson), <b>dissociação clínico-radiológica</b> (RX mais alterado que a clínica sugere), surto em ambiente coletivo (escola/creche).</li>
+<li><b>Sugere típico (pneumocócico):</b> início <b>agudo</b>, febre <b>alta</b>, taquipneia/tiragem, toxemia, crepitações localizadas, boa resposta em 48–72h a amoxicilina.</li>
+<li><b>Sugere quadro viral:</b> coriza/congestão, sintomas difusos, sibilância com resposta ao broncodilatador e ausência de foco bacteriano ou gravidade.</li>
+</ul>
+<div class="intl"><div class="intl-title">✦ UpToDate 2026 — complemento internacional</div>Idade ≥5 anos, isoladamente, não indica macrolídeo. Início abrupto, febre alta, dor torácica e foco auscultatório favorecem perfil típico; início gradual, cefaleia, mal-estar, odinofagia e tosse seca progressiva favorecem atípico. No perfil indeterminado, individualizar cobertura típica + atípica conforme gravidade e contexto. Uso excessivo de macrolídeos favorece resistência.</div>
+<div class="note">⚠️ Coriza e secreção purulenta/amarelada isoladas, tosse sem taquipneia, sem tiragem, sem crepitações e sem febre alta são achados comuns de <b>IVAS viral</b>. Não definem PAC bacteriana nem indicam antibiótico por si só; a cor do catarro não é critério diagnóstico isolado.</div>
+</details>
+</section>
+
+<section class="card dark span4"><h2><span class="step">3</span>Complicações / contexto especial</h2>
+<div class="check"><input id="derrame" type="checkbox"><span>Derrame pleural / empiema</span></div>
+<div class="check"><input id="necrose" type="checkbox"><span>Pneumonia necrosante</span></div>
+<div class="check"><input id="abscesso" type="checkbox"><span>Abscesso pulmonar</span></div>
+<div class="check"><input id="semMelhoraDrenagem" type="checkbox"><span>Sem melhora após drenagem pleural (febre &gt;72h, débito escasso com imagem persistente, septações persistentes)</span></div>
+<div class="check"><input id="porta" type="checkbox"><span>Porta de entrada cutânea / varicela / escarlatina / quadro séptico</span></div>
+<div class="check"><input id="aspirativa" type="checkbox"><span>Pneumonia aspirativa (distúrbio de deglutição, RGE, malformação — risco de anaeróbios)</span></div>
+<div class="check"><input id="alergia" type="checkbox"><span>Alergia a penicilina (não anafilática)</span></div>
+<div class="check"><input id="semHib" type="checkbox"><span>&gt;3 meses sem imunização completa contra <i>H. influenzae</i></span></div>
+<div class="check" style="background:var(--warn-light)"><input id="usoAtb" type="checkbox"><span><b>Uso de antibiótico nos últimos 30 dias</b> (ambulatorial → amoxicilina+clavulanato; hospitalar → ampicilina+sulbactam)</span></div>
+<div class="check"><input id="falha" type="checkbox"><span>Falha clínica após 48–72h de amoxicilina ambulatorial (febril/piora)</span></div>
+<div class="check"><input id="imunossuprimido" type="checkbox"><span>Imunossuprimido / em tratamento antineoplásico</span></div>
+<div class="check"><input id="hiv" type="checkbox"><span>Portador de HIV sem TARV ou tratamento irregular</span></div>
+<div class="check"><input id="cateter" type="checkbox"><span>Internação recente com uso de cateter central ou cirurgia prévia</span></div>
+<div class="check"><input id="doseAlta" type="checkbox"><span>Considerar amoxicilina em dose alta (90mg/kg/dia) — &lt;5 anos com risco de pneumococo resistente</span></div>
+
+<hr class="divider">
+<h4>✦ Triagem complementar de UTI pediátrica</h4>
+<div class="check"><input id="suporteVent" type="checkbox"><span>Necessidade de ventilação não invasiva/invasiva ou oxigênio em alta concentração</span></div>
+<div class="check"><input id="apneia" type="checkbox"><span>Apneias recorrentes</span></div>
+<div class="check"><input id="choque" type="checkbox"><span>Instabilidade hemodinâmica ou choque</span></div>
+<div class="check"><input id="mental" type="checkbox"><span>Alteração/rebaixamento do estado mental</span></div>
+<div class="check"><input id="altoRisco" type="checkbox"><span>Condição de base com alto risco de deterioração</span></div>
+
+<h4>✦ Risco de <i>S. aureus</i>/MRSA</h4>
+<div class="check"><input id="influenza" type="checkbox"><span>Influenza atual/recente ou coinfecção suspeita</span></div>
+<div class="check"><input id="rapida" type="checkbox"><span>Evolução rápida, aspecto tóxico, hemoptise, cavitação/necrose/abscesso/empiema ou necessidade de UTI</span></div>
+
+<div class="actionbar">
+<button onclick="calc()">CONDUTA:</button>
+</div>
+</section>
+
+<section class="card span12"><h2>📋 Resultado</h2><div id="badges"></div><div id="summary"></div>
+<h3>💊 Prescrição sugerida</h3><div id="rx" class="rx">A conduta será atualizada conforme o preenchimento.</div>
+<h3>🧭 Orientações gerais e sinais de alarme</h3><div id="orient"></div>
+<h3>🧪 Exames conforme gravidade</h3><div id="exames"></div>
+<h3>🔄 Transição EV → VO</h3><div id="transicao"></div>
+</section>
+
+<section class="card intl-card span12"><h2>✦ UpToDate 2026 — complemento internacional</h2>
+<div class="intl"><strong>Hierarquia das fontes:</strong> SBP e protocolos nacionais/institucionais permanecem como base principal. Estes itens são apoio internacional e devem ser correlacionados com epidemiologia, resistência local e avaliação clínica.</div>
+<details><summary>POCUS e tomografia</summary><p class="small">A acurácia do POCUS pulmonar depende da experiência do examinador. Pode complementar a avaliação de consolidação e é especialmente útil no derrame. A tomografia não é exame rotineiro da PAC; reservar para dúvidas diagnósticas ou complicações selecionadas.</p></details>
+<details><summary>Biomarcadores e painel viral</summary><p class="small">PCR e procalcitonina não devem iniciar, manter ou suspender antibiótico isoladamente. Teste viral positivo não exclui coinfecção bacteriana, sobretudo na doença grave.</p></details>
+<details><summary><i>Chlamydia pneumoniae</i></summary><p class="small">Início gradual, faringite, rouquidão, sinusite associada ou surto em ambiente fechado podem aumentar a suspeita, mas nenhum achado clínico, laboratorial ou radiológico confirma isoladamente. Testagem ambulatorial raramente é necessária; se o resultado modificar a conduta, preferir método molecular/NAAT. Sorologia não é recomendada para diagnóstico agudo, e NAAT positivo não exclui coinfecção.</p></details>
+</section>
+
+<section class="card alt span12">
+<h2>📚 Referências rápidas de apoio</h2>
+
+<details><summary>Critérios de taquipneia por idade</summary>
+<table class="table"><tr><th>Faixa etária</th><th>FR (taquipneia)</th></tr>
+<tr><td>&lt;2 meses</td><td>≥60 irpm — se presente + tosse/dificuldade respiratória, já classifica como pneumonia grave (internar)</td></tr>
+<tr><td>2–11 meses</td><td>≥50 irpm</td></tr>
+<tr><td>12–59 meses</td><td>≥40 irpm</td></tr>
+<tr><td>≥5 anos</td><td>≥30 irpm como alerta clínico (FR&gt;40 isoladamente tem associação fraca ao diagnóstico de PAC)</td></tr>
+</table>
+<p class="small">SpO₂ ≤96% e aumento do esforço respiratório (grunhidos, batimento de asas nasais, retrações) são os achados mais associados à PAC; SpO₂&gt;96% reduz a probabilidade. (SBP nº6/2021)</p>
+</details>
+
+<details><summary>Critérios de internação (consolidado Einstein + HCA + SBP)</summary>
+<ul>
+<li>Idade &lt;2 meses</li>
+<li>Insuficiência respiratória aguda / hipoxemia (SpO₂&lt;92% em ar ambiente)</li>
+<li>Comprometimento do estado geral, toxemia, aparência tóxica ou desidratação</li>
+<li>Desconforto respiratório moderado-grave (FR&gt;70 se &lt;12 meses; FR&gt;50 se maiores) ou dificuldade em respirar (gemência, batimento de asas nasais, retrações, apneia)</li>
+<li>Pneumonia extensa à radiografia (quando realizada)</li>
+<li>Impossibilidade de ingerir medicações/líquidos (vômitos)</li>
+<li>Falha de resposta à terapêutica ambulatorial</li>
+<li>Imunodeficiência primária ou secundária, doença subjacente cardiopulmonar/neurológica/genética</li>
+<li>Complicações: derrame pleural, abscesso pulmonar, pneumatocele, pneumotórax, pneumonia necrosante</li>
+<li>Dificuldade de seguimento adequado</li>
+</ul>
+</details>
+
+<details><summary>Quando pedir raio-X? (SBP + Einstein)</summary>
+<ul>
+<li>Radiografia <b>não deve ser rotina</b> em criança com quadro leve tratada ambulatorialmente — a concordância entre sinais clínicos e achados radiográficos é baixa.</li>
+<li>Padrão radiológico <b>não define etiologia</b> (não distingue bacteriana de viral) e deve ser evitado em quadros tipicamente virais ou com sibilância, pois induz erro diagnóstico e uso desnecessário de antibiótico.</li>
+<li>Considerar RX em: casos mais graves/internação, evolução prolongada ou recorrente apesar do tratamento, suspeita de aspiração de corpo estranho, malformação congênita, febre + leucocitose sem causa aparente em &lt;5 anos, pneumonia redonda, ou <b>febre prolongada + tosse mesmo sem taquipneia/desconforto</b> ("pneumonia oculta").</li>
+<li>RX pode ser <b>falso-negativo</b> — infiltrados só aparecem em 5–19% das crianças com febre sem outros sinais respiratórios baixos; se a evolução não é a esperada, reavaliar clínica e radiologicamente, independente do RX inicial.</li>
+<li>RX de controle não é necessário se houve boa evolução clínica; considerar apenas em pneumonia redonda, colapso, pneumonia recorrente localizada ou sintomas persistentes.</li>
+<li>Na suspeita de complicação (derrame/necrose), a <b>USG de tórax é o exame preferido</b> — mais sensível que o RX e sem radiação.</li>
+</ul>
+</details>
+
+<details><summary>Indicações de drenagem pleural e falha de drenagem (SBP nº7/2022)</summary>
+<p><b>Indicações de drenagem pleural simples:</b> pus em espaço pleural; germes Gram-positivos na coloração; glicose &lt;50mg/dL; LDH &gt;1000 UI; comprometimento de função pulmonar por derrame extenso; septações e/ou loculações em cavidade torácica; pH&lt;7,20 (risco alto de septações se pH&lt;7,0).</p>
+<p><b>Falha da drenagem torácica:</b> persistência ou aumento da febre após 72h; débito escasso com persistência de imagem radiológica; persistência de septações/loculações em US; piora do quadro respiratório.</p>
+<p><b>Indicações de VTCA:</b> derrame pleural massivo persistente com comprometimento respiratório e falha de drenagem simples + fibrinolíticos; fístula bronco-pleural não resolvida com drenagem simples; necrose extensa.</p>
+<table class="table"><tr><th>Peso</th><th>Tubo — derrame loculado</th><th>Tubo — derrame não loculado</th></tr>
+<tr><td>&lt;3kg</td><td>8–10</td><td>10–12</td></tr>
+<tr><td>3–8kg</td><td>10–12</td><td>12–16</td></tr>
+<tr><td>9–15kg</td><td>12–16</td><td>16–20</td></tr>
+<tr><td>16–40kg</td><td>16–20</td><td>24–28</td></tr>
+<tr><td>&gt;40kg</td><td>24–28</td><td>28–36</td></tr>
+</table>
+</details>
+
+<details><summary>Antibioticoterapia — quadro geral de doses (referência HCA/Einstein)</summary>
+<table class="table"><tr><th>Antibiótico</th><th>Dose</th><th>Intervalo</th><th>Dose máx./dia</th></tr>
+<tr><td>Amoxicilina</td><td>50–90 mg/kg/dia</td><td>6/6h (ou 8/8–12/12h)</td><td>4 g</td></tr>
+<tr><td>Amoxicilina+Clavulanato</td><td>80–90 mg/kg/dia (componente amoxicilina)</td><td>12/12h</td><td>4 g de amoxicilina</td></tr>
+<tr><td>Ampicilina</td><td>200 mg/kg/dia</td><td>6/6h</td><td>8 g</td></tr>
+<tr><td>Ampicilina+Sulbactam</td><td>200 mg/kg/dia (ampicilina)</td><td>6/6h</td><td>8 g</td></tr>
+<tr><td>Penicilina cristalina</td><td>200.000 UI/kg/dia</td><td>6/6h</td><td>16 mi UI</td></tr>
+<tr><td>Ceftriaxona</td><td>100 mg/kg/dia</td><td>12/12h ou 1x/dia</td><td>2 g</td></tr>
+<tr><td>Cefotaxima</td><td>150–200 mg/kg/dia</td><td>6/6h ou 8/8h</td><td>6 g</td></tr>
+<tr><td>Cefepime</td><td>50 mg/kg/dose</td><td>8/8h</td><td>2 g</td></tr>
+<tr><td>Oxacilina</td><td>150–200 mg/kg/dia</td><td>6/6h</td><td>12 g</td></tr>
+<tr><td>Vancomicina</td><td>40 mg/kg/dia (10mg/kg/dose)</td><td>6/6h</td><td>4 g</td></tr>
+<tr><td>Clindamicina</td><td>40 mg/kg/dia</td><td>6/6h ou 8/8h</td><td>1 g</td></tr>
+<tr><td>Metronidazol</td><td>25–40 mg/kg/dia</td><td>8/8h ou 6/6h</td><td>1,5 g</td></tr>
+<tr><td>Azitromicina</td><td>10 mg/kg/dia — base HCA</td><td>1x/dia por 5 dias</td><td>500 mg/dose</td></tr>
+<tr><td>Gentamicina (RN–2m)</td><td>5–7,5 mg/kg/dia</td><td>1x/dia</td><td>—</td></tr>
+<tr><td>Cefuroxima</td><td>30–50 mg/kg/dia</td><td>12/12h</td><td>500 mg (VO)</td></tr>
+</table>
+</details>
+
+</section>
+
+<section class="card span12"><h3 style="margin-top:0">Referências</h3>
+<p class="footer">1) Sociedade Brasileira de Pediatria. Abordagem Diagnóstica e Terapêutica das Pneumonias Adquiridas na Comunidade Não Complicadas. Documento Científico nº6, 2021. 2) Sociedade Brasileira de Pediatria. Pneumonias Adquiridas na Comunidade Complicadas. 3) Hospital Albert Einstein. Protocolo Pneumonia Adquirida na Comunidade em Pediatria. Código PTC.3693, 2022. 4) Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho — Campina Grande/PB. Normatização de Antibioticoterapia Inicial em Pediatria, Ago/2023; protocolo ATB anexado. 5) UpToDate 2026: Community-acquired pneumonia in children — outpatient treatment; clinical features and diagnosis; inpatient treatment in children &gt;28 days; epidemiology/pathogenesis/etiology; pneumonia caused by <i>Chlamydia pneumoniae</i>.<br>
+Ferramenta de apoio à decisão clínica — não substitui a avaliação médica individualizada, a conferência de função renal/alergias/apresentações disponíveis e o protocolo institucional vigente. Em caso de conflito de dose entre as fontes, prevaleceram os valores dos protocolos institucionais (Einstein/HCA) por serem mais recentes e operacionais; achados fisiopatológicos e critérios de gravidade seguiram a SBP. A conduta de amoxicilina+clavulanato para uso recente de antibiótico em PAC ambulatorial é extrapolada do padrão institucional do HCA usado em outras infecções respiratórias (sinusite/otite), já que a tabela específica de PAC ambulatorial do HCA não contempla essa opção.</p>
+</section>
+
+</div>
+</main>
+<script>
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+function c(id){return document.getElementById(id).checked}
+function fmt(x){return (Math.round(x*10)/10).toString().replace('.',',')}
+function cap(x,max){return max?Math.min(x,max):x}
+function doseLine(nome,totalDia,intervalo,maxDiaMg,via,dur,obs){
+  let d=cap(totalDia,maxDiaMg);
+  let tomadas={"6/6h":4,"8/8h":3,"12/12h":2,"24/24h":1,"1x/dia":1}[intervalo]||1;
+  return `• ${nome}: ${fmt(d)} mg/dia (${fmt(d/tomadas)} mg ${intervalo}), ${via}, por ${dur}.${obs?' '+obs:''}`;
+}
+function doseLineUI(nome,totalDiaUI,intervalo,maxDiaUI,via,dur,obs,unidade){
+  let d=cap(totalDiaUI,maxDiaUI);
+  let tomadas={"6/6h":4,"8/8h":3,"12/12h":2,"24/24h":1,"1x/dia":1}[intervalo]||1;
+  return `• ${nome}: ${fmt(d)} ${unidade}/dia (${fmt(d/tomadas)} ${unidade} ${intervalo}), ${via}, por ${dur}.${obs?' '+obs:''}`;
+}
+function amoxSusp(totalDia,conc,rotulo){let mlDia=totalDia/conc;return `\n  - Se suspensão ${rotulo||''} ${conc*5} mg/5 mL: ${fmt(mlDia/4)} mL 6/6h (total ${fmt(mlDia)} mL/dia).`}
+function azithLine(p,via,obs){
+  let hca=cap(p*10,500),d25=cap(p*5,250);
+  return `• Azitromicina: ${fmt(hca)} mg (10 mg/kg/dia), 1x/dia, ${via}, por 5 dias — base HCA.${obs?' '+obs:''}\n✦ UpToDate 2026 — complemento internacional: dia 1, ${fmt(hca)} mg (10 mg/kg, máximo 500 mg); dias 2–5, ${fmt(d25)} mg/dia (5 mg/kg/dia, máximo 250 mg/dia).`;
+}
+function perfilLabel(perfil){return {tipico:'típico bacteriano',atipico:'atípico',viral:'predominantemente viral',indeterminado:'indeterminado/misto'}[perfil]||perfil}
+function escHtml(text){return String(text).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]))}
+function rxMark(text){return escHtml(text).replaceAll('✦','<span class="rx-intl-mark">✦</span>')}
+function renderRxReport(items,peso){
+  let lines=items.join('\n').split('\n').map(x=>x.trim()).filter(Boolean),html='',headTitle='Conduta sugerida',headSub='';
+  if(lines[0]&&lines[0].startsWith('CONDUTA:')){
+    let cond=lines.shift().replace(/^CONDUTA:\s*/,'');
+    let parts=cond.split(' + ');headTitle=parts.shift()||headTitle;headSub=parts.join(' + ');
+  }
+  html+=`<div class="rx-head"><div class="rx-head-title">${rxMark(headTitle)}</div>${headSub?`<div class="rx-head-sub">${rxMark(headSub)}</div>`:''}<span class="rx-source-base">Base principal: HCA / SBP / protocolos nacionais</span></div>`;
+  for(const line of lines){
+    if(line.startsWith('• ')){
+      let body=line.slice(2),pos=body.indexOf(':'),nome=pos>=0?body.slice(0,pos):'Medicamento',valor=pos>=0?body.slice(pos+1).trim():body;
+      let doseRef=valor.match(/dose usada:\s*([\d.,]+)\s*mg\/kg\/dia\s*\(faixa aceita ([^)]+)\)\s*(?:— base HCA)?\./i);
+      let totalDia=valor.match(/^([\d.,]+)\s*mg\/dia/i);
+      if(doseRef) valor=valor.replace(doseRef[0],'').replace(/\s{2,}/g,' ').trim();
+      html+=`<div class="rx-row"><div class="rx-label"><span class="rx-icon">💊</span>Medicamento</div><div class="rx-value"><strong>${rxMark(nome)}</strong><br>${rxMark(valor)}</div></div>`;
+      if(doseRef){
+        let calculo=`${doseRef[1]} mg/kg/dia × ${fmt(peso)} kg${totalDia?' = '+totalDia[1]+' mg/dia':''}`;
+        html+=`<div class="rx-row"><div class="rx-label"><span class="rx-icon">⚖️</span>Cálculo da dose</div><div class="rx-value"><strong>${rxMark(calculo)}</strong><br><span class="small">Faixa de referência: ${rxMark(doseRef[2])}</span></div></div>`;
+      }
+    }else if(line.startsWith('- ')){
+      html+=`<div class="rx-row"><div class="rx-label"><span class="rx-icon">🧴</span>Apresentação</div><div class="rx-value">${rxMark(line.slice(2))}</div></div>`;
+    }else if(line.startsWith('✦')){
+      html+=`<div class="rx-row intl-row"><div class="rx-label"><span class="rx-icon">✦</span>Complemento internacional</div><div class="rx-value">${rxMark(line.replace(/^✦\s*/,''))}</div></div>`;
+    }else{
+      html+=`<div class="rx-row"><div class="rx-label"><span class="rx-icon">ℹ️</span>Observação</div><div class="rx-value">${rxMark(line)}</div></div>`;
+    }
+  }
+  return html;
+}
+
+function calc(){
+  let idade=n('idade'),un=document.getElementById('idadeUn').value;
+  let meses=un=='a'?idade*12:idade, anos=meses/12;
+  let p=n('peso'),fr=n('fr'),spo=n('spo2');
+  let seguimento=document.getElementById('seguimento').value;
+  let perfilModo=document.getElementById('perfil').value;
+  if(!p||p<=0){document.getElementById('rx').textContent='Informe peso válido.';return}
+
+  let rapido=false,lim='';
+  if(meses<2){rapido=fr>=60;lim='≥60 irpm'}
+  else if(meses<12){rapido=fr>=50;lim='≥50 irpm'}
+  else if(meses<60){rapido=fr>=40;lim='≥40 irpm'}
+  else{rapido=fr>=30;lim='≥30 irpm (alerta clínico)'}
+
+  let tosse=c('tosse'),tiragem=c('tiragem'),perigo=c('perigo'),oral=c('oral'),comorb=c('comorb'),extensa=c('extensa');
+  let sibilo=c('sibilo'),melhorouBdl=c('melhorouBdl'),conjuntivite=c('conjuntivite');
+  let derrame=c('derrame'),necrose=c('necrose'),abscesso=c('abscesso'),semMelhora=c('semMelhoraDrenagem');
+  let porta=c('porta'),aspirativa=c('aspirativa'),alergia=c('alergia');
+  let semHib=c('semHib'),usoAtb=c('usoAtb'),falha=c('falha'),imunossuprimido=c('imunossuprimido');
+  let hiv=c('hiv'),cateter=c('cateter'),doseAlta=c('doseAlta');
+  let suporteVent=c('suporteVent'),apneia=c('apneia'),choque=c('choque'),mental=c('mental'),altoRisco=c('altoRisco');
+  let influenza=c('influenza'),rapida=c('rapida');
+  let inicioAbrupto=c('inicioAbrupto'),foco=c('foco'),inicioGradual=c('inicioGradual'),tosseSeca=c('tosseSeca');
+  let extrapulm=c('extrapulm'),prodromoViral=c('prodromoViral'),testeViral=c('testeViral');
+
+  let comp = derrame||necrose||abscesso;
+  let perfil=perfilModo, perfilMotivo='seleção manual';
+  let sinaisTipicos=0,sinaisAtipicos=0,sinaisVirais=0,tendencia='';
+  if(perfilModo=='automatico'){
+    sinaisTipicos=(inicioAbrupto?1:0)+(foco?1:0)+(n('temp')>=39?1:0);
+    sinaisAtipicos=(inicioGradual?1:0)+(tosseSeca?1:0)+(extrapulm?1:0);
+    sinaisVirais=(prodromoViral?1:0)+(testeViral?1:0)+((sibilo&&melhorouBdl)?1:0);
+    if(sinaisVirais>=2 && !foco && !perigo && !comp){perfil='viral';perfilMotivo='conjunto viral predominante, sem foco/gravidade bacteriana';}
+    else if(anos>=5 && sinaisAtipicos>=2 && !foco && !perigo && sinaisTipicos<2){perfil='atipico';perfilMotivo='idade compatível + conjunto gradual/seco/extrapulmonar';}
+    else if(sinaisTipicos>=2 && (inicioAbrupto||foco) && sinaisAtipicos<2 && sinaisVirais<2){perfil='tipico';perfilMotivo='conjunto agudo/febre alta/foco';}
+    else {
+      perfil='indeterminado';
+      let maior=Math.max(sinaisTipicos,sinaisAtipicos,sinaisVirais);
+      let unicos=[sinaisTipicos,sinaisAtipicos,sinaisVirais].filter(x=>x==maior).length==1;
+      if(maior>0 && unicos){
+        tendencia=maior==sinaisTipicos?'típica':(maior==sinaisAtipicos?'atípica':'viral');
+        perfilMotivo=`evidência ainda insuficiente para fechar o perfil; tendência ${tendencia}`;
+      } else perfilMotivo='achados insuficientes, conflitantes ou possível quadro misto';
+    }
+  }
+  document.getElementById('perfilLive').innerHTML=`<div class="intl-title">✦ ${perfilModo=='automatico'?'Perfil sugerido agora':'Perfil definido manualmente'}: ${perfilLabel(perfil)}${tendencia?' — tendência '+tendencia:''}</div>${perfilMotivo}.${perfilModo=='automatico'?`<br><span class="small">Evidências marcadas: típico ${sinaisTipicos} · atípico ${sinaisAtipicos} · viral ${sinaisVirais}</span>`:''}`;
+  let internar = meses<2 || spo<92 || perigo || tiragem || oral || comorb || extensa || imunossuprimido || comp || falha;
+  let uti = suporteVent||apneia||choque||mental||altoRisco;
+  internar = internar || uti;
+  let mrsa = influenza || rapida;
+  let evidenciaForte = tiragem || spo<92 || comp || perigo;
+  let pneumonia = tosse && (rapido || evidenciaForte) && (perfil!='viral' || evidenciaForte);
+
+  // badges
+  let b=[];
+  b.push(`<span class="pill ${rapido?'danger':'ok'}">FR ${fr} irpm / limite ${lim}</span>`);
+  b.push(`<span class="pill ${spo<92?'danger':(spo<=96?'warn':'ok')}">SpO₂ ${spo}%</span>`);
+  if(sibilo && !melhorouBdl) b.push('<span class="pill info">Sibilância sem resposta a BDL — investigar/tratar sibilância antes de classificar PAC</span>');
+  if(sibilo && melhorouBdl) b.push('<span class="pill info">Sibilância com melhora ao BDL — considerar asma viral/sibilância antes de PAC bacteriana isolada</span>');
+  b.push(`<span class="pill intl-pill">${perfilModo=='automatico'?'✦ Sugestão automática':'Perfil manual'}: ${perfilLabel(perfil)}</span>`);
+  if(meses>=2 && meses<6) b.push('<span class="pill intl-pill">✦ 2–6 meses: maior cautela</span>');
+  if(seguimento!='sim') b.push('<span class="pill warn">Seguimento domiciliar não garantido</span>');
+  if(mrsa) b.push('<span class="pill danger">✦ Risco de S. aureus/MRSA</span>');
+  if(uti) b.push('<span class="pill danger">Avaliação imediata para UTI pediátrica</span>');
+  if(comp) b.push('<span class="pill danger">PAC complicada</span>');
+  else if(internar) b.push('<span class="pill danger">PAC grave — internação</span>');
+  else if(pneumonia) b.push('<span class="pill warn">PAC não complicada — ambulatorial</span>');
+  else b.push('<span class="pill ok">Sem critério forte de PAC pelo algoritmo</span>');
+  document.getElementById('badges').innerHTML=b.join(' ');
+
+  let rx=[],or=[];
+  if(perfilModo=='automatico') or.push(`✦ Perfil clínico sugerido automaticamente: ${perfilLabel(perfil)} (${perfilMotivo}). Esta classificação é apoio clínico, não confirmação etiológica; revise manualmente quando necessário.`);
+  if(meses>=2 && meses<6) or.push('✦ Idade de maior risco (2–6 meses): considerar limiar mais baixo para observação/internação conforme estado geral, oxigenação, hidratação, etiologia provável e possibilidade de seguimento. Não constitui internação automática isoladamente.');
+  if(seguimento!='sim') or.push('✦ Seguimento em 24–48h não está garantido: reavaliar a segurança do manejo domiciliar. O esquema principal permanece 7–10 dias conforme HCA; como complemento internacional, o UpToDate utiliza 7 dias quando o seguimento é incerto.');
+  if(uti) or.push('🚨 Avaliação imediata para UTI pediátrica: há critério complementar de suporte ventilatório/apneia/instabilidade/alteração mental/alto risco de deterioração. Estabilização e avaliação presencial não devem ser atrasadas pelo cálculo.');
+  if(mrsa) or.push('✦ Risco de pneumonia estafilocócica/MRSA após influenza ou evolução rápida: colher culturas quando possível sem atrasar tratamento e considerar cobertura antiestafilocócica conforme gravidade, epidemiologia e antibiograma institucional; discutir com infectologia/UTI. A calculadora não importa automaticamente um esquema internacional de MRSA.');
+  if(sibilo && !melhorouBdl) or.push('Sibilância predominante: testar broncodilatador de ação rápida (3x, 15/15min) e reclassificar após resposta, para evitar superprescrição de antibiótico e subdiagnóstico de doença obstrutiva de via aérea.');
+  if(sibilo && melhorouBdl) or.push('Houve melhora com broncodilatador — reavaliar cautelosamente antes de rotular como PAC bacteriana isolada (considerar asma viral/bronquiolite).');
+
+  if(!pneumonia && !comp){
+    rx.push('✅ ANTIBIÓTICO NÃO INDICADO AUTOMATICAMENTE\n\nOs dados informados não sustentam, neste momento, antibioticoterapia automática. Reavalie sinais de gravidade e considere diagnósticos como IVAS viral, bronquiolite ou asma/sibilância viral.\n\n⚠️ A ausência de indicação pelo algoritmo não exclui pneumonia. Correlacione com exame clínico, evolução e contexto individual.');
+    if(!tiragem && !perigo && spo>=97 && !comp) or.push('Achados isolados como coriza, tosse leve ou secreção amarelada, sem taquipneia/tiragem/crepitações e sem febre alta, são compatíveis com IVAS viral e não justificam antibiótico por si só.');
+  }
+
+  else if(comp){
+    rx.push('CONDUTA: Internação hospitalar + suporte clínico (oxigênio se necessário, hidratação, monitorização e reavaliação seriada) + imagem (US/TC de tórax conforme indicação) + avaliação de cirurgia torácica/infectologia.');
+    if(imunossuprimido){
+      rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','10–14 dias',''));
+      rx.push(doseLine('Vancomicina',p*40,'6/6h',4000,'EV','10–14 dias','associar.'));
+      rx.push(doseLineUI('Fluconazol',p*12,'1x/dia',400,'EV/VO','conforme evolução','considerar associar (imunossuprimido/oncológico).','mg'));
+    } else if(hiv){
+      rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','7–10 dias',''));
+      rx.push(doseLine('Vancomicina',p*40,'6/6h',4000,'EV','7–10 dias','associar (HIV sem TARV/tratamento irregular).'));
+    } else if(cateter){
+      rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','7 dias',''));
+      rx.push(doseLine('Vancomicina',p*40,'6/6h',4000,'EV','7 dias','associar (internação recente/cateter central/cirurgia prévia).'));
+    } else if(porta){
+      rx.push(doseLine('Ampicilina',p*200,'6/6h',8000,'EV','7 dias',''));
+      rx.push(doseLine('Oxacilina',p*175,'6/6h',12000,'EV','7 dias','associar (varicela/escarlatina/porta de entrada/sepse).'));
+    } else if(abscesso){
+      rx.push(doseLine('Cefotaxima',p*175,'8/8h',6000,'EV','7 dias (mínimo — manter antimicrobiano total por 3–4 semanas conforme evolução, SBP nº7)',''));
+      rx.push(doseLine('Clindamicina',p*40,'8/8h',1000,'EV','idem',' OU trocar por metronidazol.'));
+      rx.push(doseLine('Metronidazol',p*32,'8/8h',1500,'EV','idem','opção no lugar da clindamicina.'));
+      or.push('Abscesso pulmonar: tratamento habitualmente conservador com antimicrobianos por 3–4 semanas; aspiração percutânea guiada por US pode ser considerada em abscesso periférico; VTCA/toracotomia raramente necessárias.');
+    } else if(necrose){
+      rx.push(doseLine('Vancomicina',p*40,'6/6h',4000,'EV','3–4 semanas',''));
+      rx.push(doseLine('Cefotaxima',p*175,'8/8h',6000,'EV','3–4 semanas','associada (alternativas: ceftriaxona ou cefepime).'));
+      or.push('Pneumonia necrosante: antibioticoterapia venosa de amplo espectro por 3–4 semanas (SBP nº7/2022); tratamento inicial deve ser clínico, com cirurgia (drenagem/VTCA/segmentectomia) reservada para piora, empiema associado ou necrose extensa.');
+    } else if(derrame){
+      if(semMelhora){
+        rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','7 dias','(alternativas: cefepime 150mg/kg/dia 8/8h ou cefotaxima 150–200mg/kg/dia 6/6h ou 8/8h).'));
+        rx.push(doseLine('Vancomicina',p*40,'6/6h',4000,'EV','7 dias','associar.'));
+        if(meses<24 || porta) rx.push(doseLine('Oxacilina',p*175,'6/6h',12000,'EV','7 dias','associar (idade <2 anos ou porta de entrada).'));
+      } else {
+        rx.push(doseLine('Ampicilina',p*200,'6/6h',8000,'EV','7 dias','primeira escolha para derrame pleural (HCA). Se sem melhora após drenagem, escalonar conforme abaixo.'));
+      }
+    } else {
+      rx.push(doseLine('Ampicilina',p*200,'6/6h',8000,'EV','7 dias','tratamento inicial de complicação pleural.'));
+    }
+  }
+
+  else if(internar){
+    rx.push('CONDUTA: Internação hospitalar, oxigênio se necessário, hidratação, monitorização e reavaliação seriada; reavaliar clínica/radiologicamente se febre após 72h ou piora.');
+    if(meses<2){
+      rx.push(doseLine('Ampicilina',p*200,'6/6h',8000,'EV','7 dias',''));
+      rx.push(doseLineUI('Gentamicina',p*6.25,'1x/dia',null,'EV/IM','7 dias','(faixa 5–7,5mg/kg/dia; ajustar conforme idade gestacional/função renal — sem dose máxima definida).','mg'));
+      if(conjuntivite) rx.push(doseLine('Eritromicina',p*40,'6/6h',2000,'EV/VO','14 dias','se conjuntivite associada (suspeita de C. trachomatis).'));
+    } else {
+      if(imunossuprimido){
+        rx.push(doseLineUI('Cefepime',p*150,'8/8h',2000,'EV','7 dias','(imunossuprimido — equivale a 50mg/kg/dose 8/8h).','mg'));
+      } else if(aspirativa){
+        rx.push(doseLine('Ampicilina + Sulbactam',p*200,'6/6h',8000,'EV','7 dias','(dose de ampicilina). Alternativas: ceftriaxona + metronidazol ou ceftriaxona + clindamicina — risco de anaeróbios.'));
+      } else if(perigo){
+        rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','7 dias','quadro grave/séptico.'));
+        rx.push(azithLine(p,'VO/EV','Associar conforme perfil clínico.'));
+      } else if(usoAtb || falha){
+        rx.push(doseLine('Ampicilina + Sulbactam',p*200,'6/6h',8000,'EV','7 dias','(dose de ampicilina) — uso recente de ATB/falha ambulatorial.'));
+      } else if(semHib){
+        rx.push(doseLine('Ceftriaxona',p*100,'12/12h',2000,'EV','7 dias','imunização incompleta contra H. influenzae.'));
+      } else {
+        rx.push(doseLine('Ampicilina',p*200,'6/6h',8000,'EV','7 dias','primeira escolha (alternativa: penicilina cristalina 200.000 UI/kg/dia 6/6h, máx. 16 mi UI/dia).'));
+      }
+      if((perfil=='atipico' || perfil=='indeterminado') && anos>=5) rx.push(azithLine(p,'VO/EV',perfil=='atipico'?'Associar/usar por suspeita de germe atípico.':'Considerar associar se a diferenciação típico/atípico permanecer incerta.'));
+      if(alergia) or.push('Alergia a penicilina: considerar cefuroxima EV ou cefalosporina de 2ª/3ª geração e discutir com infectologia, avaliando o tipo de reação (IgE-mediada ou não).');
+    }
+    or.push('Se em uso de ampicilina por mais de 48h com resposta insatisfatória: considerar associar azitromicina; se persistir sem melhora, escalonar para ampicilina+sulbactam OU ceftriaxona, reavaliando complicações (derrame, necrose, abscesso).');
+  }
+
+  else {
+    rx.push('CONDUTA: tratamento ambulatorial + retorno/reavaliação em 48–72h ou antes se piora.');
+    let durBase = '7 a 10 dias';
+    if(alergia){
+      rx.push(doseLine('Cefuroxima',p*40,'12/12h',500,'VO',durBase,'se alergia não anafilática à penicilina; se anafilaxia, individualizar/discutir com alergista.'));
+    } else if(perfil=='atipico' && anos>=5){
+      rx.push('Suspeita de germe atípico predominando o quadro — ver esquema com macrolídeo abaixo. Se também houver dúvida quanto a componente bacteriano típico associado, considerar associar amoxicilina.');
+    } else if(usoAtb){
+      let doseC = 85; // dose alta extrapolada do padrão HCA (sinusite/otite) para uso recente de ATB
+      let totalC = cap(p*doseC,4000);
+      rx.push(doseLine('Amoxicilina + Clavulanato',p*doseC,'12/12h',4000,'VO',durBase,`dose alta (componente amoxicilina, extrapolada do padrão HCA para uso recente de ATB — não consta na tabela específica de PAC não complicada).`)+amoxSusp(totalC,50,'(250mg+62,5mg/5mL)')+amoxSusp(totalC,80,'(400mg+57mg/5mL)'));
+    } else {
+      let dose = anos>=5 ? 90 : (doseAlta?90:50);
+      let total = cap(p*dose,4000);
+      rx.push(doseLine('Amoxicilina',p*dose,'6/6h',4000,'VO',durBase,`dose usada: ${dose} mg/kg/dia (faixa aceita 50–90mg/kg/dia) — base HCA.`)+amoxSusp(total,50)+amoxSusp(total,80));
+    }
+    if((perfil=='atipico' || perfil=='indeterminado') && anos>=5){
+      rx.push(azithLine(p,'VO',perfil=='atipico'?'Opção para suspeita de atípico.':'Considerar em associação à amoxicilina se não for possível diferenciar típico de atípico.'));
+    }
+    if(meses>=6) rx.push(`✦ UpToDate 2026 — complemento internacional: em PAC não complicada, com evolução favorável, considerar 5 dias quando o seguimento em 24–48h estiver garantido; considerar 7 dias quando o seguimento for incerto. O esquema principal acima permanece 7–10 dias conforme HCA.`);
+  }
+
+  or.push('Recomendações gerais (todos os pacientes): hidratação e alimentação adequadas, controle da febre e da dor com antitérmicos, orientar sinais de piora e retorno/reavaliação em 48–72h.');
+  or.push('Sinais de alarme para retorno imediato: piora do desconforto respiratório, SpO₂ baixa, sonolência/rebaixamento do nível de consciência, recusa alimentar/desidratação, cianose, gemência, convulsão, febre persistente ou piora após 48–72h de tratamento.');
+  or.push('Suspeitar de complicação (derrame/empiema, necrose, abscesso) se: febre persistente/toxemia, dor torácica ou abdominal, murmúrio vesicular abolido, ou falha terapêutica após 48–72h de antibiótico adequado.');
+  or.push('Radiografia de tórax não é necessária de rotina em PAC ambulatorial sem sinais de gravidade; considerar em hipoxemia/hipóxia, esforço respiratório importante, má resposta ao tratamento (avaliar complicações) ou febre prolongada com tosse.');
+  if(!comp && meses<2) or.push('Idade <2 meses é, isoladamente, critério de internação.');
+
+  let ex=[];
+  if(!internar && !uti && !comp){
+    ex.push('<div class="alert ok">PAC leve/ambulatorial: não solicitar rotineiramente hemograma, biomarcadores ou RX.</div>');
+    ex.push('<div class="intl">✦ Considerar RX em pneumonia recorrente localizada, suspeita de corpo estranho/anomalia, dúvida diagnóstica relevante ou evolução inadequada. PCR/procalcitonina e painel viral não decidem antibiótico isoladamente.</div>');
+  } else {
+    ex.push('<div class="alert warn">PAC moderada/grave, hospitalizada ou evolução atípica: considerar RX de tórax; hemocultura antes do antibiótico se isso não atrasar o tratamento; teste viral; hemograma; eletrólitos/função renal; PCR e/ou procalcitonina. Considerar PCR para Mycoplasma em casos selecionados e rastreio nasal de MRSA apenas em doença grave/UTI conforme protocolo local.</div>');
+    ex.push('<div class="intl">✦ Teste viral positivo não exclui coinfecção bacteriana. PCR e procalcitonina são inespecíficas e não devem iniciar ou suspender antibiótico isoladamente.</div>');
+  }
+  document.getElementById('exames').innerHTML=ex.join('');
+
+  let tr=[];
+  if(internar||comp||uti){
+    tr.push('<div class="intl"><div class="intl-title">✦ Critérios para considerar transição EV → VO</div><ul><li>melhora do estado geral, FR e trabalho respiratório;</li><li>oxigenação estável;</li><li>afebril por 24–48 horas;</li><li>sem vômitos e tolerando hidratação/medicação oral;</li><li>sem complicação que exija terapia prolongada.</li></ul>Na PAC hospitalizada não complicada, o tempo total internacional é geralmente 5–7 dias, somando EV + VO; protocolos nacionais/institucionais e agente específico prevalecem.</div>');
+  } else tr.push('<p class="small">Não se aplica ao fluxo ambulatorial atual.</p>');
+  document.getElementById('transicao').innerHTML=tr.join('');
+
+  let sumClass = uti||comp||internar ? 'danger' : (pneumonia?'warn':'ok');
+  let sumIcon = uti||comp||internar ? '🚨' : (pneumonia?'⚠️':'✅');
+  let sumText = uti?'Avaliação imediata para UTI pediátrica, além da conduta hospitalar.':comp?'Provável PAC complicada — internação com abordagem específica.':internar?'Critérios para internação/conduta hospitalar.':pneumonia?'Provável PAC não complicada — tratamento ambulatorial.':'Reavaliar quadro clínico e diagnósticos diferenciais.';
+  document.getElementById('summary').innerHTML = `<div class="alert ${sumClass}">${sumIcon} ${sumText}</div>`;
+  let rxEl=document.getElementById('rx');
+  if(!pneumonia&&!comp){rxEl.className='rx no-atb';rxEl.textContent=rx.join('\n');}
+  else{rxEl.className='rx rx-report';rxEl.innerHTML=renderRxReport(rx,p);}
+  document.getElementById('orient').innerHTML = '<ul><li>'+or.join('</li><li>')+'</li></ul>';
+}
+
+// ===== DESCRIÇÃO MANUAL DE RX =====
+const MRX_IDS=['mrxRot','mrxHipoinsp','mrxPenet','mrxArtef','mrxHyper','mrxAirtrap','mrxPerib','mrxHilar','mrxBronch','mrxNormal','mrxInterst','mrxPerihilar','mrxFocalOp','mrxConsol','mrxMulti','mrxRound','mrxAtelect','mrxVolLoss','mrxEff','mrxPtx','mrxCav','mrxNec','mrxCardio','mrxMediast','mrxDiaph','mrxBone','mrxDiffuse','mrxAsym','mrxBasal','mrxPara','mrxSilhouette','mrxLinear','mrxNoEff','mrxNoPtx'];
+function mrxC(id){const e=document.getElementById(id);return !!(e&&e.checked)}
+function mrxS(id,v){const e=document.getElementById(id);if(e)e.checked=!!v}
+function mrxV(id){const e=document.getElementById(id);return e?e.value:''}
+function mrxLoc(){return [mrxV('mrxLobe'),mrxV('mrxZone'),mrxV('mrxSide')].filter(Boolean).join(' ')}
+function mrxCap(s){return s? s.charAt(0).toUpperCase()+s.slice(1):s}
+function mrxSentenceList(arr){return arr.filter(Boolean).map(x=>x.replace(/[.]+$/,'')).join('. ')+(arr.filter(Boolean).length?'.':'')}
+function mrxGenerate(){
+  let tech=[],find=[],imp=[],badges=[];
+  const inc=mrxV('mrxInc'),qual=mrxV('mrxQual'),loc=mrxLoc(),side=mrxV('mrxSide'),zone=mrxV('mrxZone');
+  if(inc)tech.push(`incidência ${inc}`);
+  tech.push(qual==='adequada'?'qualidade técnica adequada':`qualidade técnica ${qual}`);
+  if(mrxC('mrxRot'))tech.push('com rotação significativa');
+  if(mrxC('mrxHipoinsp'))tech.push('com hipoinspiração/baixo volume pulmonar');
+  if(mrxC('mrxPenet'))tech.push('com exposição/penetração inadequada');
+  if(mrxC('mrxArtef'))tech.push('com artefatos que limitam parcialmente a avaliação');
+
+  const positives=MRX_IDS.filter(id=>!['mrxNoEff','mrxNoPtx'].includes(id)&&mrxC(id));
+  if(mrxC('mrxNormal') && positives.length===1){
+    find.push('Campos pulmonares sem opacidades focais ou alterações pleuropulmonares agudas evidentes');
+  }
+  if(mrxC('mrxHyper'))find.push('Hiperinsuflação pulmonar');
+  if(mrxC('mrxAirtrap'))find.push(`Aprisionamento aéreo/assimetria de transparência pulmonar${side?' '+side:''}`);
+  if(mrxC('mrxPerib'))find.push(`Espessamento peribrônquico/perihilar${mrxC('mrxDiffuse')?' bilateral':''}`);
+  if(mrxC('mrxHilar'))find.push('Reforço da trama broncovascular/proeminência hilar');
+  if(mrxC('mrxInterst'))find.push(`Opacidades de padrão intersticial${zone?' '+zone:''}${side?' '+side:''}`);
+  if(mrxC('mrxPerihilar'))find.push(`Opacidades perihilares${side?' '+side:''}`);
+  if(mrxC('mrxFocalOp'))find.push(`Opacidade focal${loc?' '+loc:''}`);
+  if(mrxC('mrxConsol'))find.push(`Consolidação de padrão alveolar${loc?' '+loc:''}${mrxC('mrxBronch')?', com broncograma aéreo':''}`);
+  else if(mrxC('mrxBronch'))find.push(`Broncograma aéreo visível${loc?' '+loc:''}`);
+  if(mrxC('mrxMulti'))find.push('Acometimento multifocal/multilobar');
+  if(mrxC('mrxRound'))find.push(`Opacidade arredondada${loc?' '+loc:''}`);
+  if(mrxC('mrxAtelect'))find.push(`Opacidade linear/laminar compatível com atelectasia subsegmentar${loc?' '+loc:''}${mrxC('mrxVolLoss')?', associada a sinais de perda de volume':''}`);
+  else if(mrxC('mrxVolLoss'))find.push(`Sinais de perda de volume pulmonar/retração${loc?' '+loc:''}`);
+  if(mrxC('mrxLinear')&&!mrxC('mrxAtelect'))find.push(`Opacidades lineares/laminares${loc?' '+loc:''}`);
+  if(mrxC('mrxPara'))find.push(`Opacidade paracardíaca${side?' '+side:''}`);
+  if(mrxC('mrxSilhouette'))find.push('Apagamento de contorno adjacente (sinal da silhueta)');
+  if(mrxC('mrxEff'))find.push(`Derrame pleural${side?' '+side:''}`); else if(mrxC('mrxNoEff'))find.push('Sem derrame pleural evidente');
+  if(mrxC('mrxPtx'))find.push(`Pneumotórax${side?' '+side:''}`); else if(mrxC('mrxNoPtx'))find.push('Sem pneumotórax evidente');
+  if(mrxC('mrxCav'))find.push('Imagem(ns) cavitária(s)/pneumatocele(s)');
+  if(mrxC('mrxNec'))find.push('Alterações cavitárias/heterogêneas que levantam possibilidade de complicação necrosante');
+  if(mrxC('mrxCardio'))find.push('Aumento aparente da área cardíaca, a considerar a incidência e a técnica do exame');
+  if(mrxC('mrxMediast'))find.push('Alteração/alargamento aparente do mediastino');
+  if(mrxC('mrxDiaph'))find.push('Alteração do contorno diafragmático e/ou dos seios costofrênicos');
+  if(mrxC('mrxBone'))find.push('Alteração óssea/partes moles visível na incidência avaliada');
+  const obs=mrxV('mrxObs').trim();if(obs)find.push(obs);
+
+  if(mrxC('mrxConsol')){imp.push(`Consolidação focal/alveolar${loc?' '+loc:''}, a correlacionar com o contexto clínico`);badges.push('Consolidação');}
+  if((mrxC('mrxPerib')||mrxC('mrxPerihilar')||mrxC('mrxInterst'))&&!mrxC('mrxConsol')){imp.push('Padrão peribrônquico/perihilar e/ou intersticial, inespecífico quanto à etiologia');badges.push('Padrão intersticial/peribrônquico');}
+  if(mrxC('mrxHyper')&&(mrxC('mrxPerib')||mrxC('mrxAirtrap'))&&!mrxC('mrxConsol')){imp.push('Achados que podem acompanhar comprometimento de pequenas vias aéreas');badges.push('Pequenas vias aéreas');}
+  if(mrxC('mrxHyper')&&!mrxC('mrxConsol')){badges.push('Hiperinsuflação');}
+  if(mrxC('mrxAtelect')){imp.push('Atelectasia subsegmentar/laminar');badges.push('Atelectasia');}
+  if(mrxC('mrxRound')){imp.push('Opacidade arredondada; em pediatria, correlacionar com possibilidade de pneumonia redonda e evolução clínica');badges.push('Opacidade arredondada');}
+  if(mrxC('mrxEff')){imp.push('Derrame pleural associado');badges.push('Derrame');}
+  if(mrxC('mrxPtx')){imp.push('Pneumotórax');badges.push('Pneumotórax');}
+  if(mrxC('mrxCav')||mrxC('mrxNec')){imp.push('Achados cavitários que requerem correlação para complicação pulmonar');badges.push('Cavitação/complicação');}
+  if(mrxC('mrxNormal')&&positives.length===1){imp.push('Sem alteração pleuropulmonar aguda evidente');badges.push('Sem alteração aguda');}
+  // Classificação orientativa por regras, baseada somente nos achados marcados.
+  let pattern='INDETERMINADO / INESPECÍFICO';
+  let rationale='Os achados selecionados não formam um padrão radiográfico predominante específico.';
+  if(mrxC('mrxNormal')&&positives.length===1){
+    pattern='SEM ALTERAÇÃO PLEUROPULMONAR AGUDA EVIDENTE';
+    rationale='Não foram selecionados achados pleuropulmonares agudos.';
+  } else if((mrxC('mrxNec')||mrxC('mrxCav'))&&mrxC('mrxConsol')){
+    pattern='PADRÃO ALVEOLAR COM SINAIS DE COMPLICAÇÃO';
+    rationale='Consolidação associada a cavitação/pneumatoceles ou aspecto sugestivo de necrose.';
+  } else if(mrxC('mrxEff')&&mrxC('mrxConsol')){
+    pattern='PADRÃO ALVEOLAR COM DERRAME PLEURAL ASSOCIADO';
+    rationale='Consolidação focal/alveolar associada a derrame pleural.';
+  } else if(mrxC('mrxConsol')){
+    pattern='PADRÃO ALVEOLAR FOCAL';
+    rationale='Consolidação focal/alveolar'+(mrxC('mrxBronch')?' com broncograma aéreo':'')+'.';
+  } else if(mrxC('mrxAtelect')&&mrxC('mrxVolLoss')){
+    pattern='PADRÃO DE ATELECTASIA';
+    rationale='Opacidade laminar/subsegmentar associada a sinais de perda de volume.';
+  } else if(mrxC('mrxHyper')&&(mrxC('mrxPerib')||mrxC('mrxPerihilar')||mrxC('mrxAirtrap'))){
+    pattern='PADRÃO DE PEQUENAS VIAS AÉREAS';
+    rationale='Hiperinsuflação associada a espessamento peribrônquico/perihilar, opacidades perihilares e/ou aprisionamento aéreo; pode ocorrer em bronquiolite ou doença obstrutiva, conforme idade e clínica.';
+  } else if((mrxC('mrxInterst')||mrxC('mrxPerihilar'))&&!mrxC('mrxConsol')){
+    pattern='PADRÃO INTERSTICIAL / PERIHILAR';
+    rationale='Opacidades intersticiais/perihilares sem consolidação alveolar focal selecionada.';
+  } else if(mrxC('mrxHyper')||mrxC('mrxAirtrap')){
+    pattern='PADRÃO HIPERINSUFLATÓRIO / OBSTRUTIVO';
+    rationale='Hiperinsuflação e/ou aprisionamento aéreo sem consolidação focal selecionada.';
+  } else if(mrxC('mrxEff')){
+    pattern='ALTERAÇÃO PLEURAL — DERRAME';
+    rationale='Derrame pleural selecionado, sem consolidação focal marcada.';
+  } else if(mrxC('mrxPtx')){
+    pattern='ALTERAÇÃO PLEURAL — PNEUMOTÓRAX';
+    rationale='Pneumotórax selecionado.';
+  }
+
+  if(!imp.length)imp.push('Achados radiográficos inespecíficos; correlacionar com dados clínicos e evolução');
+
+  let desc=`RADIOGRAFIA DE TÓRAX: ${tech.join(', ')}.\n${mrxSentenceList(find.length?find:['Sem achados radiográficos específicos selecionados'])}`;
+  document.getElementById('mrxOutput').textContent=desc;
+  document.getElementById('mrxImpression').textContent='PADRÃO PREDOMINANTE SUGERIDO: '+pattern+'.\nPOR QUÊ: '+rationale+'\nIMPRESSÃO: '+imp.join('; ')+'.';
+  document.getElementById('mrxBadges').innerHTML=badges.map(x=>`<span class="rxmanual-badge">${x}</span>`).join('');
+
+  // Integra somente critérios radiográficos objetivos à calculadora de PAC.
+  const ext=document.getElementById('extensa'),der=document.getElementById('derrame'),nec=document.getElementById('necrose');
+  if(ext)ext.checked=mrxC('mrxMulti');
+  if(der)der.checked=mrxC('mrxEff');
+  if(nec)nec.checked=mrxC('mrxNec');
+  if(typeof calc==='function')calc();
+  return {desc,impression:'PADRÃO PREDOMINANTE SUGERIDO: '+pattern+'.\nPOR QUÊ: '+rationale+'\nIMPRESSÃO: '+imp.join('; ')+'.'};
+}
+function mrxCopyAll(){const r=mrxGenerate();const t=r.desc+'\n'+r.impression;navigator.clipboard?.writeText(t).then(()=>document.getElementById('mrxStatus').textContent='Descrição + impressão copiadas.').catch(()=>document.getElementById('mrxStatus').textContent='Não foi possível copiar automaticamente.');}
+function mrxCopyDescription(){const r=mrxGenerate();navigator.clipboard?.writeText(r.desc).then(()=>document.getElementById('mrxStatus').textContent='Descrição copiada.').catch(()=>document.getElementById('mrxStatus').textContent='Não foi possível copiar automaticamente.');}
+function mrxClear(){MRX_IDS.forEach(id=>mrxS(id,false));mrxS('mrxNoEff',true);mrxS('mrxNoPtx',true);['mrxInc','mrxSide','mrxZone','mrxLobe'].forEach(id=>document.getElementById(id).value='');document.getElementById('mrxQual').value='adequada';document.getElementById('mrxObs').value='';mrxGenerate();}
+function mrxPreset(name){mrxClear();
+  if(name==='normal'){mrxS('mrxNormal',true)}
+  if(name==='vias'){mrxS('mrxHyper',true);mrxS('mrxPerib',true);mrxS('mrxPerihilar',true);mrxS('mrxDiffuse',true)}
+  if(name==='asma'){mrxS('mrxHyper',true);mrxS('mrxAirtrap',true)}
+  if(name==='consol'){mrxS('mrxConsol',true);mrxS('mrxBronch',true)}
+  if(name==='interst'){mrxS('mrxInterst',true);mrxS('mrxPerihilar',true);mrxS('mrxDiffuse',true)}
+  if(name==='atelect'){mrxS('mrxAtelect',true);mrxS('mrxVolLoss',true);mrxS('mrxLinear',true)}
+  if(name==='derrame'){mrxS('mrxConsol',true);mrxS('mrxEff',true);mrxS('mrxNoEff',false)}
+  if(name==='complicada'){mrxS('mrxConsol',true);mrxS('mrxMulti',true);mrxS('mrxEff',true);mrxS('mrxNoEff',false);mrxS('mrxCav',true);mrxS('mrxNec',true)}
+  mrxGenerate();
+}
+function mrxInit(){
+  const ids=[...MRX_IDS,'mrxInc','mrxQual','mrxSide','mrxZone','mrxLobe','mrxObs'];
+  ids.forEach(id=>{const e=document.getElementById(id);if(!e)return;e.addEventListener(e.type==='text'?'input':'change',mrxGenerate)});
+  document.getElementById('mrxObs').addEventListener('input',mrxGenerate);
+  mrxGenerate();
+}
+
+mrxInit();
+calc();
+if(document.addEventListener){
+  document.addEventListener('change',event=>{if(event.target.matches('input,select')) calc()});
+  document.addEventListener('input',event=>{if(event.target.matches('input[type="number"],select')) calc()});
+  document.addEventListener('click',event=>{if(event.target.matches('input[type="checkbox"],input[type="radio"]')) setTimeout(calc,0)});
+}
+</script>
+</body></html>
