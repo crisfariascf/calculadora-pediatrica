@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Protocolo APLV + Fórmulas — SBP/ASBAI</title>
+<style>
+:root{
+  --bg:#f4f7f8;--card:#fff;--ink:#17252b;--muted:#5f727a;--line:#dfe7ea;
+  --green:#136f63;--green2:#e7f4f1;--red:#a52b2b;--redbg:#fff0f0;
+  --amber:#8a5c00;--amberbg:#fff7df;--purple:#7137a8;--purplebg:#f5effc;
+  --blue:#215e91;--bluebg:#eef6fc;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+.wrap{max-width:1080px;margin:auto;padding:18px}
+header{background:linear-gradient(135deg,#0f6359,#167f70);color:#fff;padding:20px;border-radius:18px;margin-bottom:14px}
+header h1{margin:0 0 4px;font-size:25px} header p{margin:0;opacity:.92}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #00000008}
+h2{font-size:18px;margin:0 0 12px} h3{font-size:15px;margin:16px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;padding:10px;border:1px solid #cbd7db;border-radius:10px;background:#fff;font-size:14px}
+.checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+@media(max-width:700px){.checks{grid-template-columns:1fr 1fr}}
+.check{display:flex;gap:8px;align-items:flex-start;padding:9px;border:1px solid var(--line);border-radius:10px;background:#fbfcfc}
+.check input{width:auto;margin-top:3px}
+.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:800;cursor:pointer}
+.btn.primary{background:var(--green);color:#fff}.btn.ghost{background:#edf2f3;color:#233}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.box{padding:12px 13px;border-radius:12px;margin:9px 0;border-left:5px solid}
+.good{background:var(--green2);border-color:var(--green)}
+.warn{background:var(--amberbg);border-color:#d29312}
+.danger{background:var(--redbg);border-color:var(--red)}
+.info{background:var(--bluebg);border-color:var(--blue)}
+.purple{background:var(--purplebg);border-color:var(--purple)}
+.small{font-size:12px;color:var(--muted)}
+.hidden{display:none}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+ul{margin:7px 0 7px 19px;padding:0} li{margin:4px 0}
+.result h2{color:var(--green)}
+.copy{float:right;font-size:12px;padding:7px 10px;border:0;border-radius:8px;background:#e7eeef;cursor:pointer}
+.ref{font-size:12px;padding:10px;border-radius:10px;background:#f8fafb;margin:7px 0}
+.ref strong{display:block}
+.purple-star{color:var(--purple);font-weight:900}
+.pill{display:inline-block;border-radius:999px;padding:4px 8px;background:#edf2f3;font-size:12px;font-weight:800;margin:2px}
+.brand{display:inline-block;padding:5px 8px;border-radius:9px;background:#f0f5f6;border:1px solid #d7e2e5;font-size:12px;font-weight:800;margin:3px 3px 3px 0}.brand small{font-weight:600;color:#61747c}
+.tech{margin-top:12px;border:1px solid #cddbdd;border-radius:14px;background:#fbfdfd;padding:14px}
+.tech h3{margin:0 0 8px;color:var(--green)}
+.techgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+@media(max-width:760px){.techgrid{grid-template-columns:1fr}}
+.metric{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff}
+.metric b{display:block;font-size:12px;color:var(--muted);margin-bottom:2px}
+.tablewrap{overflow:auto;margin-top:8px}
+.ftable{width:100%;border-collapse:collapse;font-size:12px;background:#fff}
+.ftable th,.ftable td{border:1px solid #dbe4e7;padding:7px;text-align:left;vertical-align:top}
+.ftable th{background:#eef4f5}
+.sourcebox{font-size:11px;color:#53676f;border-top:1px solid var(--line);padding-top:8px;margin-top:10px}
+.badgeok{display:inline-block;padding:4px 8px;border-radius:999px;background:#dff3ed;color:#116359;font-size:11px;font-weight:800}
+.badgewarn{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff0cc;color:#805300;font-size:11px;font-weight:800}
+
+.formulaRx{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;background:#f8fafb;border:1px dashed #b9c8cd;border-radius:12px;padding:12px}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:800}
+footer{font-size:11px;color:#61747c;padding:8px 4px 25px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🥛 Protocolo Prático — APLV + Fórmulas</h1>
+  <p>Triagem da suspeita • fenótipo • confirmação • aleitamento • complemento • prescrição orientativa de fórmula</p>
+</header>
+
+<div class="box good">
+<strong>REFERÊNCIA PRINCIPAL:</strong> Atualização em Alergia Alimentar 2025 — ASBAI + Sociedade Brasileira de Pediatria (SBP).
+<br><span class="small">Complementos internacionais aparecem com <span class="purple-star">★ roxa</span>. O módulo de volume usa a tabela etária do Guia Prático de Alimentação da SBP.</span>
+</div>
+
+<section class="card">
+<h2>1) Dados do paciente</h2>
+<div class="grid">
+  <div><label>Idade (dias)</label><input id="dias" type="number" min="0" max="3650" placeholder="Ex.: 8" oninput="atualizarFluxo()"></div>
+  <div><label>Idade (meses)</label><input id="idade" type="number" min="0" max="216" placeholder="Ex.: 3" oninput="atualizarFluxo()"></div>
+  <div><label>Peso (kg)</label><input id="peso" type="number" step="0.01" min="0" placeholder="Ex.: 5,2"></div>
+  <div><label>Sexo</label><select id="sexo"><option>Não informado</option><option>Feminino</option><option>Masculino</option></select></div>
+  <div><label>Alimentação atual</label><select id="feeding">
+    <option value="ame">Aleitamento materno exclusivo</option>
+    <option value="misto">Aleitamento misto</option>
+    <option value="formula">Fórmula infantil exclusiva</option>
+    <option value="ac">Leite + alimentação complementar</option>
+  </select></div>
+  <div><label>Qual é o cenário?</label><select id="motivo" onchange="atualizarFluxo()">
+    <option value="formula">Complemento / escolha de fórmula — sem suspeita de APLV</option>
+    <option value="aplv">APLV prévia / suspeita / alergia relatada</option>
+  </select></div>
+  <div><label>Necessita complemento?</label><select id="complemento">
+    <option value="nao">Não</option><option value="sim">Sim / provável</option>
+  </select></div>
+  <div><label>Prematuridade / condição especial?</label><select id="especial">
+    <option value="nao">Não</option><option value="sim">Sim</option>
+  </select></div>
+</div>
+</section>
+
+<section id="triagemAplv" class="card hidden">
+<h2>2) Triagem direcionada para APLV</h2>
+<div class="grid">
+  <div><label>APLV</label><select id="status">
+    <option value="suspeita">Suspeita / em investigação</option>
+    <option value="sim">Previamente diagnosticada</option>
+    <option value="relato">Apenas relatada pela família</option>
+  </select></div>
+  <div><label>Tempo até os sintomas</label><select id="tempo">
+    <option value="incerto">Incerto</option><option value="imediato">Minutos até 2 horas</option><option value="tardio">Horas a dias</option>
+  </select></div>
+  <div><label>Gravidade</label><select id="gravidade">
+    <option value="leve">Leve/moderada</option><option value="grave">Grave / anafilaxia / repercussão importante</option>
+  </select></div>
+  <div><label>FPIES conhecido/suspeito?</label><select id="fpies"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+</div>
+
+<h3>Manifestações relacionadas à exposição</h3>
+<div class="checks">
+<label class="check"><input type="checkbox" class="sx" value="urticaria">Urticária / angioedema</label>
+<label class="check"><input type="checkbox" class="sx" value="resp">Sibilância / dispneia / estridor</label>
+<label class="check"><input type="checkbox" class="sx" value="vomito_imediato">Vômito imediato</label>
+<label class="check"><input type="checkbox" class="sx" value="anafilaxia">Anafilaxia</label>
+<label class="check"><input type="checkbox" class="sx" value="sangue">Sangue/muco nas fezes</label>
+<label class="check"><input type="checkbox" class="sx" value="diarreia">Diarreia persistente</label>
+<label class="check"><input type="checkbox" class="sx" value="vomito_tardio">Vômitos tardios/repetitivos</label>
+<label class="check"><input type="checkbox" class="sx" value="crescimento">Baixo ganho ponderal / desnutrição</label>
+<label class="check"><input type="checkbox" class="sx" value="eczema">Dermatite atópica moderada/grave</label>
+<label class="check"><input type="checkbox" class="sx" value="refluxo">Refluxo/regurgitação persistente</label>
+<label class="check"><input type="checkbox" class="sx" value="colica">Cólica isolada</label>
+<label class="check"><input type="checkbox" class="sx" value="constipacao">Constipação refratária</label>
+</div>
+
+<div class="grid" style="margin-top:10px">
+  <div><label>Diarreia &gt; 1 semana?</label><select id="diarreiaLonga"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+  <div><label>Falha prévia de FeH?</label><select id="falhaFeh"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+  <div><label>Asma não controlada?</label><select id="asma"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+  <div><label>Reação recente importante?</label><select id="reacaoRecente"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+</div>
+</section>
+
+<section class="card">
+<h2>3) Escolha da fórmula + ficha técnica</h2>
+
+<div class="box info">
+<strong>Como funciona:</strong> escolha a fórmula. O protocolo mostra a <strong>faixa etária, classe, diluição/preparo, tabela de uso do fabricante, principais dados nutricionais por 100 mL e diferenças práticas</strong>. A recomendação clínica continua sendo feita pela <strong>classe</strong> (SBP/ASBAI); a ficha do produto serve para operacionalizar a prescrição.
+</div>
+<div id="rotaFormula" class="box good">
+<strong>Fluxo atual:</strong> complemento/fórmula sem suspeita de APLV → serão exibidas apenas fórmulas padrão compatíveis com a idade.
+</div>
+
+<div class="grid">
+  <div style="grid-column:span 2">
+    <label>Fórmula / produto</label>
+    <select id="formulaEscolhida" onchange="mostrarFormula()">
+      <option value="">— Preencha idade e cenário acima —</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Objetivo</label>
+    <select id="objetivo">
+      <option value="complemento">Complementar aleitamento</option>
+      <option value="substituicao">Substituição integral quando AM não é possível</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Mostrar referência geral SBP de volume?</label>
+    <select id="usarTabela">
+      <option value="sim">Sim</option>
+      <option value="nao">Não</option>
+    </select>
+  </div>
+</div>
+
+<div id="fichaFormula" class="tech hidden"></div>
+
+<h3>Prescrição individual — opcional</h3>
+<div class="grid">
+  <div><label>Nº de mamadas/porções de fórmula ao dia</label><input id="mamadasEscolhidas" type="number" min="1" max="12" placeholder="Ex.: 5"></div>
+  <div><label>Água usada no preparo por mamada (mL)</label><input id="volumeEscolhido" type="number" min="1" max="400" placeholder="Ex.: 150"></div>
+  <div style="grid-column:span 2">
+    <label>Observação</label>
+    <div class="small" style="padding:9px;border:1px solid var(--line);border-radius:10px;background:#fafcfc">
+      Quando a diluição oficial for conhecida (ex.: 1 medida/30 mL), o protocolo calcula o número de medidas. Para produtos cuja página oficial consultada manda seguir o rótulo sem publicar a medida, o cálculo automático fica bloqueado.
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="gerar()">Gerar conduta + prescrição</button>
+<button class="btn ghost" onclick="limpar()">Limpar</button>
+</div>
+</section>
+
+<section id="resultado" class="card result hidden">
+<button class="copy" onclick="copiar()">Copiar tudo</button>
+<h2>4) Conduta sugerida</h2>
+<div id="saida"></div>
+</section>
+
+
+<section class="card">
+<details>
+<summary>5) Biblioteca técnica das fórmulas — abrir referências</summary>
+<div style="margin-top:12px">
+<div class="box good">
+<strong>✓ Dados incorporados:</strong> as fórmulas principais acima possuem ficha individual dentro do seletor. Para os produtos Danone, a diluição, a tabela de mamadas e os valores nutricionais foram conferidos no <strong>Guia de Produtos Pediatria 2025 — Danone Health Academy</strong>. Para produtos Nestlé, foram utilizadas páginas oficiais <strong>Nestlé para Especialistas / Nestlé Health Science / Nestlé Nutre</strong>, consultadas em 11/08/2026.
+</div>
+<div class="box warn">
+<strong>Dados incompletos na fonte pública oficial:</strong> quando o fabricante não publica online a quantidade exata da colher ou uma tabela completa de preparo (ex.: algumas apresentações de Alfaré/Alfamino), o protocolo exibe <strong>“seguir rótulo”</strong> em vez de inferir uma diluição.
+</div>
+<div class="box danger">
+<strong>🚫 Não confundir:</strong> “comfort”, “sensitive”, fórmula parcialmente hidrolisada, fórmula sem lactose com proteína láctea íntegra, leite A2, leite de cabra/ovelha ou bebida vegetal comum <strong>não são substitutos terapêuticos para APLV</strong>.
+</div>
+<div class="box warn">
+<strong>⚠️ Segurança / recall:</strong> antes de dispensar fórmulas Nestlé, conferir alertas/lotes vigentes. Em 2026 houve recolhimento de <strong>lotes específicos</strong> de Alfamino e de algumas fórmulas infantis; o alerta não significa recolhimento de toda a marca.
+</div>
+
+</div>
+</details>
+</section>
+
+<section class="card">
+<h2>6) Regras rápidas</h2>
+<div class="box info"><strong>Sem história de APLV?</strong> O protocolo não abre investigação de sintomas alérgicos. Ele funciona apenas como módulo de aleitamento/complemento/fórmula.</div>
+<div class="box warn"><strong>Relato familiar ≠ diagnóstico.</strong> Evitar rótulo definitivo sem história compatível e estratégia diagnóstica adequada.</div>
+<div class="box danger"><strong>Não usar para tratamento de APLV:</strong> fórmula parcialmente hidrolisada, leite sem lactose, leite A2, leite de cabra/ovelha ou bebida vegetal comum.</div>
+<div class="box purple"><span class="purple-star">★</span> Complementos internacionais só aparecem quando não conflitam com SBP/ASBAI e ficam identificados visualmente.</div>
+</section>
+
+<section class="card">
+<h2>7) Fontes usadas no protocolo</h2>
+<div class="ref"><strong>🇧🇷 ASBAI + SBP — Atualização em Alergia Alimentar 2025</strong>
+Base principal para suspeita/diagnóstico, dieta de eliminação, reexposição/TPO, FeH, FAA, fórmula hidrolisada de arroz, soja, aleitamento e alimentação complementar.
+</div>
+<div class="ref"><strong>🇧🇷 SBP — Guia Prático de Alimentação da Criança de 0 a 5 anos</strong>
+Base para fórmula infantil quando aleitamento não é possível e para a tabela prática de volume/mamada e número de mamadas por idade.
+</div>
+<div class="ref"><strong>🇧🇷 Ministério da Saúde — alimentação da criança menor de 2 anos</strong>
+Base nacional complementar para aleitamento e introdução alimentar a partir de 6 meses.
+</div>
+<div class="ref purple"><strong><span class="purple-star">★</span> UpToDate 2026 / ESPGHAN</strong>
+Complementos pontuais, sem prevalecer sobre a recomendação brasileira.
+</div>
+<div class="ref"><strong>🏷️ Fichas técnicas comerciais — verificadas em 11/08/2026</strong>
+Danone: <b>Guia de Produtos Pediatria 2025 — Danone Health Academy</b>, com diluição, tabelas de preparo e informação nutricional das linhas Aptamil/Aptanutri/Pregomin/Neocate. Nestlé: páginas oficiais <b>Nestlé para Especialistas, Nestlé Health Science e Nestlé Nutre</b> para NAN, Alfaré e Alfamino. Novamil Rice: produto confirmado no canal oficial Biolab, porém a ficha pública completa de diluição não foi localizada nesta revisão. A recomendação clínica permanece por <b>classe</b>, não por marca.
+</div>
+<div class="ref"><strong>⚠️ Recall Nestlé 2026</strong>
+Foi acrescentado alerta para conferência de lotes porque a Nestlé Brasil publicou recolhimento preventivo de lotes específicos de fórmulas infantis, incluindo Alfamino e algumas linhas NAN. Conferir sempre informação sanitária vigente antes da dispensação.
+</div>
+</section>
+
+<footer>
+Ferramenta de apoio clínico. Volumes por mamada são referências práticas por faixa etária e devem ser ajustados ao crescimento, tolerância, alimentação global, condição clínica e instruções de preparo da fórmula escolhida. Prematuros, recém-nascidos com doença, baixo peso, distúrbios metabólicos ou necessidade de densidade calórica específica exigem prescrição individualizada.
+</footer>
+</div>
+
+<script>
+const FORMULAS = {
+  aptamil_premium1:{
+    nome:"Aptamil Premium 1", grupo:"Fórmula infantil padrão", idade:"0–6 meses", aplv:false,
+    classe:"Proteína láctea íntegra — NÃO indicada para APLV",
+    scoop:4.6, ratio:30,
+    uso:"1 medida rasa (≈4,6 g) para cada 30 mL de água previamente fervida.",
+    tabela:[
+      ["1ª–2ª semanas","90 mL","3","6"],
+      ["3ª–4ª semanas","120 mL","4","5"],
+      ["2º mês","150 mL","5","5"],
+      ["3º mês","180 mL","6","5"],
+      ["4º–5º mês","210 mL","7","4"]
+    ],
+    nutr:{kcal:"66 kcal",carb:"7,7 g",prot:"1,3 g",fat:"3,2 g",dha:"6,6 mg",fibra:"0,8 g",calcio:"67 mg",ferro:"0,71 mg"},
+    destaques:"Proteína intacta; GOS/FOS 9:1 (0,8 g/100 mL); DHA/ARA; colina; nucleotídeos.",
+    diferenca:"Dentro da linha Danone 0–6 m, tem a mesma diluição do Profutura 1. No guia 2025, Premium 1 fornece 66 kcal/100 mL e DHA 6,6 mg/100 mL; Profutura 1 fornece 68 kcal/100 mL e DHA 11 mg/100 mL. Isso descreve composição, não superioridade clínica.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 11–12."
+  },
+  aptamil_profutura1:{
+    nome:"Aptamil Profutura 1", grupo:"Fórmula infantil padrão", idade:"0–6 meses", aplv:false,
+    classe:"Proteína láctea íntegra — NÃO indicada para APLV",
+    scoop:4.6, ratio:30,
+    uso:"1 medida rasa (≈4,6 g) para cada 30 mL de água previamente fervida.",
+    tabela:[
+      ["1ª–2ª semanas","90 mL","3","6"],
+      ["3ª–4ª semanas","120 mL","4","5"],
+      ["2º mês","150 mL","5","5"],
+      ["3º mês","180 mL","6","5"],
+      ["4º–5º mês","210 mL","7","4"]
+    ],
+    nutr:{kcal:"68 kcal",carb:"7,4 g",prot:"1,3 g",fat:"3,5 g",dha:"11 mg",fibra:"0,8 g",calcio:"58 mg",ferro:"0,69 mg"},
+    destaques:"Proteína intacta; GOS/FOS 9:1 (0,8 g/100 mL); DHA/ARA; colina; estrutura lipídica específica descrita pelo fabricante.",
+    diferenca:"Mesma diluição e mesma tabela de mamadas do Premium 1. No guia 2025, apresenta maior DHA por 100 mL (11 vs 6,6 mg), gordura total 3,5 vs 3,2 g e 68 vs 66 kcal/100 mL. Não interpretar como vantagem clínica automática.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 15–16."
+  },
+  aptamil_premium2:{
+    nome:"Aptamil Premium 2", grupo:"Fórmula de seguimento", idade:"6–12 meses", aplv:false,
+    classe:"Proteína láctea íntegra — NÃO indicada para APLV",
+    scoop:5.0, ratio:30,
+    uso:"1 medida rasa (≈5,0 g) para cada 30 mL de água previamente fervida.",
+    tabela:[["6–12 meses","210 mL","7","3–4"]],
+    nutr:{kcal:"68 kcal",carb:"8,3 g",prot:"1,3 g",fat:"3,2 g",dha:"6,5 mg",fibra:"0,8 g",calcio:"74 mg",ferro:"0,81 mg"},
+    destaques:"GOS/FOS 9:1 (0,8 g/100 mL), DHA/ARA, colina e proteína intacta.",
+    diferenca:"Produto de seguimento para 6–12 meses; não substituir por Premium 1 apenas com base no nome da linha.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 13–14."
+  },
+  aptamil_profutura2:{
+    nome:"Aptamil Profutura 2", grupo:"Fórmula de seguimento", idade:"6–12 meses", aplv:false,
+    classe:"Proteína láctea íntegra — NÃO indicada para APLV",
+    scoop:5.0, ratio:30,
+    uso:"1 medida rasa (≈5,0 g) para cada 30 mL de água previamente fervida.",
+    tabela:[["6–12 meses","210 mL","7","3–4"]],
+    nutr:{kcal:"68 kcal",carb:"8,4 g",prot:"1,4 g",fat:"3,1 g",dha:"—",fibra:"0,8 g",calcio:"72 mg",ferro:"0,99 mg"},
+    destaques:"GOS/FOS 9:1; DHA/ARA; colina; estrutura lipídica específica descrita pelo fabricante.",
+    diferenca:"Mesma diluição de 1 medida/30 mL e mesma referência de 210 mL + 7 medidas, 3–4 vezes/dia que o Premium 2; composição nutricional não é idêntica.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 17–18."
+  },
+  aptanutri_premium:{
+    nome:"Aptanutri Premium", grupo:"Fórmula de primeira infância", idade:"1–3 anos", aplv:false,
+    classe:"Produto com proteína láctea — NÃO indicado para APLV",
+    scoop:4.9, ratio:30,
+    uso:"1 medida rasa (≈4,9 g) para cada 30 mL de água previamente fervida.",
+    tabela:[["1–3 anos","210 mL","7","2–3 copos/dia"]],
+    nutr:{kcal:"68 kcal",carb:"8,1 g",prot:"1,3 g",fat:"3,2 g",dha:"9 mg",fibra:"0,8 g",calcio:"73 mg",ferro:"1,1 mg"},
+    destaques:"GOS/FOS 9:1 (0,8 g/100 mL), DHA/ARA, colina.",
+    diferenca:"Faixa etária de primeira infância; não é fórmula para tratamento de APLV.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 25–26."
+  },
+  aptanutri_profutura:{
+    nome:"Aptanutri Profutura", grupo:"Fórmula de primeira infância", idade:"1–3 anos", aplv:false,
+    classe:"Produto com proteína láctea — NÃO indicado para APLV",
+    scoop:5.0, ratio:30,
+    uso:"1 medida rasa (≈5,0 g) para cada 30 mL de água previamente fervida.",
+    tabela:[["1–3 anos","210 mL","7","2–3 copos/dia"]],
+    nutr:{kcal:"67 kcal",carb:"8,7 g",prot:"1,3 g",fat:"2,8 g",dha:"—",fibra:"0,8 g",calcio:"71 mg",ferro:"1,1 mg"},
+    destaques:"GOS/FOS 9:1 e estrutura lipídica específica descrita pelo fabricante.",
+    diferenca:"Mesma referência de preparo 210 mL + 7 medidas do Aptanutri Premium, com composição nutricional diferente.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 27–28."
+  },
+  nan_comfor_0_6:{
+    nome:"NAN Comfor HMO 0–6", grupo:"Fórmula infantil padrão", idade:"0–6 meses", aplv:false,
+    classe:"Contém derivados do leite — NÃO indicada para APLV",
+    scoop:null, ratio:30,
+    uso:"Reconstituição oficial: 1 colher-medida rasa para cada 30 mL de água. Seguir o rótulo para a capacidade exata da colher da apresentação adquirida.",
+    tabela:[],
+    nutr:{kcal:"68 kcal",carb:"7,2 g",prot:"1,2 g",fat:"3,7 g",dha:"≈7 mg",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"Linha Comfor HMO; contém DHA/ARA e nucleotídeos. A ficha oficial consultada confirma reconstituição 1 medida/30 mL.",
+    diferenca:"Não é produto para APLV. A linha Comfor e a linha SupremePro têm composições distintas; não trocar medidas entre latas/produtos.",
+    fonte:"Nestlé para Especialistas — NAN Comfor HMO 0–6, consulta 11/08/2026."
+  },
+  nan_supreme_0_6:{
+    nome:"NAN SupremePro 0–6", grupo:"Fórmula infantil padrão", idade:"0–6 meses", aplv:false,
+    classe:"Derivados do leite; proteína do soro parcialmente hidrolisada — NÃO é fórmula terapêutica para APLV",
+    scoop:4.37, ratio:30,
+    uso:"Capacidade da colher: 4,37 g. A página oficial orienta higienização, água previamente fervida resfriada por cerca de 15 min até ~70°C, adição do pó e resfriamento antes da oferta.",
+    tabela:[],
+    nutr:{kcal:"67 kcal",carb:"7,8 g",prot:"1,2 g",fat:"3,4 g",dha:"presente",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"4 HMOs (2'-FL, 3'-SL, 6'-SL e LNT), DHA/ARA, nucleotídeos; proteína do soro parcialmente hidrolisada.",
+    diferenca:"Apesar da proteína parcialmente hidrolisada, NÃO deve ser usada para tratar APLV. A hidrólise parcial não equivale a FeH.",
+    fonte:"Nestlé para Especialistas — NAN SupremePro 0–6, consulta 11/08/2026."
+  },
+  nan_comfor_6_12:{
+    nome:"NAN Comfor HMO 6–12", grupo:"Fórmula de seguimento", idade:"6–12 meses", aplv:false,
+    classe:"Contém derivados do leite — NÃO indicada para APLV",
+    scoop:4.37, ratio:30,
+    uso:"1 colher-medida rasa (4,37 g) para cada 30 mL de água. A página oficial orienta preparo higiênico e água previamente fervida conforme instruções do fabricante.",
+    tabela:[],
+    nutr:{kcal:"68 kcal",carb:"8,2 g",prot:"1,2 g",fat:"3,3 g",dha:"presente",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"DHA/ARA, nucleotídeos e HMO.",
+    diferenca:"É fórmula de seguimento 6–12 meses; não usar a colher de outra fase/linha.",
+    fonte:"Nestlé para Especialistas — NAN Comfor HMO 6–12, consulta 11/08/2026."
+  },
+  nan_supreme_6_12:{
+    nome:"NAN SupremePro 6–12", grupo:"Fórmula de seguimento", idade:"6–12 meses", aplv:false,
+    classe:"Derivados do leite — NÃO indicada para APLV",
+    scoop:4.54, ratio:30,
+    uso:"Capacidade da colher: 4,54 g. A página oficial orienta água previamente fervida resfriada por cerca de 15 min até ~70°C e preparo conforme a quantidade indicada no rótulo.",
+    tabela:[],
+    nutr:{kcal:"67 kcal",carb:"8,0 g",prot:"1,5 g",fat:"3,2 g",dha:"7,8 mg",fibra:"—",calcio:"68 mg",ferro:"1,0 mg"},
+    destaques:"4 HMOs, DHA/ARA, nucleotídeos e proteína do soro parcialmente hidrolisada.",
+    diferenca:"A medida (4,54 g) difere da Comfor 6–12 (4,37 g): não intercambiar colheres.",
+    fonte:"Nestlé para Especialistas — NAN SupremePro 6–12, consulta 11/08/2026."
+  },
+  nanlac_comfor:{
+    nome:"NANLAC Comfor", grupo:"Fórmula de primeira infância", idade:"1–3 anos", aplv:false,
+    classe:"Produto com derivados do leite — NÃO indicado para APLV",
+    scoop:4.7, ratio:30,
+    uso:"Reconstituição oficial: 14,1 g de pó + 90 mL de água = 100 mL; colher de 4,7 g (equivale a 1 medida/30 mL).",
+    tabela:[],
+    nutr:{kcal:"67 kcal",carb:"8,5 g",prot:"1,2 g",fat:"3,1 g",dha:"—",fibra:"GOS/FOS",calcio:"85 mg",ferro:"—"},
+    destaques:"GOS/FOS; produto de primeira infância.",
+    diferenca:"A medida é própria do produto. Não é equivalente a fórmula de lactente 0–6/6–12.",
+    fonte:"Nestlé para Especialistas — NANLAC Comfor, consulta 11/08/2026."
+  },
+  nanlac_supreme:{
+    nome:"NANLAC SupremePro", grupo:"Fórmula de primeira infância", idade:"1–3 anos", aplv:false,
+    classe:"Produto com derivados do leite — NÃO indicado para APLV",
+    scoop:4.7, ratio:30,
+    uso:"Reconstituição oficial: 14,1 g de pó + 90 mL de água = 100 mL; colher de 4,7 g.",
+    tabela:[],
+    nutr:{kcal:"—",carb:"—",prot:"—",fat:"—",dha:"presente",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"4 HMOs (2'-FL, 3'-SL, 6'-SL e LNT) e nutrientes próprios da linha SupremePro.",
+    diferenca:"Produto 1–3 anos; não confundir com NAN SupremePro para lactentes.",
+    fonte:"Nestlé para Especialistas — NANLAC SupremePro, consulta 11/08/2026."
+  },
+  aptamil_pepti:{
+    nome:"Aptamil Pepti HMO", grupo:"FeH", idade:"0–36 meses", aplv:true,
+    classe:"100% proteína extensamente hidrolisada — APLV leve/moderada em situações apropriadas",
+    scoop:4.5, ratio:30,
+    uso:"1 medida rasa (≈4,5 g) para cada 30 mL de água previamente fervida.",
+    tabela:[
+      ["1ª–2ª semanas","90 mL","3","6"],
+      ["3ª–4ª semanas","120 mL","4","5"],
+      ["2º mês","150 mL","5","5"],
+      ["3º mês","180 mL","6","5"],
+      ["4º–5º mês","210 mL","7","4"],
+      ["≥6º mês","210 mL","7","3–4"]
+    ],
+    nutr:{kcal:"69 kcal",carb:"7,5 g",prot:"1,6 g",fat:"3,5 g",dha:"11 mg",fibra:"0,8 g",calcio:"47 mg",ferro:"0,75 mg"},
+    destaques:"FeH; contém lactose; GOS/FOS 0,8 g/100 mL + HMO 2'-FL; DHA/ARA.",
+    diferenca:"Em comparação ao Pregomin Pepti, contém lactose e prebióticos/HMO; Pregomin Pepti é sem lactose e contém maior proporção de TCM, sendo posicionado pelo fabricante para manifestações gastrointestinais/má absorção.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 73–74."
+  },
+  pregomin_pepti:{
+    nome:"Pregomin Pepti", grupo:"FeH sem lactose", idade:"0–36 meses", aplv:true,
+    classe:"100% proteína do soro extensamente hidrolisada — APLV leve/moderada com manifestações GI",
+    scoop:4.3, ratio:30,
+    uso:"1 medida rasa (≈4,3 g) para cada 30 mL de água previamente fervida.",
+    tabela:[
+      ["1ª–2ª semanas","90 mL","3","6"],
+      ["3ª–4ª semanas","120 mL","4","5"],
+      ["2º mês","150 mL","5","5"],
+      ["3º mês","180 mL","6","5"],
+      ["4º–5º mês","210 mL","7","4"],
+      ["≥6º mês","210 mL","7","3–4"]
+    ],
+    nutr:{kcal:"66 kcal",carb:"6,9 g",prot:"1,8 g",fat:"3,5 g",dha:"6,7 mg",fibra:"0 g",calcio:"50 mg",ferro:"0,77 mg"},
+    destaques:"Sem lactose; 100% proteína extensamente hidrolisada do soro; 50% TCM; DHA/ARA.",
+    diferenca:"Mais direcionado pelo fabricante aos quadros com manifestações gastrointestinais/má absorção. Não é FAA: ainda é FeH.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 69–70."
+  },
+  neocate_lcp:{
+    nome:"Neocate LCP", grupo:"FAA", idade:"0–36 meses", aplv:true,
+    classe:"100% aminoácidos livres — APLV grave/intensa/combinada ou situações especiais",
+    scoop:4.6, ratio:30,
+    uso:"1 medida (≈4,6 g) por 30 mL de água. O volume final é maior que a água inicial.",
+    tabela:[
+      ["Preparo","30 mL","1","≈35 mL final"],
+      ["Preparo","60 mL","2","≈70 mL final"],
+      ["Preparo","90 mL","3","≈100 mL final"],
+      ["Preparo","120 mL","4","≈140 mL final"],
+      ["Preparo","150 mL","5","≈170 mL final"],
+      ["Preparo","180 mL","6","≈200 mL final"],
+      ["Preparo","210 mL","7","≈240 mL final"]
+    ],
+    nutr:{kcal:"67 kcal",carb:"7,4 g",prot:"1,9 g (equiv.)",fat:"3,4 g",dha:"11 mg",fibra:"0 g",calcio:"77 mg",ferro:"0,74 mg"},
+    destaques:"Sem lactose; sem leite/produtos lácteos; 100% aminoácidos livres; DHA/ARA.",
+    diferenca:"É FAA, portanto não tem proteína láctea residual. Difere das FeH (Aptamil Pepti/Pregomin/Alfaré), que ainda contêm peptídeos hidrolisados.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 67–68."
+  },
+  alfare:{
+    nome:"Alfaré", grupo:"FeH sem lactose", idade:"0–36 meses", aplv:true,
+    classe:"Proteína extensamente hidrolisada — restrição de lactose / necessidades dietoterápicas específicas",
+    scoop:null, ratio:null,
+    uso:"A página oficial pública consultada orienta seguir o rótulo para o modo de preparo; por segurança, o protocolo não infere quantidade de medidas.",
+    tabela:[],
+    nutr:{kcal:"68 kcal",carb:"7,4 g",prot:"—",fat:"—",dha:"11 mg",fibra:"0 g",calcio:"68 mg",ferro:"—"},
+    destaques:"Sem lactose; proteína extensamente hidrolisada; contém TCM e os oligossacarídeos 2'-FL e LNnT; contém derivados do leite e soja.",
+    diferenca:"FeH sem lactose. Diferentemente de uma FAA, contém proteína do leite extensamente hidrolisada.",
+    fonte:"Nestlé Health Science / Nestlé para Especialistas — Alfaré, consulta 11/08/2026."
+  },
+  alfamino:{
+    nome:"Alfamino HMO", grupo:"FAA", idade:"0–36 meses", aplv:true,
+    classe:"100% aminoácidos livres — necessidades dietoterápicas específicas / APLV grave conforme indicação clínica",
+    scoop:null, ratio:null,
+    uso:"Página oficial: lavar mãos/equipamentos, esterilizar por 5 min, ferver água potável por 5 min, aguardar ~15 min até cerca de 70°C, adicionar água e medidas conforme o rótulo, agitar e resfriar para ~40°C antes de oferecer. A quantidade exata da medida deve ser conferida no rótulo da lata.",
+    tabela:[],
+    nutr:{kcal:"66 kcal",carb:"7,3 g",prot:"aminoácidos livres",fat:"—",dha:"presente",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"Sem lactose; aminoácidos livres; DHA/ARA; HMO 2'-FL e LNnT; TCM; β-palmitato. Contém fenilalanina.",
+    diferenca:"É FAA. A página oficial orienta oferecer preferencialmente logo após o preparo; se absolutamente necessário, produto reconstituído <5°C por no máximo 24 h; lata aberta em até 3 semanas.",
+    fonte:"Nestlé Health Science / Nestlé Nutre — Alfamino HMO, consulta 11/08/2026."
+  },
+  novamil_rice:{
+    nome:"Novamil Rice", grupo:"Proteína de arroz extensamente hidrolisada", idade:"lactentes/crianças conforme apresentação", aplv:true,
+    classe:"Fórmula à base de proteína de arroz extensamente hidrolisada — alternativa em casos selecionados",
+    scoop:null, ratio:null,
+    uso:"A ficha técnica completa do fabricante com medida/diluição não foi localizada publicamente nesta revisão. Conferir o rótulo antes de prescrever; o protocolo não infere a diluição.",
+    tabela:[],
+    nutr:{kcal:"—",carb:"—",prot:"proteína de arroz hidrolisada",fat:"—",dha:"—",fibra:"—",calcio:"—",ferro:"—"},
+    destaques:"Não confundir com bebida vegetal de arroz.",
+    diferenca:"Alternativa às FeH derivadas de proteína do leite em situações selecionadas; a diretriz clínica brasileira aceita fórmula hidrolisada de arroz como opção, mas não há aqui recomendação por marca.",
+    fonte:"Produto confirmado no canal oficial Biolab; ficha técnica pública completa não localizada em 11/08/2026."
+  },
+  aptamil_soja:{
+    nome:"Aptamil Soja", grupo:"Soja", idade:"fórmula infantil; uso em APLV selecionado a partir de 6 m segundo fabricante", aplv:true,
+    classe:"100% proteína isolada de soja — NÃO é primeira escolha para dieta diagnóstica de APLV",
+    scoop:4.6, ratio:30,
+    uso:"1 medida rasa (≈4,6 g) para cada 30 mL de água previamente fervida.",
+    tabela:[
+      ["1ª–2ª semanas","90 mL","3","6"],
+      ["3ª–4ª semanas","120 mL","4","5"],
+      ["2º mês","150 mL","5","5"],
+      ["3º mês","180 mL","6","5"],
+      ["4º–5º mês","210 mL","7","4"],
+      ["≥6º mês","210 mL","7","3–4"]
+    ],
+    nutr:{kcal:"69 kcal",carb:"8,3 g",prot:"1,7 g",fat:"3,2 g",dha:"—",fibra:"0 g",calcio:"66 mg",ferro:"1,1 mg"},
+    destaques:"Isenta de proteínas lácteas e lactose; proteína 100% isolada de soja.",
+    diferenca:"O fabricante cita APLV IgE mediada a partir de 6 meses; no protocolo, prevalece ASBAI/SBP: soja não é primeira escolha para eliminação diagnóstica e deve ser individualizada.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 83–84."
+  },
+  nan_soja:{
+    nome:"NAN Soja", grupo:"Soja", idade:"fórmula infantil/de seguimento conforme indicação", aplv:true,
+    classe:"Proteína de soja — uso selecionado; NÃO é primeira escolha para dieta diagnóstica de APLV",
+    scoop:4.3, ratio:30,
+    uso:"Reconstituição oficial: 13 g de pó + 90 mL de água = 100 mL; colher de 4,3 g (≈1 medida/30 mL). Seguir o preparo higiênico do fabricante.",
+    tabela:[],
+    nutr:{kcal:"67 kcal",carb:"6,8 g",prot:"1,8 g",fat:"3,6 g",dha:"13 mg",fibra:"—",calcio:"70 mg",ferro:"0,75 mg"},
+    destaques:"Fórmula à base de soja, sem finalidade de primeira escolha na APLV.",
+    diferenca:"A escolha depende de idade, fenótipo e tolerância à soja; não selecionar apenas por ser 'sem leite'.",
+    fonte:"Nestlé para Especialistas — NAN Soja, consulta 11/08/2026."
+  },
+  aptanutri_soja:{
+    nome:"Aptanutri Soja", grupo:"Soja", idade:"1–3 anos", aplv:true,
+    classe:"Fórmula à base de proteína de soja — situações selecionadas",
+    scoop:4.3, ratio:30,
+    uso:"1 medida rasa (≈4,3 g) para cada 30 mL de água previamente fervida.",
+    tabela:[["1–3 anos","210 mL","7","2–3 copos/dia"]],
+    nutr:{kcal:"66 kcal",carb:"7,0 g",prot:"1,6 g",fat:"3,5 g",dha:"—",fibra:"0 g",calcio:"51 mg",ferro:"0,79 mg"},
+    destaques:"Produto de soja para primeira infância.",
+    diferenca:"Faixa etária 1–3 anos; não substituir por Aptamil Soja sem conferir fase/medida.",
+    fonte:"Danone Health Academy — Guia de Produtos Pediatria 2025, p. 85–86."
+  }
+};
+
+
+function faixaProduto(id,f){
+  // Age limits are encoded conservatively from the product names/technical sheets used in the protocol.
+  if(["aptamil_premium1","aptamil_profutura1","nan_comfor_0_6","nan_supreme_0_6"].includes(id)) return [0,6];
+  if(["aptamil_premium2","aptamil_profutura2","nan_comfor_6_12","nan_supreme_6_12"].includes(id)) return [6,12];
+  if(["aptanutri_premium","aptanutri_profutura","nanlac_comfor","nanlac_supreme","aptanutri_soja"].includes(id)) return [12,36];
+  if(["aptamil_pepti","pregomin_pepti","alfare","neocate_lcp","alfamino"].includes(id)) return [0,36];
+  if(id==="aptamil_soja") return [6,12]; // uso em APLV selecionado a partir de 6 m no material do fabricante
+  if(id==="nan_soja") return [6,12];     // conservador no fluxo prático
+  if(id==="novamil_rice") return [0,36];
+  return [0,999];
+}
+
+function ehFormulaPadrao(id,f){
+  return f && f.aplv===false;
+}
+
+function ehFormulaAplv(id,f){
+  return f && f.aplv===true;
+}
+
+function grupoAplv(f){
+  const g=(f.grupo||"").toLowerCase();
+  if(g.includes("faa")) return "FAA — aminoácidos";
+  if(g.includes("feh")) return "FeH — extensamente hidrolisada";
+  if(g.includes("arroz")) return "Hidrolisada de arroz";
+  if(g.includes("soja")) return "Soja — situações selecionadas";
+  return "Outras opções";
+}
+
+function grupoPadrao(id){
+  const [min,max]=faixaProduto(id,FORMULAS[id]);
+  if(min===0 && max===6) return "0–6 meses — fórmula de partida";
+  if(min===6 && max===12) return "6–12 meses — fórmula de seguimento";
+  if(min===12 && max===36) return "1–3 anos";
+  return "Outras";
+}
+
+function produtoCompatívelComIdade(id,idade){
+  const [min,max]=faixaProduto(id,FORMULAS[id]);
+  if(!Number.isFinite(idade)) return true;
+  return idade>=min && idade<max;
+}
+
+function atualizarOpcoesFormula(){
+  const sel=document.getElementById("formulaEscolhida");
+  if(!sel) return;
+
+  const atual=sel.value;
+  const motivo=v("motivo");
+  const idade=idadeMeses();
+  const temIdade=(Number(v("idade")||0)>0 || Number(v("dias")||0)>0);
+
+  const grupos={};
+  Object.entries(FORMULAS).forEach(([id,f])=>{
+    if(motivo==="formula" && !ehFormulaPadrao(id,f)) return;
+    if(motivo==="aplv" && !ehFormulaAplv(id,f)) return;
+    if(temIdade && !produtoCompatívelComIdade(id,idade)) return;
+
+    const grupo = motivo==="formula" ? grupoPadrao(id) : grupoAplv(f);
+    (grupos[grupo] ||= []).push([id,f]);
+  });
+
+  sel.innerHTML='<option value="">— Selecione uma opção compatível —</option>';
+
+  const ordem = motivo==="formula"
+    ? ["0–6 meses — fórmula de partida","6–12 meses — fórmula de seguimento","1–3 anos","Outras"]
+    : ["FeH — extensamente hidrolisada","FAA — aminoácidos","Hidrolisada de arroz","Soja — situações selecionadas","Outras opções"];
+
+  ordem.forEach(g=>{
+    if(!grupos[g] || !grupos[g].length) return;
+    const og=document.createElement("optgroup");
+    og.label=g;
+    grupos[g].forEach(([id,f])=>{
+      const op=document.createElement("option");
+      op.value=id;
+      op.textContent=f.nome;
+      og.appendChild(op);
+    });
+    sel.appendChild(og);
+  });
+
+  if([...sel.options].some(o=>o.value===atual)) sel.value=atual;
+  else sel.value="";
+
+  mostrarFormula();
+}
+
+function atualizarRotaFormula(){
+  const rota=document.getElementById("rotaFormula");
+  if(!rota) return;
+  const idade=idadeMeses();
+  const temIdade=(Number(v("idade")||0)>0 || Number(v("dias")||0)>0);
+
+  if(v("motivo")==="formula"){
+    rota.className="box good";
+    rota.innerHTML="<strong>Fluxo atual:</strong> complemento/fórmula sem suspeita de APLV → exibindo somente fórmulas padrão" +
+      (temIdade ? " compatíveis com a idade informada." : ". Informe a idade para filtrar por fase.");
+  }else{
+    rota.className="box warn";
+    rota.innerHTML="<strong>Fluxo atual:</strong> APLV prévia/suspeita → exibindo somente fórmulas terapêuticas/especiais pertinentes ao protocolo (FeH, FAA, hidrolisada de arroz e soja em situações selecionadas)" +
+      (temIdade ? " compatíveis com a idade informada." : ". Informe a idade para filtrar por faixa etária.");
+  }
+}
+
+function atualizarFluxo(){
+  document.getElementById('triagemAplv').classList.toggle('hidden',v('motivo')!=='aplv');
+  const res=document.getElementById("resultado"); if(res) res.classList.add("hidden");
+  atualizarRotaFormula();
+  atualizarOpcoesFormula();
+}
+
+function compatibilidadeFormula(f,motivo){
+  let warnings=[];
+  if(!f) return warnings;
+  if(motivo==='aplv' && f.aplv===false) warnings.push("⚠️ Produto com proteína láctea/linha padrão: NÃO usar como tratamento de APLV.");
+  if(motivo!=='aplv' && f.aplv===true) warnings.push("⚠️ Fórmula terapêutica/especial: não há indicação automática sem uma condição clínica compatível.");
+  const idade=idadeMeses();
+  if(f.nome.includes(" 1") && idade>=6 && !f.nome.includes("LCP")) warnings.push("⚠️ A idade informada é ≥6 meses; confira se a fase 1 ainda é apropriada.");
+  if((f.nome.includes(" 2") || f.nome.includes("6–12")) && (idade<6 || idade>=12)) warnings.push("⚠️ A idade informada não corresponde à faixa 6–12 meses deste produto.");
+  if((f.nome.includes("Aptanutri") || f.nome.includes("NANLAC")) && idade<12) warnings.push("⚠️ Produto de primeira infância; idade informada <12 meses.");
+  return warnings;
+}
+
+function tabelaFormulaHTML(rows){
+  if(!rows || !rows.length) return `<div class="small">Tabela de mamadas/preparo por idade não publicada de forma completa na fonte oficial consultada; seguir o rótulo.</div>`;
+  let h=`<div class="tablewrap"><table class="ftable"><thead><tr><th>Faixa / preparo</th><th>Água</th><th>Medidas</th><th>Referência do fabricante</th></tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`});
+  return h+`</tbody></table></div>`;
+}
+
+function mostrarFormula(){
+  const id=v('formulaEscolhida'), box=document.getElementById('fichaFormula');
+  if(!id || !FORMULAS[id]){box.classList.add('hidden');box.innerHTML='';return}
+  const f=FORMULAS[id], motivo=v('motivo');
+  const n=f.nutr||{};
+  const warnings=compatibilidadeFormula(f,motivo);
+  let html=`<h3>${f.nome}</h3>
+    <div><span class="badgeok">${f.grupo}</span> <span class="pill">${f.idade}</span></div>
+    <div class="box ${f.aplv?'good':'info'}"><strong>Classe / papel:</strong> ${f.classe}</div>`;
+  if(warnings.length) html+=`<div class="box danger">${warnings.join("<br>")}</div>`;
+  html+=`<div class="techgrid">
+    <div class="metric"><b>Diluição / modo de uso</b>${f.uso}</div>
+    <div class="metric"><b>Características</b>${f.destaques}</div>
+    <div class="metric"><b>Diferença prática</b>${f.diferenca}</div>
+  </div>
+  <h3 style="margin-top:12px">Informação nutricional — por 100 mL reconstituídos</h3>
+  <div class="techgrid">
+    <div class="metric"><b>Energia</b>${n.kcal||"—"}</div>
+    <div class="metric"><b>Carboidratos</b>${n.carb||"—"}</div>
+    <div class="metric"><b>Proteína / equivalente</b>${n.prot||"—"}</div>
+    <div class="metric"><b>Gorduras</b>${n.fat||"—"}</div>
+    <div class="metric"><b>DHA</b>${n.dha||"—"}</div>
+    <div class="metric"><b>Fibra / prebióticos</b>${n.fibra||"—"}</div>
+    <div class="metric"><b>Cálcio</b>${n.calcio||"—"}</div>
+    <div class="metric"><b>Ferro</b>${n.ferro||"—"}</div>
+  </div>
+  <h3 style="margin-top:12px">Tabela de preparo/oferta do fabricante</h3>
+  ${tabelaFormulaHTML(f.tabela)}
+  <div class="sourcebox"><strong>Fonte técnica do produto:</strong> ${f.fonte}<br>
+  <strong>Regra:</strong> conferir o rótulo da embalagem adquirida antes de orientar a família, pois fabricante, apresentação e colher podem ser atualizados.</div>`;
+  box.innerHTML=html; box.classList.remove('hidden');
+}
+
+function v(id){return document.getElementById(id).value}
+function sx(){return [...document.querySelectorAll('.sx:checked')].map(x=>x.value)}
+function atualizarTriagem(){ atualizarFluxo(); }
+function idadeMeses(){
+ const m=Number(v('idade')||0), d=Number(v('dias')||0);
+ return m>0 ? m : d/30.44;
+}
+function faixaSBP(m){
+ if(m < 1) return {rotulo:'0 a 30 dias', min:60,max:120,nmin:6,nmax:8};
+ if(m < 2) return {rotulo:'30 a 60 dias', min:120,max:150,nmin:6,nmax:8};
+ if(m < 3) return {rotulo:'2 a 3 meses', min:150,max:180,nmin:5,nmax:6};
+ if(m < 6) return {rotulo:'3 a 6 meses', min:180,max:200,nmin:5,nmax:6};
+ return {rotulo:'acima de 6 meses', min:180,max:200,nmin:2,nmax:3};
+}
+function gerar(){
+ const m=idadeMeses(), peso=Number(v('peso')||0), motivo=v('motivo'), feed=v('feeding'),
+ comp=v('complemento'), especial=v('especial')==='sim', objetivo=v('objetivo'),
+ tabela=v('usarTabela')==='sim', sintomas=sx(), formulaId=v('formulaEscolhida'), formula=FORMULAS[formulaId]||null;
+
+ let status='nao', tempo='incerto', grav='leve', fpies=false, longa=false, falha=false, asma=false, recente=false;
+ if(motivo==='aplv'){
+   status=v('status'); tempo=v('tempo'); grav=v('gravidade'); fpies=v('fpies')==='sim';
+   longa=v('diarreiaLonga')==='sim'; falha=v('falhaFeh')==='sim'; asma=v('asma')==='sim'; recente=v('reacaoRecente')==='sim';
+ }
+
+ const imediatos=sintomas.some(x=>['urticaria','resp','vomito_imediato','anafilaxia'].includes(x));
+ const tardios=sintomas.some(x=>['sangue','diarreia','vomito_tardio','crescimento','eczema','refluxo','colica','constipacao'].includes(x));
+ const altoRisco=grav==='grave'||sintomas.includes('anafilaxia')||sintomas.includes('resp')||fpies||asma||recente;
+ let fenotipo='SEM INVESTIGAÇÃO DE APLV NESTA CONSULTA';
+ if(motivo==='aplv'){
+   fenotipo='SUSPEITA DE APLV — MECANISMO A DEFINIR';
+   if((tempo==='imediato'||imediatos) && !tardios) fenotipo='SUSPEITA DE APLV IgE MEDIADA';
+   else if((tempo==='tardio'||tardios) && !imediatos) fenotipo='SUSPEITA DE APLV NÃO IgE MEDIADA';
+   else if(imediatos&&tardios) fenotipo='SUSPEITA DE MECANISMO MISTO / APRESENTAÇÃO COMBINADA';
+ }
+
+ let out=`<div class="box info"><strong>CLASSIFICAÇÃO:</strong> ${fenotipo}`;
+ if(peso) out+=` • ${peso.toFixed(2).replace('.',',')} kg`;
+ if(m>0) out+=` • ${m<1?Math.round(m*30.44)+' dias':m.toFixed(1).replace('.',',')+' meses'}`;
+ out+=`</div>`;
+
+ if(formula){
+   out+=`<h3>Fórmula selecionada</h3><div class="box info"><strong>${formula.nome}</strong> — ${formula.classe}<br><strong>Diluição:</strong> ${formula.uso}<br><span class="small">Fonte técnica: ${formula.fonte}</span></div>`;
+   const fw=compatibilidadeFormula(formula,motivo);
+   if(fw.length) out+=`<div class="box danger">${fw.join("<br>")}</div>`;
+ }
+
+ if(motivo==='aplv'){
+   out+=`<h3>APLV — investigação/conduta</h3><ul>`;
+   if(status==='relato') out+=`<li><strong>APLV apenas relatada:</strong> não considerar diagnóstico confirmado sem reconstruir história de exposição, temporalidade, reprodutibilidade e manifestações.</li>`;
+   if(imediatos||tempo==='imediato') out+=`<li>Padrão imediato: considerar IgE específica e/ou teste cutâneo como apoio, sem diagnosticar apenas pela sensibilização.</li>`;
+   out+=`<li>Quando seguro: dieta de eliminação diagnóstica por período limitado (em geral 2–4 semanas) e reexposição programada para confirmação.</li>`;
+   if(altoRisco) out+=`<li><strong>Reexposição domiciliar NÃO recomendada.</strong> Programar TPO/reexposição em ambiente de saúde preparado e com equipe treinada.</li>`;
+   else out+=`<li>Forma não-IgE leve/moderada selecionada: reintrodução pode ser individualizada e, quando apropriado, orientada em domicílio.</li>`;
+   out+=`</ul>`;
+ }
+
+
+ out+=`<h3>Recomendação de classe</h3>`;
+ if(motivo==='aplv'){
+   if(altoRisco||falha){
+     out+=`<div class="box danger"><strong>Classe preferida neste cenário: FAA.</strong> Exemplos na biblioteca: Neocate LCP / Alfamino HMO. A escolha da marca não substitui a indicação pela classe.</div>`;
+   } else {
+     out+=`<div class="box good"><strong>Classe preferida na maioria dos quadros leves/moderados: FeH.</strong> Exemplos na biblioteca: Aptamil Pepti HMO / Pregomin Pepti / Alfaré.`;
+     if(longa) out+=` Como há diarreia prolongada, uma FeH sem lactose pode ser particularmente pertinente se houver deficiência secundária de lactase.`;
+     out+=`</div>`;
+   }
+ } else {
+   out+=`<div class="box info"><strong>Sem APLV:</strong> utilizar fórmula padrão adequada à fase etária se houver indicação de complemento/substituição.</div>`;
+ }
+
+ out+=`<h3>Aleitamento e necessidade de complemento</h3><ul>`;
+ if(feed==='ame'||feed==='misto'){
+   out+=`<li><strong>Priorizar manutenção do aleitamento materno</strong> sempre que possível e clinicamente adequado.</li>`;
+   out+=`<li>Se a família relata que o leite materno parece “insuficiente”, não concluir hipogalactia apenas pela frequência das mamadas. Correlacionar com pega/transferência de leite, diurese, ganho ponderal e curva de crescimento antes de indicar complemento.</li>`;
+ }
+ if(comp==='nao' && feed==='ame') out+=`<li>Sem indicação informada de complemento neste momento.</li>`;
+ if(comp==='sim'||feed==='formula'||feed==='misto'){
+   if(motivo==='aplv'){
+      if(altoRisco||falha){
+        out+=`<li><strong>Classe sugerida: fórmula de aminoácidos (FAA)</strong> pela presença de alto risco/falha de FeH — confirmar individualmente.</li>`;
+      }else{
+        out+=`<li><strong>Classe sugerida: fórmula extensamente hidrolisada (FeH)</strong> como primeira escolha.</li>`;
+        out+=`<li>Fórmula hidrolisada de arroz pode ser alternativa em situação apropriada.</li>`;
+      }
+      if(longa) out+=`<li>Diarreia prolongada: considerar FeH sem lactose temporariamente se houver suspeita de deficiência secundária de lactase.</li>`;
+   } else {
+      out+=`<li><strong>Sem suspeita de APLV:</strong> se a complementação for realmente necessária, utilizar fórmula infantil adequada à faixa etária; fórmula terapêutica de APLV não está indicada apenas por baixa produção percebida de leite.</li>`;
+   }
+ }
+ out+=`</ul>`;
+
+ if(tabela && m>=0 && !especial){
+   const f=faixaSBP(m);
+   const dmin=f.min*f.nmin, dmax=f.max*f.nmax;
+   out+=`<h3>Referência prática de volume — SBP</h3>`;
+   out+=`<div class="box good"><strong>${f.rotulo}:</strong> ${f.min}–${f.max} mL por mamada, ${f.nmin}–${f.nmax} mamadas/dia.`;
+   out+=`<br><span class="small">Faixa teórica diária resultante da própria tabela: aproximadamente ${dmin}–${dmax} mL/dia. Não significa meta rígida nem obrigação de oferecer o limite superior.</span></div>`;
+} else if(especial){
+   out+=`<div class="box danger"><strong>Condição especial/prematuridade:</strong> não aplicar automaticamente a tabela padrão. Individualizar volume, densidade calórica e metas nutricionais.</div>`;
+ }
+
+ const ve=Number(v('volumeEscolhido')||0), ne=Number(v('mamadasEscolhidas')||0);
+ if(ve>0 && ne>0){
+   out+=`<h3>Prescrição orientativa preenchida</h3>`;
+   let nomeRx=formula?formula.nome:((motivo==='aplv')?((altoRisco||falha)?'FÓRMULA DE AMINOÁCIDOS (FAA)':'FÓRMULA EXTENSAMENTE HIDROLISADA (FeH)'):'FÓRMULA INFANTIL ADEQUADA À FAIXA ETÁRIA');
+   let preparo='';
+   if(formula && formula.ratio && formula.scoop){
+      const medidas=ve/formula.ratio;
+      if(Math.abs(medidas-Math.round(medidas))<0.001){
+        preparo=`PREPARAR CADA MAMADA COM ${ve} ML DE ÁGUA + ${Math.round(medidas)} MEDIDA(S) RASA(S) DA COLHER DO PRÓPRIO PRODUTO.`;
+      } else {
+        preparo=`O VOLUME DE ÁGUA INFORMADO (${ve} ML) NÃO É MÚLTIPLO DA DILUIÇÃO OFICIAL DE 1 MEDIDA/${formula.ratio} ML. AJUSTAR PARA UM VOLUME COMPATÍVEL COM O RÓTULO; NÃO FRACIONAR A MEDIDA POR ESTIMATIVA.`;
+      }
+   } else if(formula){
+      preparo=`PREPARAR EXATAMENTE CONFORME O RÓTULO DE ${formula.nome}. A FONTE OFICIAL PÚBLICA CONSULTADA NÃO PERMITIU EMBUTIR COM SEGURANÇA A QUANTIDADE EXATA DA COLHER.`;
+   } else {
+      preparo=`PREPARAR EXATAMENTE CONFORME A DILUIÇÃO DO FABRICANTE DO PRODUTO ESCOLHIDO.`;
+   }
+
+   out+=`<div class="formulaRx">USO ORAL
+
+${nomeRx}
+
+${preparo}
+OFERTAR ${ne} VEZ(ES) AO DIA, CONFORME PRESCRIÇÃO INDIVIDUAL E SINAIS DE FOME/SACIEDADE.
+
+NÃO CONCENTRAR, DILUIR OU TROCAR A COLHER-MEDIDA ENTRE PRODUTOS.
+DESCARTAR SOBRAS DA MAMADA E SEGUIR AS REGRAS DE HIGIENE/CONSERVAÇÃO DO RÓTULO.
+REAVALIAR CRESCIMENTO, TOLERÂNCIA E NECESSIDADE DE COMPLEMENTAÇÃO.${formula?`\n\nFONTE DO PREPARO: ${formula.fonte}`:''}</div>`;
+ } else {
+   out+=`<div class="box warn"><strong>Para gerar prescrição individual:</strong> escolha a fórmula e preencha “água usada no preparo” + “mamadas/porções ao dia”. A diluição só será calculada automaticamente quando estiver confirmada na fonte técnica do produto.</div>`;
+ }
+
+ if(m>=6){
+   out+=`<h3>Alimentação complementar</h3><div class="box good">A partir de 6 meses: iniciar/manter alimentação complementar conforme desenvolvimento. Na APLV, evitar PLV enquanto indicada, mas não atrasar automaticamente os demais alimentos potencialmente alergênicos.</div>`;
+ } else {
+   out+=`<h3>Alimentação complementar</h3><div class="box warn">Menor de 6 meses: se a família refere que o bebê mama muito ou que o leite materno parece insuficiente, isso isoladamente não indica introdução precoce de papas/comida. Avaliar primeiro aleitamento, diurese e crescimento; quando houver indicação real de complemento, utilizar fórmula infantil apropriada à idade e à condição clínica.</div>`;
+ }
+
+ out+=`<h3>Orientações gerais aos responsáveis</h3><div class="box good">
+• Manter aleitamento materno sempre que possível.<br>
+• Preparar fórmula exatamente conforme o rótulo/fabricante; não adicionar pó extra e não “render” com mais água.<br>
+• Respeitar sinais de fome e saciedade; não forçar o término da mamadeira.<br>
+• A necessidade de fórmula deve ser reavaliada pelo ganho ponderal, diurese, mamadas e evolução clínica.<br>
+${motivo==='aplv'?'• Não substituir fórmula terapêutica por leite sem lactose, leite de cabra/ovelha, leite A2 ou bebida vegetal.<br>• Não ampliar exclusões alimentares sem indicação clínica.<br>':''}
+• Procurar atendimento se houver recusa alimentar persistente, redução importante da diurese, vômitos repetidos, prostração, dificuldade respiratória ou sinais de reação alérgica importante.
+</div>`;
+
+ document.getElementById('saida').innerHTML=out;
+ document.getElementById('resultado').classList.remove('hidden');
+ document.getElementById('resultado').scrollIntoView({behavior:'smooth'});
+}
+function limpar(){
+ document.querySelectorAll('input').forEach(x=>{if(x.type==='checkbox')x.checked=false;else x.value='';});
+ document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);
+ document.getElementById('resultado').classList.add('hidden');
+ atualizarFluxo();
+}
+function copiar(){
+ navigator.clipboard.writeText(document.getElementById('saida').innerText);
+ const b=document.querySelector('.copy'), old=b.innerText;
+ b.innerText='Copiado ✓'; setTimeout(()=>b.innerText=old,1200);
+}
+atualizarFluxo();
+</script>
+</body>
+</html>
