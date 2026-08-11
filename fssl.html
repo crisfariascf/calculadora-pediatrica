@@ -4,74 +4,427 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FSSL Pediátrica — Fluxograma Interativo</title>
+
 <style>
 :root{
-  --bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9e2ec;
-  --blue:#175cd3;--blue-soft:#eff6ff;--green:#067647;--green-soft:#ecfdf3;
-  --amber:#b54708;--amber-soft:#fffaeb;--red:#b42318;--red-soft:#fef3f2;
-  --purple:#6941c6;--purple-soft:#f7f4ff;--shadow:0 10px 28px rgba(16,24,40,.08)
+  --bg:#f4f7fb;
+  --card:#fff;
+  --ink:#172033;
+  --muted:#667085;
+  --line:#d9e2ec;
+  --blue:#175cd3;
+  --blue-soft:#eff6ff;
+  --green:#067647;
+  --green-soft:#ecfdf3;
+  --amber:#b54708;
+  --amber-soft:#fffaeb;
+  --red:#b42318;
+  --red-soft:#fef3f2;
+  --purple:#6941c6;
+  --purple-soft:#f7f4ff;
+  --shadow:0 10px 28px rgba(16,24,40,.08)
 }
+
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#eef4ff);color:var(--ink)}
-.wrap{max-width:1220px;margin:auto;padding:18px}
-.hero{background:linear-gradient(135deg,#174ea6,#0875b7);color:#fff;border-radius:22px;padding:21px 24px;box-shadow:var(--shadow)}
-.hero h1{margin:0 0 5px;font-size:clamp(24px,4vw,36px)}
-.hero p{margin:0;opacity:.92;line-height:1.45}
-.legend{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px 14px;margin:13px 0;box-shadow:var(--shadow)}
-.tags{display:flex;gap:7px;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800}
-.br{background:#eaf7ef;color:#146c43;border:1px solid #a7d7b8}
-.int{background:var(--purple-soft);color:var(--purple);border:1px solid #c9b8ff}
-.layout{display:grid;grid-template-columns:minmax(350px,430px) minmax(0,1fr);gap:16px;align-items:start}
-@media(max-width:900px){.layout{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
-.sticky{position:sticky;top:10px}@media(max-width:900px){.sticky{position:static}}
-h2{font-size:18px;margin:0 0 12px;color:#163a63}
-h3{font-size:15px;margin:0 0 8px}
-label{display:block;font-size:12.5px;font-weight:750;color:#344054;margin-bottom:5px}
-input,select{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:var(--ink);font:inherit}
-input:focus,select:focus{outline:3px solid rgba(23,92,211,.12);border-color:var(--blue)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.one{grid-template-columns:1fr}
-@media(max-width:520px){.grid{grid-template-columns:1fr}}
-.question{border:1px solid #dce6f2;background:#fbfdff;border-radius:15px;padding:14px;margin-top:12px}
-.question-title{font-size:18px;font-weight:900;line-height:1.25;margin-bottom:6px}
-.question-help{font-size:12.5px;color:var(--muted);line-height:1.45;margin-bottom:12px}
-.options{display:grid;gap:8px}
-.option{display:flex;gap:10px;align-items:flex-start;border:1px solid #dce3ec;border-radius:12px;padding:11px;background:#fff;cursor:pointer}
-.option:hover{border-color:#98b8e8;background:#f8fbff}.option input{width:auto;margin-top:2px}
-.option b{display:block;font-size:13px}.option small{display:block;color:var(--muted);line-height:1.35;margin-top:2px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-button{border:0;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:850;cursor:pointer}
-.primary{background:var(--blue);color:#fff}.secondary{background:#edf2f7;color:#344054}.danger-btn{background:#fff1f0;color:var(--red)}
-.progress{height:7px;background:#e9eef5;border-radius:999px;overflow:hidden;margin:9px 0 4px}
-.progress>div{height:100%;background:linear-gradient(90deg,#2e90fa,#12b76a);transition:.25s}
-.muted{font-size:12px;color:var(--muted);line-height:1.45}
-.path{display:grid;gap:9px}
-.node{border:1px solid var(--line);border-left:5px solid #98a2b3;border-radius:14px;padding:11px 12px;background:#fff}
-.node.active{border-left-color:var(--blue);background:var(--blue-soft)}
-.node.ok{border-left-color:#12b76a;background:var(--green-soft)}
-.node.warn{border-left-color:#f79009;background:var(--amber-soft)}
-.node.danger{border-left-color:#f04438;background:var(--red-soft)}
-.node.international{border-left-color:#7f56d9;background:var(--purple-soft)}
-.node .kicker{font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#667085}
-.node .title{font-size:15px;font-weight:900;margin-top:3px}
-.node p,.node li{font-size:12.8px;line-height:1.45}
-.node ul{margin:7px 0 0;padding-left:19px}
-.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900;margin:2px 4px 2px 0}
-.b-blue{background:#eaf2ff;color:#175cd3}.b-green{background:#dff7e9;color:#067647}.b-red{background:#fee4e2;color:#b42318}.b-amber{background:#fff1cc;color:#b54708}
-.rx{white-space:pre-wrap;background:#101828;color:#e5e7eb;border-radius:14px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.3px;line-height:1.5;overflow:auto}
-.hidden{display:none!important}.mini-title{font-size:12px;font-weight:900;color:#475467;text-transform:uppercase;letter-spacing:.04em;margin:13px 0 7px}
-.check-grid{display:grid;gap:7px}
-.check{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid #e2e8f0;border-radius:11px;background:#fff}
-.check input{width:auto;margin-top:2px}.check span{font-size:12.5px;line-height:1.35}
-.footer{font-size:11px;color:#667085;line-height:1.5;margin-top:14px}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(135deg,#f8fafc,#eef4ff);
+  color:var(--ink)
+}
+
+.wrap{
+  max-width:1220px;
+  margin:auto;
+  padding:18px
+}
+
+.hero{
+  background:linear-gradient(135deg,#174ea6,#0875b7);
+  color:#fff;
+  border-radius:22px;
+  padding:21px 24px;
+  box-shadow:var(--shadow)
+}
+
+.hero h1{
+  margin:0 0 5px;
+  font-size:clamp(24px,4vw,36px)
+}
+
+.hero p{
+  margin:0;
+  opacity:.92;
+  line-height:1.45
+}
+
+.legend{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:11px 14px;
+  margin:13px 0;
+  box-shadow:var(--shadow)
+}
+
+.tags{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:800
+}
+
+.br{
+  background:#eaf7ef;
+  color:#146c43;
+  border:1px solid #a7d7b8
+}
+
+.int{
+  background:var(--purple-soft);
+  color:var(--purple);
+  border:1px solid #c9b8ff
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(350px,430px) minmax(0,1fr);
+  gap:16px;
+  align-items:start
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:var(--shadow)
+}
+
+.sticky{
+  position:sticky;
+  top:10px
+}
+
+h2{
+  font-size:18px;
+  margin:0 0 12px;
+  color:#163a63
+}
+
+h3{
+  font-size:15px;
+  margin:0 0 8px
+}
+
+label{
+  display:block;
+  font-size:12.5px;
+  font-weight:750;
+  color:#344054;
+  margin-bottom:5px
+}
+
+input,select{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #cbd5e1;
+  border-radius:11px;
+  background:#fff;
+  color:var(--ink);
+  font:inherit
+}
+
+input:focus,select:focus{
+  outline:3px solid rgba(23,92,211,.12);
+  border-color:var(--blue)
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px
+}
+
+.one{
+  grid-template-columns:1fr
+}
+
+.question{
+  border:1px solid #dce6f2;
+  background:#fbfdff;
+  border-radius:15px;
+  padding:14px;
+  margin-top:12px
+}
+
+.question-title{
+  font-size:18px;
+  font-weight:900;
+  line-height:1.25;
+  margin-bottom:6px
+}
+
+.question-help{
+  font-size:12.5px;
+  color:var(--muted);
+  line-height:1.45;
+  margin-bottom:12px
+}
+
+.options{
+  display:grid;
+  gap:8px
+}
+
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  border:1px solid #dce3ec;
+  border-radius:12px;
+  padding:11px;
+  background:#fff;
+  cursor:pointer
+}
+
+.option:hover{
+  border-color:#98b8e8;
+  background:#f8fbff
+}
+
+.option input{
+  width:auto;
+  margin-top:2px
+}
+
+.option b{
+  display:block;
+  font-size:13px
+}
+
+.option small{
+  display:block;
+  color:var(--muted);
+  line-height:1.35;
+  margin-top:2px
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:13px
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:10px 14px;
+  font-size:13px;
+  font-weight:850;
+  cursor:pointer
+}
+
+.primary{
+  background:var(--blue);
+  color:#fff
+}
+
+.secondary{
+  background:#edf2f7;
+  color:#344054
+}
+
+.danger-btn{
+  background:#fff1f0;
+  color:var(--red)
+}
+
+.progress{
+  height:7px;
+  background:#e9eef5;
+  border-radius:999px;
+  overflow:hidden;
+  margin:9px 0 4px
+}
+
+.progress>div{
+  height:100%;
+  background:linear-gradient(90deg,#2e90fa,#12b76a);
+  transition:.25s
+}
+
+.muted{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45
+}
+
+.path{
+  display:grid;
+  gap:9px
+}
+
+.node{
+  border:1px solid var(--line);
+  border-left:5px solid #98a2b3;
+  border-radius:14px;
+  padding:11px 12px;
+  background:#fff
+}
+
+.node.active{
+  border-left-color:var(--blue);
+  background:var(--blue-soft)
+}
+
+.node.ok{
+  border-left-color:#12b76a;
+  background:var(--green-soft)
+}
+
+.node.warn{
+  border-left-color:#f79009;
+  background:var(--amber-soft)
+}
+
+.node.danger{
+  border-left-color:#f04438;
+  background:var(--red-soft)
+}
+
+.node.international{
+  border-left-color:#7f56d9;
+  background:var(--purple-soft)
+}
+
+.node .kicker{
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:#667085
+}
+
+.node .title{
+  font-size:15px;
+  font-weight:900;
+  margin-top:3px
+}
+
+.node p,.node li{
+  font-size:12.8px;
+  line-height:1.45
+}
+
+.node ul{
+  margin:7px 0 0;
+  padding-left:19px
+}
+
+.badge{
+  display:inline-flex;
+  border-radius:999px;
+  padding:4px 8px;
+  font-size:10px;
+  font-weight:900;
+  margin:2px 4px 2px 0
+}
+
+.b-blue{background:#eaf2ff;color:#175cd3}
+.b-green{background:#dff7e9;color:#067647}
+.b-red{background:#fee4e2;color:#b42318}
+.b-amber{background:#fff1cc;color:#b54708}
+
+.rx{
+  white-space:pre-wrap;
+  background:#101828;
+  color:#e5e7eb;
+  border-radius:14px;
+  padding:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.3px;
+  line-height:1.5;
+  overflow:auto
+}
+
+.hidden{
+  display:none!important
+}
+
+.mini-title{
+  font-size:12px;
+  font-weight:900;
+  color:#475467;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  margin:13px 0 7px
+}
+
+.check-grid{
+  display:grid;
+  gap:7px
+}
+
+.check{
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+  padding:9px 10px;
+  border:1px solid #e2e8f0;
+  border-radius:11px;
+  background:#fff
+}
+
+.check input{
+  width:auto;
+  margin-top:2px
+}
+
+.check span{
+  font-size:12.5px;
+  line-height:1.35
+}
+
+.footer{
+  font-size:11px;
+  color:#667085;
+  line-height:1.5;
+  margin-top:14px
+}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sticky{position:static}
+}
+
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
+
 <header class="hero">
   <h1>🌡️ FSSL — Fluxograma Interativo</h1>
-  <p>As perguntas aparecem apenas quando o caminho clínico exige. O painel à direita registra cada decisão e abre a próxima etapa do fluxograma.</p>
+  <p>
+    As perguntas aparecem apenas quando o caminho clínico exige.
+    O painel à direita registra cada decisão e abre a próxima etapa do fluxograma.
+  </p>
 </header>
 
 <div class="legend">
@@ -82,21 +435,65 @@ button{border:0;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:
 </div>
 
 <div class="layout">
+
 <section class="card sticky">
+
   <h2>Etapa atual</h2>
-  <div class="progress"><div id="progressBar" style="width:8%"></div></div>
-  <div id="progressText" class="muted">Início do fluxo</div>
+
+  <div class="progress">
+    <div id="progressBar" style="width:8%"></div>
+  </div>
+
+  <div id="progressText" class="muted">
+    Início do fluxo
+  </div>
 
   <div id="baseForm">
+
     <div class="mini-title">Dados mínimos</div>
+
     <div class="grid">
-      <div><label>Idade</label><input id="age" type="number" min="0" step="1" placeholder="Ex.: 45"></div>
-      <div><label>Unidade</label><select id="ageUnit"><option value="days">dias</option><option value="months" selected>meses</option><option value="years">anos</option></select></div>
-      <div><label>Peso (kg)</label><input id="weight" type="number" min=".5" step=".1" placeholder="Ex.: 8,5"></div>
-      <div><label>Temperatura máxima</label><input id="temp" type="number" min="34" max="43" step=".1" placeholder="Ex.: 39,2"></div>
-      <div><label>Via</label><select id="tempRoute"><option value="axillary">Axilar</option><option value="rectal">Retal</option><option value="other">Outra</option></select></div>
-      <div><label>Dias de febre</label><input id="feverDays" type="number" min="0" step=".5" placeholder="Ex.: 2"></div>
+
+      <div>
+        <label>Idade</label>
+        <input id="age" type="number" min="0" step="1" placeholder="Ex.: 45">
+      </div>
+
+      <div>
+        <label>Unidade</label>
+        <select id="ageUnit">
+          <option value="days">dias</option>
+          <option value="months" selected>meses</option>
+          <option value="years">anos</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Peso (kg)</label>
+        <input id="weight" type="number" min=".5" step=".1" placeholder="Ex.: 8,5">
+      </div>
+
+      <div>
+        <label>Temperatura máxima</label>
+        <input id="temp" type="number" min="34" max="43" step=".1" placeholder="Ex.: 39,2">
+      </div>
+
+      <div>
+        <label>Via</label>
+        <select id="tempRoute">
+          <option value="axillary">Axilar</option>
+          <option value="rectal">Retal</option>
+          <option value="other">Outra</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Dias de febre</label>
+        <input id="feverDays" type="number" min="0" step=".5" placeholder="Ex.: 2">
+      </div>
+
     </div>
+
   </div>
 
   <div id="questionBox" class="question"></div>
@@ -106,9 +503,11 @@ button{border:0;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:
     <button id="backBtn" class="secondary" onclick="goBack()">Voltar</button>
     <button class="danger-btn" onclick="restart()">Reiniciar</button>
   </div>
+
 </section>
 
 <section>
+
   <div class="card">
     <h2>Caminho percorrido</h2>
     <div id="path" class="path"></div>
@@ -117,284 +516,1415 @@ button{border:0;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:
   <div id="prescriptionCard" class="card hidden">
     <h2>Conduta / prescrição calculada</h2>
     <div id="rx" class="rx"></div>
-    <div class="actions"><button class="primary" onclick="copyRx()">Copiar</button></div>
+
+    <div class="actions">
+      <button class="primary" onclick="copyRx()">Copiar</button>
+    </div>
   </div>
+
 </section>
+
 </div>
 
 <div class="footer">
-Ferramenta de apoio à decisão. O fluxo nacional/institucional é mantido como eixo. Recomendações internacionais aparecem em lilás com ★ e não substituem o protocolo local, julgamento clínico, avaliação de alergias, função renal, disponibilidade de apresentações e revisão de culturas.
+  Ferramenta de apoio à decisão. O fluxo nacional/institucional é mantido como eixo.
+  Recomendações internacionais aparecem em lilás com ★ e não substituem o protocolo
+  local, julgamento clínico, avaliação de alergias, função renal, disponibilidade de
+  apresentações e revisão de culturas.
 </div>
+
 </div>
 
 <script>
-const $=id=>document.getElementById(id);
-const state={answers:{},history:[],nodes:[],step:'eligibility',finished:false};
 
-function n(id){const v=parseFloat($(id).value);return Number.isFinite(v)?v:null}
-function ageDays(){const a=n('age');if(a===null)return null;return $('ageUnit').value==='days'?a:$('ageUnit').value==='months'?a*30.4375:a*365.25}
-function ageMonths(){const d=ageDays();return d===null?null:d/30.4375}
-function fmt(v,d=1){return Number(v).toLocaleString('pt-BR',{maximumFractionDigits:d})}
-function radio(name){const x=document.querySelector(`input[name="${name}"]:checked`);return x?x.value:null}
-function checked(id){return $(id)?.checked||false}
+const $=id=>document.getElementById(id);
+
+const state={
+  answers:{},
+  history:[],
+  nodes:[],
+  step:'eligibility',
+  finished:false
+};
+
+function n(id){
+  const v=parseFloat($(id).value);
+  return Number.isFinite(v)?v:null
+}
+
+function ageDays(){
+  const a=n('age');
+
+  if(a===null)return null;
+
+  return $('ageUnit').value==='days'
+    ?a
+    :$('ageUnit').value==='months'
+      ?a*30.4375
+      :a*365.25
+}
+
+function ageMonths(){
+  const d=ageDays();
+  return d===null?null:d/30.4375
+}
+
+function fmt(v,d=1){
+  return Number(v).toLocaleString(
+    'pt-BR',
+    {maximumFractionDigits:d}
+  )
+}
+
+function radio(name){
+  const x=document.querySelector(
+    `input[name="${name}"]:checked`
+  );
+
+  return x?x.value:null
+}
+
+function checked(id){
+  return $(id)?.checked||false
+}
+
 function addNode(type,kicker,title,body){
- state.nodes.push({type,kicker,title,body});
- renderPath();
+
+  state.nodes.push({
+    type,
+    kicker,
+    title,
+    body
+  });
+
+  renderPath()
 }
+
 function renderPath(){
- $('path').innerHTML=state.nodes.map((x,i)=>`<div class="node ${x.type}">
- <div class="kicker">${x.kicker}</div><div class="title">${x.title}</div>
- <div>${x.body}</div></div>`).join('');
+
+  $('path').innerHTML=state.nodes.map(
+    (x,i)=>`
+    <div class="node ${x.type}">
+      <div class="kicker">${x.kicker}</div>
+      <div class="title">${x.title}</div>
+      <div>${x.body}</div>
+    </div>`
+  ).join('')
 }
+
 function setQuestion(title,help,html){
- $('questionBox').innerHTML=`<div class="question-title">${title}</div><div class="question-help">${help||''}</div>${html}`;
+
+  $('questionBox').innerHTML=`
+    <div class="question-title">${title}</div>
+    <div class="question-help">${help||''}</div>
+    ${html}
+  `
 }
-function setProgress(text,pct){$('progressText').textContent=text;$('progressBar').style.width=pct+'%'}
+
+function setProgress(text,pct){
+
+  $('progressText').textContent=text;
+  $('progressBar').style.width=pct+'%'
+}
+
 function baseValid(){
- const vals=[n('age'),n('weight'),n('temp'),n('feverDays')];
- return vals.every(v=>v!==null);
+
+  const vals=[
+    n('age'),
+    n('weight'),
+    n('temp'),
+    n('feverDays')
+  ];
+
+  return vals.every(v=>v!==null)
 }
+
 function renderStep(){
- $('backBtn').disabled=state.history.length===0;
- const s=state.step;
- if(s==='eligibility'){
-   setProgress('1. Confirmar se é FSSL',10);
-   setQuestion('O caso é elegível para o fluxo de FSSL?','Confirme ausência de foco após anamnese e exame físico completos.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="elig" value="yes"><span><b>Sim, não há foco identificado</b><small>Febre aguda, criança até 36 meses, exame sem causa definida.</small></span></label>
-    <label class="option"><input type="radio" name="elig" value="no"><span><b>Não, existe foco clínico</b><small>Conduzir pelo diagnóstico localizado.</small></span></label>
-   </div>`);
- } else if(s==='toxemia'){
-   setProgress('2. Avaliar toxemia / sepse',20);
-   setQuestion('Há toxemia ou sinais de sepse?','Considere perfusão ruim, alteração de consciência, choque, petéquias/púrpura, desconforto grave ou aparência muito doente.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="tox" value="yes"><span><b>Sim</b><small>Ramo de alto risco com internação e antibioticoterapia empírica.</small></span></label>
-    <label class="option"><input type="radio" name="tox" value="no"><span><b>Não, bom estado geral</b><small>Prosseguir conforme idade.</small></span></label>
-   </div>`);
- } else if(s==='rochesterClinical'){
-   setProgress('3. Critérios clínicos de Rochester',35);
-   setQuestion('Critérios clínicos de baixo risco — Rochester','Marque todos os critérios presentes. O fluxo só classifica como baixo risco se todos forem atendidos.',
-   `<div class="check-grid">
-    <label class="check"><input id="rPrevHealthy" type="checkbox"><span>Previamente saudável</span></label>
-    <label class="check"><input id="rTerm" type="checkbox"><span>Nascido a termo e sem complicações relevantes no berçário</span></label>
-    <label class="check"><input id="rNoToxic" type="checkbox"><span>Sem aparência tóxica e sem evidência de infecção bacteriana focal</span></label>
-    <label class="check"><input id="rNoChronic" type="checkbox"><span>Sem doença crônica relevante</span></label>
-   </div>`);
- } else if(s==='rochesterLabs'){
-   setProgress('4. Critérios laboratoriais de Rochester',50);
-   setQuestion('Exames para Rochester','Informe os valores disponíveis. A classificação de baixo risco requer todos dentro dos limites.',
-   `<div class="grid">
-    <div><label>Leucócitos (/mm³)</label><input id="rWbc" type="number" min="0" step="100" placeholder="5.000–15.000"></div>
-    <div><label>Bastonetes absolutos (/mm³)</label><input id="rBands" type="number" min="0" step="50" placeholder="<1.500"></div>
-    <div><label>Leucócitos na urina / campo</label><input id="rUrine" type="number" min="0" step="1" placeholder="≤10"></div>
-    <div><label>Se diarreia: leucócitos fecais / campo</label><input id="rStool" type="number" min="0" step="1" placeholder="≤5; deixe vazio sem diarreia"></div>
-   </div>`);
- } else if(s==='temp39'){
-   setProgress('3. Temperatura define o próximo ramo',35);
-   setQuestion('A temperatura axilar é ≥39 °C?','No fluxograma nacional, esse limiar abre investigação adicional em crianças de 3–36 meses.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="t39" value="yes"><span><b>Sim, ≥39 °C</b></span></label>
-    <label class="option"><input type="radio" name="t39" value="no"><span><b>Não, <39 °C</b></span></label>
-   </div>`);
- } else if(s==='utiRisk'){
-   setProgress('4. Avaliar risco de ITU',48);
-   setQuestion('Há fatores de risco para ITU?','Use o ramo do fluxograma conforme sexo, duração da febre, idade e circuncisão.',
-   `<div class="grid one">
-    <div><label>Sexo</label><select id="sex"><option value="female">Feminino</option><option value="male">Masculino</option></select></div>
-   </div>
-   <div class="check-grid" style="margin-top:9px">
-    <label class="check" id="girlWhiteRow"><input id="girlWhite" type="checkbox"><span>Menina branca</span></label>
-    <label class="check hidden" id="uncircRow"><input id="uncirc" type="checkbox"><span>Menino não circuncidado</span></label>
-    <label class="check"><input id="priorUTI" type="checkbox"><span>ITU prévia ou anomalia geniturinária ★</span></label>
-   </div>
-   <div class="muted" style="margin-top:8px">Nacional: meninas — branca, febre >48 h, T >39 °C, idade <1 ano; meninos — não circuncidado, febre >24 h, T >39 °C. ★ UpToDate também valoriza ITU prévia/anomalia e febre prolongada.</div>`);
-   setTimeout(()=>{$('sex').onchange=()=>{const male=$('sex').value==='male';$('girlWhiteRow').classList.toggle('hidden',male);$('uncircRow').classList.toggle('hidden',!male)}},0);
- } else if(s==='urineResult'){
-   setProgress('5. Interpretar urina',60);
-   setQuestion('Qual foi o resultado da urina?','Considere nitrito, esterase leucocitária, bacteriúria e piúria/leucocitúria.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="urine" value="abnormal"><span><b>Alterada</b><small>Prosseguir como provável ITU após coleta de urocultura.</small></span></label>
-    <label class="option"><input type="radio" name="urine" value="normal"><span><b>Normal</b><small>Prosseguir para hemograma quando indicado pelo ramo.</small></span></label>
-   </div>`);
- } else if(s==='cbcResult'){
-   setProgress('6. Interpretar hemograma',70);
-   setQuestion('O hemograma está alterado?','Fluxo nacional: leucócitos >20.000/mm³ ou neutrófilos absolutos >10.000/mm³.',
-   `<div class="grid">
-    <div><label>Leucócitos (/mm³)</label><input id="wbc" type="number" min="0" step="100"></div>
-    <div><label>Neutrófilos absolutos (/mm³)</label><input id="anc" type="number" min="0" step="100"></div>
-    <div><label>PCR (mg/L) ★</label><input id="crp" type="number" min="0" step=".1"></div>
-    <div><label>Procalcitonina (ng/mL) ★</label><input id="pct" type="number" min="0" step=".01"></div>
-   </div>
-   <div class="muted" style="margin-top:8px">★ UpToDate: em não/imunizado incompleto, PCT >0,5 ng/mL, PCR >20 mg/L, leucócitos ≥15.000 ou ANC ≥10.000 elevam o risco.</div>`);
- } else if(s==='cxr'){
-   setProgress('7. Radiografia e risco de bacteremia',80);
-   setQuestion('Qual o resultado da radiografia de tórax?','O fluxograma abre este ponto após hemograma alterado para pesquisar pneumonia oculta.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="cxr" value="abnormal"><span><b>Alterada / infiltrado compatível</b><small>Tratar como pneumonia.</small></span></label>
-    <label class="option"><input type="radio" name="cxr" value="normal"><span><b>Normal</b><small>Prosseguir para risco de bacteremia conforme vacinação.</small></span></label>
-   </div>
-   <div class="international-note node international" style="margin-top:9px"><b>★ Complemento UpToDate:</b> também considerar RX com taquipneia, desconforto respiratório ou SpO₂ ≤95%.</div>`);
- } else if(s==='vaccination'){
-   setProgress('8. Definir risco de bacteremia',90);
-   setQuestion('A vacinação para Hib e pneumococo está completa?','Após RX normal e hemograma alterado, o fluxograma usa o estado vacinal para decidir observação versus antibiótico empírico.',
-   `<div class="options">
-    <label class="option"><input type="radio" name="vacc" value="complete"><span><b>Completa para a idade</b><small>Reavaliação clínica e acompanhamento de culturas.</small></span></label>
-    <label class="option"><input type="radio" name="vacc" value="incomplete"><span><b>Incompleta ou desconhecida</b><small>Maior risco de bacteremia oculta; considerar ceftriaxona após hemocultura.</small></span></label>
-   </div>`);
- }
+
+  $('backBtn').disabled=state.history.length===0;
+
+  const s=state.step;
+
+  if(s==='eligibility'){
+
+    setProgress(
+      '1. Confirmar se é FSSL',
+      10
+    );
+
+    setQuestion(
+      'O caso é elegível para o fluxo de FSSL?',
+      'Confirme ausência de foco após anamnese e exame físico completos.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="elig" value="yes">
+          <span>
+            <b>Sim, não há foco identificado</b>
+            <small>
+              Febre aguda, criança até 36 meses, exame sem causa definida.
+            </small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="elig" value="no">
+          <span>
+            <b>Não, existe foco clínico</b>
+            <small>Conduzir pelo diagnóstico localizado.</small>
+          </span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='toxemia'){
+
+    setProgress(
+      '2. Avaliar toxemia / sepse',
+      20
+    );
+
+    setQuestion(
+      'Há toxemia ou sinais de sepse?',
+      'Considere perfusão ruim, alteração de consciência, choque, petéquias/púrpura, desconforto grave ou aparência muito doente.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="tox" value="yes">
+          <span>
+            <b>Sim</b>
+            <small>
+              Ramo de alto risco com internação e antibioticoterapia empírica.
+            </small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="tox" value="no">
+          <span>
+            <b>Não, bom estado geral</b>
+            <small>Prosseguir conforme idade.</small>
+          </span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='rochesterClinical'){
+
+    setProgress(
+      '3. Critérios clínicos de Rochester',
+      35
+    );
+
+    setQuestion(
+      'Critérios clínicos de baixo risco — Rochester',
+      'Marque todos os critérios presentes. O fluxo só classifica como baixo risco se todos forem atendidos.',
+      `
+      <div class="check-grid">
+
+        <label class="check">
+          <input id="rPrevHealthy" type="checkbox">
+          <span>Previamente saudável</span>
+        </label>
+
+        <label class="check">
+          <input id="rTerm" type="checkbox">
+          <span>Nascido a termo e sem complicações relevantes no berçário</span>
+        </label>
+
+        <label class="check">
+          <input id="rNoToxic" type="checkbox">
+          <span>Sem aparência tóxica e sem evidência de infecção bacteriana focal</span>
+        </label>
+
+        <label class="check">
+          <input id="rNoChronic" type="checkbox">
+          <span>Sem doença crônica relevante</span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='rochesterLabs'){
+
+    setProgress(
+      '4. Critérios laboratoriais de Rochester',
+      50
+    );
+
+    setQuestion(
+      'Exames para Rochester',
+      'Informe os valores disponíveis. A classificação de baixo risco requer todos dentro dos limites.',
+      `
+      <div class="grid">
+
+        <div>
+          <label>Leucócitos (/mm³)</label>
+          <input
+            id="rWbc"
+            type="number"
+            min="0"
+            step="100"
+            placeholder="5.000–15.000">
+        </div>
+
+        <div>
+          <label>Bastonetes absolutos (/mm³)</label>
+          <input
+            id="rBands"
+            type="number"
+            min="0"
+            step="50"
+            placeholder="<1.500">
+        </div>
+
+        <div>
+          <label>Leucócitos na urina / campo</label>
+          <input
+            id="rUrine"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="≤10">
+        </div>
+
+        <div>
+          <label>Se diarreia: leucócitos fecais / campo</label>
+          <input
+            id="rStool"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="≤5; deixe vazio sem diarreia">
+        </div>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='temp39'){
+
+    setProgress(
+      '3. Temperatura define o próximo ramo',
+      35
+    );
+
+    setQuestion(
+      'A temperatura axilar é ≥39 °C?',
+      'No fluxograma nacional, esse limiar abre investigação adicional em crianças de 3–36 meses.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="t39" value="yes">
+          <span><b>Sim, ≥39 °C</b></span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="t39" value="no">
+          <span><b>Não, &lt;39 °C</b></span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='utiRisk'){
+
+    setProgress(
+      '4. Avaliar risco de ITU',
+      48
+    );
+
+    setQuestion(
+      'Há fatores de risco para ITU?',
+      'Use o ramo do fluxograma conforme sexo, duração da febre, idade e circuncisão.',
+      `
+      <div class="grid one">
+
+        <div>
+          <label>Sexo</label>
+
+          <select id="sex">
+            <option value="female">Feminino</option>
+            <option value="male">Masculino</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="check-grid" style="margin-top:9px">
+
+        <label class="check" id="girlWhiteRow">
+          <input id="girlWhite" type="checkbox">
+          <span>Menina branca</span>
+        </label>
+
+        <label class="check hidden" id="uncircRow">
+          <input id="uncirc" type="checkbox">
+          <span>Menino não circuncidado</span>
+        </label>
+
+        <label class="check">
+          <input id="priorUTI" type="checkbox">
+          <span>ITU prévia ou anomalia geniturinária ★</span>
+        </label>
+
+      </div>
+
+      <div class="muted" style="margin-top:8px">
+        Nacional: meninas — branca, febre &gt;48 h, T &gt;39 °C,
+        idade &lt;1 ano; meninos — não circuncidado, febre &gt;24 h,
+        T &gt;39 °C. ★ UpToDate também valoriza ITU prévia/anomalia
+        e febre prolongada.
+      </div>
+      `
+    );
+
+    setTimeout(()=>{
+
+      $('sex').onchange=()=>{
+
+        const male=$('sex').value==='male';
+
+        $('girlWhiteRow').classList.toggle(
+          'hidden',
+          male
+        );
+
+        $('uncircRow').classList.toggle(
+          'hidden',
+          !male
+        )
+      }
+
+    },0);
+
+  }
+
+  else if(s==='urineResult'){
+
+    setProgress(
+      '5. Interpretar urina',
+      60
+    );
+
+    setQuestion(
+      'Qual foi o resultado da urina?',
+      'Considere nitrito, esterase leucocitária, bacteriúria e piúria/leucocitúria.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="urine" value="abnormal">
+          <span>
+            <b>Alterada</b>
+            <small>
+              Prosseguir como provável ITU após coleta de urocultura.
+            </small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="urine" value="normal">
+          <span>
+            <b>Normal</b>
+            <small>
+              Prosseguir conforme vacinação e investigação subsequente.
+            </small>
+          </span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='vaccinationPreCBC'){
+
+    setProgress(
+      '6. Estado vacinal',
+      64
+    );
+
+    setQuestion(
+      'A vacinação para Hib e pneumococo está completa para a idade?',
+      'Responda dentro do fluxo. O estado vacinal modifica a necessidade de investigação laboratorial no ramo de 3–36 meses.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="vaccPre" value="complete">
+          <span>
+            <b>Sim — completa para a idade</b>
+            <small>
+              Com bom estado geral e avaliação urinária sem indicação/normal,
+              pode seguir como baixo risco.
+            </small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="vaccPre" value="incomplete">
+          <span>
+            <b>Não — incompleta ou desconhecida</b>
+            <small>
+              Prosseguir com hemograma e hemocultura conforme o fluxo nacional.
+            </small>
+          </span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='cbcResult'){
+
+    setProgress(
+      '7. Interpretar hemograma',
+      72
+    );
+
+    setQuestion(
+      'O hemograma está alterado?',
+      'Fluxo nacional: leucócitos >20.000/mm³ ou neutrófilos absolutos >10.000/mm³.',
+      `
+      <div class="grid">
+
+        <div>
+          <label>Leucócitos (/mm³)</label>
+          <input id="wbc" type="number" min="0" step="100">
+        </div>
+
+        <div>
+          <label>Neutrófilos absolutos (/mm³)</label>
+          <input id="anc" type="number" min="0" step="100">
+        </div>
+
+        <div>
+          <label>PCR (mg/L) ★</label>
+          <input id="crp" type="number" min="0" step=".1">
+        </div>
+
+        <div>
+          <label>Procalcitonina (ng/mL) ★</label>
+          <input id="pct" type="number" min="0" step=".01">
+        </div>
+
+      </div>
+
+      <div class="muted" style="margin-top:8px">
+        ★ UpToDate: em não/imunizado incompleto, PCT &gt;0,5 ng/mL,
+        PCR &gt;20 mg/L, leucócitos ≥15.000 ou ANC ≥10.000 elevam o risco.
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='cxr'){
+
+    setProgress(
+      '8. Radiografia e risco de bacteremia',
+      84
+    );
+
+    setQuestion(
+      'Qual o resultado da radiografia de tórax?',
+      'O fluxograma abre este ponto após hemograma alterado para pesquisar pneumonia oculta.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="cxr" value="abnormal">
+          <span>
+            <b>Alterada / infiltrado compatível</b>
+            <small>Tratar como pneumonia.</small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="cxr" value="normal">
+          <span>
+            <b>Normal</b>
+            <small>
+              Prosseguir para risco de bacteremia conforme vacinação.
+            </small>
+          </span>
+        </label>
+
+      </div>
+
+      <div
+        class="international-note node international"
+        style="margin-top:9px">
+
+        <b>★ Complemento UpToDate:</b>
+        também considerar RX com taquipneia,
+        desconforto respiratório ou SpO₂ ≤95%.
+
+      </div>
+      `
+    );
+
+  }
+
+  else if(s==='vaccination'){
+
+    setProgress(
+      '9. Definir risco de bacteremia',
+      92
+    );
+
+    setQuestion(
+      'A vacinação para Hib e pneumococo está completa?',
+      'Após RX normal e hemograma alterado, o fluxograma usa o estado vacinal para decidir observação versus antibiótico empírico.',
+      `
+      <div class="options">
+
+        <label class="option">
+          <input type="radio" name="vacc" value="complete">
+          <span>
+            <b>Completa para a idade</b>
+            <small>
+              Reavaliação clínica e acompanhamento de culturas.
+            </small>
+          </span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="vacc" value="incomplete">
+          <span>
+            <b>Incompleta ou desconhecida</b>
+            <small>
+              Maior risco de bacteremia oculta;
+              considerar ceftriaxona após hemocultura.
+            </small>
+          </span>
+        </label>
+
+      </div>
+      `
+    );
+
+  }
+
 }
 
 function advance(){
- if(state.finished){return}
- if(state.step==='eligibility'){
-   if(!baseValid())return alert('Informe idade, peso, temperatura e duração da febre.');
-   const m=ageMonths(),fd=n('feverDays'),t=n('temp');
-   if(m>36)return finish('warn','Fora do escopo','A calculadora foi construída para crianças até 36 meses.','Sem prescrição automática.');
-   const a=radio('elig');if(!a)return alert('Selecione uma opção.');
-   saveHistory();
-   addNode(a==='yes'?'active':'warn','Entrada',a==='yes'?'FSSL confirmada clinicamente':'Há foco clínico',a==='yes'?`Idade: ${fmt(m,1)} meses; Tmáx ${fmt(t)} °C; febre há ${fmt(fd)} dia(s).`:'Conduzir conforme o foco identificado; não aplicar o fluxo de FSSL.');
-   if(a==='no')return finish('warn','Fluxo encerrado','Há foco clínico identificado.','Tratar conforme o diagnóstico localizado.');
-   if(fd>=5)addNode('international','★ UpToDate','Febre ≥5 dias','Reavaliar doença de Kawasaki típica/incompleta e outras causas de febre persistente.');
-   if(fd>=7)addNode('warn','Limite do fluxo','Febre prolongada','Febre ≥7 dias deixa de ser FSSL aguda e exige investigação específica.');
-   state.step='toxemia';
- } else if(state.step==='toxemia'){
-   const a=radio('tox');if(!a)return alert('Selecione uma opção.');
-   saveHistory();addNode(a==='yes'?'danger':'ok','Gravidade',a==='yes'?'Toxemia / sepse':'Bom estado geral',a==='yes'?'Internação, rastreio de sepse e antibiótico empírico parenteral.':'Prosseguir conforme a faixa etária.');
-   if(a==='yes')return finishToxemia();
-   const m=ageMonths();
-   if(m<1)return finishNeonate();
-   state.step=m<3?'rochesterClinical':'temp39';
- } else if(state.step==='rochesterClinical'){
-   const all=checked('rPrevHealthy')&&checked('rTerm')&&checked('rNoToxic')&&checked('rNoChronic');
-   saveHistory();state.answers.rochesterClinical=all;
-   addNode(all?'ok':'danger','Rochester — clínica',all?'Todos os critérios clínicos presentes':'Critério clínico de baixo risco não preenchido',all?'Prosseguir para os critérios laboratoriais.':'Classificar como alto risco no fluxo institucional.');
-   if(!all)return finishYoungHigh('Falha em critério clínico de Rochester');
-   state.step='rochesterLabs';
- } else if(state.step==='rochesterLabs'){
-   const w=n('rWbc'),b=n('rBands'),u=n('rUrine'),s=n('rStool');
-   if(w===null||b===null||u===null)return alert('Informe leucócitos, bastonetes e leucócitos urinários.');
-   const low=w>=5000&&w<=15000&&b<1500&&u<=10&&(s===null||s<=5);
-   saveHistory();
-   addNode(low?'ok':'danger','Rochester — laboratório',low?'Baixo risco laboratorial':'Alto risco laboratorial',
-   `<ul><li>Leucócitos: ${fmt(w,0)}/mm³</li><li>Bastonetes: ${fmt(b,0)}/mm³</li><li>Urina: ${fmt(u,0)} leucócitos/campo</li>${s!==null?`<li>Fezes: ${fmt(s,0)} leucócitos/campo</li>`:''}</ul>`);
-   return low?finishYoungLow():finishYoungHigh('Critério laboratorial de Rochester alterado');
- } else if(state.step==='temp39'){
-   const a=radio('t39');if(!a)return alert('Selecione uma opção.');
-   saveHistory();addNode(a==='yes'?'warn':'ok','3–36 meses',a==='yes'?'Febre ≥39 °C':'Febre <39 °C',a==='yes'?'Abrir avaliação de risco urinário.':'Baixo risco no fluxograma, se permanecer em bom estado geral.');
-   if(a==='no')return finishLowRisk();
-   state.step='utiRisk';
- } else if(state.step==='utiRisk'){
-   const sex=$('sex').value,m=ageMonths(),fd=n('feverDays'),temp=n('temp');
-   const risk=sex==='female'?(checked('girlWhite')||fd>2||temp>39||m<12||checked('priorUTI')):(checked('uncirc')||fd>1||temp>39||checked('priorUTI'));
-   saveHistory();state.answers.utiRisk=risk;
-   addNode(risk?'warn':'ok','Risco de ITU',risk?'Fatores presentes':'Fatores ausentes',risk?'Solicitar urina I e urocultura por método adequado.':'No ramo vacinado completo, pode seguir sem urina; em vacinação incompleta, ainda será necessário hemograma/hemocultura.');
-   if(risk){state.step='urineResult'}
-   else{
-     state.answers.urine='not_indicated';
-     state.step='vaccinationPreCBC';
-     const vaccKnown=confirm('Vacinação para Hib e pneumococo está completa para a idade?\n\nOK = completa | Cancelar = incompleta/desconhecida');
-     state.answers.vacc=vaccKnown?'complete':'incomplete';
-     if(vaccKnown)return finishLowRisk();
-     addNode('warn','Vacinação','Incompleta/desconhecida','Solicitar hemograma e hemocultura conforme fluxo nacional.');
-     state.step='cbcResult';
-   }
- } else if(state.step==='urineResult'){
-   const a=radio('urine');if(!a)return alert('Selecione uma opção.');
-   saveHistory();state.answers.urine=a;
-   addNode(a==='abnormal'?'danger':'ok','Urina',a==='abnormal'?'Urina alterada':'Urina normal',a==='abnormal'?'Provável ITU; colher urocultura e tratar conforme idade/estado clínico.':'Prosseguir conforme vacinação e hemograma.');
-   if(a==='abnormal')return finishUTI();
-   const vaccKnown=confirm('Vacinação para Hib e pneumococo está completa para a idade?\n\nOK = completa | Cancelar = incompleta/desconhecida');
-   state.answers.vacc=vaccKnown?'complete':'incomplete';
-   if(vaccKnown)return finishLowRisk('Urina normal e vacinação completa');
-   addNode('warn','Vacinação','Incompleta/desconhecida','Solicitar hemograma e hemocultura.');
-   state.step='cbcResult';
- } else if(state.step==='cbcResult'){
-   const w=n('wbc'),a=n('anc');if(w===null&&a===null)return alert('Informe leucócitos e/ou neutrófilos absolutos.');
-   const national=(w!==null&&w>20000)||(a!==null&&a>10000);
-   const crp=n('crp'),pct=n('pct');
-   const utd=(w!==null&&w>=15000)||(a!==null&&a>=10000)||(crp!==null&&crp>20)||(pct!==null&&pct>0.5);
-   saveHistory();state.answers.cbcAltered=national;state.answers.utdAlert=utd;
-   addNode(national?'danger':'ok','Hemograma',national?'Alterado pelo corte nacional':'Sem alteração pelo corte nacional',
-   `<ul>${w!==null?`<li>Leucócitos: ${fmt(w,0)}/mm³</li>`:''}${a!==null?`<li>ANC: ${fmt(a,0)}/mm³</li>`:''}</ul>`);
-   if(utd&&!national)addNode('international','★ UpToDate','Marcador internacional positivo','Há marcador acima do corte internacional, embora o corte nacional principal não tenha sido ultrapassado.');
-   if(!national)return finishLowRisk('Hemograma sem critérios nacionais de alto risco');
-   state.step='cxr';
- } else if(state.step==='cxr'){
-   const a=radio('cxr');if(!a)return alert('Selecione uma opção.');
-   saveHistory();state.answers.cxr=a;
-   addNode(a==='abnormal'?'danger':'ok','Radiografia de tórax',a==='abnormal'?'RX alterado':'RX normal',a==='abnormal'?'Tratar como pneumonia; ajustar destino conforme gravidade.':'Prosseguir para risco de bacteremia oculta segundo vacinação.');
-   if(a==='abnormal')return finishPneumonia();
-   state.step='vaccination';
- } else if(state.step==='vaccination'){
-   const a=radio('vacc');if(!a)return alert('Selecione uma opção.');
-   saveHistory();state.answers.vacc=a;
-   addNode(a==='complete'?'ok':'danger','Risco de bacteremia',a==='complete'?'Vacinação completa':'Vacinação incompleta/desconhecida',a==='complete'?'Baixo risco de bacteremia oculta; observar e acompanhar culturas.':'Maior risco de bacteremia oculta; ceftriaxona empírica pode ser considerada após hemocultura.');
-   return a==='complete'?finishObserveAfterCXR():finishBacteremia();
- }
- renderStep();
+
+  if(state.finished){
+    return
+  }
+
+  if(state.step==='eligibility'){
+
+    if(!baseValid()){
+      return alert(
+        'Informe idade, peso, temperatura e duração da febre.'
+      )
+    }
+
+    const m=ageMonths();
+    const fd=n('feverDays');
+    const t=n('temp');
+
+    if(m>36){
+
+      return finish(
+        'warn',
+        'Fora do escopo',
+        'A calculadora foi construída para crianças até 36 meses.',
+        'Sem prescrição automática.'
+      )
+    }
+
+    const a=radio('elig');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    addNode(
+      a==='yes'?'active':'warn',
+      'Entrada',
+      a==='yes'
+        ?'FSSL confirmada clinicamente'
+        :'Há foco clínico',
+      a==='yes'
+        ?`Idade: ${fmt(m,1)} meses; Tmáx ${fmt(t)} °C; febre há ${fmt(fd)} dia(s).`
+        :'Conduzir conforme o foco identificado; não aplicar o fluxo de FSSL.'
+    );
+
+    if(a==='no'){
+
+      return finish(
+        'warn',
+        'Fluxo encerrado',
+        'Há foco clínico identificado.',
+        'Tratar conforme o diagnóstico localizado.'
+      )
+    }
+
+    if(fd>=5){
+
+      addNode(
+        'international',
+        '★ UpToDate',
+        'Febre ≥5 dias',
+        'Reavaliar doença de Kawasaki típica/incompleta e outras causas de febre persistente.'
+      )
+    }
+
+    if(fd>=7){
+
+      addNode(
+        'warn',
+        'Limite do fluxo',
+        'Febre prolongada',
+        'Febre ≥7 dias deixa de ser FSSL aguda e exige investigação específica.'
+      )
+    }
+
+    state.step='toxemia';
+
+  }
+
+  else if(state.step==='toxemia'){
+
+    const a=radio('tox');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    addNode(
+      a==='yes'?'danger':'ok',
+      'Gravidade',
+      a==='yes'
+        ?'Toxemia / sepse'
+        :'Bom estado geral',
+      a==='yes'
+        ?'Internação, rastreio de sepse e antibiótico empírico parenteral.'
+        :'Prosseguir conforme a faixa etária.'
+    );
+
+    if(a==='yes'){
+      return finishToxemia()
+    }
+
+    const m=ageMonths();
+
+    if(m<1){
+      return finishNeonate()
+    }
+
+    state.step=m<3
+      ?'rochesterClinical'
+      :'temp39';
+
+  }
+
+  else if(state.step==='rochesterClinical'){
+
+    const all=
+      checked('rPrevHealthy') &&
+      checked('rTerm') &&
+      checked('rNoToxic') &&
+      checked('rNoChronic');
+
+    saveHistory();
+
+    state.answers.rochesterClinical=all;
+
+    addNode(
+      all?'ok':'danger',
+      'Rochester — clínica',
+      all
+        ?'Todos os critérios clínicos presentes'
+        :'Critério clínico de baixo risco não preenchido',
+      all
+        ?'Prosseguir para os critérios laboratoriais.'
+        :'Classificar como alto risco no fluxo institucional.'
+    );
+
+    if(!all){
+
+      return finishYoungHigh(
+        'Falha em critério clínico de Rochester'
+      )
+    }
+
+    state.step='rochesterLabs';
+
+  }
+
+  else if(state.step==='rochesterLabs'){
+
+    const w=n('rWbc');
+    const b=n('rBands');
+    const u=n('rUrine');
+    const s=n('rStool');
+
+    if(w===null || b===null || u===null){
+
+      return alert(
+        'Informe leucócitos, bastonetes e leucócitos urinários.'
+      )
+    }
+
+    const low=
+      w>=5000 &&
+      w<=15000 &&
+      b<1500 &&
+      u<=10 &&
+      (s===null || s<=5);
+
+    saveHistory();
+
+    addNode(
+      low?'ok':'danger',
+      'Rochester — laboratório',
+      low
+        ?'Baixo risco laboratorial'
+        :'Alto risco laboratorial',
+      `
+      <ul>
+        <li>Leucócitos: ${fmt(w,0)}/mm³</li>
+        <li>Bastonetes: ${fmt(b,0)}/mm³</li>
+        <li>Urina: ${fmt(u,0)} leucócitos/campo</li>
+        ${s!==null
+          ?`<li>Fezes: ${fmt(s,0)} leucócitos/campo</li>`
+          :''
+        }
+      </ul>
+      `
+    );
+
+    return low
+      ?finishYoungLow()
+      :finishYoungHigh(
+        'Critério laboratorial de Rochester alterado'
+      );
+
+  }
+
+  else if(state.step==='temp39'){
+
+    const a=radio('t39');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    addNode(
+      a==='yes'?'warn':'ok',
+      '3–36 meses',
+      a==='yes'
+        ?'Febre ≥39 °C'
+        :'Febre <39 °C',
+      a==='yes'
+        ?'Abrir avaliação de risco urinário.'
+        :'Baixo risco no fluxograma, se permanecer em bom estado geral.'
+    );
+
+    if(a==='no'){
+      return finishLowRisk()
+    }
+
+    state.step='utiRisk';
+
+  }
+
+  else if(state.step==='utiRisk'){
+
+    const sex=$('sex').value;
+    const m=ageMonths();
+    const fd=n('feverDays');
+    const temp=n('temp');
+
+    const risk=
+      sex==='female'
+      ?(
+        checked('girlWhite') ||
+        fd>2 ||
+        temp>39 ||
+        m<12 ||
+        checked('priorUTI')
+      )
+      :(
+        checked('uncirc') ||
+        fd>1 ||
+        temp>39 ||
+        checked('priorUTI')
+      );
+
+    saveHistory();
+
+    state.answers.utiRisk=risk;
+
+    addNode(
+      risk?'warn':'ok',
+      'Risco de ITU',
+      risk
+        ?'Fatores presentes'
+        :'Fatores ausentes',
+      risk
+        ?'Solicitar urina I e urocultura por método adequado.'
+        :'No ramo vacinado completo, pode seguir sem urina; em vacinação incompleta, ainda será necessário hemograma/hemocultura.'
+    );
+
+    if(risk){
+
+      state.step='urineResult'
+
+    }else{
+
+      state.answers.urine='not_indicated';
+      state.step='vaccinationPreCBC'
+    }
+
+  }
+
+  else if(state.step==='urineResult'){
+
+    const a=radio('urine');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    state.answers.urine=a;
+
+    addNode(
+      a==='abnormal'?'danger':'ok',
+      'Urina',
+      a==='abnormal'
+        ?'Urina alterada'
+        :'Urina normal',
+      a==='abnormal'
+        ?'Provável ITU; colher urocultura e tratar conforme idade/estado clínico.'
+        :'Prosseguir conforme vacinação e hemograma.'
+    );
+
+    if(a==='abnormal'){
+      return finishUTI()
+    }
+
+    state.step='vaccinationPreCBC';
+
+  }
+
+  else if(state.step==='vaccinationPreCBC'){
+
+    const a=radio('vaccPre');
+
+    if(!a){
+
+      return alert(
+        'Informe se a vacinação para Hib e pneumococo está completa para a idade.'
+      )
+    }
+
+    saveHistory();
+
+    state.answers.vacc=a;
+
+    addNode(
+      a==='complete'?'ok':'warn',
+      'Vacinação',
+      a==='complete'
+        ?'Completa para a idade'
+        :'Incompleta/desconhecida',
+      a==='complete'
+        ?'Baixo risco de bacteremia oculta neste ponto do fluxo; manter seguimento clínico.'
+        :'Prosseguir com hemograma e hemocultura conforme o fluxo nacional.'
+    );
+
+    if(a==='complete'){
+
+      return finishLowRisk(
+        state.answers.urine==='normal'
+          ?'Urina normal e vacinação completa'
+          :'Vacinação completa para a idade'
+      )
+    }
+
+    state.step='cbcResult';
+
+  }
+
+  else if(state.step==='cbcResult'){
+
+    const w=n('wbc');
+    const a=n('anc');
+
+    if(w===null && a===null){
+
+      return alert(
+        'Informe leucócitos e/ou neutrófilos absolutos.'
+      )
+    }
+
+    const national=
+      (w!==null && w>20000) ||
+      (a!==null && a>10000);
+
+    const crp=n('crp');
+    const pct=n('pct');
+
+    const utd=
+      (w!==null && w>=15000) ||
+      (a!==null && a>=10000) ||
+      (crp!==null && crp>20) ||
+      (pct!==null && pct>0.5);
+
+    saveHistory();
+
+    state.answers.cbcAltered=national;
+    state.answers.utdAlert=utd;
+
+    addNode(
+      national?'danger':'ok',
+      'Hemograma',
+      national
+        ?'Alterado pelo corte nacional'
+        :'Sem alteração pelo corte nacional',
+      `
+      <ul>
+        ${w!==null
+          ?`<li>Leucócitos: ${fmt(w,0)}/mm³</li>`
+          :''
+        }
+
+        ${a!==null
+          ?`<li>ANC: ${fmt(a,0)}/mm³</li>`
+          :''
+        }
+      </ul>
+      `
+    );
+
+    if(utd && !national){
+
+      addNode(
+        'international',
+        '★ UpToDate',
+        'Marcador internacional positivo',
+        'Há marcador acima do corte internacional, embora o corte nacional principal não tenha sido ultrapassado.'
+      )
+    }
+
+    if(!national){
+
+      return finishLowRisk(
+        'Hemograma sem critérios nacionais de alto risco'
+      )
+    }
+
+    state.step='cxr';
+
+  }
+
+  else if(state.step==='cxr'){
+
+    const a=radio('cxr');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    state.answers.cxr=a;
+
+    addNode(
+      a==='abnormal'?'danger':'ok',
+      'Radiografia de tórax',
+      a==='abnormal'
+        ?'RX alterado'
+        :'RX normal',
+      a==='abnormal'
+        ?'Tratar como pneumonia; ajustar destino conforme gravidade.'
+        :'Prosseguir para risco de bacteremia oculta segundo vacinação.'
+    );
+
+    if(a==='abnormal'){
+      return finishPneumonia()
+    }
+
+    if(state.answers.vacc==='incomplete'){
+      return finishBacteremia()
+    }
+
+    if(state.answers.vacc==='complete'){
+      return finishObserveAfterCXR()
+    }
+
+    state.step='vaccination';
+
+  }
+
+  else if(state.step==='vaccination'){
+
+    const a=radio('vacc');
+
+    if(!a){
+      return alert('Selecione uma opção.')
+    }
+
+    saveHistory();
+
+    state.answers.vacc=a;
+
+    addNode(
+      a==='complete'?'ok':'danger',
+      'Risco de bacteremia',
+      a==='complete'
+        ?'Vacinação completa'
+        :'Vacinação incompleta/desconhecida',
+      a==='complete'
+        ?'Baixo risco de bacteremia oculta; observar e acompanhar culturas.'
+        :'Maior risco de bacteremia oculta; ceftriaxona empírica pode ser considerada após hemocultura.'
+    );
+
+    return a==='complete'
+      ?finishObserveAfterCXR()
+      :finishBacteremia();
+
+  }
+
+  renderStep()
 }
 
-function saveHistory(){state.history.push({step:state.step,nodes:JSON.parse(JSON.stringify(state.nodes)),answers:JSON.parse(JSON.stringify(state.answers))})}
+function saveHistory(){
+
+  state.history.push({
+    step:state.step,
+    nodes:JSON.parse(
+      JSON.stringify(state.nodes)
+    ),
+    answers:JSON.parse(
+      JSON.stringify(state.answers)
+    )
+  })
+}
+
 function goBack(){
- if(!state.history.length)return;
- const h=state.history.pop();state.step=h.step;state.nodes=h.nodes;state.answers=h.answers;state.finished=false;
- $('baseForm').classList.remove('hidden');$('nextBtn').classList.remove('hidden');$('prescriptionCard').classList.add('hidden');
- renderPath();renderStep();
+
+  if(!state.history.length){
+    return
+  }
+
+  const h=state.history.pop();
+
+  state.step=h.step;
+  state.nodes=h.nodes;
+  state.answers=h.answers;
+  state.finished=false;
+
+  $('baseForm').classList.remove('hidden');
+  $('nextBtn').classList.remove('hidden');
+  $('prescriptionCard').classList.add('hidden');
+
+  renderPath();
+  renderStep()
 }
+
 function restart(){
- state.answers={};state.history=[];state.nodes=[];state.step='eligibility';state.finished=false;
- document.querySelectorAll('input').forEach(i=>i.value='');
- $('ageUnit').value='months';$('tempRoute').value='axillary';
- $('baseForm').classList.remove('hidden');$('nextBtn').classList.remove('hidden');$('prescriptionCard').classList.add('hidden');
- renderPath();renderStep();
+
+  state.answers={};
+  state.history=[];
+  state.nodes=[];
+  state.step='eligibility';
+  state.finished=false;
+
+  document
+    .querySelectorAll('input')
+    .forEach(i=>i.value='');
+
+  $('ageUnit').value='months';
+  $('tempRoute').value='axillary';
+
+  $('baseForm').classList.remove('hidden');
+  $('nextBtn').classList.remove('hidden');
+  $('prescriptionCard').classList.add('hidden');
+
+  renderPath();
+  renderStep()
 }
+
 function finish(type,title,body,rx){
- state.finished=true;addNode(type,'Desfecho',title,body);setProgress('Fluxo concluído',100);
- setQuestion(title,body,`<div class="muted">Use “Voltar” para revisar o último ponto ou “Reiniciar” para um novo paciente.</div>`);
- $('nextBtn').classList.add('hidden');$('prescriptionCard').classList.remove('hidden');$('rx').textContent=rx;
+
+  state.finished=true;
+
+  addNode(
+    type,
+    'Desfecho',
+    title,
+    body
+  );
+
+  setProgress(
+    'Fluxo concluído',
+    100
+  );
+
+  setQuestion(
+    title,
+    body,
+    `
+    <div class="muted">
+      Use “Voltar” para revisar o último ponto
+      ou “Reiniciar” para um novo paciente.
+    </div>
+    `
+  );
+
+  $('nextBtn').classList.add('hidden');
+  $('prescriptionCard').classList.remove('hidden');
+  $('rx').textContent=rx
 }
-function commonHeader(){return `FSSL PEDIÁTRICA\nPeso: ${fmt(n('weight'))} kg | Idade: ${fmt(ageMonths(),1)} meses\n\n`}
+
+function commonHeader(){
+
+  return `FSSL PEDIÁTRICA
+Peso: ${fmt(n('weight'))} kg | Idade: ${fmt(ageMonths(),1)} meses
+
+`
+}
+
 function finishToxemia(){
- const w=n('weight');finish('danger','Alto risco / toxemia','Internar, rastrear sepse e iniciar antibiótico empírico sem atrasar estabilização.',
- commonHeader()+`CONDUTA\n• Internação imediata; UTI se choque/disfunção orgânica.\n• Hemograma, PCR/PCT, hemocultura, urina I + urocultura, LCR se seguro, RX conforme clínica.\n• Ceftriaxona: ${fmt(Math.min(100*w,4000))} mg EV 1x/dia (confirmar indicação/dose local).\n\nConfirmar alergias, função renal, diluição e protocolo institucional.`);
+
+  const w=n('weight');
+
+  finish(
+    'danger',
+    'Alto risco / toxemia',
+    'Internar, rastrear sepse e iniciar antibiótico empírico sem atrasar estabilização.',
+
+    commonHeader()+
+`CONDUTA
+• Internação imediata; UTI se choque/disfunção orgânica.
+• Hemograma, PCR/PCT, hemocultura, urina I + urocultura, LCR se seguro, RX conforme clínica.
+• Ceftriaxona: ${fmt(Math.min(100*w,4000))} mg EV 1x/dia (confirmar indicação/dose local).
+
+Confirmar alergias, função renal, diluição e protocolo institucional.`
+  )
 }
+
 function finishNeonate(){
- const w=n('weight');finish('danger','Recém-nascido — internação','Todo RN com FSSL deve permanecer em ambiente hospitalar, realizar rastreio de sepse e receber antibioticoterapia empírica.',
- commonHeader()+`RN COM FSSL\n• Internação hospitalar.\n• HMG, HMC, PCR/PCT, urina I + UROC por sondagem, LCR, RX de tórax e pesquisa viral quando disponível.\n• Cefotaxima: ${fmt(150*w)} mg/dia EV, dividir 8/8 h.\n• Associar ampicilina se LCR alterado; considerar aciclovir se risco herpético.\n\nRevisar esquema neonatal segundo protocolo local.`);
+
+  const w=n('weight');
+
+  finish(
+    'danger',
+    'Recém-nascido — internação',
+    'Todo RN com FSSL deve permanecer em ambiente hospitalar, realizar rastreio de sepse e receber antibioticoterapia empírica.',
+
+    commonHeader()+
+`RN COM FSSL
+• Internação hospitalar.
+• HMG, HMC, PCR/PCT, urina I + UROC por sondagem, LCR, RX de tórax e pesquisa viral quando disponível.
+• Cefotaxima: ${fmt(150*w)} mg/dia EV, dividir 8/8 h.
+• Associar ampicilina se LCR alterado; considerar aciclovir se risco herpético.
+
+Revisar esquema neonatal segundo protocolo local.`
+  )
 }
+
 function finishYoungLow(){
- finish('ok','Rochester: baixo risco','Observação/reavaliação diária pode ser considerada se exames normais e seguimento seguro.',
- commonHeader()+`1–3 MESES — BAIXO RISCO PELO ROCHESTER\n• Sem antibiótico automático.\n• Garantir reavaliação diária e acesso rápido ao serviço.\n• Ponderar internação nos menores de 2 meses ou se seguimento não for seguro.`);
+
+  finish(
+    'ok',
+    'Rochester: baixo risco',
+    'Observação/reavaliação diária pode ser considerada se exames normais e seguimento seguro.',
+
+    commonHeader()+
+`1–3 MESES — BAIXO RISCO PELO ROCHESTER
+• Sem antibiótico automático.
+• Garantir reavaliação diária e acesso rápido ao serviço.
+• Ponderar internação nos menores de 2 meses ou se seguimento não for seguro.`
+  )
 }
+
 function finishYoungHigh(reason){
- const w=n('weight');finish('danger','1–3 meses: alto risco',`${reason}. Internação, exames completos e cefalosporina de 3ª geração.`,
- commonHeader()+`1–3 MESES — ALTO RISCO\n• Internação hospitalar.\n• HMG, HMC, PCR/PCT, urina I + UROC; ponderar LCR e RX.\n• Ceftriaxona: ${fmt(Math.min(50*w,2000))} mg EV/IM 1x/dia.\n• Se LCR alterado: ceftriaxona em dose meníngea + ampicilina conforme protocolo.\n\nRevisar culturas e evolução diariamente.`);
+
+  const w=n('weight');
+
+  finish(
+    'danger',
+    '1–3 meses: alto risco',
+    `${reason}. Internação, exames completos e cefalosporina de 3ª geração.`,
+
+    commonHeader()+
+`1–3 MESES — ALTO RISCO
+• Internação hospitalar.
+• HMG, HMC, PCR/PCT, urina I + UROC; ponderar LCR e RX.
+• Ceftriaxona: ${fmt(Math.min(50*w,2000))} mg EV/IM 1x/dia.
+• Se LCR alterado: ceftriaxona em dose meníngea + ampicilina conforme protocolo.
+
+Revisar culturas e evolução diariamente.`
+  )
 }
+
 function finishLowRisk(extra=''){
- finish('ok','Baixo risco / observação',`${extra?extra+'. ':''}Sem indicação automática de antibiótico; orientar retorno e reavaliação.`,
- commonHeader()+`3–36 MESES — BAIXO RISCO\n• Sem antibiótico empírico.\n• Tratamento de suporte e orientação de sinais de alarme.\n• Reavaliar em 24 h se febre persistir ou antes se houver piora.\n\n★ No completamente imunizado e com bom estado geral, o UpToDate não recomenda exames sanguíneos rotineiros apenas pela altura da febre.`);
+
+  finish(
+    'ok',
+    'Baixo risco / observação',
+    `${extra?extra+'. ':''}Sem indicação automática de antibiótico; orientar retorno e reavaliação.`,
+
+    commonHeader()+
+`3–36 MESES — BAIXO RISCO
+• Sem antibiótico empírico.
+• Tratamento de suporte e orientação de sinais de alarme.
+• Reavaliar em 24 h se febre persistir ou antes se houver piora.
+
+★ No completamente imunizado e com bom estado geral, o UpToDate não recomenda exames sanguíneos rotineiros apenas pela altura da febre.`
+  )
 }
+
 function finishUTI(){
- const w=n('weight'),cefuro=Math.min(30*w,500),dose=cefuro/2,amox=Math.min(50*w,4000),amoxDose=amox/2;
- finish('danger','Provável ITU','Coletar urocultura antes do antibiótico e tratar conforme idade, vômitos, toxemia e possibilidade de seguimento.',
- commonHeader()+`PROVÁVEL ITU\n• Urocultura por método adequado antes do antibiótico.\n• Axetilcefuroxima: ${fmt(cefuro)} mg/dia VO, 12/12 h = ${fmt(dose)} mg/dose (${fmt(dose/50)} mL/dose da suspensão 250 mg/5 mL).\nOU\n• Amoxicilina + clavulanato: ${fmt(amox)} mg/dia de amoxicilina, 12/12 h = ${fmt(amoxDose)} mg/dose (${fmt(amoxDose/80)} mL/dose da suspensão 400/57 mg em 5 mL).\n• Se não tolera VO/indicação parenteral: ceftriaxona ${fmt(Math.min(50*w,2000))} mg IM/EV 1x/dia.\n\nAjustar à cultura e protocolo local.`);
+
+  const w=n('weight');
+
+  const cefuro=Math.min(
+    30*w,
+    500
+  );
+
+  const dose=cefuro/2;
+
+  const amox=Math.min(
+    50*w,
+    4000
+  );
+
+  const amoxDose=amox/2;
+
+  finish(
+    'danger',
+    'Provável ITU',
+    'Coletar urocultura antes do antibiótico e tratar conforme idade, vômitos, toxemia e possibilidade de seguimento.',
+
+    commonHeader()+
+`PROVÁVEL ITU
+• Urocultura por método adequado antes do antibiótico.
+• Axetilcefuroxima: ${fmt(cefuro)} mg/dia VO, 12/12 h = ${fmt(dose)} mg/dose (${fmt(dose/50)} mL/dose da suspensão 250 mg/5 mL).
+
+OU
+
+• Amoxicilina + clavulanato: ${fmt(amox)} mg/dia de amoxicilina, 12/12 h = ${fmt(amoxDose)} mg/dose (${fmt(amoxDose/80)} mL/dose da suspensão 400/57 mg em 5 mL).
+
+• Se não tolera VO/indicação parenteral:
+  ceftriaxona ${fmt(Math.min(50*w,2000))} mg IM/EV 1x/dia.
+
+Ajustar à cultura e protocolo local.`
+  )
 }
+
 function finishPneumonia(){
- const w=n('weight'),amox=Math.min(90*w,4000);
- finish('danger','Pneumonia oculta / RX alterado','Tratar como pneumonia; avaliar internação conforme gravidade, hipóxia, idade e comorbidades.',
- commonHeader()+`PNEUMONIA — RX ALTERADO\n• Amoxicilina em alta dose: ${fmt(amox)} mg/dia VO, dividir 12/12 h ou conforme protocolo local.\n• Se grave, hipóxia, incapacidade VO ou necessidade de suporte: internação e esquema parenteral.\n\n★ RX não diferencia de forma confiável etiologia viral de bacteriana; integrar com clínica e leucocitose.`);
+
+  const w=n('weight');
+
+  const amox=Math.min(
+    90*w,
+    4000
+  );
+
+  finish(
+    'danger',
+    'Pneumonia oculta / RX alterado',
+    'Tratar como pneumonia; avaliar internação conforme gravidade, hipóxia, idade e comorbidades.',
+
+    commonHeader()+
+`PNEUMONIA — RX ALTERADO
+• Amoxicilina em alta dose: ${fmt(amox)} mg/dia VO, dividir 12/12 h ou conforme protocolo local.
+• Se grave, hipóxia, incapacidade VO ou necessidade de suporte: internação e esquema parenteral.
+
+★ RX não diferencia de forma confiável etiologia viral de bacteriana; integrar com clínica e leucocitose.`
+  )
 }
+
 function finishObserveAfterCXR(){
- finish('ok','RX normal + vacinação completa','Baixo risco de bacteremia oculta; acompanhar clinicamente e revisar culturas.',
- commonHeader()+`RX NORMAL + VACINAÇÃO COMPLETA\n• Sem antibiótico empírico automático.\n• Reavaliação diária enquanto febril.\n• Conferir hemocultura, se coletada.\n• Internar se seguimento não for seguro.`);
+
+  finish(
+    'ok',
+    'RX normal + vacinação completa',
+    'Baixo risco de bacteremia oculta; acompanhar clinicamente e revisar culturas.',
+
+    commonHeader()+
+`RX NORMAL + VACINAÇÃO COMPLETA
+• Sem antibiótico empírico automático.
+• Reavaliação diária enquanto febril.
+• Conferir hemocultura, se coletada.
+• Internar se seguimento não for seguro.`
+  )
 }
+
 function finishBacteremia(){
- const w=n('weight'),cef=Math.min(50*w,2000);
- finish('danger','Risco de bacteremia oculta','Após hemocultura, considerar ceftriaxona e garantir reavaliação diária.',
- commonHeader()+`RISCO DE BACTEREMIA OCULTA\n• Coletar hemocultura antes do antibiótico.\n• Ceftriaxona: ${fmt(cef)} mg IM/EV 1x/dia (${fmt(cef/100)} mL se solução final 100 mg/mL).\n• Reavaliação em 24 h e revisão ativa da cultura.\n• Internar se seguimento não for garantido.\n\n★ UpToDate recomenda nova revisão também em 48 h após antibiótico parenteral.`);
+
+  const w=n('weight');
+
+  const cef=Math.min(
+    50*w,
+    2000
+  );
+
+  finish(
+    'danger',
+    'Risco de bacteremia oculta',
+    'Após hemocultura, considerar ceftriaxona e garantir reavaliação diária.',
+
+    commonHeader()+
+`RISCO DE BACTEREMIA OCULTA
+• Coletar hemocultura antes do antibiótico.
+• Ceftriaxona: ${fmt(cef)} mg IM/EV 1x/dia (${fmt(cef/100)} mL se solução final 100 mg/mL).
+• Reavaliação em 24 h e revisão ativa da cultura.
+• Internar se seguimento não for garantido.
+
+★ UpToDate recomenda nova revisão também em 48 h após antibiótico parenteral.`
+  )
 }
-function copyRx(){navigator.clipboard.writeText($('rx').textContent)}
+
+function copyRx(){
+  navigator.clipboard.writeText(
+    $('rx').textContent
+  )
+}
+
 renderStep();
+
 </script>
+
 </body>
 </html>
