@@ -3,175 +3,603 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Calculadora de ITU Pediátrica — SBP + HCA</title>
+<title>ITU Pediátrica — HCA + SBP + UpToDate</title>
 <style>
-:root{--bg:#f4f7f5;--card:#fff;--ink:#17352c;--muted:#65766f;--green:#26734d;--green2:#dff1e7;--amber:#fff3cd;--red:#fde2e2;--blue:#e8f1fb;--line:#d9e3de}
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1d2925}
-header{background:linear-gradient(135deg,#174b37,#2f7a55);color:white;padding:24px 18px}
-header h1{margin:0 0 5px;font-size:25px} header p{margin:0;opacity:.9;font-size:14px}
-.wrap{max-width:1080px;margin:auto;padding:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 2px 8px #00000008}
-h2{font-size:18px;color:var(--ink);margin:0 0 14px}.field{margin:10px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
-input,select{width:100%;padding:11px;border:1px solid #cbd8d1;border-radius:10px;background:white;font-size:15px}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{display:flex;gap:8px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:10px;font-size:13px}
-.check input{width:auto;margin-top:2px}.actions{display:flex;gap:10px;margin:16px 0}
-button{border:0;border-radius:11px;padding:13px 18px;font-weight:800;cursor:pointer;font-size:15px}
-.primary{background:var(--green);color:#fff;flex:1}.secondary{background:#e7ece9;color:#29453a}
-#result{display:none}.banner{border-radius:12px;padding:14px;margin:10px 0;font-weight:700}.red{background:var(--red);color:#7c2222}.amber{background:var(--amber);color:#694f00}.green{background:var(--green2);color:#155d3b}.blue{background:var(--blue);color:#1f4f7b}
-.rx{border-left:5px solid var(--green);padding:13px 14px;background:#f7fbf8;border-radius:10px;margin:10px 0}.rx b{color:var(--ink)} .apres{margin-top:6px;font-size:13px;color:#31433c;line-height:1.5}
-.small{font-size:12px;color:var(--muted);line-height:1.45}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eaf3ee;color:#205c40;font-size:12px;font-weight:800;margin:2px}
-hr{border:0;border-top:1px solid var(--line);margin:14px 0}
-@media(max-width:760px){.grid,.checks{grid-template-columns:1fr}.wrap{padding:10px}header{padding:18px 14px}}
-@media print{.input-area,.actions{display:none!important}#result{display:block!important}.card{box-shadow:none}body{background:white}}
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9e2ec;
+  --blue:#175cd3;--blue-soft:#eff6ff;--green:#067647;--green-soft:#ecfdf3;
+  --amber:#b54708;--amber-soft:#fffaeb;--red:#b42318;--red-soft:#fef3f2;
+  --purple:#6941c6;--purple-soft:#f7f4ff;--shadow:0 10px 28px rgba(16,24,40,.08)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#eef4ff);color:var(--ink)}
+.wrap{max-width:1220px;margin:auto;padding:18px}
+.hero{background:linear-gradient(135deg,#174ea6,#0875b7);color:#fff;border-radius:22px;padding:21px 24px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 5px;font-size:clamp(24px,4vw,36px)}
+.hero p{margin:0;opacity:.92;line-height:1.45}
+.legend{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px 14px;margin:13px 0;box-shadow:var(--shadow)}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800}
+.br{background:#eaf7ef;color:#146c43;border:1px solid #a7d7b8}
+.inst{background:#e8f2f4;color:#315f68;border:1px solid #b7d5db}
+.int{background:var(--purple-soft);color:var(--purple);border:1px solid #c9b8ff}
+.layout{display:grid;grid-template-columns:minmax(350px,430px) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.sticky{position:sticky;top:10px}@media(max-width:900px){.sticky{position:static}}
+h2{font-size:18px;margin:0 0 12px;color:#163a63}
+h3{font-size:15px;margin:0 0 8px}
+label{display:block;font-size:12.5px;font-weight:750;color:#344054;margin-bottom:5px}
+input,select{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:var(--ink);font:inherit}
+input:focus,select:focus{outline:3px solid rgba(23,92,211,.12);border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.one{grid-template-columns:1fr}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+.question{border:1px solid #dce6f2;background:#fbfdff;border-radius:15px;padding:14px;margin-top:12px}
+.question-title{font-size:18px;font-weight:900;line-height:1.25;margin-bottom:6px}
+.question-help{font-size:12.5px;color:var(--muted);line-height:1.45;margin-bottom:12px}
+.options{display:grid;gap:8px}
+.option{display:flex;gap:10px;align-items:flex-start;border:1px solid #dce3ec;border-radius:12px;padding:11px;background:#fff;cursor:pointer}
+.option:hover{border-color:#98b8e8;background:#f8fbff}.option input{width:auto;margin-top:2px}
+.option b{display:block;font-size:13px}.option small{display:block;color:var(--muted);line-height:1.35;margin-top:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+button{border:0;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:850;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#edf2f7;color:#344054}.danger-btn{background:#fff1f0;color:var(--red)}
+.progress{height:7px;background:#e9eef5;border-radius:999px;overflow:hidden;margin:9px 0 4px}
+.progress>div{height:100%;background:linear-gradient(90deg,#2e90fa,#12b76a);transition:.25s}
+.muted{font-size:12px;color:var(--muted);line-height:1.45}
+.path{display:grid;gap:9px}
+.node{border:1px solid var(--line);border-left:5px solid #98a2b3;border-radius:14px;padding:11px 12px;background:#fff}
+.node.active{border-left-color:var(--blue);background:var(--blue-soft)}
+.node.ok{border-left-color:#12b76a;background:var(--green-soft)}
+.node.warn{border-left-color:#f79009;background:var(--amber-soft)}
+.node.danger{border-left-color:#f04438;background:var(--red-soft)}
+.node.international{border-left-color:#7f56d9;background:var(--purple-soft)}
+.node .kicker{font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#667085}
+.node .title{font-size:15px;font-weight:900;margin-top:3px}
+.node p,.node li{font-size:12.8px;line-height:1.45}
+.node ul{margin:7px 0 0;padding-left:19px}
+.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900;margin:2px 4px 2px 0}
+.b-blue{background:#eaf2ff;color:#175cd3}.b-green{background:#dff7e9;color:#067647}.b-red{background:#fee4e2;color:#b42318}.b-amber{background:#fff1cc;color:#b54708}.b-purple{background:#ede9fe;color:#6941c6}
+.rx{white-space:pre-wrap;background:#101828;color:#e5e7eb;border-radius:14px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.3px;line-height:1.5;overflow:auto}
+.just{white-space:pre-wrap;background:#fff7ed;color:#7c2d12;border:2px solid #fdba74;border-radius:14px;padding:14px;font-size:12.5px;font-weight:900;line-height:1.5;text-transform:uppercase}
+.just.green{background:#ecfdf3;color:#065f46;border-color:#6ee7b7}
+.just.purple{background:#f7f4ff;color:#4c1d95;border-color:#c4b5fd}
+.hidden{display:none!important}.mini-title{font-size:12px;font-weight:900;color:#475467;text-transform:uppercase;letter-spacing:.04em;margin:13px 0 7px}
+.check-grid{display:grid;gap:7px}
+.check{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid #dce3ec;border-radius:11px;background:#fff}
+.check input{width:auto;margin-top:2px}.check b{font-size:12.5px}.check small{display:block;color:var(--muted);margin-top:2px;line-height:1.35}
+.alert{border-radius:12px;padding:10px 11px;font-size:12.5px;line-height:1.45;margin:8px 0;border:1px solid}
+.info{background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a}.okbox{background:#ecfdf5;border-color:#a7f3d0;color:#064e3b}
+.warnbox{background:#fffbeb;border-color:#fde68a;color:#78350f}.dangerbox{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}
+.purplebox{background:#f5f3ff;border-color:#ddd6fe;color:#4c1d95}
+.medbox{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfdff;margin-top:9px}
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.kpi>div{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px}
+.kpi b{display:block;color:#163a63;font-size:14px}.kpi small{color:var(--muted)}
+.copyrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.source{padding:9px 11px;border-left:4px solid #94a3b8;background:#f8fafc;border-radius:8px;margin:7px 0;font-size:11.5px;line-height:1.4}
+.source.sbp{border-left-color:#b91c1c}.source.hca{border-left-color:#315f68}.source.utd{border-left-color:#7f56d9}
+details{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;margin-top:8px}
+summary{font-weight:800;cursor:pointer;color:#334155}
+.footer{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;padding:8px}
 </style>
 </head>
 <body>
-<header><h1>Calculadora de ITU Pediátrica</h1><p>Fluxo diagnóstico SBP 2023 + antibioticoterapia inicial do HCA</p></header>
 <div class="wrap">
-<div class="input-area">
-<div class="grid">
-<section class="card">
-<h2>1. Paciente</h2>
-<div class="field"><label>Idade</label><div style="display:grid;grid-template-columns:2fr 1fr;gap:8px"><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 8"><select id="ageUnit"><option value="m">meses</option><option value="y">anos</option></select></div></div>
-<div class="field"><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 12,5"></div>
-<div class="field"><label>Temperatura máxima</label><input id="temp" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 39,0"></div>
-<div class="field"><label>Controle esfincteriano</label><select id="toilet"><option value="no">Não / lactente</option><option value="yes">Sim</option></select></div>
-</section>
-<section class="card">
-<h2>2. Clínica e gravidade</h2>
-<div class="checks">
-<label class="check"><input type="checkbox" id="nofocus"> Febre sem foco identificável</label>
-<label class="check"><input type="checkbox" id="tox"> Toxemia / comprometimento do estado geral</label>
-<label class="check"><input type="checkbox" id="vomit"> Vômitos ou incapacidade de VO</label>
-<label class="check"><input type="checkbox" id="sepsis"> Urosepse ou bacteremia</label>
-<label class="check"><input type="checkbox" id="immuno"> Imunocomprometido</label>
-<label class="check"><input type="checkbox" id="follow"> Dificuldade de seguimento/adesão</label>
-<label class="check"><input type="checkbox" id="failure"> Falha do tratamento ambulatorial</label>
-<label class="check"><input type="checkbox" id="pna"> Suspeita clínica de pielonefrite</label>
-</div>
-</section>
-<section class="card">
-<h2>3. Sintomas</h2>
-<div class="checks">
-<label class="check"><input type="checkbox" id="dysuria"> Disúria</label>
-<label class="check"><input type="checkbox" id="frequency"> Polaciúria/urgência</label>
-<label class="check"><input type="checkbox" id="lumbar"> Dor lombar</label>
-<label class="check"><input type="checkbox" id="abd"> Dor abdominal</label>
-<label class="check"><input type="checkbox" id="foul"> Urina fétida/turva</label>
-<label class="check"><input type="checkbox" id="hematuria"> Hematúria</label>
-<label class="check"><input type="checkbox" id="lethargy"> Letargia/irritabilidade</label>
-<label class="check"><input type="checkbox" id="poorfeed"> Recusa alimentar</label>
-</div>
-</section>
-<section class="card">
-<h2>4. Urina</h2>
-<div class="field"><label>Fita reagente</label><select id="dip"><option value="na">Não realizada</option><option value="neg">Esterase e nitrito negativos</option><option value="pos">Leucocitúria/esterase e/ou nitrito positivo</option></select></div>
-<div class="field"><label>Sedimento/EAS</label><select id="eas"><option value="na">Não disponível</option><option value="neg">Sem achados sugestivos</option><option value="pos">Piúria &gt;5–10 leucócitos/campo e/ou bactéria</option></select></div>
-<div class="field"><label>Método de coleta da urocultura</label><select id="collection"><option value="none">Ainda não coletada</option><option value="psp">Punção suprapúbica</option><option value="cat">Cateterismo vesical</option><option value="mid">Jato intermediário</option><option value="bag">Saco coletor</option></select></div>
-<div class="field"><label>Urocultura — UFC/mL (se disponível)</label><input id="cfu" type="number" min="0" step="1" placeholder="Ex.: 100000"></div>
-</section>
-</div>
-<div class="actions"><button class="secondary" onclick="clearAll()">Limpar</button><button class="primary" onclick="calculate()">Gerar conduta</button></div>
-<p class="small"><b>Agora inclui conversão para apresentações pediátricas comuns</b>, como amoxicilina/clavulanato 250/62,5 mg/5 mL, 400/57 mg/5 mL e 600/42,9 mg/5 mL; cefalexina 250 mg/5 mL; nitrofurantoína 25 mg/5 mL; SMX-TMP 200/40 mg/5 mL, entre outras.</p>
+  <section class="hero">
+    <h1>ITU Pediátrica — Fluxo Interativo</h1>
+    <p>Decisão clínica → EAS → diferenciais → urocultura → tratamento. O fluxo mostra uma pergunta por vez e gera justificativa pronta para evolução/anamnese.</p>
+  </section>
+
+  <section class="legend">
+    <div class="tags">
+      <span class="tag inst">HCA • escolha antimicrobiana</span>
+      <span class="tag br">SBP • diagnóstico / investigação</span>
+      <span class="tag int">★ UpToDate • complemento em casos cinzentos</span>
+    </div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="card">
+        <h2>1) Dados do paciente</h2>
+        <div class="grid">
+          <div><label>Idade</label><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 2"></div>
+          <div><label>Unidade</label><select id="ageUnit"><option value="years">anos</option><option value="months">meses</option><option value="days">dias</option></select></div>
+          <div><label>Peso (kg)</label><input id="weight" type="number" min="0.5" step="0.1" placeholder="Ex.: 12,5"></div>
+          <div><label>Sexo</label><select id="sex" onchange="toggleCirc()"><option value="">Selecione</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
+          <div id="circBox" class="hidden"><label>Circuncidado?</label><select id="circ"><option value="no">Não</option><option value="yes">Sim</option><option value="unknown">Não informado</option></select></div>
+          <div><label>Maior temperatura (°C)</label><input id="temp" type="number" min="34" max="43" step="0.1" placeholder="Ex.: 39,0"></div>
+          <div><label>Duração da febre (horas)</label><input id="feverHours" type="number" min="0" step="1" placeholder="Ex.: 48"></div>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="startFlow()">Iniciar avaliação</button>
+          <button class="secondary" onclick="resetFlow()">Limpar</button>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <div class="muted"><b id="progressText">Aguardando início</b></div>
+        <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+        <div id="questionBox" class="question">
+          <div class="question-title">Preencha os dados acima</div>
+          <div class="question-help">Depois, clique em “Iniciar avaliação”.</div>
+        </div>
+        <div class="actions">
+          <button id="backBtn" class="secondary" onclick="goBack()" disabled>← Voltar</button>
+          <button id="nextBtn" class="primary" onclick="nextStep()">Continuar →</button>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <details>
+          <summary>Como interpretar piócitos no laudo do HCA</summary>
+          <div class="alert info"><b>LAUDO HCA ENVIADO:</b> o serviço reporta piócitos em <b>p/campo</b> e apresenta referência de <b>2–3 p/campo</b>. O laudo não informa o detalhe técnico do processamento microscópico.</div>
+          <div class="alert purplebox"><b>★ UPTODATE — REGRA OPERACIONAL:</b> como o resultado é expresso por campo, esta ferramenta usa <b>≥5 piócitos/leucócitos por campo</b> como corte operacional para piúria. Assim, <b>10 piócitos/campo é piúria</b>, não “caso sem piúria”.</div>
+          <div class="muted"><b>Importante:</b> os valores 5 e 10 não correspondem a meninos versus meninas. A diferença descrita no UpToDate é de <b>método laboratorial</b>, e não de sexo.</div>
+        </details>
+        <details>
+          <summary>Urocultura no fluxo prático do PA</summary>
+          <div class="alert info">
+            <b>Fluxo local desta ferramenta:</b> urocultura <b>não é etapa obrigatória para iniciar tratamento ambulatorial</b> quando a avaliação clínica + EAS sustentam ITU e o paciente está estável.
+          </div>
+          <div class="alert purplebox">
+            <b>SBP / ★ UpToDate:</b> a cultura continua sendo o exame confirmatório e é especialmente útil em <b>internação, quadro atípico, recorrência, falha terapêutica, resistência prévia, anormalidade urológica</b> ou quando houver disponibilidade/indicação clínica.
+          </div>
+        </details>
+        <details>
+          <summary>Fontes / hierarquia</summary>
+          <div class="source hca"><b>HCA:</b> prioridade para escolha, dose, via e duração dos antimicrobianos.</div>
+          <div class="source sbp"><b>SBP:</b> base para diagnóstico, método de coleta, cultura e investigação.</div>
+          <div class="source utd"><b>★ UpToDate:</b> complemento para probabilidade pré-teste, casos sem piúria clássica, diferenciais e tomada de decisão empírica.</div>
+        </details>
+      </section>
+    </div>
+
+    <div class="sticky">
+      <section class="card">
+        <h2>Conduta construída</h2>
+        <div id="path" class="path">
+          <div class="node active"><div class="kicker">Início</div><div class="title">Aguardando dados</div><p>O resultado será montado conforme as respostas.</p></div>
+        </div>
+
+        <div id="finalArea" class="hidden">
+          <div class="mini-title">Justificativa para prontuário / anamnese</div>
+          <div id="finalJust" class="just"></div>
+          <div class="copyrow"><button class="secondary" onclick="copyJust()">Copiar justificativa</button></div>
+
+          <div id="medArea" class="hidden">
+            <div class="mini-title">Antibiótico — protocolo HCA</div>
+            <div id="medBox" class="medbox"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="footer">Ferramenta de apoio clínico. No fluxo ambulatorial do PA, a decisão inicial é baseada em clínica + EAS + gravidade, com o HCA como fonte principal para antibioticoterapia. Urocultura fica reservada nesta ferramenta principalmente para internação, falha, recorrência ou situações selecionadas.</div>
 </div>
 
-<section id="result" class="card">
-<h2>Conduta sugerida</h2><div id="out"></div>
-<div class="actions"><button class="secondary" onclick="window.print()">Imprimir / salvar PDF</button></div>
-<p class="small"><b>Uso de apoio à decisão.</b> Confirmar alergias, função renal, antibiograma e disponibilidade/formulações locais. A calculadora prioriza o protocolo local do HCA para antibioticoterapia e usa o documento da SBP para diagnóstico/coleta/investigação. Não substitui avaliação clínica.</p>
-</section>
-</div>
 <script>
 const $=id=>document.getElementById(id);
-const ck=id=>$(id).checked;
-function n(id){return parseFloat($(id).value)}
-function ageMonths(){let a=n('age'); return isNaN(a)?NaN:($('ageUnit').value==='y'?a*12:a)}
-function fmt(x){return (Math.round(x*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})}
-function doseDay(mgkg,w,max){return Math.min(mgkg*w,max||Infinity)}
-const presentations = {
- "Amoxicilina + clavulanato":[
-   ["Susp. 250/62,5 mg/5 mL",50,"amoxicilina"],
-   ["Susp. 400/57 mg/5 mL",80,"amoxicilina"],
-   ["Susp. 600/42,9 mg/5 mL",120,"amoxicilina"]
- ],
- "Cefalexina":[["Susp. 250 mg/5 mL",50,"cefalexina"],["Susp. 500 mg/5 mL",100,"cefalexina"]],
- "Nitrofurantoína":[["Susp. 25 mg/5 mL",5,"nitrofurantoína"]],
- "Axetilcefuroxima":[["Susp. 250 mg/5 mL",50,"cefuroxima"]],
- "Cefaclor":[["Susp. 250 mg/5 mL",50,"cefaclor"]],
- "Sulfametoxazol + trimetoprima":[["Susp. 200/40 mg/5 mL",8,"TMP"]],
- "Cefuroxima":[["Frasco-ampola 750 mg",750,"cefuroxima"],["Frasco-ampola 1,5 g",1500,"cefuroxima"]],
- "Cefotaxima":[["Frasco-ampola 1 g",1000,"cefotaxima"]],
- "Gentamicina":[["Inj. 40 mg/mL",40,"gentamicina"],["Inj. 80 mg/2 mL",40,"gentamicina"]],
- "Amicacina":[["Inj. 250 mg/mL",250,"amicacina"]],
- "Piperacilina/tazobactam":[["Frasco 4 g + 0,5 g",4000,"piperacilina"]]
+const state={step:'fever',history:[],nodes:[],answers:{},finished:false};
+
+function n(id){const v=parseFloat($(id).value);return Number.isFinite(v)?v:null}
+function ageDays(){const a=n('age');if(a===null)return null;return $('ageUnit').value==='days'?a:$('ageUnit').value==='months'?a*30.4375:a*365.25}
+function ageMonths(){const d=ageDays();return d===null?null:d/30.4375}
+function fmt(v,d=1){return Number(v).toLocaleString('pt-BR',{maximumFractionDigits:d})}
+function radio(name){const x=document.querySelector(`input[name="${name}"]:checked`);return x?x.value:null}
+function checked(id){return $(id)?.checked||false}
+function toggleCirc(){$('circBox').classList.toggle('hidden',$('sex').value!=='M')}
+function setProgress(text,pct){$('progressText').textContent=text;$('progressBar').style.width=pct+'%'}
+function setQuestion(title,help,html){$('questionBox').innerHTML=`<div class="question-title">${title}</div><div class="question-help">${help||''}</div>${html}`}
+function addNode(type,kicker,title,body){state.nodes.push({type,kicker,title,body});renderPath()}
+function renderPath(){
+  $('path').innerHTML=state.nodes.length?state.nodes.map(x=>`<div class="node ${x.type}"><div class="kicker">${x.kicker}</div><div class="title">${x.title}</div><div>${x.body}</div></div>`).join(''):
+  `<div class="node active"><div class="kicker">Início</div><div class="title">Aguardando dados</div><p>O resultado será montado conforme as respostas.</p></div>`
+}
+function baseValid(){
+  return n('age')!==null && n('weight')!==null && $('sex').value && n('temp')!==null && n('feverHours')!==null;
+}
+function startFlow(){
+  if(!baseValid()){alert('Preencha idade, peso, sexo, temperatura máxima e duração da febre.');return}
+  state.step='fever';state.history=[];state.nodes=[];state.answers={};state.finished=false;
+  $('finalArea').classList.add('hidden');$('medArea').classList.add('hidden');
+  addNode('active','Paciente',`${fmt(n('weight'))} kg • ${ageLabel()} • ${$('sex').value==='M'?'masculino':'feminino'}`,`Temperatura máxima: ${fmt(n('temp'))} °C • febre referida por ${fmt(n('feverHours'),0)} h.`);
+  renderStep();
+}
+function resetFlow(){
+  document.querySelectorAll('input').forEach(x=>{if(x.type==='checkbox'||x.type==='radio')x.checked=false;else x.value=''});
+  document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);
+  $('circBox').classList.add('hidden');state.step='fever';state.history=[];state.nodes=[];state.answers={};state.finished=false;
+  $('finalArea').classList.add('hidden');$('medArea').classList.add('hidden');setProgress('Aguardando início',0);
+  setQuestion('Preencha os dados acima','Depois, clique em “Iniciar avaliação”.','');
+  renderPath();$('backBtn').disabled=true;
+}
+function ageLabel(){
+  const m=ageMonths();if(m===null)return '';
+  if(m<1)return `${Math.round(m*30.4375)} dias`;
+  if(m<24)return `${Math.round(m)} meses`;
+  return `${fmt(m/12,1)} anos`;
+}
+function pushHistory(){state.history.push({step:state.step,nodes:JSON.parse(JSON.stringify(state.nodes)),answers:JSON.parse(JSON.stringify(state.answers))})}
+function goBack(){
+  const h=state.history.pop();if(!h)return;
+  state.step=h.step;state.nodes=h.nodes;state.answers=h.answers;state.finished=false;
+  $('finalArea').classList.add('hidden');$('medArea').classList.add('hidden');
+  renderPath();renderStep();
+}
+function renderStep(){
+  $('backBtn').disabled=state.history.length===0;
+  const s=state.step;
+  if(s==='fever'){
+    setProgress('1. Classificar febril × afebril',10);
+    setQuestion('Há febre associada ao quadro atual?','Febre ≥38 °C muda o raciocínio para ITU febril / possível acometimento alto.',
+    `<div class="options">
+      <label class="option"><input type="radio" name="fever" value="yes"><span><b>Sim — quadro febril</b><small>Considerar ITU febril / possível pielonefrite.</small></span></label>
+      <label class="option"><input type="radio" name="fever" value="no"><span><b>Não — quadro afebril</b><small>Se sintomas urinários baixos, considerar cistite simples.</small></span></label>
+    </div>`);
+  }else if(s==='symptoms'){
+    setProgress('2. História clínica',22);
+    setQuestion('Quais achados clínicos estão presentes?','Marque os achados realmente referidos/observados.',
+    `<div class="check-grid">
+      <label class="check"><input id="dysuria" type="checkbox"><span><b>Disúria</b><small>Dor/ardência ao urinar.</small></span></label>
+      <label class="check"><input id="frequency" type="checkbox"><span><b>Polaciúria / urgência</b><small>Aumento da frequência ou urgência miccional.</small></span></label>
+      <label class="check"><input id="incontinence" type="checkbox"><span><b>Nova incontinência / enurese</b><small>Em criança previamente continente.</small></span></label>
+      <label class="check"><input id="abdpain" type="checkbox"><span><b>Dor abdominal / suprapúbica</b></span></label>
+      <label class="check"><input id="backpain" type="checkbox"><span><b>Dor lombar</b></span></label>
+      <label class="check"><input id="vomit" type="checkbox"><span><b>Vômitos / prostração</b></span></label>
+      <label class="check"><input id="odor" type="checkbox"><span><b>Urina fétida / turva</b><small>Achado de menor especificidade isoladamente.</small></span></label>
+      <label class="check"><input id="prevUTI" type="checkbox"><span><b>ITU prévia / episódio febril urinário prévio</b></span></label>
+    </div>`);
+  }else if(s==='historyClass'){
+    setProgress('3. Julgamento da história clínica',32);
+    const hint=historyHint();
+    setQuestion('A história clínica é sugestiva para ITU?',hint,
+    `<div class="options">
+      <label class="option"><input type="radio" name="hist" value="yes" onchange="previewHist()"><span><b>SIM — história clínica sugestiva</b><small>Usar quando o conjunto clínico mantém probabilidade relevante de ITU.</small></span></label>
+      <label class="option"><input type="radio" name="hist" value="no" onchange="previewHist()"><span><b>NÃO — história pouco sugestiva</b><small>Prosseguir, mas valorizar diagnósticos alternativos e urocultura conforme contexto.</small></span></label>
+    </div>
+    <div id="histPreview"></div>`);
+  }else if(s==='otherFocus'){
+    setProgress('4. Procurar outro foco',41);
+    setQuestion('Existe outro foco definido que explique a febre?','Outro foco reduz a probabilidade de ITU, mas não a elimina completamente.',
+    `<div class="options">
+      <label class="option"><input type="radio" name="focus" value="no"><span><b>Não — sem outro foco identificado</b></span></label>
+      <label class="option"><input type="radio" name="focus" value="yes"><span><b>Sim — há outro foco clínico definido</b><small>Ex.: OMA, pneumonia, síndrome viral bem caracterizada etc.</small></span></label>
+    </div>`);
+  }else if(s==='genital'){
+    setProgress('5. Exame genital / diferenciais',50);
+    renderGenitalQuestion();
+  }else if(s==='ua'){
+    setProgress('6. Interpretar EAS',68);
+    setQuestion('Informe os achados do EAS','O laudo do HCA fornecido pelo serviço informa PIÓCITOS “p/campo”. O método técnico exato (centrifugado/automatizado) não aparece no laudo; por isso, o fluxo usa uma interpretação operacional por campo.',
+    `<div class="grid one">
+      <div>
+        <label>Piócitos por campo — use o MAIOR valor do intervalo do laudo</label>
+        <input id="wbc" type="number" min="0" step="1" placeholder="Ex.: laudo 3 a 4 → digite 4; laudo 8 a 10 → digite 10">
+      </div>
+    </div>
+    <div class="check-grid" style="margin-top:9px">
+      <label class="check"><input id="le" type="checkbox"><span><b>Leucócitos / esterase leucocitária: positivo</b><small>No laudo HCA aparece em linha separada como “LEUCÓCITOS”.</small></span></label>
+      <label class="check"><input id="nitrite" type="checkbox"><span><b>Nitrito positivo</b><small>Alta especificidade; nitrito negativo não exclui ITU.</small></span></label>
+      <label class="check"><input id="bact" type="checkbox"><span><b>Bactérias presentes</b></span></label>
+    </div>
+    <div class="alert info"><b>PADRÃO OBSERVADO NO LAUDO DO HCA:</b> piócitos são reportados em <b>p/campo</b>; no exemplo enviado, o próprio laboratório traz referência de <b>2–3 p/campo</b>.</div>
+    <div class="alert purplebox"><b>★ REGRA OPERACIONAL UPTODATE PARA ESTE FLUXO:</b> em microscopia convencional, <b>≥5 leucócitos/piócitos por campo</b> caracteriza piúria. Portanto, <b>10 piócitos/campo = PIÚRIA PRESENTE</b>. Os valores 5 e 10 <b>não são cortes por sexo</b>.</div>
+    <div class="alert warnbox"><b>INTERPRETAÇÃO PRÁTICA:</b> 0–2 p/campo = pouco sugestivo isoladamente; 3–4 p/campo = limítrofe/discreto; <b>≥5 p/campo = piúria presente</b>. Nitrito, bactérias, esterase/leucócitos e história clínica aumentam ou reduzem a probabilidade.</div>`);
+  }else if(s==='risk'){
+    setProgress('7. Gravidade / risco',84);
+    setQuestion('Há fatores que favorecem tratamento imediato / internação?','Marque apenas os presentes.',
+    `<div class="check-grid">
+      <label class="check"><input id="ill" type="checkbox"><span><b>Mau estado geral / toxemia</b></span></label>
+      <label class="check"><input id="sepsis" type="checkbox"><span><b>Urosepse / bacteremia / má perfusão</b></span></label>
+      <label class="check"><input id="noPO" type="checkbox"><span><b>Vômitos ou incapacidade de ingerir VO</b></span></label>
+      <label class="check"><input id="immuno" type="checkbox"><span><b>Imunocomprometido</b></span></label>
+      <label class="check"><input id="uroAbn" type="checkbox"><span><b>Anormalidade urológica conhecida</b></span></label>
+      <label class="check"><input id="poorFU" type="checkbox"><span><b>Seguimento ambulatorial não confiável</b></span></label>
+      <label class="check"><input id="failed" type="checkbox"><span><b>Falha de tratamento ambulatorial</b></span></label>
+    </div>`);
+  }else if(s==='decision'){
+    setProgress('8. Decisão empírica',94);
+    const rec=decisionSuggestion();
+    setQuestion('Conduta enquanto aguarda urocultura',rec.help,
+    `<div class="alert ${rec.cls}"><b>${rec.title}</b><br>${rec.body}</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="empiric" value="yes"><span><b>INICIAR ANTIBIÓTICO EMPÍRICO</b><small>Gerar justificativa pronta para prontuário.</small></span></label>
+      <label class="option"><input type="radio" name="empiric" value="wait"><span><b>AGUARDAR UROCULTURA / REAVALIAR</b><small>Gerar justificativa para não iniciar empiricamente neste momento.</small></span></label>
+    </div>`);
+  }else if(s==='done'){
+    finishFlow();
+  }
+}
+function historyHint(){
+  const m=ageMonths(), t=n('temp'), h=n('feverHours');
+  let s='Valorize disúria, frequência/urgência, nova incontinência, dor abdominal/lombar e febre sem outro foco.';
+  if(m!==null && m<24) s+=' Em menores de 2 anos, febre ≥39 °C, duração ≥48 h e ausência de outro foco elevam a probabilidade pré-teste.';
+  else s+=' Em ≥2 anos, sintomas urinários localizadores têm maior peso diagnóstico.';
+  if(t>=39 || h>=48) s+=' Este caso já apresenta fator clínico de maior probabilidade (febre alta e/ou ≥48 h).';
+  return s;
+}
+function previewHist(){
+  const v=radio('hist');const box=$('histPreview');if(!box)return;
+  if(v==='yes'){
+    box.innerHTML=`<div class="just purple" style="margin-top:10px">HISTÓRIA CLÍNICA CONSIDERADA SUGESTIVA PARA INFECÇÃO DO TRATO URINÁRIO, DIANTE DO CONJUNTO DE SINAIS E SINTOMAS URINÁRIOS E/OU FEBRE SEM FOCO ALTERNATIVO DEFINIDO. A CONFIRMAÇÃO DIAGNÓSTICA DEPENDE DA ANÁLISE URINÁRIA E UROCULTURA, DEVENDO A NECESSIDADE DE TERAPIA EMPÍRICA SER DEFINIDA APÓS INTEGRAÇÃO DOS ACHADOS CLÍNICOS E LABORATORIAIS.</div>`;
+  }else if(v==='no'){
+    box.innerHTML=`<div class="alert warnbox"><b>História pouco sugestiva:</b> evite usar sintomas inespecíficos isolados como justificativa para antibiótico; prossiga com EAS/cultura conforme risco e procure diagnósticos alternativos.</div>`;
+  }else box.innerHTML='';
+}
+function renderGenitalQuestion(){
+  if($('sex').value==='M'){
+    setQuestion('Foi descartada causa genital para a disúria?','Em meninos, examinar glande, prepúcio e meato. O UpToDate destaca anormalidades como fimose; balanite/balanopostite e meatite são diferenciais clínicos locais para disúria.',
+    `<div class="options">
+      <label class="option"><input type="radio" name="genital" value="cleared"><span><b>SIM — sem sinais de balanite/balanopostite, meatite ou fimose inflamatória</b><small>Sem causa genital evidente para explicar a disúria.</small></span></label>
+      <label class="option"><input type="radio" name="genital" value="present"><span><b>NÃO — há alteração genital que pode explicar a disúria</b><small>Reavaliar se sintomas locais explicam o quadro; febre relevante pode exigir investigação concomitante de ITU.</small></span></label>
+      <label class="option"><input type="radio" name="genital" value="notexamined"><span><b>NÃO FOI AVALIADO</b><small>Realizar exame genital antes de concluir ITU, quando possível.</small></span></label>
+    </div>`);
+  }else{
+    setQuestion('Foi descartada causa genital para a disúria?','Em meninas, avaliar vulva e introito: vulvovaginite, irritação química/mecânica, aderência labial e corpo estranho podem mimetizar ITU.',
+    `<div class="options">
+      <label class="option"><input type="radio" name="genital" value="cleared"><span><b>SIM — sem sinais de vulvovaginite, irritação genital, aderência labial ou corpo estranho</b></span></label>
+      <label class="option"><input type="radio" name="genital" value="present"><span><b>NÃO — há alteração genital que pode explicar a disúria</b><small>Vulvovaginite/corpo estranho podem causar disúria e até leucócitos na urina.</small></span></label>
+      <label class="option"><input type="radio" name="genital" value="notexamined"><span><b>NÃO FOI AVALIADO</b><small>Realizar exame genital antes de concluir ITU, quando possível.</small></span></label>
+    </div>`);
+  }
+}
+function nextStep(){
+  const s=state.step;
+  if(s==='fever'){
+    const v=radio('fever');if(!v){alert('Selecione se há febre.');return}
+    pushHistory();state.answers.fever=v;addNode(v==='yes'?'warn':'ok','Classificação',v==='yes'?'Quadro febril':'Quadro afebril',v==='yes'?'Tratar como possível ITU febril se investigação urinária sustentar a hipótese.':'Se houver sintomas urinários baixos, considerar cistite simples.');state.step='symptoms';
+  }else if(s==='symptoms'){
+    pushHistory();
+    state.answers.symptoms={dysuria:checked('dysuria'),frequency:checked('frequency'),incontinence:checked('incontinence'),abdpain:checked('abdpain'),backpain:checked('backpain'),vomit:checked('vomit'),odor:checked('odor'),prevUTI:checked('prevUTI')};
+    const list=symptomList();addNode(list.length?'active':'warn','Clínica',list.length?'Sintomas registrados':'Sem sintomas urinários localizadores',list.length?list.join(' • '):'A história isolada oferece menor sustentação para ITU.');state.step='historyClass';
+  }else if(s==='historyClass'){
+    const v=radio('hist');if(!v){alert('Classifique a história clínica.');return}
+    pushHistory();state.answers.history=v;addNode(v==='yes'?'active':'warn','Probabilidade clínica',v==='yes'?'História sugestiva':'História pouco sugestiva',v==='yes'?'Prosseguir integrando EAS, urocultura e diferenciais.':'Valorizar diagnósticos alternativos e evitar antibiótico baseado apenas em sintomas inespecíficos.');state.step=state.answers.fever==='yes'?'otherFocus':'genital';
+  }else if(s==='otherFocus'){
+    const v=radio('focus');if(!v){alert('Informe se há outro foco.');return}
+    pushHistory();state.answers.focus=v;addNode(v==='no'?'active':'warn','Foco de febre',v==='no'?'Sem outro foco definido':'Outro foco identificado',v==='no'?'A ausência de foco alternativo aumenta a probabilidade de ITU no contexto apropriado.':'Outro foco reduz a probabilidade de ITU, embora não a elimine.');state.step='genital';
+  }else if(s==='genital'){
+    const v=radio('genital');if(!v){alert('Informe a avaliação genital.');return}
+    pushHistory();state.answers.genital=v;
+    const sex=$('sex').value;
+    const t=v==='cleared'?'Diferencial genital descartado':v==='present'?'Possível causa genital presente':'Exame genital ainda não realizado';
+    const b=v==='cleared'?'Sem causa local evidente para explicar a disúria.':v==='present'?(sex==='M'?'Balanite/balanopostite, meatite ou fimose inflamatória podem explicar disúria.':'Vulvovaginite, irritação, aderência labial ou corpo estranho podem explicar disúria e/ou piúria.'):'Recomenda-se exame genital antes de concluir ITU quando possível.';
+    addNode(v==='cleared'?'ok':'warn','Diferenciais',t,b);state.step='ua';
+  }else if(s==='ua'){
+    const w=n('wbc');if(w===null){alert('Informe a contagem de leucócitos/piócitos.');return}
+    pushHistory();state.answers.ua={method:'hca_field',wbc:w,le:checked('le'),nitrite:checked('nitrite'),bact:checked('bact')};
+    const c=classifyUA();addNode(c.type,'EAS',c.title,c.body);state.step='risk';
+  }else if(s==='risk'){
+    pushHistory();state.answers.risk={ill:checked('ill'),sepsis:checked('sepsis'),noPO:checked('noPO'),immuno:checked('immuno'),uroAbn:checked('uroAbn'),poorFU:checked('poorFU'),failed:checked('failed')};
+    const r=riskList();addNode(r.length?'danger':'ok','Gravidade',r.length?'Há critérios de maior risco':'Sem critérios maiores marcados',r.length?r.join(' • '):'Se estável e com seguimento confiável, manejo ambulatorial pode ser possível conforme idade e cenário.');state.step='decision';
+  }else if(s==='decision'){
+    const v=radio('empiric');if(!v){alert('Escolha a conduta empírica.');return}
+    pushHistory();state.answers.empiric=v;state.step='done';
+  }
+  renderStep();
+}
+function symptomList(){
+  const a=state.answers.symptoms||{};const out=[];
+  if(a.dysuria)out.push('Disúria');if(a.frequency)out.push('Polaciúria/urgência');if(a.incontinence)out.push('Nova incontinência/enurese');
+  if(a.abdpain)out.push('Dor abdominal/suprapúbica');if(a.backpain)out.push('Dor lombar');if(a.vomit)out.push('Vômitos/prostração');if(a.odor)out.push('Urina fétida/turva');if(a.prevUTI)out.push('ITU prévia');
+  return out;
+}
+function classifyUA(){
+  const u=state.answers.ua;
+  const py = u.wbc >= 5;
+  const border = u.wbc >= 3 && u.wbc < 5;
+  const fieldText = `${fmt(u.wbc,0)} piócitos/campo`;
+
+  // Forte quando há marcador altamente sugestivo ou convergência de piúria + outro marcador.
+  const strong = u.nitrite || (py && (u.le || u.bact)) || (u.le && u.bact);
+
+  let title,body,type;
+  if(strong){
+    title='EAS FORTEMENTE SUGESTIVO PARA ITU';
+    type='ok';
+    body=`${fieldText}. ${py?'PIÚRIA PRESENTE (≥5/campo). ':''}${u.nitrite?'Nitrito positivo. ':''}${u.le?'Leucócitos/esterase positivos. ':''}${u.bact?'Bactérias presentes. ':''}O conjunto laboratorial aumenta significativamente a probabilidade de ITU quando associado à clínica.`;
+  }else if(py){
+    title='EAS SUGESTIVO — PIÚRIA PRESENTE';
+    type='ok';
+    body=`${fieldText}. O valor preenche o corte operacional de piúria (≥5/campo). Mesmo com nitrito negativo ou sem bacteriúria marcada, NÃO deve ser descrito como “sem piúria”. Integrar com febre, sintomas urinários, exame genital e estado geral.`;
+  }else if(border || u.le || u.bact){
+    title='EAS INTERMEDIÁRIO / LIMÍTROFE';
+    type='warn';
+    body=`${fieldText}. ${border?'Há discreto aumento/valor limítrofe, mas abaixo do corte operacional de piúria de ≥5/campo. ':''}${u.le?'Leucócitos/esterase positivos. ':''}${u.bact?'Bactérias presentes. ':''}A decisão depende principalmente da probabilidade clínica e dos diagnósticos diferenciais.`;
+  }else{
+    title='EAS POUCO SUGESTIVO';
+    type='warn';
+    body=`${fieldText}, sem nitrito, leucócitos/esterase ou bactérias marcados. Isso reduz a probabilidade de ITU, embora não a zere quando a história clínica é muito sugestiva.`;
+  }
+
+  state.answers.uaClass={strong,suggestive:(strong||py||border||u.le||u.bact),border,py,title};
+  return {title,body,type};
+}
+function riskList(){
+  const r=state.answers.risk||{},o=[];const m=ageMonths();
+  if(m!==null&&m<2)o.push('Idade <2 meses');
+  if(r.ill)o.push('Mau estado geral/toxemia');if(r.sepsis)o.push('Urosepse/bacteremia');if(r.noPO)o.push('Vômitos/incapacidade VO');
+  if(r.immuno)o.push('Imunocomprometido');if(r.uroAbn)o.push('Anormalidade urológica');if(r.poorFU)o.push('Seguimento não confiável');if(r.failed)o.push('Falha ambulatorial');
+  return o;
+}
+function clinicalHigh(){
+  const a=state.answers.symptoms||{},t=n('temp')||0,h=n('feverHours')||0;
+  let score=0;if(a.dysuria)score+=2;if(a.frequency)score++;if(a.incontinence)score++;if(a.abdpain)score++;if(a.backpain)score+=2;if(a.prevUTI)score+=2;
+  if(state.answers.fever==='yes'){if(t>=39)score+=2;if(h>=48)score+=2;if(state.answers.focus==='no')score+=2;}
+  if(state.answers.history==='yes')score+=2;
+  if(state.answers.genital==='present')score-=2;
+  return score>=4;
+}
+function decisionSuggestion(){
+  const u=state.answers.uaClass||{},feb=state.answers.fever==='yes',high=clinicalHigh(),r=riskList();
+
+  if(r.length) return {
+    cls:'dangerbox',
+    title:'RECOMENDAÇÃO FORTE: TRATAR E AVALIAR INTERNAÇÃO / VIA PARENTERAL',
+    body:'Há critério de maior risco. Iniciar terapia adequada ao cenário. Em internação, considerar urocultura/antibiograma conforme disponibilidade e protocolo institucional.',
+    help:'Os fatores de gravidade pesam mais que um EAS pouco exuberante.'
+  };
+
+  if(u.strong && state.answers.history==='yes') return {
+    cls:'okbox',
+    title:'ALTA PROBABILIDADE DE ITU — INICIAR ANTIBIOTICOTERAPIA EMPÍRICA',
+    body:'História clínica sugestiva + EAS fortemente sugestivo sustentam tratamento empírico no fluxo do PA, após exclusão de diagnósticos alternativos relevantes.',
+    help:'O quadro clínico e laboratorial convergem.'
+  };
+
+  if(feb && high && u.py) return {
+    cls:'okbox',
+    title:'ITU FEBRIL PROVÁVEL — TRATAMENTO EMPÍRICO SUSTENTADO',
+    body:'Há febre + história clínica relevante + PIÚRIA PRESENTE (≥5 piócitos/campo). Mesmo com nitrito negativo, o EAS é sugestivo e não deve ser classificado como “sem piúria”.',
+    help:'Exemplo: 10 piócitos/campo entra neste ramo.'
+  };
+
+  if(feb && high && !u.py) return {
+    cls:'warnbox',
+    title:'CASO CINZENTO — TRATAMENTO EMPÍRICO PODE SER DEFENSÁVEL',
+    body:'A história clínica mantém suspeita relevante, mas NÃO há piúria clássica pelo corte operacional de ≥5/campo. Nessa situação, o UpToDate ressalta que uma minoria das ITUs pediátricas pode ocorrer sem piúria; integrar clínica, demais achados do EAS, diferenciais, gravidade e possibilidade de reavaliação.',
+    help:'Exemplo típico: 3–4 piócitos/campo com febre + disúria e sem outro foco.'
+  };
+
+  if(!feb && state.answers.history==='yes' && (u.py||u.strong)) return {
+    cls:'okbox',
+    title:'CISTITE PROVÁVEL — EMPÍRICO PODE SER INICIADO',
+    body:'Sintomas urinários baixos associados a piúria e/ou outros marcadores sugestivos sustentam tratamento empírico após excluir causas genitais alternativas.',
+    help:'Nos quadros afebris, correlacionar sintomas localizadores e EAS.'
+  };
+
+  if(!feb && state.answers.history==='yes' && u.border) return {
+    cls:'warnbox',
+    title:'CISTITE POSSÍVEL, MAS EAS LIMÍTROFE',
+    body:'Há sintomas urinários, porém apenas 3–4 piócitos/campo. Avaliar bacteriúria, leucócitos/esterase, exame genital e evolução antes de iniciar antibiótico automaticamente.',
+    help:'O EAS isolado ainda não fecha o diagnóstico.'
+  };
+
+  return {
+    cls:'warnbox',
+    title:'NÃO HÁ SUSTENTAÇÃO SUFICIENTE PARA ATB AUTOMÁTICO',
+    body:'A combinação atual não oferece sustentação suficiente para antibioticoterapia imediata. Procure diagnósticos alternativos, garanta seguimento e reavalie conforme evolução clínica.',
+    help:'Evitar transformar alteração discreta isolada do EAS em diagnóstico de ITU.'
+  };
+}
+function finishFlow(){
+  state.finished=true;setProgress('Fluxo concluído',100);
+  setQuestion('Avaliação concluída','A justificativa e a opção antimicrobiana aparecem à direita.','<div class="alert okbox"><b>Fluxo finalizado.</b> Use “Voltar” para revisar alguma resposta.</div>');
+  const empiric=state.answers.empiric==='yes';
+  addNode(empiric?'ok':'warn','Conduta',empiric?'Antibioticoterapia empírica selecionada':'Não iniciar ATB agora / reavaliar',empiric?'Gerada justificativa em caixa alta para prontuário.':'Gerada justificativa para conduta expectante.');
+  $('finalArea').classList.remove('hidden');
+  $('finalJust').className='just '+(empiric?'green':'');
+  $('finalJust').textContent=buildJustification(empiric);
+  if(empiric){$('medArea').classList.remove('hidden');renderMedication()}else{$('medArea').classList.add('hidden')}
+}
+function buildJustification(empiric){
+  const feb=state.answers.fever==='yes',u=state.answers.ua||{},c=state.answers.uaClass||{};
+  const symptoms=symptomList().join(', ').toUpperCase() || 'QUADRO CLÍNICO AVALIADO';
+  const method=`${fmt(u.wbc,0)} PIÓCITOS POR CAMPO`;
+  const noClassic = !c.py;
+  const diff=state.answers.genital==='cleared'
+    ?'SEM CAUSA GENITAL ALTERNATIVA EVIDENTE AO EXAME'
+    :state.answers.genital==='present'
+      ?'COM ALTERAÇÃO GENITAL CONCORRENTE QUE PODE CONTRIBUIR PARA DISÚRIA, DEVENDO SER CONSIDERADA NA INTERPRETAÇÃO'
+      :'SEM EXAME GENITAL DOCUMENTADO, DEVENDO SER REALIZADO QUANDO POSSÍVEL';
+  const inpatient = treatmentGroup()==='par';
+
+  if(empiric){
+    let txt=`COM BASE NAS RECOMENDAÇÕES DA SOCIEDADE BRASILEIRA DE PEDIATRIA, NO COMPLEMENTO DOS TÓPICOS ATUALIZADOS DO UPTODATE E UTILIZANDO O PROTOCOLO DO HCA COMO REFERÊNCIA PRINCIPAL PARA ESCOLHA E POSOLOGIA DO ANTIMICROBIANO, O PACIENTE APRESENTA HISTÓRIA CLÍNICA SUGESTIVA PARA INFECÇÃO DO TRATO URINÁRIO ${feb?'FEBRIL':'AFEBRIL'}, COM ${symptoms}. `;
+    txt+=`AO EAS, OBSERVA-SE ${method}${u.nitrite?', NITRITO POSITIVO':''}${u.le?', ESTERASE LEUCOCITÁRIA POSITIVA':''}${u.bact?', BACTERIÚRIA PRESENTE':''}. `;
+    if(noClassic){
+      txt+=`EMBORA NÃO HAJA PIÚRIA CLÁSSICA PELO CORTE OPERACIONAL DE ≥5 PIÓCITOS/CAMPO, ESSE ACHADO ISOLADAMENTE NÃO EXCLUI ITU, UMA VEZ QUE UMA PARCELA DAS ITUS PEDIÁTRICAS PODE OCORRER SEM PIÚRIA, DEVENDO O EAS SER INTERPRETADO EM CONJUNTO COM A PROBABILIDADE CLÍNICA, OS DIAGNÓSTICOS DIFERENCIAIS E A EVOLUÇÃO DO PACIENTE. `;
+    }else{
+      txt+=`OS ACHADOS URINÁRIOS AUMENTAM A PROBABILIDADE DE ITU QUANDO INTERPRETADOS EM CONJUNTO COM O QUADRO CLÍNICO. `;
+    }
+    txt+=`${diff}. DIANTE DO CONJUNTO CLÍNICO-LABORATORIAL E DA NECESSIDADE DE TRATAMENTO PRECOCE QUANDO A SUSPEITA É RELEVANTE, OPTO POR INÍCIO DE ANTIBIOTICOTERAPIA EMPÍRICA, COM REAVALIAÇÃO CLÍNICA EM 48–72 HORAS OU ANTES EM CASO DE PIORA.`;
+    if(inpatient){
+      txt+=` EM CENÁRIO DE INTERNAÇÃO OU QUADRO COMPLICADO, CONSIDERAR UROCULTURA E ANTIBIOGRAMA CONFORME DISPONIBILIDADE E PROTOCOLO INSTITUCIONAL.`;
+    }
+    return txt;
+  }
+
+  return `COM BASE NA AVALIAÇÃO CLÍNICA, EAS, DIAGNÓSTICOS DIFERENCIAIS E PROBABILIDADE PRÉ-TESTE, O QUADRO NÃO APRESENTA, NESTE MOMENTO, SUSTENTAÇÃO SUFICIENTE PARA INÍCIO AUTOMÁTICO DE ANTIBIOTICOTERAPIA EMPÍRICA. OPTO POR CONDUTA EXPECTANTE E REAVALIAÇÃO CLÍNICA, MANTENDO VIGILÂNCIA PARA PERSISTÊNCIA DE FEBRE, PIORA DO ESTADO GERAL, VÔMITOS, DOR LOMBAR OU OUTROS SINAIS DE ACOMETIMENTO SISTÊMICO. DIAGNÓSTICOS ALTERNATIVOS, INCLUSIVE CAUSAS GENITAIS E DISFUNÇÃO VESICAL/INTESTINAL, DEVEM SER CONSIDERADOS CONFORME O CONTEXTO.`;
+}
+const meds={
+ af:{
+  nitro:{name:'Nitrofurantoína',doseText:'5–7 mg/kg/dia, 6/6 h',min:5,max:7,div:4,maxDay:400,route:'VO',dur:'10 dias',note:'Somente ITU afebril/cistite. NÃO usar em ITU febril.'},
+  cephalexin:{name:'Cefalexina',doseText:'50–100 mg/kg/dia, 6/6 h',min:50,max:100,div:4,maxDay:2000,route:'VO',dur:'10 dias',note:''},
+  tmp:{name:'Sulfametoxazol + trimetoprima',doseText:'8–12 mg TMP/kg/dia, 12/12 h',min:8,max:12,div:2,maxDay:320,route:'VO',dur:'10 dias',note:'Dose pelo componente TMP.'},
+  amox:{name:'Amoxicilina + clavulanato',doseText:'20–40 mg/kg/dia de amoxicilina, 8/8 h',min:20,max:40,div:3,maxDay:4000,route:'VO',dur:'10 dias',note:'Dose pelo componente amoxicilina.'}
+ },
+ febvo:{
+  cefuro:{name:'Axetilcefuroxima',doseText:'30 mg/kg/dia, 12/12 h',fixed:30,div:2,maxDay:500,route:'VO',dur:'10 dias',note:''},
+  cefaclor:{name:'Cefaclor',doseText:'40 mg/kg/dia, 8/8 h',fixed:40,div:3,maxDay:1000,route:'VO',dur:'10 dias',note:'HCA: 8/8 h.'},
+  amox:{name:'Amoxicilina + clavulanato',doseText:'20–40 mg/kg/dia de amoxicilina, 8/8 h',min:20,max:40,div:3,maxDay:4000,route:'VO',dur:'10 dias',note:'Dose pelo componente amoxicilina.'}
+ },
+ par:{
+  cefuro:{name:'Cefuroxima',doseText:'150 mg/kg/dia, 8/8 h',fixed:150,div:3,maxDay:null,route:'EV',dur:'10–14 dias / sequencial',note:'⚠ HCA registra também máximo de 500 mg/dia, discrepante da dose ponderal. Confirmar versão institucional/farmácia.'},
+  genta:{name:'Gentamicina',doseText:'5–7,5 mg/kg/dia, 1x/dia',min:5,max:7.5,div:1,maxDay:null,route:'EV/IM',dur:'10–14 dias / sequencial',note:'Avaliar função renal.'},
+  amica:{name:'Amicacina',doseText:'15 mg/kg/dia, 1x/dia',fixed:15,div:1,maxDay:1500,route:'EV',dur:'10–14 dias / sequencial',note:'Avaliar função renal.'},
+  cefotax:{name:'Cefotaxima',doseText:'150–200 mg/kg/dia, 8/8 h',min:150,max:200,div:3,maxDay:6000,route:'EV',dur:'10–14 dias / sequencial',note:''}
+ }
 };
-function presentationHtml(name, perDose){
- let arr=presentations[name]||[];
- if(!arr.length) return "";
- let lines=arr.map(a=>{
-   let ml = perDose/a[1];
-   if(a[0].includes("Frasco")) return `${a[0]}: dose corresponde a ${fmt(perDose)} mg de ${a[2]} por dose; reconstituir/diluir conforme rotina local.`;
-   return `${a[0]}: <b>${fmt(ml)} mL por dose</b> (${fmt(perDose)} mg de ${a[2]}).`;
- });
- return `<div class="apres"><b>Apresentações comuns:</b><br>${lines.join("<br>")}</div>`;
+function treatmentGroup(){
+  const feb=state.answers.fever==='yes',r=riskList(),m=ageMonths();
+  if(!feb)return 'af';
+  if((m!==null&&m<2)||r.length)return 'par';
+  return 'febvo';
 }
-function rx(name,mgkg,divisor,interval,route,duration,max,extra=''){
- let w=n('weight'), daily=doseDay(mgkg,w,max), per=daily/divisor;
- return `<div class="rx"><b>${name}</b><br>${fmt(mgkg)} mg/kg/dia → <b>${fmt(daily)} mg/dia</b><br>${fmt(per)} mg/dose, ${interval}, ${route}${duration?` · ${duration}`:''}${presentationHtml(name,per)}${extra?`<br><span class="small">${extra}</span>`:''}</div>`;
+function renderMedication(){
+  const g=treatmentGroup(),dict=meds[g];
+  const opts=Object.entries(dict).map(([k,v])=>`<option value="${k}">${v.name} — ${v.doseText}</option>`).join('');
+  const label=g==='af'?'ITU AFEBRIL — HCA':g==='febvo'?'ITU FEBRIL ESTÁVEL — HCA':'ITU FEBRIL / PARENTERAL — HCA';
+
+  const doseCards=Object.entries(dict).map(([k,v])=>`
+    <div style="border:1px solid #d9e2ec;border-radius:11px;padding:9px;background:#fff">
+      <b style="font-size:12.5px">${v.name}</b>
+      <div style="font-size:12px;margin-top:3px"><b>Dose HCA:</b> ${v.doseText}</div>
+      <div style="font-size:11px;color:#667085;margin-top:2px">${v.route} • ${v.dur}${v.maxDay?` • máx. ${fmt(v.maxDay,0)} mg/dia`:''}</div>
+    </div>`).join('');
+
+  $('medBox').innerHTML=`
+    <div class="alert okbox"><b>FONTE PRINCIPAL PARA ANTIBIOTICOTERAPIA: PROTOCOLO HCA.</b><br>As doses abaixo reproduzem a seção de ITU comunitária do HCA.</div>
+    <b>${label}</b><div style="font-size:11.5px;color:#667085;margin-top:3px">HCA: VO para ITU baixa e para ITU alta em >2 meses se sem toxemia e sem vômitos; parenteral se houver critério de internação.</div>
+    <div style="display:grid;gap:7px;margin-top:8px">${doseCards}</div>
+    <div style="margin-top:10px">
+      <label>Escolha o antimicrobiano para calcular a dose do paciente</label>
+      <select id="medSel" onchange="calcMedication()">${opts}</select>
+    </div>
+    <div id="doseRange" style="margin-top:8px"></div>
+    <div id="doseOut"></div>
+    <div class="alert purplebox"><b>★ UpToDate:</b> pode divergir em escolha/duração em alguns cenários; nesta ferramenta, <b>HCA prevalece</b> para a prescrição principal.</div>`;
+  calcMedication();
 }
-function calculate(){
- let m=ageMonths(), w=n('weight'), t=n('temp'), out=[];
- if(isNaN(m)||isNaN(w)){alert('Preencha idade e peso.');return}
- let febrile=!isNaN(t)&&t>=38.0, sbpFlow=m>=1&&m<24&&!isNaN(t)&&t>=38.5&&ck('nofocus');
- let admit=m<2||ck('sepsis')||ck('immuno')||ck('vomit')||ck('follow')||ck('failure')||ck('tox');
- let upper=febrile||ck('pna')||ck('lumbar')||ck('tox');
- let dip=$('dip').value,eas=$('eas').value,col=$('collection').value,cfu=n('cfu');
- out.push(`<div>${m<1?'<span class="pill">RN</span>':m<3?'<span class="pill">&lt;3 meses</span>':m<24?'<span class="pill">3 meses–2 anos</span>':'<span class="pill">≥2 anos</span>'} ${upper?'<span class="pill">ITU febril/alta provável</span>':'<span class="pill">ITU afebril/baixa provável</span>'}</div>`);
- if(sbpFlow){
-   if(m<3) out.push(`<div class="banner red">Fluxograma SBP (&lt;2 anos): 1–&lt;3 meses, febre ≥38,5 °C sem foco → <b>urocultura por coleta invasiva</b>. Pela idade, o protocolo local também indica internação/tratamento parenteral se &lt;2 meses.</div>`);
-   else if(ck('tox')||ck('pna')) out.push(`<div class="banner red">Fluxograma SBP: ≥3 meses + comprometimento do estado geral/suspeita de PNA → <b>coleta invasiva</b> e manejo como ITU febril.</div>`);
-   else if(dip==='pos') out.push(`<div class="banner amber">Fluxograma SBP: paciente sem comprometimento geral + fita com leucocitúria e/ou nitrito → <b>confirmar com coleta invasiva</b>.</div>`);
-   else if(dip==='neg') out.push(`<div class="banner green">Fluxograma SBP: fita negativa no cenário do algoritmo → ITU não sustentada pelo rastreio. Reavaliar se a suspeita clínica permanecer alta.</div>`);
-   else out.push(`<div class="banner blue">Fluxograma SBP: sem comprometimento geral → pode realizar teste rápido por fita como triagem. Se positivo, confirmar por coleta invasiva.</div>`);
- }
- if($('toilet').value==='no') out.push(`<div class="banner blue"><b>Coleta:</b> sem controle esfincteriano, preferir cateterismo vesical ou punção suprapúbica. Saco coletor negativo pode ajudar a excluir; se positivo, repetir por método adequado antes de confirmar.</div>`);
- else out.push(`<div class="banner blue"><b>Coleta:</b> com controle esfincteriano, pode utilizar jato intermediário, com técnica adequada.</div>`);
- if(col!=='none'&&!isNaN(cfu)){
-   let positive=col==='psp'?cfu>0:col==='cat'?cfu>50000:col==='mid'?cfu>100000:false;
-   if(col==='bag') out.push(`<div class="banner amber">Cultura por saco coletor positiva <b>não confirma ITU</b>; repetir por método adequado.</div>`);
-   else out.push(`<div class="banner ${positive?'green':'amber'}">Urocultura: ${positive?'<b>atinge o limiar microbiológico do método informado</b>':'<b>não atinge o limiar descrito pela SBP para o método informado</b>'}. PSP: qualquer crescimento; cateterismo: &gt;50.000 UFC/mL; jato intermediário: &gt;100.000 UFC/mL.</div>`);
- }
- if(eas==='pos'||dip==='pos') out.push(`<div class="banner amber">Urina sugestiva de ITU. Colher urocultura <b>antes do antibiótico sempre que possível</b>, sem atrasar tratamento de paciente grave.</div>`);
- out.push(`<hr><h2>Destino e via</h2>`);
- if(admit) out.push(`<div class="banner red"><b>Indicação de internação/tratamento parenteral pelo protocolo HCA:</b> ${[m<2?'idade <2 meses':'',ck('sepsis')?'urosepse/bacteremia':'',ck('immuno')?'imunocomprometido':'',ck('vomit')?'vômitos/incapacidade VO':'',ck('follow')?'dificuldade de seguimento':'',ck('failure')?'falha ambulatorial':'',ck('tox')?'comprometimento geral/toxemia':''].filter(Boolean).join('; ')}.</div>`);
- else out.push(`<div class="banner green"><b>Via oral é possível pelo protocolo HCA</b> se ITU baixa ou ITU alta em >2 meses sem toxemia/vômitos. Reavaliar em 48–72 h com antibiograma.</div>`);
- out.push(`<hr><h2>Antibioticoterapia — protocolo local HCA</h2>`);
- if(upper){
-   if(admit){
-     out.push(`<p><b>ITU febril — opções parenterais do protocolo local:</b></p>`);
-     out.push(rx('Cefuroxima',150,3,'8/8 h','EV','10–14 dias',500,'Atenção: o protocolo local impresso registra dose máxima de 500 mg/dia; conferir com a CCIH/farmácia, pois esse teto é incomum para a dose pediátrica listada.'));
-     out.push(rx('Gentamicina',5,1,'1x/dia','EV/IM','—',Infinity,'Faixa do protocolo: 5–7,5 mg/kg/dia. Calculado no limite inferior; ajustar conforme função renal e rotina local.'));
-     out.push(rx('Amicacina',15,1,'1x/dia','EV','—',1500));
-     out.push(rx('Cefotaxima',150,3,'8/8 h','EV','10–14 dias',6000,'Faixa do protocolo: 150–200 mg/kg/dia. Calculado no limite inferior.'));
-     out.push(rx('Piperacilina/tazobactam',300,4,'6/6 h','EV','10–14 dias',16000,'Dose expressa pelo componente piperacilina; o protocolo permite 6/6 h ou 8/8 h.'));
-   } else {
-     out.push(`<p><b>ITU febril — opções VO do protocolo local:</b></p>`);
-     out.push(rx('Axetilcefuroxima',30,2,'12/12 h','VO','10 dias',500));
-     out.push(rx('Cefaclor',40,3,'8/8 h','VO','10 dias',1000));
-     out.push(rx('Amoxicilina + clavulanato',20,3,'8/8 h','VO','10 dias',4000,'Dose calculada pelo componente amoxicilina. Faixa do protocolo: 20–40 mg/kg/dia.'));
-   }
-   out.push(`<div class="banner amber"><b>Não usar nitrofurantoína para ITU febril/pielonefrite:</b> concentração no parênquima renal é inadequada.</div>`);
- } else {
-   out.push(`<p><b>ITU afebril/baixa — opções VO do protocolo local, 10 dias:</b></p>`);
-   out.push(rx('Nitrofurantoína',5,4,'6/6 h','VO','10 dias',400,'Faixa do protocolo: 5–7 mg/kg/dia. Calculado no limite inferior.'));
-   out.push(rx('Cefalexina',50,4,'6/6 h','VO','10 dias',2000,'Faixa do protocolo: 50–100 mg/kg/dia. Calculado no limite inferior.'));
-   let tmp=Math.min(8*w,320), tmpDose=tmp/2; out.push(`<div class="rx"><b>Sulfametoxazol + trimetoprima</b><br>Dose pelo TMP: 8 mg TMP/kg/dia → <b>${fmt(tmp)} mg TMP/dia</b><br>${fmt(tmpDose)} mg TMP/dose, 12/12 h, VO · 10 dias${presentationHtml('Sulfametoxazol + trimetoprima',tmpDose)}<br><span class="small">Faixa local: 8–12 mg TMP/kg/dia; máximo 320 mg/dia de TMP.</span></div>`);
-   out.push(rx('Amoxicilina + clavulanato',20,3,'8/8 h','VO','10 dias',4000,'Dose calculada pelo componente amoxicilina. Faixa do protocolo: 20–40 mg/kg/dia.'));
- }
- out.push(`<hr><h2>Reavaliação e investigação</h2><div class="banner blue">Revisar terapia em <b>48–72 h</b> com urocultura/antibiograma e descalonar quando possível. Sem melhora clínica em 48 h: reconsiderar diagnóstico, anormalidades do trato urinário e cobertura antimicrobiana.</div>`);
- if(m<24) out.push(`<div class="banner amber">Em menores de 2 anos, investigar história de alterações na ultrassonografia antenatal/malformações do trato urinário. A investigação por imagem deve ser individualizada conforme evolução, recorrência e achados clínicos.</div>`);
- $('out').innerHTML=out.join(''); $('result').style.display='block'; $('result').scrollIntoView({behavior:'smooth'});
+function calcMedication(){
+  const g=treatmentGroup(),key=$('medSel').value,m=meds[g][key],w=n('weight');
+  if(!m||!w)return;
+  let mgkg;
+  if(m.fixed){mgkg=m.fixed;$('doseRange').innerHTML='';}
+  else{
+    const old=$('doseLevel')?.value||'min';
+    $('doseRange').innerHTML=`<label>Dose dentro da faixa HCA</label><select id="doseLevel" onchange="calcMedication()"><option value="min" ${old==='min'?'selected':''}>Limite inferior — ${m.min} mg/kg/dia</option><option value="max" ${old==='max'?'selected':''}>Limite superior — ${m.max} mg/kg/dia</option></select>`;
+    mgkg=old==='max'?m.max:m.min;
+  }
+  let day=w*mgkg;if(m.maxDay)day=Math.min(day,m.maxDay);const dose=day/m.div;
+  const interval=m.div===1?'1x/dia':m.div===2?'12/12 h':m.div===3?'8/8 h':'6/6 h';
+  $('doseOut').innerHTML=`<div class="alert info"><b>Dose-base HCA:</b> ${m.doseText}${m.maxDay?` • máximo ${fmt(m.maxDay,0)} mg/dia`:''}.</div><div class="kpi"><div><b>${fmt(dose,1)} mg/dose</b><small>${interval}</small></div><div><b>${fmt(day,1)} mg/dia</b><small>${m.route} • ${m.dur}</small></div></div>
+    ${m.note?`<div class="alert ${key==='cefuro'&&g==='par'?'warnbox':'info'}">${m.note}</div>`:''}
+    <div class="grid"><div><label>Apresentação (mg)</label><input id="apMg" type="number" step="0.1" oninput="calcMl()" placeholder="Ex.: 250"></div><div><label>Em quantos mL?</label><input id="apMl" type="number" step="0.1" oninput="calcMl()" placeholder="Ex.: 5"></div></div>
+    <div id="mlOut" class="alert info"><b>Prescrição:</b> ${m.name.toUpperCase()} — ${fmt(dose,1)} mg ${m.route} ${interval} por ${m.dur}.</div>
+    <div class="copyrow"><button class="secondary" onclick="copyRx()">Copiar prescrição</button></div>`;
 }
-function clearAll(){document.querySelectorAll('input').forEach(x=>x.type==='checkbox'?x.checked=false:x.value='');document.querySelectorAll('select').forEach(x=>x.selectedIndex=0);$('result').style.display='none'}
+function calcMl(){
+  const g=treatmentGroup(),m=meds[g][$('medSel').value],w=n('weight'),am=n('apMg'),av=n('apMl');if(!m||!w||!am||!av)return;
+  let mgkg=m.fixed||($('doseLevel')?.value==='max'?m.max:m.min);let day=w*mgkg;if(m.maxDay)day=Math.min(day,m.maxDay);const dose=day/m.div;
+  const ml=dose/am*av;const interval=m.div===1?'1x/dia':m.div===2?'12/12 h':m.div===3?'8/8 h':'6/6 h';
+  $('mlOut').innerHTML=`<b>${fmt(dose,1)} mg/dose = ${fmt(ml,2)} mL/dose</b><br>${m.name.toUpperCase()} (${fmt(am)} mg/${fmt(av)} mL) — administrar ${fmt(ml,2)} mL ${m.route} ${interval} por ${m.dur}.`;
+}
+function copyJust(){navigator.clipboard.writeText($('finalJust').innerText).then(()=>alert('Justificativa copiada.'))}
+function copyRx(){navigator.clipboard.writeText($('mlOut').innerText).then(()=>alert('Prescrição copiada.'))}
 </script>
-</body></html>
+</body>
+</html>
