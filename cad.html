@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -766,6 +765,297 @@ summary{cursor:pointer;font-weight:900}
   cursor:pointer !important;
 }
 
+
+/* ===== V27 — TEMPO DA EXPANSÃO + CONFERÊNCIA MANUAL ===== */
+.expansionTiming{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:7px;
+}
+.timeChip{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:5px 9px;
+  border-radius:9px;
+  font-size:11px;
+  font-weight:850;
+  border:1px solid;
+  letter-spacing:.01em;
+}
+.timeChip.noShock{
+  color:#145a4a;
+  background:#edf9f5;
+  border-color:#b9e3d5;
+}
+.timeChip.shock{
+  color:#8d2525;
+  background:#fff1f1;
+  border-color:#f1bcbc;
+}
+
+.manualCheck{
+  border:1px solid #cfd9e3 !important;
+  background:linear-gradient(180deg,#fbfdff,#f7fafc) !important;
+}
+.manualCheck .manualIntro{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.manualCheck .manualIntroText{
+  min-width:0;
+}
+.manualCheck .manualIntroText h2{
+  margin:0;
+  font-size:20px;
+  color:#173b56;
+}
+.manualCheck .manualIntroText p{
+  margin:3px 0 0;
+  color:#697887;
+  font-size:12px;
+}
+.sourceLegend{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.sourceTag{
+  display:inline-flex;
+  align-items:center;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:950;
+  white-space:nowrap;
+  border:1px solid;
+}
+.sourceTag.hca{background:#eaf3fa;border-color:#bad0e2;color:#173b56}
+.sourceTag.utd{background:#f6edff;border-color:#d8baf4;color:#6f32a1}
+.sourceTag.sbp{background:#edf8f1;border-color:#bee0c8;color:#23693a}
+.sourceTag.ispad{background:#fff4e7;border-color:#efcf9f;color:#8a5515}
+
+.refAccordion{
+  margin-top:8px;
+  border:1px solid #dbe3ea;
+  border-radius:12px;
+  background:#fff;
+  overflow:hidden;
+}
+.refAccordion > summary{
+  cursor:pointer;
+  list-style:none;
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:950;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  user-select:none;
+}
+.refAccordion > summary::-webkit-details-marker{display:none}
+.refAccordion > summary::after{
+  content:"+";
+  margin-left:auto;
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:#eef3f7;
+  color:#173b56;
+  font-size:16px;
+  line-height:1;
+}
+.refAccordion[open] > summary::after{content:"−"}
+.refAccordion[open] > summary{
+  border-bottom:1px solid #e3e9ee;
+}
+.refAccordion .refBody{
+  padding:10px 12px 12px;
+  font-size:11.5px;
+  line-height:1.48;
+  color:#334754;
+}
+.refAccordion.hcaRef > summary{color:#173b56;background:#f3f8fc}
+.refAccordion.utdRef > summary{color:#6f32a1;background:#fbf7ff}
+.refAccordion.sbpRef > summary{color:#23693a;background:#f5fbf7}
+.refAccordion.ispadRef > summary{color:#8a5515;background:#fffaf3}
+
+.refGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.refBox{
+  border:1px solid #e2e8ed;
+  border-radius:9px;
+  padding:8px 9px;
+  background:#fbfcfd;
+}
+.refBox b{
+  display:block;
+  margin-bottom:3px;
+  color:#243c4d;
+  font-size:11px;
+}
+.refBox ul{
+  margin:4px 0 0 17px;
+  padding:0;
+}
+.refBox li{margin:2px 0}
+.paramBlue{color:#175f91;font-weight:950}
+.paramGreen{color:#177153;font-weight:950}
+.paramOrange{color:#ad6515;font-weight:950}
+.paramRed{color:#aa3030;font-weight:950}
+.paramPurple{color:#7436a7;font-weight:950}
+.manualNote{
+  margin-top:8px;
+  padding:8px 10px;
+  border-left:4px solid #7b8f9f;
+  background:#f6f8fa;
+  border-radius:7px;
+  font-size:10.5px;
+  color:#5c6d79;
+}
+.sourceFoot{
+  margin-top:10px;
+  padding-top:8px;
+  border-top:1px dashed #d7e0e7;
+  font-size:9.5px;
+  color:#74828d;
+}
+@media(max-width:780px){
+  .refGrid{grid-template-columns:1fr}
+  .manualCheck .manualIntro{display:block}
+  .sourceLegend{justify-content:flex-start;margin-top:7px}
+}
+
+
+/* ===== V28 — CALCULADORA RÁPIDA K + HGT ===== */
+.quickCalc{
+  border:2px solid #c9d8e6 !important;
+  background:linear-gradient(180deg,#ffffff,#f8fbfd) !important;
+}
+.quickCalcHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.quickCalcHead h2{margin:0;color:#173b56;font-size:21px}
+.quickCalcHead p{margin:3px 0 0;color:#66758a;font-size:12px}
+.quickCalcBadge{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#edf5fd;
+  color:#175f91;
+  border:1px solid #cbdfee;
+  font-size:10px;
+  font-weight:950;
+  white-space:nowrap;
+}
+.quickGrid{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:8px;
+}
+.quickGrid .q2{grid-column:span 2}
+.quickGrid .q3{grid-column:span 3}
+.quickGrid .q4{grid-column:span 4}
+.quickGrid .q6{grid-column:span 6}
+.quickResultGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-top:10px;
+}
+.quickPanel{
+  border:1px solid #d9e3eb;
+  border-radius:12px;
+  background:#fff;
+  padding:11px 12px;
+  min-width:0;
+}
+.quickPanel h3{
+  margin:0 0 7px;
+  font-size:13px;
+  color:#173b56;
+}
+.quickPanel .big{
+  font-size:20px;
+  font-weight:950;
+  line-height:1.15;
+  margin:2px 0 5px;
+}
+.quickPanel .mini{
+  font-size:11px;
+  line-height:1.42;
+  color:#556674;
+}
+.quickPanel.red{background:#fff7f7;border-color:#efc5c5}
+.quickPanel.amber{background:#fffaf0;border-color:#ead7ad}
+.quickPanel.green{background:#f5fbf8;border-color:#cce6da}
+.quickPanel.purple{background:#fbf7ff;border-color:#dfcff1}
+.quickEq{
+  margin-top:8px;
+  padding:8px 9px;
+  border-radius:9px;
+  background:#f5f8fb;
+  border:1px dashed #ccd8e2;
+  font-size:10.5px;
+  line-height:1.42;
+}
+.quickPriority{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#fff0f0;
+  border-left:5px solid #a93636;
+  font-size:12px;
+  line-height:1.45;
+}
+.quickPriority.ok{
+  background:#edf8f3;
+  border-left-color:#17745a;
+}
+.quickPriority.warn{
+  background:#fff7e7;
+  border-left-color:#c17a00;
+}
+.quickLegend{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.quickLegend span{
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:9.5px;
+  font-weight:900;
+  background:#f0f4f7;
+  color:#43566a;
+  border:1px solid #d8e1e8;
+}
+@media(max-width:900px){
+  .quickResultGrid{grid-template-columns:1fr}
+  .quickGrid .q2,.quickGrid .q3,.quickGrid .q4,.quickGrid .q6{grid-column:span 6}
+}
+@media(max-width:560px){
+  .quickCalcHead{display:block}
+  .quickCalcBadge{margin-top:7px}
+  .quickGrid .q2,.quickGrid .q3,.quickGrid .q4,.quickGrid .q6{grid-column:span 12}
+}
+
 </style>
 </head>
 <body>
@@ -816,7 +1106,11 @@ summary{cursor:pointer;font-weight:900}
     <div class="num">1</div>
     <div>
       <h2>EXPANSÃO VOLÊMICA</h2>
-      <p>Primeira medida hídrica. A expansão inicial desta ferramenta é sempre 20 mL/kg de SF 0,9%.</p>
+      <p>Primeira medida hídrica. A expansão inicial desta ferramenta é sempre <b>20 mL/kg de SF 0,9%</b>.</p>
+      <div class="expansionTiming">
+        <span class="timeChip noShock">SEM CHOQUE: <b>20 mL/kg EV EM 1 HORA</b></span>
+        <span class="timeChip shock">CHOQUE: <b>20 mL/kg EV EM 20 MIN</b> + protocolo de choque</span>
+      </div>
     </div>
   </div>
 
@@ -1489,12 +1783,431 @@ summary{cursor:pointer;font-weight:900}
   </details>
 </section>
 
-<section class="card">
-  <div class="turnTitle">REFERÊNCIA ÚNICA</div>
-  <p style="margin:5px 0 0"><b>Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho — Protocolo de Cetoacidose Diabética.</b></p>
+
+<section class="card manualCheck" id="conferenciaManual">
+  <div class="manualIntro">
+    <div class="manualIntroText">
+      <h2>📚 CONFERÊNCIA MANUAL / LEITURA EXTRA</h2>
+      <p>Área de consulta rápida. Fechada por padrão para não poluir o fluxo principal.</p>
+    </div>
+    <div class="sourceLegend">
+      <span class="sourceTag hca">HCA — CONDUTA PRINCIPAL</span>
+      <span class="sourceTag utd">💜 UPTODATE — EXTRA</span>
+      <span class="sourceTag sbp">SBP — EXTRA</span>
+      <span class="sourceTag ispad">ISPAD — EXTRA</span>
+    </div>
+  </div>
+
+  <details class="refAccordion hcaRef">
+    <summary>🏥 RESUMO COMPLETO — PROTOCOLO HCA</summary>
+    <div class="refBody">
+      <div class="refGrid">
+        <div class="refBox">
+          <b>1. Diagnóstico / classificação</b>
+          <ul>
+            <li>CAD: glicose <span class="paramBlue">&gt;200 mg/dL</span> + pH <span class="paramRed">&lt;7,3</span> ou HCO₃⁻ <span class="paramRed">&lt;18</span> + cetonemia BOHB ≥3 mmol/L ou cetonúria importante.</li>
+            <li>Leve: pH 7,2–7,3 e HCO₃⁻ 10–18.</li>
+            <li>Moderada: pH 7,1–7,2 e HCO₃⁻ 5–9.</li>
+            <li>Grave: pH <span class="paramRed">&lt;7,1</span> e HCO₃⁻ <span class="paramRed">&lt;5</span>.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>2. Chegada ao PA</b>
+          <ul>
+            <li>PALS, peso atual, hidratação, Glasgow e <span class="paramBlue">2 acessos periféricos</span>.</li>
+            <li>Coletar HMG, eletrólitos, ureia, creatinina, gasometria venosa e EAS.</li>
+            <li>CAD grave / disfunção renal → considerar manejo em UTI.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>3. Expansão inicial</b>
+          <ul>
+            <li>Ferramenta padronizada em <span class="paramBlue">SF 0,9% 20 mL/kg</span>.</li>
+            <li>Sem choque: <span class="paramGreen">em 1 hora</span>.</li>
+            <li>Choque: <span class="paramRed">em 20 min</span> + protocolo de choque.</li>
+            <li>Iniciar fluido antes da insulina.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>4. Reposição das perdas — 8 h</b>
+          <ul>
+            <li>Déficit = peso × 10 × % desidratação.</li>
+            <li>Subtrair expansão e dividir o restante em <span class="paramBlue">4 blocos de 2 h</span>.</li>
+            <li>Máximo considerado no cálculo: <span class="paramOrange">10% do peso</span>.</li>
+            <li>Se ainda desidratado após perdas: repor adicional de <span class="paramOrange">2–3%</span> e reavaliar.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>5. Potássio — HCA</b>
+          <ul>
+            <li>K &lt;4,5 → <span class="paramGreen">40 mEq/L</span>.</li>
+            <li>K &gt;4,5 → <span class="paramGreen">20 mEq/L</span>.</li>
+            <li>K ≥5,5 → <span class="paramRed">não adicionar KCl</span>; manter hidratação e insulina se não houver outra contraindicação.</li>
+            <li>K &lt;3 → <span class="paramRed">adiar/suspender temporariamente a insulina</span> + reposição rápida <span class="paramRed">0,5 mEq/kg/h</span> e reavaliar.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>6. Glicose na solução</b>
+          <ul>
+            <li>Queda HGT &gt;100 mg/dL em 1 h ou HGT &lt;250 → <span class="paramPurple">G5%</span>.</li>
+            <li>G5: SG50% = 10% do volume-base; SF = 90%.</li>
+            <li>Persistindo queda na avaliação seguinte → <span class="paramPurple">G7,5%</span>.</li>
+            <li>G7,5: SG50% = 15% do volume-base; SF = 85%.</li>
+            <li>KCl é adicionado fora do volume-base.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>7. Manutenção</b>
+          <ul>
+            <li>Após reposição das perdas → Holliday-Segar <span class="paramBlue">100%</span>.</li>
+            <li>Na: <span class="paramGreen">136 mEq/L</span>.</li>
+            <li>K: <span class="paramGreen">40 mEq/L</span>.</li>
+            <li>Manter até dieta plena.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>8. Insulina</b>
+          <ul>
+            <li>Iniciar <span class="paramOrange">1 h após a expansão</span>, junto à reposição.</li>
+            <li>Regular: <span class="paramBlue">0,1 UI/kg SC 1/1 h</span> ou <span class="paramBlue">0,1 UI/kg/h EV</span> em bomba na CAD grave/UTI.</li>
+            <li>Se G7,5% e queda persistente da glicose → reduzir para <span class="paramPurple">0,05 UI/kg</span>.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>9. Monitorização</b>
+          <ul>
+            <li><span class="paramBlue">1/1 h:</span> sinais vitais + Glasgow + HGT.</li>
+            <li><span class="paramBlue">2/2 h:</span> gasometria venosa.</li>
+            <li>Registrar balanço hídrico e resposta clínica.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>10. Bicarbonato</b>
+          <ul>
+            <li>Não usar de rotina.</li>
+            <li>Considerar apenas hipercalemia grave ou pH <span class="paramRed">&lt;6,9</span> com comprometimento da contratilidade cardíaca.</li>
+            <li>HCA: 0,3 × BE × peso = mEq; infundir 1/3 do volume em 1 h.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>11. Lesão/edema cerebral</b>
+          <ul>
+            <li>Piora neurológica → <span class="paramRed">tratar sem aguardar imagem</span>.</li>
+            <li>Manitol: <span class="paramRed">0,5–1 g/kg EV em 30 min</span>; pode repetir após 30 min.</li>
+            <li>NaCl 3%: <span class="paramRed">5–10 mL/kg em 30 min</span>.</li>
+            <li>Cabeceira 30°.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>12. Resolução</b>
+          <ul>
+            <li>Critério institucional: pH <span class="paramGreen">&gt;7,3</span> e HCO₃⁻ <span class="paramGreen">&gt;15 mEq/L</span>.</li>
+            <li>Após resolução, realizar transição para esquema subcutâneo conforme protocolo HCA.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="refAccordion utdRef">
+    <summary>💜 UPTODATE — MONITORIZAÇÃO, MARCADORES E ALERTAS COMPLEMENTARES</summary>
+    <div class="refBody">
+      <div class="refGrid">
+        <div class="refBox">
+          <b>Monitorização laboratorial complementar</b>
+          <ul>
+            <li>HGT: <span class="paramPurple">1/1 h</span> durante insulina EV.</li>
+            <li>Eletrólitos + pH venoso/pCO₂: <span class="paramPurple">2–4/4 h</span>.</li>
+            <li>Fósforo, cálcio e magnésio: <span class="paramPurple">4–6/6 h</span>.</li>
+            <li>BOHB pode ser usado para acompanhar resolução da cetose.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Resolução metabólica complementar</b>
+          <ul>
+            <li>Ânion gap: <span class="paramPurple">Na − (Cl + HCO₃⁻)</span>.</li>
+            <li>AG normal aproximado: <span class="paramPurple">12 ± 2 mEq/L</span>.</li>
+            <li>BOHB <span class="paramPurple">≤1 mmol/L</span> + pH ≥7,3 são marcadores úteis.</li>
+            <li>Cetonúria pode persistir mesmo após resolução e não deve, isoladamente, definir persistência da CAD.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>ECG / potássio</b>
+          <ul>
+            <li>Se resultado de K atrasar, ECG pode ajudar a identificar hiperK.</li>
+            <li>QTc <span class="paramRed">&gt;460 ms</span> → monitorização contínua do ritmo.</li>
+            <li>ECG contínuo recomendado especialmente em alterações importantes do K.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Risco neurológico aumentado</b>
+          <ul>
+            <li>Idade <span class="paramRed">&lt;5 anos</span>.</li>
+            <li>pH <span class="paramRed">&lt;7,1</span>.</li>
+            <li>pCO₂ <span class="paramRed">≤20 mmHg</span>.</li>
+            <li>BUN elevado, especialmente <span class="paramRed">&gt;20 mg/dL</span>.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Gatilhos clínicos para lesão cerebral</b>
+          <ul>
+            <li>Tratar se 1 critério diagnóstico; ou 2 maiores; ou 1 maior + 2 menores.</li>
+            <li>&lt;5 anos: 1 maior + 1 menor também é gatilho complementar.</li>
+            <li>Queda inadequada da FC &gt;20 bpm, alteração do sensório, incontinência, vômitos/cefaleia novos ou progressivos.</li>
+            <li>Não aguardar neuroimagem diante de deterioração clínica.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Alerta HHS / quadro misto</b>
+          <ul>
+            <li>Glicose <span class="paramRed">&gt;600 mg/dL</span>.</li>
+            <li>Osmolalidade efetiva <span class="paramRed">&gt;320 mOsm/kg</span>.</li>
+            <li>HHS típico: pouca acidose/cetose; quadro misto pode reunir critérios de CAD + hiperosmolalidade.</li>
+            <li>Se suspeito, não aplicar automaticamente o mesmo raciocínio hídrico/insulínico da CAD padrão.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="manualNote">💜 Esta área é complementar. Quando houver diferença de dose/tempo em relação ao material institucional, a ferramenta mantém a conduta do HCA.</div>
+    </div>
+  </details>
+
+  <details class="refAccordion sbpRef">
+    <summary>🇧🇷 SBP — RECONHECIMENTO CLÍNICO E DIAGNÓSTICO</summary>
+    <div class="refBody">
+      <div class="refGrid">
+        <div class="refBox">
+          <b>Quando lembrar de CAD no PA</b>
+          <ul>
+            <li>Desidratação com <span class="paramGreen">poliúria</span> é pista importante e pode ser confundida com gastroenterite.</li>
+            <li>Taquipneia + desidratação + hálito cetônico devem levantar suspeita de CAD.</li>
+            <li>Dor abdominal pode mimetizar abdome agudo e melhorar com hidratação.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Critérios citados pela SBP</b>
+          <ul>
+            <li>Hiperglicemia: glicose <span class="paramGreen">&gt;200 mg/dL</span>.</li>
+            <li>Acidose metabólica: pH <span class="paramRed">&lt;7,3</span> ou HCO₃⁻ <span class="paramRed">&lt;15 mEq/L</span>.</li>
+            <li>Associada a cetonemia.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Sinais de gravidade descritos</b>
+          <ul>
+            <li>Depressão do nível de consciência.</li>
+            <li>Respiração de Kussmaul.</li>
+            <li>Desidratação grave / choque.</li>
+            <li>Arritmia e redução dos movimentos respiratórios em acidemia extrema.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Limite desta fonte</b>
+          <ul>
+            <li>O documento SBP utilizado é de orientação geral sobre DM1 e <span class="paramOrange">não traz um protocolo operacional detalhado de fluidos em blocos</span> como o HCA.</li>
+            <li>Por isso, não substitui os cálculos e posologias institucionais desta ferramenta.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="refAccordion ispadRef">
+    <summary>🌐 ISPAD — CONFERÊNCIA INTERNACIONAL / PONTOS DE COMPARAÇÃO</summary>
+    <div class="refBody">
+      <div class="refGrid">
+        <div class="refBox">
+          <b>Diagnóstico bioquímico ISPAD</b>
+          <ul>
+            <li>Glicose <span class="paramOrange">&gt;200 mg/dL</span>.</li>
+            <li>pH venoso <span class="paramRed">&lt;7,3</span> ou HCO₃⁻ <span class="paramRed">&lt;18 mmol/L</span>.</li>
+            <li>BOHB <span class="paramOrange">≥3 mmol/L</span> ou cetonúria moderada/importante.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Avaliação de emergência</b>
+          <ul>
+            <li>Seguir PALS, aferir peso atual e nível de consciência.</li>
+            <li>Glicose, cetonas, eletrólitos e gasometria precocemente.</li>
+            <li>Recomenda 2 acessos venosos periféricos quando possível.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Fluidos / insulina — comparação</b>
+          <ul>
+            <li>Fluido deve começar antes da insulina.</li>
+            <li>ISPAD descreve bolus inicial de SF 0,9% em <span class="paramOrange">20–30 min</span> para restaurar circulação.</li>
+            <li>Insulina: iniciar pelo menos <span class="paramOrange">1 h após</span> começar fluidos.</li>
+            <li><b>Nesta ferramenta prevalece o HCA:</b> 20 mL/kg em 1 h sem choque e 20 min no choque.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Potássio / bicarbonato</b>
+          <ul>
+            <li>K &gt;5,5 → postergar K até diurese e redução do K.</li>
+            <li>K &lt;3 → postergar insulina e repor K, com limite de 0,5 mEq/kg/h.</li>
+            <li>Bicarbonato não recomendado de rotina; exceções incluem hipercalemia ameaçadora ou pH &lt;6,9 com comprometimento cardíaco.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>Risco de lesão cerebral</b>
+          <ul>
+            <li>BUN &gt;20 mg/dL, pH &lt;7,1, pCO₂ &lt;21 mmHg e idade &lt;5 anos são fatores de maior risco.</li>
+            <li>Deterioração neurológica aguda exige terapia hiperosmolar imediata.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>HHS</b>
+          <ul>
+            <li>Glicose &gt;600 mg/dL + osmolalidade efetiva &gt;320 mOsm/kg.</li>
+            <li>pH venoso &gt;7,25 e HCO₃⁻ &gt;15 com cetose discreta/ausente favorecem HHS.</li>
+            <li>CAD e HHS podem se sobrepor.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="manualNote">🌐 ISPAD foi incluída como referência internacional para conferência. Diferenças de tempo de expansão ou estratégia hídrica não alteram automaticamente o protocolo HCA da ferramenta.</div>
+    </div>
+  </details>
+
+  <div class="sourceFoot">
+    Fontes de conferência: Protocolo institucional HCA (2023); Sociedade Brasileira de Pediatria — “Diabetes melito tipo 1 na criança e no adolescente: Orientações para o pediatra” (2023); UpToDate — tratamento/complicações e lesão cerebral em CAD pediátrica, literatura revisada até jul/2026; ISPAD Clinical Practice Consensus Guidelines — DKA/HHS (2022, página oficial disponibilizada pela ISPAD em 2024).
+  </div>
 </section>
 
-<div class="footer">Ferramenta de apoio ao protocolo institucional HCA. Condutas principais e posologias permanecem HCA; itens em 💜 são complementos de monitorização/alerta baseados nos PDFs UpToDate fornecidos.</div>
+
+
+<section class="card quickCalc" id="calculadoraRapidaCAD">
+  <div class="quickCalcHead">
+    <div>
+      <h2>🧮 CALCULADORA RÁPIDA — POTÁSSIO + HGT</h2>
+      <p>Módulo independente do fluxo sequencial. Assume que a expansão inicial já foi realizada e ajuda a recalcular rapidamente o bloco, o KCl e a necessidade de glicose.</p>
+    </div>
+    <span class="quickCalcBadge">HCA — CONDUTA PRINCIPAL</span>
+  </div>
+
+  <div class="call info">
+    <b>Unidades que costumam gerar confusão:</b>
+    <b>20/40 = mEq/L de potássio</b>, não mL/L.
+    Com a equivalência institucional de KCl 19,1% ≈ <b>2,5 mEq/mL</b>,
+    20 mEq/L correspondem a ≈ <b>8 mL/L</b> de KCl 19,1% e 40 mEq/L a ≈ <b>16 mL/L</b>.
+    Na hipocalemia grave, a taxa é <b>0,5 mEq/kg/h</b>, não mL/kg/h.
+  </div>
+
+  <div class="quickGrid">
+    <div class="field q2">
+      <label>Peso (kg)</label>
+      <input id="quickPeso" type="number" min="0.5" step="0.1" placeholder="Ex.: 24">
+    </div>
+    <div class="field q2">
+      <label>Desidratação</label>
+      <select id="quickDesid">
+        <option value="">Selecione</option>
+        <option value="5">5%</option>
+        <option value="7">7%</option>
+        <option value="10">10%</option>
+      </select>
+    </div>
+    <div class="field q2">
+      <label>Expansão já feita (mL)</label>
+      <input id="quickExpansao" type="number" min="0" step="1" placeholder="auto: 20 mL/kg">
+    </div>
+    <div class="field q2">
+      <label>Volume do bloco (mL)</label>
+      <input id="quickBloco" type="number" min="1" step="1" placeholder="auto pelo déficit">
+    </div>
+    <div class="field q2">
+      <label>K atual (mEq/L)</label>
+      <input id="quickK" type="number" step="0.1" placeholder="Ex.: 3,2">
+    </div>
+    <div class="field q2">
+      <label>KCl 19,1% (mEq/mL)</label>
+      <input id="quickKcl" type="number" min="0.1" step="0.01" value="2.5">
+    </div>
+
+    <div class="field q3">
+      <label>Diurese / função renal</label>
+      <select id="quickDiurese">
+        <option value="ok">Diurese presente / adequada</option>
+        <option value="unknown">Não confirmada</option>
+        <option value="no">Ausente / oligúria importante</option>
+      </select>
+    </div>
+    <div class="field q3">
+      <label>Soro em uso</label>
+      <select id="quickSoro">
+        <option value="sf">SF 0,9%</option>
+        <option value="g5">Glicose 5%</option>
+        <option value="g75">Glicose 7,5%</option>
+      </select>
+    </div>
+    <div class="field q2">
+      <label>HGT anterior</label>
+      <input id="quickHgtAnt" type="number" min="0" step="1" placeholder="mg/dL">
+    </div>
+    <div class="field q2">
+      <label>HGT atual</label>
+      <input id="quickHgtAtual" type="number" min="0" step="1" placeholder="mg/dL">
+    </div>
+    <div class="field q2">
+      <label>Intervalo HGT (min)</label>
+      <input id="quickHgtMin" type="number" min="1" step="1" value="60">
+    </div>
+  </div>
+
+  <div class="btns">
+    <button class="secondary" type="button" onclick="importarCalculadoraRapida()">↙ IMPORTAR DADOS DO PROTOCOLO</button>
+    <button class="primary" type="button" onclick="calcularRapidoCAD()">CALCULAR CONDUTA RÁPIDA</button>
+  </div>
+
+  <div id="quickResult" class="result"></div>
+
+  <details class="refAccordion hcaRef" style="margin-top:10px">
+    <summary>⚠️ COMO A CALCULADORA PRIORIZA AS EXCEÇÕES DO POTÁSSIO</summary>
+    <div class="refBody">
+      <div class="refGrid">
+        <div class="refBox">
+          <b>K &lt;3,0 mEq/L</b>
+          <ul>
+            <li><span class="paramRed">adiar/suspender temporariamente a insulina</span>;</li>
+            <li>HCA: correção de K a <span class="paramRed">0,5 mEq/kg/h</span> e reavaliar;</li>
+            <li>não tratar como simples “40 mEq/L no bloco”;</li>
+            <li>o resultado em mL é quantidade de <b>KCl concentrado a ser diluída</b>, nunca administração direta.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>K ≥5,5 mEq/L</b>
+          <ul>
+            <li><span class="paramRed">não adicionar KCl</span> naquele momento;</li>
+            <li>manter a hidratação pelos blocos;</li>
+            <li>o K elevado, isoladamente, <b>não é motivo para suspender a insulina</b>;</li>
+            <li>reavaliar K e diurese antes de iniciar reposição.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>K entre os extremos — regra HCA</b>
+          <ul>
+            <li>K &lt;4,5 → <span class="paramGreen">40 mEq/L</span>;</li>
+            <li>K &gt;4,5 e &lt;5,5 → <span class="paramGreen">20 mEq/L</span>;</li>
+            <li>K = 4,5 → ponto de corte não explicitado no documento institucional.</li>
+          </ul>
+        </div>
+        <div class="refBox">
+          <b>HGT — regra HCA</b>
+          <ul>
+            <li>queda &gt;100 mg/dL/h <b>OU</b> HGT &lt;250 → G5%;</li>
+            <li>persistindo na avaliação seguinte → G7,5%;</li>
+            <li>G7,5% + persistência → avaliar redução da insulina para 0,05 UI/kg conforme protocolo.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="manualNote">
+        <b>Conferência externa:</b> a SBD 2025 usa K &lt;3,3 mEq/L como limiar para adiar insulina em CAD moderada/grave, enquanto o HCA desta ferramenta e a referência pediátrica ISPAD/BSPED usam o corte operacional de 3,0 mEq/L. <b>A calculadora permanece programada para seguir o HCA</b>; a diferença fica explícita para conferência.
+      </div>
+    </div>
+  </details>
+</section>
+
+
+<div class="footer">Ferramenta de apoio clínico. <b>HCA permanece como conduta e posologia principal.</b> SBP, 💜 UpToDate e ISPAD aparecem apenas na área de conferência/leituras extras e não substituem o protocolo institucional.</div>
 
 </div>
 <aside class="cadSidebar">
@@ -1647,8 +2360,8 @@ function avaliarCAD(){
 
   let ktxt='K não informado.';
   if(k!==null){
-    if(k<3) ktxt=`K ${br(k)} mEq/L → reposição rápida de K 0,5 mEq/kg/h e reavaliar.`;
-    else if(k>=5.5) ktxt=`K ${br(k)} mEq/L → adiar reposição de K até próxima aferição.`;
+    if(k<3) ktxt=`K ${br(k)} mEq/L → <b>adiar/suspender temporariamente a insulina</b>; realizar reposição rápida de K a 0,5 mEq/kg/h e reavaliar antes de reiniciar.`;
+    else if(k>=5.5) ktxt=`K ${br(k)} mEq/L → <b>não adicionar KCl</b> até nova aferição; manter hidratação e, pelo K isoladamente, não suspender a insulina.`;
     else if(k<4.5) ktxt=`K ${br(k)} mEq/L → usar 40 mEq/L na reposição de perdas.`;
     else if(k>4.5) ktxt=`K ${br(k)} mEq/L → usar 20 mEq/L na reposição de perdas.`;
     else ktxt='K = 4,5 mEq/L → o documento não explicita qual das duas concentrações usar exatamente neste ponto de corte.';
@@ -1690,9 +2403,9 @@ function calcPerdas(){
 
   if(k!==null){
     if(k<3){
-      ktxt=`K ${br(k)} mEq/L → realizar reposição rápida a <b>0,5 mEq/kg/h</b> e reavaliar antes da reposição habitual.`;
+      ktxt=`K ${br(k)} mEq/L → <b>adiar/suspender temporariamente a insulina</b>; realizar reposição rápida a <b>0,5 mEq/kg/h</b> e reavaliar antes da reposição habitual.`;
     } else if(k>=5.5){
-      ktxt=`K ${br(k)} mEq/L → <b>adiar potássio</b> até a próxima aferição.`;
+      ktxt=`K ${br(k)} mEq/L → <b>não adicionar KCl</b> até a próxima aferição; manter o bloco de hidratação e a insulina se não houver outra contraindicação.`;
     } else if(k<4.5){
       alvoK=40;
       ktxt=`K ${br(k)} mEq/L → concentração institucional: <b>40 mEq/L</b>.`;
@@ -2203,12 +2916,13 @@ function avaliarGlicemia(){
   }
 
   const queda=anterior-atual;
-  const gatilho=(queda>100 || atual<250);
+  const gatilhoInicial=(queda>100 || atual<250);
+  const quedaPersistente=(queda>100);
 
   function kData(baseVol){
     if(baseVol===null || k===null) return {ml:0,meq:0,txt:'K não informado nesta aba; o preparo abaixo não inclui KCl.'};
-    if(k<3) return {ml:0,meq:0,txt:'K <3 mEq/L: seguir reposição rápida institucional e reavaliar antes da reposição habitual.'};
-    if(k>=5.5) return {ml:0,meq:0,txt:'K ≥5,5 mEq/L: adiar K até nova aferição.'};
+    if(k<3) return {ml:0,meq:0,txt:'K <3 mEq/L: adiar/suspender temporariamente a insulina, seguir reposição rápida institucional de K e reavaliar antes da reposição habitual.'};
+    if(k>=5.5) return {ml:0,meq:0,txt:'K ≥5,5 mEq/L: não adicionar KCl até nova aferição; manter hidratação e insulina se não houver outra contraindicação.'};
     let conc=null;
     if(k<4.5) conc=40;
     else if(k>4.5) conc=20;
@@ -2245,10 +2959,11 @@ function avaliarGlicemia(){
       </div>`;
   }
 
-  let acao='', preparoHtml='', proximo=soro;
+  let acao='', preparoHtml='', proximo=soro, destaque=false;
 
   if(soro==='sf'){
-    if(gatilho){
+    if(gatilhoInicial){
+      destaque=true;
       acao='<b>Trocar para glicose 5%, mantendo o volume-base do bloco.</b>';
       preparoHtml=preparo(vol,5);
       proximo='g5';
@@ -2256,17 +2971,23 @@ function avaliarGlicemia(){
       acao=`Manter SF 0,9%. Queda ${br(queda,0)} mg/dL; HGT atual ${br(atual,0)} mg/dL.`;
     }
   } else if(soro==='g5'){
-    if(gatilho){
-      acao='<b>Persistência da queda → passar para glicose 7,5%, mantendo o volume-base do bloco.</b>';
+    if(quedaPersistente){
+      destaque=true;
+      acao='<b>Queda >100 mg/dL/h persistiu na nova avaliação → passar para glicose 7,5%, mantendo o volume-base.</b>';
       preparoHtml=preparo(vol,7.5);
       proximo='g75';
     } else {
-      acao='Manter glicose 5% e seguir reavaliação horária.';
+      acao='Manter glicose 5%. HGT <250 isoladamente, depois de já iniciar G5%, não é usado aqui como gatilho automático para G7,5%; o protocolo pede persistência da queda.';
     }
   } else if(soro==='g75'){
-    if(gatilho){
-      const dose=p?` Para ${br(p,1)} kg: ${br(p*0.05,2)} UI/dose SC ou ${br(p*0.05,2)} UI/h EV.`:'';
-      acao=`Já em glicose 7,5% com persistência da queda → reduzir insulina para <b>0,05 UI/kg</b>.${dose}`;
+    if(quedaPersistente){
+      destaque=true;
+      if(k!==null && k<3){
+        acao='<b>Queda >100 mg/dL/h persistente, porém K <3 mEq/L:</b> a insulina já deve estar temporariamente suspensa; priorizar correção do K e reavaliar.';
+      } else {
+        const dose=p?` Para ${br(p,1)} kg: ${br(p*0.05,2)} UI/dose SC ou ${br(p*0.05,2)} UI/h EV.`:'';
+        acao=`Já em glicose 7,5% com persistência da queda → reduzir insulina para <b>0,05 UI/kg</b>.${dose}`;
+      }
       preparoHtml=preparo(vol,7.5);
     } else {
       acao='Manter glicose 7,5% e seguir reavaliação horária.';
@@ -2274,20 +2995,23 @@ function avaliarGlicemia(){
   }
 
   const nomes={sf:'SF 0,9%',g5:'Glicose 5%',g75:'Glicose 7,5%'};
+  const prioridadeK=(k!==null && k<3)
+    ? '<div class="call danger"><b>PRIORIDADE: K &lt;3 mEq/L.</b> Adiar/suspender temporariamente a insulina e corrigir o potássio antes de reiniciar.</div>'
+    : '';
 
   document.getElementById('resGlicemia').innerHTML=`
+    ${prioridadeK}
     <div class="kpis">
       <div class="kpi"><small>HGT anterior</small><strong>${br(anterior,0)} mg/dL</strong></div>
       <div class="kpi"><small>HGT atual</small><strong>${br(atual,0)} mg/dL</strong></div>
       <div class="kpi"><small>Variação</small><strong>${queda>=0?'-':'+'}${br(Math.abs(queda),0)} mg/dL</strong></div>
       <div class="kpi"><small>Soro atual</small><strong>${nomes[soro]}</strong></div>
     </div>
-    <div class="call ${gatilho?'warn':'info'}"><b>Conduta:</b> ${acao}</div>
+    <div class="call ${destaque?'warn':'info'}"><b>Conduta:</b> ${acao}</div>
     ${preparoHtml}
-    ${proximo!==soro?`<div class="call info"><b>Próxima reavaliação:</b> selecione ${nomes[proximo]} como soro em uso e informe os novos HGTs. Se houver nova troca, a ferramenta recalculará o preparo.</div>`:''}
+    ${proximo!==soro?`<div class="call info"><b>Próxima reavaliação:</b> selecione ${nomes[proximo]} como soro em uso e informe os novos HGTs. Para avançar de G5% para G7,5%, a ferramenta exige persistência da queda &gt;100 mg/dL/h.</div>`:''}
   `;
 }
-
 
 function hollidayVolumeCAD(p){
   if(p<=10) return 100*p;
@@ -2460,6 +3184,258 @@ function avaliarEdema(){
     <div class="call uptodate"><span class="uptag">💜 Critério UpToDate</span><div style="margin-top:6px">${utdTreat?'Critério complementar atingido.':'Critério complementar não atingido.'} ${hcaCriteria?'Também preenche a combinação previamente usada pelo HCA nesta ferramenta.':'Se o gatilho ocorreu por <5 anos + 1 maior + 1 menor, trata-se do complemento UpToDate.'}</div></div>
     ${tratamento}`;
 }
+
+/* ===== V28 — CALCULADORA RÁPIDA K + HGT ===== */
+function valorNumDireto(id){
+  const el=document.getElementById(id);
+  if(!el) return null;
+  const v=parseFloat(el.value);
+  return Number.isFinite(v)?v:null;
+}
+
+function importarCalculadoraRapida(){
+  const set=(id,val)=>{
+    const el=document.getElementById(id);
+    if(el && val!==null && val!==undefined && val!=='') el.value=val;
+  };
+
+  const p=valorNumDireto('peso') ?? valorNumDireto('ptPeso');
+  const desEl=document.getElementById('desid');
+  const k=valorNumDireto('kPerdas') ?? valorNumDireto('kDx');
+  const vol=valorNumDireto('volNovoSoro');
+  const hAnt=valorNumDireto('hgtAnterior');
+  const hAt=valorNumDireto('hgtAtual');
+  const soro=document.getElementById('soroAtual')?.value;
+
+  set('quickPeso',p);
+  if(desEl && desEl.value) set('quickDesid',desEl.value);
+  if(p!==null) set('quickExpansao',Math.round(p*20));
+  set('quickK',k);
+  set('quickBloco',vol);
+  set('quickHgtAnt',hAnt);
+  set('quickHgtAtual',hAt);
+  if(soro && document.getElementById('quickSoro')) document.getElementById('quickSoro').value=soro;
+
+  const out=document.getElementById('quickResult');
+  if(out) out.innerHTML='<div class="call info"><b>Dados importados.</b> Revise K, diurese, HGT e volume do bloco antes de calcular.</div>';
+}
+
+function calcularRapidoCAD(){
+  const p=valorNumDireto('quickPeso');
+  const des=parseFloat(document.getElementById('quickDesid')?.value);
+  const expManual=valorNumDireto('quickExpansao');
+  const blocoManual=valorNumDireto('quickBloco');
+  const k=valorNumDireto('quickK');
+  const kcl=valorNumDireto('quickKcl') || 2.5;
+  const diurese=document.getElementById('quickDiurese')?.value || 'unknown';
+  const soro=document.getElementById('quickSoro')?.value || 'sf';
+  const hAnt=valorNumDireto('quickHgtAnt');
+  const hAt=valorNumDireto('quickHgtAtual');
+  const mins=valorNumDireto('quickHgtMin') || 60;
+  const out=document.getElementById('quickResult');
+
+  if(!p){
+    out.innerHTML='<div class="call warn"><b>Informe o peso.</b> Ele é necessário para expansão, blocos e para a correção intensiva do K.</div>';
+    return;
+  }
+
+  const expansao=(expManual!==null)?expManual:p*20;
+  let deficit=null, restante=null, bloco=null;
+  if(Number.isFinite(des)){
+    deficit=p*10*des;
+    restante=Math.max(deficit-expansao,0);
+    bloco=restante/4;
+  }
+  if(blocoManual!==null) bloco=blocoManual;
+
+  // Mantém os campos operacionais atualizados sem obrigar o usuário a fazer conta mental.
+  if(document.getElementById('quickExpansao') && expManual===null){
+    document.getElementById('quickExpansao').value=Math.round(expansao);
+  }
+  if(document.getElementById('quickBloco') && blocoManual===null && bloco!==null){
+    document.getElementById('quickBloco').value=Math.round(bloco);
+  }
+
+  let volumeHtml='';
+  if(bloco!==null){
+    const rate=bloco/2;
+    const plan=planStockVolume(bloco,[500,250,100]);
+    volumeHtml=`
+      <div class="quickPanel green">
+        <h3>💧 BLOCO DE REPOSIÇÃO</h3>
+        <div class="big">${br(bloco,0)} mL / 2 h</div>
+        <div class="mini"><b>${br(rate,0)} mL/h</b> de volume-base.</div>
+        ${deficit!==null?`<div class="quickEq">Déficit ${br(deficit,0)} mL − expansão ${br(expansao,0)} mL = ${br(restante,0)} mL; ÷4 = ${br(bloco,0)} mL/bloco.</div>`:
+        `<div class="quickEq">Volume informado manualmente. Expansão registrada: ${br(expansao,0)} mL.</div>`}
+        <div class="quickEq">${plan.text}</div>
+      </div>`;
+  } else {
+    volumeHtml=`
+      <div class="quickPanel amber">
+        <h3>💧 BLOCO DE REPOSIÇÃO</h3>
+        <div class="big">Volume não definido</div>
+        <div class="mini">Selecione a desidratação para calcular automaticamente, ou informe diretamente o volume do bloco.</div>
+      </div>`;
+  }
+
+  // POTÁSSIO
+  let kHtml='', kRotinaMl=0, kRotinaMeq=0, concK=null, insulinHold=false, omitirK=false;
+  if(k===null){
+    kHtml=`
+      <div class="quickPanel amber">
+        <h3>⚡ POTÁSSIO</h3>
+        <div class="big">K não informado</div>
+        <div class="mini">Defina o K atual antes de decidir KCl/insulina.</div>
+      </div>`;
+  } else if(k<3){
+    insulinHold=true;
+    const meqHora=0.5*p;
+    const mlConcHora=meqHora/kcl;
+    let blocoEq='';
+    if(bloco!==null && bloco>0){
+      const fluidRateLh=(bloco/2)/1000;
+      const concNec=meqHora/fluidRateLh;
+      const meq2h=meqHora*2;
+      const ml2h=meq2h/kcl;
+      blocoEq=`
+        <div class="quickEq">
+          Se a taxa institucional de 0,5 mEq/kg/h fosse fornecida pela velocidade-base deste bloco:
+          seriam <b>${br(meq2h,1)} mEq em 2 h</b> = equivalente a <b>${br(ml2h,2)} mL</b> de KCl 19,1% concentrado no preparo,
+          correspondendo a ≈ <b>${br(concNec,1)} mEq/L</b>.
+          ${concNec>40?'<br><span class="paramRed"><b>Isso ultrapassa 40 mEq/L:</b> não tratar como bloco periférico habitual; requer discussão imediata com terapia intensiva e limites institucionais de acesso/concentração.</span>':''}
+        </div>`;
+    }
+    kHtml=`
+      <div class="quickPanel red">
+        <h3>⚡ POTÁSSIO — PRIORIDADE</h3>
+        <div class="big">K ${br(k)} → &lt;3,0</div>
+        <div class="mini"><b>ADIAR/SUSPENDER TEMPORARIAMENTE A INSULINA.</b><br>
+        HCA: K a <b>0,5 mEq/kg/h</b> → para ${br(p,1)} kg = <b>${br(meqHora,1)} mEq/h</b>.<br>
+        Equivalente matemático de KCl 19,1% (${br(kcl,2)} mEq/mL): <b>${br(mlConcHora,2)} mL/h do concentrado</b>, a ser obrigatoriamente diluído/preparado conforme acesso e protocolo — <b>nunca EV direto</b>.</div>
+        ${blocoEq}
+      </div>`;
+  } else if(k>=5.5){
+    omitirK=true;
+    kHtml=`
+      <div class="quickPanel red">
+        <h3>⚡ POTÁSSIO</h3>
+        <div class="big">K ${br(k)} → ≥5,5</div>
+        <div class="mini"><b>NÃO ADICIONAR KCl</b> neste momento.<br>
+        Manter o bloco de hidratação. O K elevado, isoladamente, <b>não suspende a insulina</b>. Reavaliar K e diurese.</div>
+      </div>`;
+  } else if(Math.abs(k-4.5)<0.0001){
+    kHtml=`
+      <div class="quickPanel amber">
+        <h3>⚡ POTÁSSIO</h3>
+        <div class="big">K = 4,5</div>
+        <div class="mini">O texto HCA usa &lt;4,5 e &gt;4,5 e <b>não define exatamente o valor 4,5</b>. Confirmar qual concentração o serviço adota neste ponto.</div>
+      </div>`;
+  } else {
+    concK=k<4.5?40:20;
+    if(bloco!==null){
+      kRotinaMeq=concK*(bloco/1000);
+      kRotinaMl=kRotinaMeq/kcl;
+    }
+    const eqLitro=concK/kcl;
+    let renalWarn='';
+    if(diurese!=='ok'){
+      renalWarn=`<div class="quickEq"><span class="paramRed"><b>Diurese ${diurese==='no'?'ausente/oligúria':'não confirmada'}:</b> não automatizar a adição de KCl até confirmar função renal/débito urinário adequado.</span></div>`;
+    }
+    kHtml=`
+      <div class="quickPanel ${diurese==='ok'?'green':'amber'}">
+        <h3>⚡ POTÁSSIO</h3>
+        <div class="big">K ${br(k)} → ${concK} mEq/L</div>
+        <div class="mini">Regra HCA: ${concK} mEq de K por litro de volume-base.<br>
+        Em 1 L isso equivale a ≈ <b>${br(eqLitro,1)} mL de KCl 19,1%</b> usando ${br(kcl,2)} mEq/mL.</div>
+        ${bloco!==null?`<div class="quickEq">Para bloco de <b>${br(bloco,0)} mL</b>: <b>${br(kRotinaMeq,1)} mEq</b> = <b>${br(kRotinaMl,2)} mL de KCl 19,1%</b>, adicionado por fora do volume-base conforme o exemplo institucional.</div>`:
+        '<div class="quickEq">Informe o volume do bloco para converter a concentração em mEq e mL de KCl.</div>'}
+        ${renalWarn}
+      </div>`;
+  }
+
+  // GLICOSE / HGT
+  let hgtHtml='';
+  let destino=soro, pct=null, quedaHora=null, gatilho=false, acao='';
+  if(hAt===null){
+    hgtHtml=`
+      <div class="quickPanel amber">
+        <h3>🩸 HGT / GLICOSE</h3>
+        <div class="big">HGT não informado</div>
+        <div class="mini">Informe ao menos o HGT atual; para avaliar velocidade de queda, informe também o anterior.</div>
+      </div>`;
+  } else {
+    if(hAnt!==null && mins>0) quedaHora=(hAnt-hAt)*(60/mins);
+    const quedaPersistente=(quedaHora!==null && quedaHora>100);
+    const gatilhoInicial=(hAt<250) || quedaPersistente;
+
+    if(soro==='sf'){
+      gatilho=gatilhoInicial;
+      if(gatilhoInicial){destino='g5';pct=5;acao='Trocar para G5%, mantendo o volume-base do bloco.';}
+      else acao='Manter SF 0,9% e reavaliar HGT.';
+    } else if(soro==='g5'){
+      gatilho=quedaPersistente;
+      if(quedaPersistente){destino='g75';pct=7.5;acao='Queda >100 mg/dL/h persistiu → passar para G7,5%.';}
+      else {destino='g5';pct=5;acao='Manter G5%. HGT <250 isoladamente não força G7,5%; é necessária persistência da queda.';}
+    } else {
+      destino='g75'; pct=7.5; gatilho=quedaPersistente;
+      if(quedaPersistente) acao='Já em G7,5% com queda >100 mg/dL/h persistente → HCA permite reduzir insulina para 0,05 UI/kg, exceto se a insulina já estiver suspensa por K baixo.';
+      else acao='Manter G7,5% e seguir reavaliação.';
+    }
+
+    let preparo='';
+    if(bloco!==null && pct!==null){
+      const sg=bloco*(pct/50);
+      const sf=bloco-sg;
+      const kExtra=(concK!==null && diurese==='ok')?kRotinaMl:0;
+      const vf=bloco+kExtra;
+      preparo=`
+        <div class="quickEq">
+          Preparo para volume-base de <b>${br(bloco,0)} mL</b>:
+          deixar <b>${br(sf,1)} mL de SF 0,9%</b> + acrescentar <b>${br(sg,1)} mL de SG 50%</b>
+          → SF + SG50% = <b>${br(bloco,0)} mL</b>.
+          ${kExtra>0?`<br>Depois adicionar <b>${br(kExtra,2)} mL de KCl 19,1%</b> por fora do volume-base → volume físico ≈ <b>${br(vf,1)} mL</b>.`:''}
+          ${omitirK?'<br><b>K ≥5,5:</b> não adicionar KCl neste preparo.':''}
+          ${insulinHold?'<br><b>K &lt;3:</b> a correção intensiva do potássio é prioritária e não é substituída pelo KCl habitual do bloco.':''}
+        </div>`;
+    }
+
+    const quedaTxt=quedaHora===null?'sem HGT anterior':`${quedaHora>=0?'queda':'subida'} de ${br(Math.abs(quedaHora),0)} mg/dL/h`;
+    hgtHtml=`
+      <div class="quickPanel ${gatilho?'purple':'green'}">
+        <h3>🩸 HGT / GLICOSE</h3>
+        <div class="big">${br(hAt,0)} mg/dL</div>
+        <div class="mini">${quedaTxt}.<br><b>Conduta:</b> ${acao}</div>
+        ${preparo}
+      </div>`;
+  }
+
+  let prioridade='';
+  if(insulinHold){
+    prioridade=`<div class="quickPriority"><b>🔴 PRIORIDADE: K &lt;3,0.</b> A correção da hipocalemia vem antes da insulinização. Reavaliar K antes de reiniciar a insulina; usar monitorização cardíaca e limites institucionais de concentração/acesso.</div>`;
+  } else if(omitirK){
+    prioridade=`<div class="quickPriority warn"><b>🟠 K ≥5,5:</b> mantenha o volume do bloco, <b>sem KCl</b>; continue a insulinização conforme o protocolo se não houver outra contraindicação e repita K/diurese.</div>`;
+  } else {
+    prioridade=`<div class="quickPriority ok"><b>🟢 Fluxo habitual:</b> volume do bloco + ajuste do K conforme faixa + ajuste da glicose conforme HGT. Reavaliar K e HGT durante o tratamento.</div>`;
+  }
+
+  out.innerHTML=`
+    ${prioridade}
+    <div class="quickResultGrid">
+      ${volumeHtml}
+      ${kHtml}
+      ${hgtHtml}
+    </div>
+    <div class="quickLegend">
+      <span>HCA: blocos de 2 h</span>
+      <span>KCl 19,1%: valor padrão 2,5 mEq/mL</span>
+      <span>G5: 10% SG50 + 90% SF</span>
+      <span>G7,5: 15% SG50 + 85% SF</span>
+    </div>
+    <div class="small" style="margin-top:8px">
+      O cálculo de KCl concentrado é uma <b>conversão matemática para preparo</b>. Confirmar rótulo da ampola, diurese/função renal, concentração máxima permitida para o acesso e protocolo de segurança do serviço antes da infusão.
+    </div>`;
+}
+
 </script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
