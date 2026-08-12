@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Prurigo Estrófulo • Protocolo Pediátrico</title>
+<style>
+:root{
+  --bg:#f4f7f8; --card:#ffffff; --ink:#17222b; --muted:#66737d;
+  --primary:#0f766e; --primary2:#115e59; --soft:#e8f5f3;
+  --blue:#245c7a; --blueSoft:#eaf3f8; --warn:#a16207; --warnSoft:#fff7db;
+  --danger:#b42318; --dangerSoft:#fff0ee; --purple:#7c3aed; --purpleSoft:#f3efff;
+  --line:#dce5e8; --shadow:0 8px 25px rgba(20,45,55,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:1.45}
+.container{max-width:1180px;margin:0 auto;padding:18px}
+.hero{background:linear-gradient(135deg,#0d6f68,#174d66);color:white;border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px}
+.hero h1{font-size:24px;margin:0 0 5px;letter-spacing:.2px}
+.hero p{margin:0;opacity:.92}
+.source-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.15)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.container{padding:10px}.hero{border-radius:12px}.hero h1{font-size:20px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 3px 12px rgba(20,45,55,.04);margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 11px;color:#16343d;display:flex;align-items:center;gap:8px}
+.card h3{font-size:14px;margin:15px 0 8px}
+.section-num{display:inline-flex;width:25px;height:25px;border-radius:8px;background:var(--primary);color:#fff;align-items:center;justify-content:center;font-size:13px}
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:650px){.fields{grid-template-columns:1fr 1fr}.fields .wide{grid-column:1/-1}}
+label{display:block;font-weight:700;font-size:12px;color:#44525b;margin-bottom:5px}
+input,select,textarea{width:100%;border:1px solid #cfdadd;border-radius:9px;padding:9px 10px;background:white;color:var(--ink);font:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#57a7a0;box-shadow:0 0 0 3px rgba(15,118,110,.09)}
+.toggle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(max-width:650px){.toggle-grid{grid-template-columns:1fr}}
+.toggle{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:10px;padding:9px;background:#fbfcfc;cursor:pointer}
+.toggle input{width:auto;margin-top:2px}
+.toggle b{display:block;font-size:12.5px}.toggle span{color:var(--muted);font-size:11.5px}
+.outcome{border-radius:12px;padding:12px 13px;border:1px solid var(--line);background:#fafcfc;margin-top:10px}
+.outcome.good{background:var(--soft);border-color:#bfe2dd}
+.outcome.warn{background:var(--warnSoft);border-color:#ead994}
+.outcome.danger{background:var(--dangerSoft);border-color:#f0b7b0}
+.badge{display:inline-flex;padding:3px 8px;border-radius:999px;font-weight:800;font-size:11px;margin-right:5px;margin-bottom:5px}
+.badge.green{background:#dff4f0;color:#0f655f}.badge.yellow{background:#fff0b5;color:#805d00}.badge.red{background:#ffe2df;color:#9b2218}.badge.blue{background:#e6f1f7;color:#245c7a}.badge.purple{background:var(--purpleSoft);color:var(--purple)}
+ul.compact{padding-left:19px;margin:7px 0} ul.compact li{margin:4px 0}
+.step{border-left:4px solid var(--primary);padding:9px 11px;background:#fbfefe;border-radius:0 9px 9px 0;margin:8px 0}
+.step.warn{border-color:#d59b1f;background:#fffdf5}.step.danger{border-color:#d14d42;background:#fff8f7}
+.medbox{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:#fcfdfd}
+.medtitle{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.medtitle b{font-size:13px}
+.result{margin-top:9px;padding:10px;border-radius:9px;background:var(--blueSoft);border:1px solid #c9dfe9;color:#153e52;font-weight:700}
+.note{font-size:11.5px;color:var(--muted);margin-top:6px}
+.purple-note{background:var(--purpleSoft);border:1px solid #dcd2ff;color:#5c34a0;padding:8px 10px;border-radius:9px;margin-top:8px;font-size:12px}
+.rep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}
+@media(max-width:650px){.rep-grid{grid-template-columns:1fr}}
+.rep-card{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fbfdfd}
+.rep-card b{display:block;font-size:12.5px;margin-bottom:3px}
+.rep-card .meta{font-size:11.5px;color:var(--muted);line-height:1.42}
+.rep-card .dose{margin-top:6px;font-size:11.5px;font-weight:700;color:#214b58}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{border:0;border-radius:9px;padding:8px 11px;background:var(--primary);color:white;font-weight:800;cursor:pointer;font:inherit}
+button.secondary{background:#eaf1f2;color:#2c4b55}button.danger{background:#b42318}button.purple{background:var(--purple)}
+.copyarea{white-space:pre-wrap;background:#10242d;color:#eef8f8;padding:13px;border-radius:11px;min-height:100px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+details{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;margin-top:9px}
+summary{cursor:pointer;font-weight:800;color:#334851}
+.small{font-size:11.5px;color:var(--muted)}
+.footer{color:#6e7b84;font-size:11px;padding:5px 2px 25px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.sticky{position:sticky;top:8px;z-index:10}
+@media(max-width:860px){.sticky{position:static}}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:800;opacity:.84}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="hero">
+    <h1>Prurigo estrófulo / urticária papular</h1>
+  </header>
+
+  <div class="grid">
+    <div>
+      <section class="card">
+        <h2><span class="section-num">0</span> Dados do paciente</h2>
+        <div class="fields">
+          <div><label>Idade</label><input id="age" type="number" min="0" step="0.1" placeholder="Ex.: 4"></div>
+          <div><label>Unidade</label><select id="ageUnit"><option value="y">anos</option><option value="m">meses</option></select></div>
+          <div><label>Peso (kg)</label><input id="weight" type="number" min="0" step="0.1" placeholder="Ex.: 18"></div>
+          <div class="wide"><label>Observação curta (opcional)</label><input id="obs" placeholder="Ex.: prurido pior à noite; sem febre"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="section-num">1</span> Reconhecimento clínico</h2>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="checkbox" class="feat" value="papulas"><div><b>Pápulas eritematosas</b><span>Lesão básica típica.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="linear"><div><b>Aos pares / lineares</b><span>Padrão “fila indiana”.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="vesicula"><div><b>Vesícula central</b><span>Seropápula de Tomazoli.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="crosta"><div><b>Crosta hemática</b><span>Pode surgir após 1–3 dias.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="expostos"><div><b>Extensores / áreas expostas</b><span>Mais compatível com mosquitos/pernilongos.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="tronco"><div><b>Tronco / próximo a elásticos</b><span>Pode sugerir pulgas/percevejos.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="prurido"><div><b>Prurido intenso</b><span>Escoriações podem ocorrer.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="feat" value="recorrente"><div><b>Recidivante / novas lesões</b><span>Reexposição pode manter o quadro.</span></div></label>
+        </div>
+
+        <h3>Achados que tornam o padrão menos típico</h3>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="checkbox" class="atyp" value="palmo"><div><b>Palmas / plantas</b><span>Raramente acometidas no padrão descrito pela SBP.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="atyp" value="genital"><div><b>Genital / perianal</b><span>Não é localização esperada no documento da SBP.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="atyp" value="axila"><div><b>Axila predominante</b><span>Localização pouco habitual.</span></div></label>
+          <label class="toggle"><input type="checkbox" class="atyp" value="face"><div><b>Face predominante</b><span>Menos frequente.</span></div></label>
+        </div>
+
+        <h3>Complicação / reação intensa</h3>
+        <div class="toggle-grid">
+          <label class="toggle"><input id="localizedInfection" type="checkbox"><div><b>Infecção secundária localizada</b><span>Poucas lesões infectadas, sem repercussão clínica.</span></div></label>
+          <label class="toggle"><input id="cellulitis" type="checkbox"><div><b>Celulite / infecção com extensão</b><span>Eritema em progressão, dor/calor e repercussão local.</span></div></label>
+          <label class="toggle"><input id="skeeter" type="checkbox"><div><b>Reação local intensa em horas</b><span>Edema + calor + eritema + dor/prurido após picada: considerar síndrome de Skeeter.</span></div></label>
+          <label class="toggle"><input id="systemic" type="checkbox"><div><b>Febre / mal-estar / vômitos</b><span>Reavaliar gravidade e contexto; podem ocorrer em reação intensa.</span></div></label>
+        </div>
+        <div id="diagnosticBox" class="outcome">Marque os achados para gerar o apoio clínico.</div>
+      </section>
+    </div>
+
+    <div>
+      <section class="card sticky">
+        <h2><span class="section-num">2</span> Conduta na emergência / PA</h2>
+        <div id="paPlan"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2><span class="section-num">3</span> Conduta para casa • prescrição prática</h2>
+    <div class="grid">
+      <div>
+        <div class="medbox">
+          <div class="medtitle"><b>🧴 Corticoide tópico — eixo principal da reação local</b><span class="badge green">SBP 2022</span></div>
+          <label>Opção</label>
+          <select id="topical">
+            <option value="mometasona">Furoato de mometasona CREME 0,1% (1 mg/g) — potência média</option>
+            <option value="betametasona">Valerato de betametasona 0,1% (1 mg/g) — potência média</option>
+            <option value="metilpred">Aceponato de metilprednisolona 0,1% (1 mg/g) — média-baixa na tabela SBP</option>
+          </select>
+          <div id="topicalResult" class="result"></div>
+          <div class="note"><b>Posologia conferida na SBP:</b> aplicar <b>camada fina somente sobre as lesões, 1x/dia, por até 5 dias</b>. Não é dose por kg. A potência depende também do veículo: na própria tabela da SBP, mometasona 0,1% em <b>creme</b> aparece como potência média, enquanto a <b>pomada</b> aparece em faixa de maior potência.</div>
+        </div>
+
+        <div class="medbox">
+          <div class="medtitle"><b>💊 Anti-histamínico oral</b><span class="badge green">2ª geração preferida</span></div>
+          <label>Escolha</label>
+          <select id="antihist">
+            <option value="deslo">Desloratadina — SBP + RFOFOS</option>
+            <option value="fexo">Fexofenadina — SBP + RFOFOS</option>
+            <option value="bila">Bilastina — SBP + RFOFOS</option>
+          </select>
+          <div id="antihistResult" class="result">Preencha idade e, quando necessário, peso.</div>
+          <div id="antihistNote" class="note"></div>
+        </div>
+
+        <details>
+          <summary>Outras opções presentes no RFOFOS</summary>
+          <div class="small" style="margin-top:8px">
+            <b>Loratadina:</b> ≥2 a &lt;6 a: 5 mg 1x/dia; ≥6 a: 10 mg/dia em 1–2 tomadas. É de 2ª geração, porém não aparece entre os exemplos nomeados no documento da SBP usado como base.<br><br>
+            <b>Hidroxizina:</b> consta no RFOFOS, mas não é a escolha-padrão deste protocolo, pois a SBP orienta preferência por anti-histamínicos de 2ª geração para o prurido no prurigo estrófulo.
+          </div>
+        </details>
+      </div>
+
+      <div>
+        <div class="medbox">
+          <div class="medtitle"><b>🦠 Se infecção secundária</b><span class="badge yellow">somente se indicada</span></div>
+          <div id="infectionPlan"></div>
+        </div>
+
+        <div class="medbox">
+          <div class="medtitle"><b>🧮 Cefalexina — calculadora se celulite</b><span class="badge green">SBP específica</span></div>
+          <div id="cefaResult" class="result">Marque “celulite” e informe o peso.</div>
+          <div class="note">Neste contexto, o protocolo prioriza a recomendação específica da SBP: 50–100 mg/kg/dia, divididos de 6/6h, por 7 dias. Apresentação de referência do RFOFOS: suspensão 250 mg/5 mL; teto convencional RFOFOS: 4 g/dia.</div>
+        </div>
+
+        <div class="medbox">
+          <div class="medtitle"><b>🦟 Repelente por idade</b><span class="badge green">SBP • 08/2025</span></div>
+          <div id="repellentResult" class="result">Preencha a idade para mostrar a recomendação.</div>
+          <div id="repellentBrands" class="rep-grid"></div>
+          <div class="note"><b>Posologia prática:</b> repelentes não são dosados em mL/kg. Aplicar quantidade suficiente para cobrir uniformemente a <b>pele exposta</b>, respeitando o número máximo de aplicações/dia da faixa etária e o tempo de proteção do rótulo.</div>
+          <details>
+            <summary>Como aplicar com segurança</summary>
+            <ul class="compact small">
+              <li>Aplicar somente na pele exposta; não é necessário encharcar a pele.</li>
+              <li>O adulto aplica primeiro nas próprias mãos e depois espalha na criança.</li>
+              <li>Não aplicar nas mãos da criança pequena, pele ferida, olhos ou boca.</li>
+              <li>Na face, aplicar primeiro nas mãos do adulto.</li>
+              <li>Remover no banho após terminar a exposição.</li>
+              <li>Associar roupas compridas, mosquiteiros, telas e controle ambiental.</li>
+              <li>Se houver protetor solar, aplicá-lo primeiro; depois de seco, aplicar o repelente.</li>
+            </ul>
+          </details>
+          <details>
+            <summary>Sobre os exemplos de marcas</summary>
+            <div class="small" style="margin-top:8px">
+              Os exemplos abaixo vêm da tabela de produtos do documento da SBP de 2022 e, para Exposis®, da rotulagem atual do fabricante. A composição das marcas pode mudar: conferir sempre <b>princípio ativo, concentração, idade mínima e instruções da apresentação específica</b>.
+            </div>
+          </details>
+        </div>
+
+        <div class="medbox">
+          <div class="medtitle"><b>🧴 Alívio sintomático adicional</b><span class="badge blue">SBP</span></div>
+          <ul class="compact">
+            <li>Loções com <b>calamina</b>, cânfora ou mentol podem aliviar o prurido.</li>
+            <li>Usar com cuidado, pois podem causar irritação ou ardência.</li>
+            <li>Manter higiene local e unhas curtas para reduzir escoriações e infecção secundária.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="copyRx">Copiar prescrição sugerida</button>
+      <button id="reset" class="secondary">Limpar dados</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="section-num">4</span> Orientações aos genitores</h2>
+    <div id="parentText" class="copyarea"></div>
+    <div class="actions"><button id="copyParents">Copiar orientações</button></div>
+  </section>
+
+  <section class="card">
+    <h2>📝 Texto para prontuário</h2>
+    <div id="chartText" class="copyarea"></div>
+    <div class="actions"><button id="copyChart">Copiar evolução/conduta</button></div>
+  </section>
+
+  <section class="card">
+    <h2>⚖️ Conflitos e observações</h2>
+    <div class="step">
+      <b>Hierarquia adotada:</b> quando há uma recomendação específica da SBP para prurigo estrófulo, ela prevalece. O RFOFOS 2026 é usado para apresentação, cálculo e apoio posológico.
+    </div>
+    <div class="step warn">
+      <b>Cefalexina:</b> a SBP, especificamente para celulite complicando o prurigo, recomenda 50–100 mg/kg/dia de 6/6h por 7 dias. O RFOFOS traz faixas gerais diferentes para “infecções de pele”. Por isso, a calculadora acima segue a SBP no cenário de celulite associada.
+    </div>
+    <div class="step">
+      <b>Corticoide sistêmico:</b> não foi incorporado como rotina. O RFOFOS traz doses de prednisolona para outras indicações, mas o documento da SBP utilizado aqui direciona o tratamento do prurigo para corticoide <b>tópico</b> + anti-histamínico oral.
+    </div>
+    <div class="step">
+      <b>Repelentes:</b> a ferramenta passou a usar como regra principal a página oficial da SBP <b>“Picadas de insetos e repelentes” — atualizado em agosto/2025</b>. Assim, &lt;3 meses ficam apenas com barreiras físicas; 3–6 meses têm uso restrito de icaridina se a exposição for inevitável; 6 meses–2 anos podem usar icaridina ou IR3535 1x/dia; 2–7 anos até 2x/dia; 7–12 anos até 3x/dia; &gt;12 anos até 3x/dia.
+    </div>
+    <div class="step">
+      <b>Corticoide tópico:</b> a posologia específica para prurigo estrófulo permanece a da SBP 2022: <b>camada fina, 1x/dia, por até 5 dias</b>. A tabela da própria SBP mostra que o veículo interfere na potência; por isso a opção de mometasona foi corrigida para <b>creme 0,1%</b> quando classificada como potência média.
+    </div>
+    <div class="purple-note">💜 <b>Bilastina:</b> o RFOFOS registra “UpToDate: a partir de 4 anos; bula Alektos Ped: a partir de 6 anos”. Para evitar extrapolação automática, este protocolo usa a faixa de bula como padrão e apenas sinaliza a referência do UpToDate.</div>
+  </section>
+
+  <section class="card">
+    <h2>📚 Referências usadas</h2>
+    <ul class="compact">
+      <li>Sociedade Brasileira de Pediatria — Departamento Científico de Dermatologia. <i>Picadas de Inseto: Prurigo Estrófulo ou Urticária Papular – Atualização</i>. Documento Científico nº 12, 08/02/2022 — base do tratamento das lesões e corticoide tópico.</li>
+      <li>Sociedade Brasileira de Pediatria — <i>Picadas de insetos e repelentes</i>, Pediatria para Famílias, publicado/atualizado em agosto/2025 — regra principal por faixa etária para repelentes.</li>
+      <li>Sociedade Brasileira de Pediatria — <i>Repelentes e outras medidas protetoras contra insetos na infância</i>. Guia Prático de Atualização nº 7, junho/2020 — complemento para aplicação segura e princípios ativos.</li>
+      <li>RFOFOS 2026 — Hospital Infantil Albert Sabin, atualização pela Turma 49. Seções de anti-histamínicos/corticoides sistêmicos e cefalexina; os corticoides tópicos deste protocolo seguem a tabela/posologia da SBP.</li>
+    </ul>
+    <div class="small">Ferramenta de apoio clínico. O resultado depende dos dados inseridos e não substitui avaliação médica, exame físico ou julgamento clínico.</div>
+  </section>
+
+  <div class="footer">HTML offline • sem chamadas externas • dados não são enviados a servidor.</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const qsa = sel => [...document.querySelectorAll(sel)];
+const fmt = n => Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
+
+function ageMonths(){
+  const v=parseFloat($('age').value);
+  if(!Number.isFinite(v)) return null;
+  return $('ageUnit').value==='y'?v*12:v;
+}
+function weight(){
+  const v=parseFloat($('weight').value);
+  return Number.isFinite(v)&&v>0?v:null;
+}
+function checkedValues(cls){return qsa(cls+':checked').map(x=>x.value)}
+function copyText(text){
+  if(navigator.clipboard) navigator.clipboard.writeText(text);
+  else { const t=document.createElement('textarea'); t.value=text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+}
+function antihistamineText(){
+  const m=ageMonths(), w=weight(), drug=$('antihist').value;
+  if(m===null) return {text:'Preencha a idade para calcular.',note:''};
+  if(drug==='deslo'){
+    if(m<6) return {text:'Desloratadina: faixa < 6 meses não contemplada no trecho do RFOFOS usado.',note:'SBP cita desloratadina como opção de 2ª geração.'};
+    if(m<12) return {text:'Desloratadina 1 mg VO 1x/dia → xarope 0,5 mg/mL: 2 mL/dose OU gotas 1,25 mg/mL: 16 gotas/dose.',note:'RFOFOS 2026.'};
+    if(m<72) return {text:'Desloratadina 1,25 mg VO 1x/dia → xarope 0,5 mg/mL: 2,5 mL/dose OU gotas 1,25 mg/mL: 20 gotas/dose.',note:'RFOFOS 2026.'};
+    if(m<144) return {text:'Desloratadina 2,5 mg VO 1x/dia → xarope 0,5 mg/mL: 5 mL/dose OU gotas 1,25 mg/mL: 40 gotas/dose.',note:'RFOFOS 2026.'};
+    return {text:'Desloratadina 5 mg VO 1x/dia → xarope 0,5 mg/mL: 10 mL/dose OU gotas 1,25 mg/mL: 80 gotas/dose OU 1 comprimido de 5 mg.',note:'RFOFOS 2026.'};
+  }
+  if(drug==='fexo'){
+    if(m<6) return {text:'Fexofenadina: faixa < 6 meses não contemplada no trecho do RFOFOS usado.',note:'SBP cita fexofenadina como opção de 2ª geração.'};
+    if(m<24){
+      if(!w) return {text:'Informe o peso para fexofenadina em criança de 6 meses a <2 anos.',note:'RFOFOS diferencia a dose em torno de 10,5 kg.'};
+      if(w<10.5) return {text:'Fexofenadina 15 mg VO 12/12h → solução 6 mg/mL: 2,5 mL/dose.',note:'RFOFOS 2026: 6m a <2a e <10,5 kg.'};
+      return {text:'Fexofenadina 30 mg VO 12/12h → solução 6 mg/mL: 5 mL/dose.',note:'RFOFOS 2026: 6m a <2a e ≥10,5 kg.'};
+    }
+    if(m<144) return {text:'Fexofenadina 30 mg VO 12/12h → solução 6 mg/mL: 5 mL/dose.',note:'RFOFOS 2026: 2 a <12 anos.'};
+    return {text:'Fexofenadina: 60 mg VO 12/12h (solução 6 mg/mL: 10 mL/dose) OU 120 mg VO 1x/dia (20 mL/dose). RFOFOS também registra máximo de 180 mg 1x/dia.',note:'RFOFOS 2026: ≥12 anos.'};
+  }
+  if(drug==='bila'){
+    if(m<48) return {text:'Bilastina: não calcular automaticamente nesta faixa etária.',note:'💜 RFOFOS: UpToDate a partir de 4 anos; bula Alektos Ped a partir de 6 anos.'};
+    if(m<72) {
+      if(w && w>=16) return {text:'Bilastina 10 mg 1x/dia aparece no RFOFOS para ≥4–11 anos e ≥16 kg, porém esta faixa de 4–5 anos é atribuída ao UpToDate.',note:'💜 Preferência desta ferramenta: confirmar bula/indicação antes de usar abaixo de 6 anos.'};
+      return {text:'Bilastina: não calcular automaticamente em 4–5 anos.',note:'💜 RFOFOS atribui ≥4 anos ao UpToDate; bula citada no próprio material: ≥6 anos.'};
+    }
+    if(m<144){
+      if(w!==null && w<16) return {text:'Bilastina: RFOFOS condiciona a dose pediátrica a peso ≥16 kg.',note:'Dose citada: 10 mg 1x/dia para 4–11 anos e ≥16 kg; bula citada: a partir de 6 anos.'};
+      return {text:'Bilastina 10 mg VO 1x/dia → solução 2,5 mg/mL: 4 mL/dose OU comprimido de 10 mg.',note:'RFOFOS 2026; bula citada no material: a partir de 6 anos.'};
+    }
+    return {text:'Bilastina 20 mg VO 1x/dia → solução 2,5 mg/mL: 8 mL/dose OU comprimido de 20 mg.',note:'RFOFOS 2026: ≥12 anos.'};
+  }
+  return {text:'',note:''};
+}
+function topicalText(){
+  const v=$('topical').value;
+  const map={
+    mometasona:'Furoato de mometasona CREME 0,1% (1 mg/g): aplicar CAMADA FINA somente sobre as lesões, 1x/dia, por até 5 dias.',
+    betametasona:'Valerato de betametasona 0,1% (1 mg/g): aplicar CAMADA FINA somente sobre as lesões, 1x/dia, por até 5 dias.',
+    metilpred:'Aceponato de metilprednisolona 0,1% (1 mg/g): aplicar CAMADA FINA somente sobre as lesões, 1x/dia, por até 5 dias.'
+  };
+  return map[v];
+}
+
+function repellentText(){
+  const m=ageMonths();
+  if(m===null) return 'Preencha a idade para mostrar a recomendação de repelente.';
+  if(m<3){
+    return '< 3 meses: NÃO usar repelente tópico de rotina. Utilizar apenas barreiras físicas: roupas adequadas, mosquiteiros e telas.';
+  }
+  if(m<6){
+    return '3 a < 6 meses: uso RESTRITO de repelente com ICARIDINA, apenas quando a exposição aos insetos for inevitável. Seguir rigorosamente o rótulo do produto.';
+  }
+  if(m<24){
+    return '6 meses a < 2 anos: ICARIDINA ou IR3535. Limitar a 1 aplicação ao dia e seguir o rótulo quanto à idade e reaplicação.';
+  }
+  if(m<84){
+    return '2 a < 7 anos: repelente infantil, uso eventual, no máximo 2 aplicações ao dia. Escolher produto liberado para a idade e seguir o rótulo.';
+  }
+  if(m<=144){
+    return '7 a 12 anos: repelente infantil, até 3 aplicações ao dia. Escolher produto liberado para a idade e seguir o rótulo.';
+  }
+  return '> 12 anos: repelente para adultos, até 3 aplicações ao dia, conforme rótulo.';
+}
+
+function repellentBrandsHtml(){
+  const m=ageMonths();
+  if(m===null) return '';
+  const card=(name,meta,dose)=>`<div class="rep-card"><b>${name}</b><div class="meta">${meta}</div><div class="dose">${dose}</div></div>`;
+
+  if(m<3){
+    return card('Sem repelente tópico','SBP 2025: menores de 3 meses = apenas barreiras físicas.','Roupas adequadas + mosquiteiro + telas; sem aplicação cutânea.');
+  }
+  if(m<6){
+    return [
+      card('Exposis® Bebê','Icaridina • fabricante: a partir de 3 meses • proteção anunciada de até 6 h.','SBP: somente se a exposição for inevitável; seguir o rótulo e evitar reaplicação desnecessária.'),
+      card('OFF!® Baby','Icaridina 10% • tabela SBP 2022: >3 meses • proteção estimada até 6 h.','Exemplo da tabela SBP; conferir composição/rotulagem atual antes de orientar.')
+    ].join('');
+  }
+  if(m<24){
+    return [
+      card('Exposis® Infantil','Icaridina • fabricante: a partir de 6 meses • proteção anunciada de até 10 h.','SBP 2025: máximo 1 aplicação/dia.'),
+      card('Granado® Bebê','Icaridina 25% • tabela SBP 2022: >6 meses • proteção estimada até 8 h.','SBP 2025: máximo 1 aplicação/dia.'),
+      card('Mustela® Repelente','IR3535 18% • tabela SBP 2022: >6 meses • proteção estimada até 8 h.','SBP 2025: máximo 1 aplicação/dia.'),
+      card('SBP® Advanced Spray Kids','Icaridina 9,98% • tabela SBP 2022: >6 meses • proteção estimada até 5 h.','SBP 2025: máximo 1 aplicação/dia.')
+    ].join('');
+  }
+  if(m<84){
+    return [
+      card('Exposis® Infantil','Icaridina • fabricante: proteção anunciada de até 10 h.','SBP 2025: uso eventual; máximo 2 aplicações/dia.'),
+      card('Xô Inseto!® Icaridina','Icaridina 25% • tabela SBP 2022: >2 anos • proteção estimada até 12 h.','SBP 2025: máximo 2 aplicações/dia.'),
+      card('OFF!® Kids','DEET 7,1% • tabela SBP 2022: >2 anos • proteção estimada até 2 h.','SBP 2025: máximo 2 aplicações/dia nesta faixa.'),
+      card('Super Repelex® Kids Gel','DEET 7,34% • tabela SBP 2022: >2 anos • proteção estimada até 3–4 h.','SBP 2025: máximo 2 aplicações/dia.')
+    ].join('');
+  }
+  if(m<=144){
+    return [
+      card('Exposis® Infantil','Icaridina • fabricante: proteção anunciada de até 10 h.','SBP 2025: até 3 aplicações/dia.'),
+      card('Xô Inseto!® Icaridina','Icaridina 25% • tabela SBP 2022: >2 anos • proteção estimada até 12 h.','SBP 2025: até 3 aplicações/dia.'),
+      card('OFF!® Kids','DEET 7,1% • tabela SBP 2022: >2 anos • proteção estimada até 2 h.','Até 3 aplicações/dia; ANVISA: em 2–12 anos, DEET ≤10%.'),
+      card('Super Repelex® Kids Gel','DEET 7,34% • tabela SBP 2022: >2 anos • proteção estimada até 3–4 h.','SBP 2025: até 3 aplicações/dia.')
+    ].join('');
+  }
+  return [
+    card('Exposis® Extreme / adulto','Icaridina • duração varia pela apresentação.','SBP 2025: até 3 aplicações/dia, respeitando o rótulo.'),
+    card('OFF!® / Super Repelex® adulto','Há apresentações adultas com DEET em concentrações maiores que as infantis.','>12 anos: seguir rótulo; até 3 aplicações/dia.'),
+    card('Icaridina 20–25% — várias marcas','Ex.: linhas Exposis®, Xô Inseto!® e similares registradas.','Aplicar uniformemente na pele exposta; reaplicar somente conforme o rótulo.')
+  ].join('');
+}
+
+function cephalexinText(){
+  const w=weight();
+  if(!$('cellulitis').checked) return 'Marque “celulite” se houver indicação de antibiótico sistêmico.';
+  if(!w) return 'Informe o peso para calcular a cefalexina.';
+  const lowDay=Math.min(50*w,4000), highDay=Math.min(100*w,4000);
+  const lowDose=lowDay/4, highDose=highDay/4;
+  const lowMl=lowDose/50, highMl=highDose/50; // 250mg/5ml = 50mg/ml
+  return `SBP: cefalexina 50–100 mg/kg/dia, VO, dividida de 6/6h, por 7 dias.\n`+
+         `Para ${fmt(w)} kg: ${fmt(lowDose)}–${fmt(highDose)} mg por dose, 6/6h.\n`+
+         `Suspensão 250 mg/5 mL: ${fmt(lowMl)}–${fmt(highMl)} mL por dose, 6/6h.\n`+
+         `Teto usado pela ferramenta: 4 g/dia (RFOFOS).`;
+}
+function diagnostic(){
+  const f=checkedValues('.feat'), a=checkedValues('.atyp');
+  const typical=f.length;
+  let cls='good', title='', badges='';
+  if(typical>=4 && a.length===0){title='Padrão clínico bem compatível com prurigo estrófulo';}
+  else if(typical>=2 && a.length<=1){title='Padrão compatível, mas correlacionar com distribuição e evolução';cls='warn';}
+  else {title='Padrão pouco típico / dados ainda insuficientes';cls='warn';}
+  if(a.length>=2){title='Há achados de localização atípica — ampliar avaliação diferencial';cls='warn';}
+  if($('cellulitis').checked){badges+='<span class="badge red">CELULITE?</span>'}
+  if($('localizedInfection').checked){badges+='<span class="badge yellow">INFECÇÃO LOCAL</span>'}
+  if($('skeeter').checked){badges+='<span class="badge blue">SKEETER?</span>'}
+  if($('systemic').checked){badges+='<span class="badge red">SINTOMAS SISTÊMICOS</span>'}
+  const ageM=ageMonths();
+  let ageNote='';
+  if(ageM!==null && ageM<6) ageNote='<div class="note">Atenção: a SBP relata que o prurigo estrófulo raramente se inicia antes do 6º mês, pois a sensibilização costuma exigir múltiplas picadas.</div>';
+  $('diagnosticBox').className='outcome '+cls;
+  $('diagnosticBox').innerHTML=`${badges}<b>${title}</b><div class="note">Apoio heurístico, não é escore validado. A SBP descreve pápulas eritematosas, muitas vezes lineares/aos pares, podendo haver vesícula central e crostas hemáticas.</div>${ageNote}`;
+}
+function paPlan(){
+  let html='';
+  if($('cellulitis').checked){
+    html+=`<div class="step danger"><b>1. Há complicação infecciosa com padrão de celulite</b><br>Indicar antibiótico sistêmico. Para este cenário, seguir a recomendação específica da SBP: <b>cefalexina 50–100 mg/kg/dia, 6/6h, por 7 dias</b>.</div>`;
+  } else if($('localizedInfection').checked){
+    html+=`<div class="step warn"><b>1. Infecção secundária localizada, poucas lesões, sem repercussão</b><br>SBP: antibiótico tópico — mupirocina ou ácido fusídico 3x/dia por 7 dias; alternativa: retapamulina 2x/dia por 5 dias.</div>`;
+  } else {
+    html+=`<div class="step"><b>1. Sem sinais de infecção secundária</b><br><b>Não há indicação de antibiótico</b> apenas pelo prurigo estrófulo. Tratar reação inflamatória/prurido e prevenir novas picadas.</div>`;
+  }
+  if($('skeeter').checked){
+    html+=`<div class="step warn"><b>2. Considerar síndrome de Skeeter</b><br>Reação local intensa pode iniciar em poucas horas, com edema, calor, eritema, dor ou prurido e pode simular celulite. A SBP orienta prevenção de novas picadas + anti-histamínico oral + corticoide tópico.</div>`;
+  } else {
+    html+=`<div class="step"><b>2. Controle da reação local</b><br>Corticoide tópico de média potência <b>1x/dia por até 5 dias</b>.</div>`;
+  }
+  html+=`<div class="step"><b>3. Controle do prurido</b><br>Preferir anti-histamínico oral de <b>2ª geração</b>. A SBP cita desloratadina, fexofenadina, bilastina, rupatadina e levocetirizina; esta ferramenta calcula apenas opções com posologia localizada no RFOFOS enviado.</div>`;
+  html+=`<div class="step"><b>4. Prevenção</b><br>${repellentText()}<br><span class="small">Associar barreiras físicas, telas/mosquiteiros, controle ambiental e avaliação de pulgas em animais quando pertinente.</span></div>`;
+  if($('systemic').checked) html+=`<div class="step danger"><b>Reavaliar gravidade</b><br>Febre, mal-estar ou vômitos exigem correlação com o exame físico e com a hipótese de reação intensa versus infecção/diagnóstico alternativo.</div>`;
+  $('paPlan').innerHTML=html;
+}
+function infectionPlan(){
+  if($('cellulitis').checked){
+    $('infectionPlan').innerHTML=`<b>Celulite:</b> cefalexina sistêmica conforme cálculo abaixo. <span class="badge red">ATB sistêmico</span>`;
+  } else if($('localizedInfection').checked){
+    $('infectionPlan').innerHTML=`<b>Poucas lesões infectadas, sem repercussão:</b><ul class="compact"><li>Mupirocina tópica 3x/dia por 7 dias <b>OU</b></li><li>Ácido fusídico tópico 3x/dia por 7 dias <b>OU</b></li><li>Retapamulina tópica 2x/dia por 5 dias.</li></ul><div class="note">SBP alerta que neomicina/bacitracina podem causar dermatite de contato.</div>`;
+  } else {
+    $('infectionPlan').innerHTML=`Sem sinais de infecção secundária selecionados: <b>não incluir antibiótico</b>.`;
+  }
+}
+function parentText(){
+  let t=`ORIENTAÇÕES AOS RESPONSÁVEIS\n\n`;
+  t+=`• O quadro é compatível com uma reação da pele às picadas de insetos. Mesmo uma nova exposição ocasional pode manter o surgimento de lesões por vários dias.\n`;
+  t+=`• Evitar coçar: manter as unhas curtas e as lesões limpas.\n`;
+  t+=`• PREVENÇÃO POR IDADE: ${repellentText()}\n`;
+  t+=`• Aplicar repelente somente na pele exposta; o adulto deve aplicar primeiro nas próprias mãos e depois na criança. Não aplicar em feridas, olhos ou boca e remover no banho após a exposição.\n`;
+  t+=`• Observar o ambiente: telas/mosquiteiros ajudam; se houver pulgas em animais de estimação, procurar orientação veterinária.\n`;
+  t+=`• As manchas residuais mais claras ou mais escuras podem persistir por algum tempo após a melhora das lesões.\n`;
+  if($('localizedInfection').checked || $('cellulitis').checked){
+    t+=`• Como há suspeita de infecção secundária, usar o antibiótico exatamente conforme prescrito e reavaliar se houver piora.\n`;
+  }
+  t+=`• Retornar para avaliação se houver aumento rápido da vermelhidão/inchaço, dor importante, secreção/pus, febre persistente, prostração, vômitos importantes ou piora do estado geral.\n`;
+  $('parentText').textContent=t;
+}
+function chartText(){
+  const f=checkedValues('.feat'), a=checkedValues('.atyp');
+  const names={papulas:'pápulas eritematosas',linear:'disposição linear/aos pares',vesicula:'vesícula central',crosta:'crostas hemáticas',expostos:'predomínio em áreas expostas/extensoras',tronco:'lesões em tronco/próximas a elásticos',prurido:'prurido intenso',recorrente:'caráter recidivante'};
+  const atyp={palmo:'acometimento palmo-plantar',genital:'acometimento genital/perianal',axila:'predomínio axilar',face:'predomínio facial'};
+  const fs=f.map(x=>names[x]).join(', ') || 'achados típicos não selecionados';
+  const as=a.map(x=>atyp[x]).join(', ');
+  let t=`AVALIAÇÃO: QUADRO CUTÂNEO COM ${fs.toUpperCase()}.`;
+  if(as) t+=` APRESENTA AINDA ${as.toUpperCase()}, ACHADO MENOS TÍPICO PARA O PADRÃO DESCRITO DE PRURIGO ESTRÓFULO.`;
+  if($('skeeter').checked) t+=` HÁ RELATO DE REAÇÃO LOCAL INTENSA DE INSTALAÇÃO EM HORAS, DEVENDO-SE CONSIDERAR SÍNDROME DE SKEETER NO CONTEXTO CLÍNICO.`;
+  if($('cellulitis').checked) t+=` HÁ SINAIS COMPATÍVEIS COM COMPLICAÇÃO INFECCIOSA/CELULITE.`;
+  else if($('localizedInfection').checked) t+=` HÁ SUSPEITA DE INFECÇÃO SECUNDÁRIA LOCALIZADA, SEM REPERCUSSÃO SELECIONADA.`;
+  else t+=` SEM SINAIS DE INFECÇÃO SECUNDÁRIA SELECIONADOS.`;
+  t+=`\n\nCONDUTA: ${topicalText().toUpperCase()} ${antihistamineText().text.toUpperCase()}`;
+  if($('cellulitis').checked) t+=` ${cephalexinText().replace(/\n/g,' ').toUpperCase()}`;
+  else if($('localizedInfection').checked) t+=` CONSIDERAR ATB TÓPICO CONFORME SBP (MUPIROCINA/ÁCIDO FUSÍDICO 3X/DIA POR 7 DIAS OU RETAPAMULINA 2X/DIA POR 5 DIAS).`;
+  t+=` ORIENTADAS MEDIDAS DE PREVENÇÃO DE NOVAS PICADAS, INCLUINDO REPELENTE CONFORME FAIXA ETÁRIA/ROTULAGEM, ALÉM DE HIGIENE LOCAL E MANUTENÇÃO DE UNHAS CURTAS.`;
+  const o=$('obs').value.trim(); if(o) t+=`\n\nOBS.: ${o.toUpperCase()}.`;
+  $('chartText').textContent=t;
+}
+function rxText(){
+  let t=`PRESCRIÇÃO SUGERIDA — PRURIGO ESTRÓFULO\n\n1) ${topicalText()}\n\n2) ${antihistamineText().text}`;
+  if($('cellulitis').checked) t+=`\n\n3) ${cephalexinText()}`;
+  else if($('localizedInfection').checked) t+=`\n\n3) Infecção localizada: mupirocina OU ácido fusídico tópico 3x/dia por 7 dias; alternativa: retapamulina 2x/dia por 5 dias.`;
+  t+=`\n\nMedidas gerais: higiene local, unhas curtas e prevenção de novas picadas. ${repellentText()}`;
+  return t;
+}
+function update(){
+  diagnostic(); paPlan(); infectionPlan();
+  $('topicalResult').textContent=topicalText();
+  const a=antihistamineText(); $('antihistResult').textContent=a.text; $('antihistNote').textContent=a.note;
+  $('cefaResult').textContent=cephalexinText();
+  $('repellentResult').textContent=repellentText();
+  $('repellentBrands').innerHTML=repellentBrandsHtml();
+  parentText(); chartText();
+}
+qsa('input,select').forEach(el=>el.addEventListener('input',update));
+$('copyRx').onclick=()=>copyText(rxText());
+$('copyParents').onclick=()=>copyText($('parentText').textContent);
+$('copyChart').onclick=()=>copyText($('chartText').textContent);
+$('reset').onclick=()=>{
+  qsa('input[type="checkbox"]').forEach(x=>x.checked=false);
+  qsa('input[type="number"], input[type="text"]').forEach(x=>x.value='');
+  $('ageUnit').value='y'; $('topical').value='mometasona'; $('antihist').value='deslo'; update();
+};
+update();
+</script>
+</body>
+</html>
