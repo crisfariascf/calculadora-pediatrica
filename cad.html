@@ -1,195 +1,2412 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Calculadora CAD Pediátrica - HCA</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAD Pediátrica — Protocolo HCA em Etapas</title>
 <style>
-  :root{
-    --bg:#f5f7fb; --card:#ffffff; --ink:#1d2433; --muted:#607089; --line:#dbe3ef;
-    --primary:#155e75; --primary2:#0e7490; --soft:#e6f7fb; --warn:#fff7ed; --danger:#fef2f2; --ok:#ecfdf5;
-    --shadow:0 10px 30px rgba(20,36,55,.08); --radius:18px;
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#172231;--muted:#66758a;--line:#dde5ee;
+  --blue:#2563a6;--green:#17745a;--amber:#a86b00;--red:#a93636;
+  --softBlue:#edf5fd;--softGreen:#ebf7f2;--softAmber:#fff5df;--softRed:#fdecec;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.42}
+.wrap{max-width:1120px;margin:auto;padding:18px}
+.hero{
+  border-radius:20px;padding:22px 24px;color:#fff;
+  background:linear-gradient(135deg,#173b56,#176652);
+  box-shadow:0 12px 30px rgba(20,45,65,.15)
+}
+.hero h1{margin:0;font-size:clamp(25px,4vw,38px);letter-spacing:-.03em}
+.hero p{margin:6px 0 0;opacity:.93}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pill{padding:6px 10px;border:1px solid rgba(255,255,255,.23);border-radius:999px;background:rgba(255,255,255,.12);font-size:12px;font-weight:800}
+.route{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:14px 0}
+.routeBox{padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.routeBox b{display:block;margin-bottom:2px}
+.routeArrow{font-size:24px;color:#728197}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 4px 15px rgba(26,50,70,.045)}
+.stepHead{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.num{width:37px;height:37px;flex:0 0 37px;border-radius:11px;background:#173b56;color:#fff;display:grid;place-items:center;font-weight:950;font-size:18px}
+.stepHead h2{margin:0;font-size:21px;letter-spacing:-.02em}
+.stepHead p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.turn{border:2px solid #b9d5ee;background:#f8fbff}
+.turnTitle{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:950;color:var(--blue)}
+.fields{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.field{grid-column:span 12}
+@media(min-width:720px){.sm{grid-column:span 3}.md{grid-column:span 4}.lg{grid-column:span 6}}
+label{display:block;font-size:12px;font-weight:850;color:#43536a;margin-bottom:5px}
+input,select{width:100%;border:1px solid #cad5e1;border-radius:10px;padding:10px 11px;background:#fff;color:var(--ink);font-size:14px;outline:none}
+input:focus,select:focus{border-color:#72a7d8;box-shadow:0 0 0 3px rgba(60,128,190,.10)}
+.checks{display:flex;flex-wrap:wrap;gap:9px;margin:9px 0}
+.check{display:flex;gap:7px;align-items:center;padding:8px 10px;background:#f5f8fb;border:1px solid var(--line);border-radius:10px;font-size:13px;font-weight:750}
+.check input{width:auto}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{border:0;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:900;cursor:pointer}
+.primary{background:#176652;color:#fff}
+.secondary{background:#e9f1f8;color:#25465f}
+.result{margin-top:13px;padding:14px;background:#fbfcfe;border:1px solid var(--line);border-radius:13px}
+.result:empty{display:none}
+.call{padding:11px 13px;border-radius:11px;margin:9px 0;font-size:13px}
+.info{background:var(--softBlue);border-left:4px solid var(--blue)}
+.ok{background:var(--softGreen);border-left:4px solid var(--green)}
+.warn{background:var(--softAmber);border-left:4px solid #d58b00}
+.danger{background:var(--softRed);border-left:4px solid var(--red)}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+@media(min-width:760px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{border:1px solid var(--line);background:#f7f9fc;border-radius:11px;padding:10px}
+.kpi small{display:block;color:var(--muted);font-weight:750}
+.kpi strong{display:block;font-size:17px;margin-top:2px}
+.list{margin:7px 0 0;padding-left:20px}
+.list li{margin:5px 0}
+details{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+summary{cursor:pointer;font-weight:900}
+.small{font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:14px 0}
+.blocks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+@media(min-width:760px){.blocks{grid-template-columns:repeat(4,1fr)}}
+.block{padding:12px;border-radius:12px;border:1px solid #ced9e5;background:#f7fafc}
+.block b{display:block;font-size:15px}.block span{font-size:12px;color:var(--muted)}
+.footer{font-size:12px;color:var(--muted);padding:4px 2px 28px}
+
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 10px}
+.tabbtn{background:#edf3f8;color:#27445e;border:1px solid #d6e0ea}
+.tabbtn.active{background:#173b56;color:#fff;border-color:#173b56}
+.tabpanel{display:none}
+.tabpanel.active{display:block}
+.timeline{position:relative;margin-top:12px}
+.timeRow{display:grid;grid-template-columns:82px 1fr;gap:12px;margin:0 0 10px}
+.timeMark{font-weight:950;color:#173b56;background:#edf4fa;border:1px solid #d4e1ed;border-radius:11px;padding:10px;text-align:center;height:max-content}
+.timeBody{border:1px solid var(--line);border-radius:12px;background:#fff;padding:11px 13px}
+.timeBody b{display:block;margin-bottom:3px}
+.timeBody ul{margin:6px 0 0;padding-left:18px}
+.timeBody li{margin:4px 0}
+.glucoseState{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:900;background:#edf3f8;color:#27445e;margin-left:5px}
+.bagPlan{display:grid;gap:8px;margin-top:10px}
+.bagItem{border:1px solid #d8e2ec;background:#f8fbfd;border-radius:12px;padding:10px 12px}
+.bagItem b{display:block;margin-bottom:3px}
+.bagItem .small{line-height:1.35}
+.stock{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+.stock span{background:#eef4f8;border:1px solid #d4e0e9;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:850;color:#385168}
+.uptodate{background:#f7f0ff;border-left:4px solid #7c3aed}
+.uptag{display:inline-flex;align-items:center;gap:5px;background:#efe5ff;color:#6332a8;border:1px solid #dac6ff;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:950}
+.alertgrid{display:grid;grid-template-columns:repeat(1,1fr);gap:8px;margin-top:10px}
+@media(min-width:760px){.alertgrid{grid-template-columns:repeat(2,1fr)}}
+.alertbox{border-radius:12px;padding:11px 12px;border:1px solid var(--line);background:#fafbfd}
+.alertbox strong{display:block;margin-bottom:3px}
+.alertbox.red{background:var(--softRed);border-color:#f0c9c9}
+.alertbox.amber{background:var(--softAmber);border-color:#efdfb9}
+.alertbox.purple{background:#f7f0ff;border-color:#dccbfa}
+.alertbox.green{background:var(--softGreen);border-color:#cfe8dd}
+.miniTable{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+.miniTable th,.miniTable td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.miniTable th{background:#f4f7fa}
+
+@media(max-width:650px){.route{grid-template-columns:1fr}.routeArrow{transform:rotate(90deg);text-align:center}.timeRow{grid-template-columns:1fr}.timeMark{text-align:left}}
+
+/* ===== LAYOUT CAD COM BARRA LATERAL FLUTUANTE ===== */
+.appShell{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 310px;
+  gap:18px;
+  align-items:start;
+}
+.mainFlow{min-width:0}
+.cadSidebar{
+  position:sticky;
+  top:14px;
+  align-self:start;
+  max-height:calc(100vh - 28px);
+  overflow:auto;
+  border:1px solid #d7e0e8;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 26px rgba(26,44,61,.12);
+  border-radius:16px;
+  padding:12px;
+  z-index:30;
+}
+.sideTitle{
+  font-size:13px;
+  font-weight:950;
+  color:#173b56;
+  margin:0 0 8px;
+}
+.sideSection{
+  border:1px solid #dfe7ee;
+  background:#f9fbfd;
+  border-radius:12px;
+  padding:9px 10px;
+  margin-top:8px;
+}
+.sideSection b{
+  display:block;
+  color:#173b56;
+  margin-bottom:5px;
+}
+.sideLine{
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:8px;
+  align-items:start;
+  padding:5px 0;
+  border-bottom:1px dashed #dfe5eb;
+  font-size:11px;
+  line-height:1.35;
+}
+.sideLine:last-child{border-bottom:0}
+.sideTime{
+  font-weight:950;
+  color:#7c3aed;
+}
+.sideBadge{
+  display:inline-flex;
+  padding:3px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  margin:2px 3px 2px 0;
+  background:#edf3f8;
+  color:#27445e;
+}
+.sideBadge.hour{background:#e9f7f1;color:#176044}
+.sideBadge.two{background:#fff4df;color:#8a5a00}
+.sideBadge.purple{background:#f2eaff;color:#6c36ad}
+.sideAlert{
+  margin-top:8px;
+  padding:8px 9px;
+  border-radius:10px;
+  background:#fff1f1;
+  border:1px solid #f0cece;
+  font-size:11px;
+  line-height:1.35;
+}
+.desidGuide{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin:10px 0 12px;
+}
+.desidCard{
+  border:1px solid #dce5ec;
+  border-radius:12px;
+  background:#fbfcfd;
+  padding:10px;
+  min-height:120px;
+}
+.desidCard strong{display:block;color:#173b56;margin-bottom:4px}
+.desidCard .pct{font-size:20px;font-weight:950;color:#7c3aed}
+.desidCard ul{margin:7px 0 0;padding-left:16px;font-size:11px;line-height:1.35}
+.desidNote{
+  font-size:11px;
+  color:#5a6875;
+  background:#f6f8fa;
+  border-radius:9px;
+  padding:7px 9px;
+  margin-top:7px;
+}
+@media(max-width:1100px){
+  .appShell{grid-template-columns:1fr}
+  .cadSidebar{
+    position:relative;
+    top:auto;
+    max-height:none;
+    order:-1;
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef7fb 0%,var(--bg) 240px);color:var(--ink);}
-  header{padding:28px 18px 12px;max-width:1200px;margin:auto;}
-  h1{margin:0;font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:-.03em;color:#0f3f52;}
-  .subtitle{margin-top:8px;color:var(--muted);line-height:1.45;max-width:900px}
-  main{max-width:1200px;margin:0 auto 44px;padding:0 18px;display:grid;grid-template-columns:390px 1fr;gap:18px;align-items:start}
-  @media(max-width:900px){main{grid-template-columns:1fr}.sticky{position:static!important}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px;}
-  .sticky{position:sticky;top:12px}
-  h2{font-size:1.05rem;margin:0 0 14px;color:#12384a}.section-title{display:flex;align-items:center;gap:8px}.badge{font-size:.78rem;background:var(--soft);color:var(--primary);border:1px solid #bfe8f1;border-radius:999px;padding:4px 8px;font-weight:700}
-  label{display:block;font-size:.88rem;font-weight:700;margin:12px 0 6px;color:#26384d}.hint{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.3}
-  input,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:11px 12px;font-size:1rem;color:var(--ink);outline:none} input:focus,select:focus{border-color:var(--primary2);box-shadow:0 0 0 3px rgba(14,116,144,.12)}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}@media(max-width:520px){.row,.row3{grid-template-columns:1fr}}
-  .checks{display:grid;gap:8px;margin-top:8px}.check{display:flex;gap:10px;align-items:flex-start;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px}.check input{width:auto;margin-top:3px}.check span{font-size:.9rem;line-height:1.25}
-  button{border:0;border-radius:14px;padding:12px 14px;font-weight:800;cursor:pointer;font-size:.98rem}.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;width:100%;box-shadow:0 8px 18px rgba(14,116,144,.22)}.ghost{background:#eef2f7;color:#25435a;width:100%;margin-top:8px}
-  .result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:720px){.result-grid{grid-template-columns:1fr}}
-  .pill{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:.82rem;font-weight:800;margin:2px 5px 6px 0;border:1px solid #cbd5e1;background:#f8fafc}.pill.ok{background:var(--ok);border-color:#bbf7d0;color:#166534}.pill.warn{background:var(--warn);border-color:#fed7aa;color:#9a3412}.pill.danger{background:var(--danger);border-color:#fecaca;color:#991b1b}.pill.info{background:var(--soft);border-color:#bae6fd;color:#075985}
-  .big{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}.muted{color:var(--muted)}
-  .presc{background:#0b1220;color:#e5edf7;border-radius:16px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem;white-space:pre-wrap;line-height:1.45;overflow:auto;border:1px solid #1e293b}
-  .alert{border-radius:14px;padding:12px 14px;line-height:1.45;margin:10px 0;border:1px solid}.alert.warn{background:var(--warn);border-color:#fed7aa}.alert.danger{background:var(--danger);border-color:#fecaca}.alert.ok{background:var(--ok);border-color:#bbf7d0}.alert.info{background:#eff6ff;border-color:#bfdbfe}
-  table{width:100%;border-collapse:collapse;font-size:.88rem}td,th{border-bottom:1px solid #e2e8f0;padding:9px 6px;text-align:left;vertical-align:top}th{color:#334155;background:#f8fafc}.small{font-size:.8rem}.footer{max-width:1200px;margin:0 auto 30px;padding:0 18px;color:#64748b;font-size:.78rem;line-height:1.4}
+}
+@media(max-width:700px){
+  .desidGuide{grid-template-columns:1fr}
+}
+
+
+.patientBar{
+  border:1px solid #d7e0e8;
+  background:#ffffff;
+  border-radius:14px;
+  padding:12px;
+  margin:12px 0 14px;
+  box-shadow:0 6px 18px rgba(26,44,61,.06);
+}
+.patientBar h3{margin:0 0 8px;color:#173b56;font-size:15px}
+.patientGrid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr .8fr .8fr 1.3fr;
+  gap:8px;
+}
+.patientActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.patientSaved{font-size:11px;color:#5b6875;margin-top:6px}
+.scheduleStrip{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:7px;
+}
+.scheduleChip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  background:#edf6f1;
+  color:#176044;
+  border:1px solid #cce4d8;
+}
+.scheduleChip.two{
+  background:#fff4df;
+  color:#8a5a00;
+  border-color:#ead5aa;
+}
+.scheduleChip.time{
+  background:#eef3ff;
+  color:#3551a3;
+  border-color:#d2dcf6;
+}
+.blockClock{
+  margin-top:7px;
+  font-size:11px;
+  font-weight:850;
+  color:#3551a3;
+}
+@media(max-width:980px){
+  .patientGrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .patientGrid{grid-template-columns:1fr}
+}
+
+
+/* ===== V18 — COMPACTAÇÃO E MELHOR USO DA TELA ===== */
+.wrap{
+  max-width:none !important;
+  width:100%;
+  margin:0 !important;
+  padding:10px 14px 18px !important;
+}
+.appShell{
+  display:block !important;
+}
+.mainFlow{
+  min-width:0;
+  margin-right:352px;
+}
+.cadSidebar{
+  position:fixed !important;
+  top:10px !important;
+  right:10px !important;
+  bottom:10px !important;
+  width:330px !important;
+  max-height:none !important;
+  overflow:auto;
+  z-index:60;
+  padding:10px !important;
+  border-radius:14px !important;
+}
+.sideSection{
+  margin-top:6px !important;
+  padding:8px 9px !important;
+}
+.sideLine{
+  grid-template-columns:48px 1fr !important;
+  gap:6px !important;
+  padding:4px 0 !important;
+  font-size:10.5px !important;
+}
+.sideTitle{
+  font-size:12px !important;
+  position:sticky;
+  top:-10px;
+  z-index:3;
+  background:rgba(255,255,255,.98);
+  padding:8px 2px 6px;
+  margin:-2px 0 3px !important;
+}
+.sideBadge{
+  padding:2px 6px !important;
+  font-size:9.5px !important;
+}
+.sideSection .small{
+  font-size:10.5px !important;
+  line-height:1.3 !important;
+}
+
+/* Dados do paciente: vira uma faixa horizontal compacta */
+.patientBar{
+  padding:7px 9px !important;
+  margin:7px 0 10px !important;
+  border-radius:11px !important;
+  box-shadow:none !important;
+}
+.patientBar h3{
+  display:none !important;
+}
+.patientGrid{
+  display:grid !important;
+  grid-template-columns:minmax(180px,1.7fr) minmax(110px,.8fr) 78px 82px minmax(185px,1.15fr) !important;
+  gap:6px !important;
+  align-items:end;
+}
+.patientBar .field{
+  margin:0 !important;
+}
+.patientBar .field label{
+  font-size:9.5px !important;
+  margin-bottom:2px !important;
+  color:#62707d !important;
+}
+.patientBar input{
+  min-height:34px !important;
+  height:34px !important;
+  padding:6px 8px !important;
+  font-size:12px !important;
+}
+.patientActions{
+  margin-top:6px !important;
+  gap:5px !important;
+}
+.patientActions button{
+  padding:5px 8px !important;
+  min-height:28px !important;
+  font-size:9.5px !important;
+  border-radius:8px !important;
+}
+.patientSaved{
+  display:none !important;
+}
+#agendaPaciente{
+  margin-top:5px !important;
+}
+#agendaPaciente .call{
+  padding:7px 9px !important;
+  margin:4px 0 0 !important;
+}
+#agendaPaciente .scheduleStrip{
+  margin-top:5px !important;
+}
+#agendaPaciente .scheduleChip{
+  font-size:9px !important;
+  padding:3px 5px !important;
+}
+
+/* Mais espaço útil para conteúdo */
+.card{
+  padding:13px !important;
+}
+.fields{
+  gap:8px !important;
+}
+.kpis{
+  gap:8px !important;
+}
+.timeRow{
+  grid-template-columns:72px 1fr !important;
+  gap:9px !important;
+}
+.timeMark{
+  padding:8px 6px !important;
+  font-size:11px !important;
+}
+.timeBody{
+  padding:9px 11px !important;
+}
+.timeline .scheduleStrip{
+  margin-top:5px !important;
+}
+.timeline .scheduleChip{
+  padding:3px 6px !important;
+  font-size:9.5px !important;
+}
+
+@media(min-width:1700px){
+  .mainFlow{margin-right:382px}
+  .cadSidebar{width:360px !important}
+}
+@media(max-width:1180px){
+  .mainFlow{margin-right:0}
+  .cadSidebar{
+    position:relative !important;
+    top:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    width:auto !important;
+    max-height:none !important;
+    margin-top:10px;
+  }
+}
+@media(max-width:860px){
+  .patientGrid{
+    grid-template-columns:1fr 1fr !important;
+  }
+}
+@media(max-width:560px){
+  .patientGrid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+/* ===== V20 — IDENTIFICAÇÃO ULTRACOMPACTA ===== */
+.patientBar{
+  padding:5px 7px !important;
+  margin:5px 0 8px !important;
+  border-radius:9px !important;
+  min-height:0 !important;
+}
+.patientGrid{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:5px !important;
+  align-items:center !important;
+}
+.patientBar .field{
+  margin:0 !important;
+  min-width:0 !important;
+}
+.patientBar .field label{
+  display:none !important;
+}
+.patientBar input{
+  height:30px !important;
+  min-height:30px !important;
+  padding:4px 7px !important;
+  font-size:11px !important;
+  border-radius:7px !important;
+}
+.patientBar .field:nth-child(1){flex:1.5 1 170px}
+.patientBar .field:nth-child(2){flex:.8 1 105px}
+.patientBar .field:nth-child(3){flex:0 0 66px}
+.patientBar .field:nth-child(4){flex:0 0 68px}
+.patientBar .field:nth-child(5){flex:0 0 178px}
+.patientActions{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:4px !important;
+  margin:0 0 0 3px !important;
+  align-items:center !important;
+}
+.patientActions button{
+  height:30px !important;
+  min-height:30px !important;
+  padding:3px 7px !important;
+  font-size:9px !important;
+  line-height:1 !important;
+  border-radius:7px !important;
+  white-space:nowrap !important;
+}
+#ptSavedMsg,#agendaPaciente{
+  display:none !important;
+}
+@media(max-width:900px){
+  .patientGrid{flex-wrap:wrap !important}
+  .patientBar .field:nth-child(1){flex:1 1 180px}
+  .patientBar .field:nth-child(2){flex:1 1 110px}
+  .patientActions{margin-left:0 !important}
+}
+
+
+/* ===== V21 — TOPO FLUTUANTE + LATERAL FIXA ===== */
+.topDock{
+  position:fixed;
+  top:10px;
+  left:14px;
+  right:352px;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:6px 8px 6px 12px;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(10px);
+  border:1px solid #d7e0e8;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(26,44,61,.12);
+  z-index:70;
+}
+.dockTitle{
+  flex:0 0 auto;
+  white-space:nowrap;
+  padding-right:10px;
+  border-right:1px solid #dfe6ec;
+}
+.dockTitle h1{
+  margin:0 !important;
+  font-size:18px !important;
+  line-height:1.1 !important;
+}
+.topDock .patientBar{
+  flex:1 1 auto;
+  min-width:0;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+}
+.topDock .patientGrid{
+  width:100%;
+}
+.hero{
+  padding-top:66px !important;
+}
+
+/* a barra lateral começa alinhada ao dock superior */
+.cadSidebar{
+  top:10px !important;
+}
+
+/* telas muito largas: sidebar maior e dock respeita sua largura */
+@media(min-width:1700px){
+  .topDock{right:382px}
+}
+
+/* quando a barra lateral deixa de ser fixa, o topo passa a usar toda a largura */
+@media(max-width:1180px){
+  .topDock{
+    right:14px;
+  }
+}
+
+/* telas menores: topo continua visível, mas quebra com segurança */
+@media(max-width:900px){
+  .topDock{
+    position:sticky;
+    top:6px;
+    left:auto;
+    right:auto;
+    display:block;
+    padding:7px 8px;
+    margin-bottom:8px;
+  }
+  .dockTitle{
+    border-right:0;
+    border-bottom:1px solid #dfe6ec;
+    padding:0 0 5px;
+    margin-bottom:5px;
+  }
+  .dockTitle h1{
+    font-size:16px !important;
+  }
+  .hero{
+    padding-top:0 !important;
+  }
+}
+
+
+/* ===== V22 — CORREÇÃO DE CONTRASTE DO TÍTULO FIXO ===== */
+.dockTitle h1{
+  color:#173b56 !important;
+  text-shadow:none !important;
+  opacity:1 !important;
+  -webkit-text-fill-color:#173b56 !important;
+}
+
+
+/* ===== V24 — TOPO LIMPO, SEM FAIXA VAZIA ===== */
+.hero{
+  background:transparent !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  color:inherit !important;
+  padding:62px 0 0 !important;
+  margin:0 !important;
+  min-height:0 !important;
+}
+.hero .pills,
+.hero > p{
+  display:none !important;
+}
+.route{
+  margin:6px 0 10px !important;
+}
+.topDock{
+  min-height:44px !important;
+  padding:5px 7px 5px 10px !important;
+  gap:9px !important;
+}
+.dockTitle{
+  padding-right:8px !important;
+}
+.dockTitle h1{
+  font-size:16px !important;
+}
+.topDock .patientBar input{
+  height:28px !important;
+  min-height:28px !important;
+}
+.topDock .patientActions button{
+  height:28px !important;
+  min-height:28px !important;
+}
+@media(max-width:900px){
+  .hero{
+    padding-top:0 !important;
+  }
+}
+
+
+/* ===== V25 — PACIENTES SALVOS ===== */
+.savedPatientsPanel{
+  position:fixed;
+  top:62px;
+  right:352px;
+  width:min(520px,calc(100vw - 390px));
+  max-height:60vh;
+  overflow:auto;
+  z-index:90;
+  background:#fff;
+  border:1px solid #d7e0e8;
+  border-radius:12px;
+  box-shadow:0 14px 34px rgba(26,44,61,.18);
+  padding:10px;
+  display:none;
+}
+.savedPatientsPanel.open{display:block}
+.savedPatientsHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.savedPatientsHead b{
+  color:#173b56;
+  font-size:13px;
+}
+.savedPatientsHead button{
+  min-height:26px !important;
+  height:26px !important;
+  padding:3px 7px !important;
+  font-size:10px !important;
+}
+.savedPatientItem{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  border:1px solid #e1e7ed;
+  border-radius:10px;
+  padding:8px 9px;
+  margin-top:6px;
+  background:#fbfcfd;
+}
+.savedPatientItem:hover{background:#f6f9fb}
+.savedPatientMain{
+  min-width:0;
+}
+.savedPatientName{
+  font-size:12px;
+  font-weight:950;
+  color:#173b56;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.savedPatientMeta{
+  margin-top:2px;
+  font-size:10px;
+  color:#687784;
+  line-height:1.35;
+}
+.savedPatientActions{
+  display:flex;
+  gap:4px;
+}
+.savedPatientActions button{
+  min-height:27px !important;
+  height:27px !important;
+  padding:3px 7px !important;
+  font-size:9px !important;
+}
+.savedEmpty{
+  padding:14px 8px;
+  text-align:center;
+  font-size:11px;
+  color:#71808d;
+}
+.patientActions .folderBtn{
+  min-width:30px;
+}
+@media(min-width:1700px){
+  .savedPatientsPanel{right:382px}
+}
+@media(max-width:1180px){
+  .savedPatientsPanel{
+    right:14px;
+    width:min(520px,calc(100vw - 28px));
+  }
+}
+@media(max-width:900px){
+  .savedPatientsPanel{
+    top:112px;
+    left:14px;
+    right:14px;
+    width:auto;
+  }
+}
+
 </style>
 </head>
 <body>
-<header>
-  <h1>Calculadora de CAD Pediátrica</h1>
-  <div class="subtitle">Apoio rápido para abordagem de cetoacidose diabética pediátrica conforme protocolo HCA: classificação, expansão, reposição de perdas em blocos de 2h, potássio, insulina, bicarbonato e edema cerebral.</div>
-</header>
-<main>
-  <section class="sticky">
-    <div class="card">
-      <h2>Dados do paciente</h2>
-      <div class="row">
-        <div><label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ex.: 20"></div>
-        <div><label>Idade</label><div class="row"><input id="idade" type="number" min="0" step="1" placeholder="Ex.: 6"><select id="idadeUn"><option value="anos">anos</option><option value="meses">meses</option></select></div></div>
-      </div>
-      <div class="row3">
-        <div><label>HGT atual</label><input id="hgt" type="number" min="0" step="1" placeholder="mg/dL"></div>
-        <div><label>Queda do HGT na última hora</label><input id="queda" type="number" min="0" step="1" placeholder="mg/dL"></div>
-        <div><label>Desidratação estimada</label><select id="desid"><option value="5">5% — saliva espessa, filme lacrimal presente</option><option value="7.5">7,5% — mucosa seca, ausência de filme lacrimal</option><option value="10">10% — perdas máximas pelo protocolo</option></select><div class="hint">5%: saliva espessa + filme lacrimal presente. 7,5%: mucosa seca + ausência de filme lacrimal. Máximo de perdas: 10% do peso.</div></div>
-      </div>
-      <div class="row3">
-        <div><label>pH venoso</label><input id="ph" type="number" step="0.01" placeholder="Ex.: 7.12"></div>
-        <div><label>Bicarbonato</label><input id="bic" type="number" step="0.1" placeholder="mEq/L"></div>
-        <div><label>BE</label><input id="be" type="number" step="0.1" placeholder="Ex.: -18"></div>
-      </div>
-      <div class="row">
-        <div><label>Potássio sérico</label><input id="k" type="number" step="0.1" placeholder="mEq/L"></div>
-        <div><label>Expansão inicial escolhida</label><select id="exp"><option value="10">10 mL/kg em 1h</option><option value="20">20 mL/kg em 1h</option></select></div>
-      </div>
-      <div class="checks">
-        <label class="check"><input id="choque" type="checkbox"><span>Paciente em choque: considerar SF 0,9% 20 mL/kg em 20 min e seguir protocolo de choque.</span></label>
-        <label class="check"><input id="ureiaCreat" type="checkbox"><span>Ureia ou creatinina alterados.</span></label>
-        <label class="check"><input id="cetonas" type="checkbox" checked><span>Cetonemia ≥ 3 mmol/L ou cetonúria +++.</span></label>
-      </div>
-      <label>Soro durante reposição de perdas</label>
-      <select id="tipoSoro">
-        <option value="sf">SF 0,9% sem glicose</option>
-        <option value="g5">SF 0,9% + SG 50% 1 mL para cada 10 mL de SF (glicose final 5%)</option>
-        <option value="g75">SF 0,9% + SG 50% 1,5 mL para cada 10 mL de SF (glicose final 7,5%)</option>
-      </select>
-      <div class="alert info small" style="margin-top:12px">
-        <b>Estimativa clínica de desidratação:</b><br>
-        • <b>5%</b>: saliva espessa, filme lacrimal presente.<br>
-        • <b>7,5%</b>: mucosa seca, ausência de filme lacrimal.<br>
-        • <b>10%</b>: usar como teto de reposição de perdas no protocolo; se choque, priorizar expansão e protocolo de choque.
-      </div>
-      <h2 style="margin-top:18px">Reavaliação da 1ª hora / próxima checagem</h2>
-      <div class="hint">Preencha depois da expansão inicial ou a cada hora para a calculadora comparar a evolução e sugerir mudança do soro/insulina.</div>
-      <div class="row3">
-        <div><label>HGT reavaliado</label><input id="hgtRe" type="number" min="0" step="1" placeholder="mg/dL"></div>
-        <div><label>pH reavaliado</label><input id="phRe" type="number" step="0.01" placeholder="Ex.: 7.18"></div>
-        <div><label>BIC reavaliado</label><input id="bicRe" type="number" step="0.1" placeholder="mEq/L"></div>
-      </div>
-      <div class="row3">
-        <div><label>K reavaliado</label><input id="kRe" type="number" step="0.1" placeholder="mEq/L"></div>
-        <div><label>Desidratação reavaliada</label><select id="desidRe"><option value="">não informado</option><option value="5">5% — saliva espessa/filme presente</option><option value="7.5">7,5% — mucosa seca/sem filme</option><option value="10">10% — ainda importante</option></select></div>
-        <div><label>Estado neurológico</label><select id="neuroRe"><option value="estavel">estável</option><option value="piorou">piorou / alerta</option></select></div>
-      </div>
-      <div class="checks">
-        <label class="check"><input id="vomitosCefaleia" type="checkbox"><span>Na reavaliação: vômitos frequentes, cefaleia, letargia, bradicardia inapropriada, aumento de PA ou alteração de pares cranianos.</span></label>
-        <label class="check"><input id="diureseOk" type="checkbox"><span>Diurese presente/adequada antes de manter potássio na solução.</span></label>
-      </div>
+<div class="wrap">
+<div class="appShell"><div class="mainFlow">
 
-      <button class="primary" onclick="calc()">Calcular / reavaliar conduta</button>
-      <button class="ghost" onclick="limpar()">Limpar</button>
+<section class="hero">
+  <div class="topDock">
+<div class="dockTitle"><h1>CAD PEDIÁTRICA — PROTOCOLO HCA + UPTODATE</h1></div>
+<div class="patientBar">
+  <div class="patientGrid">
+    <div class="field"><input id="ptNome" type="text" placeholder="Nome"></div>
+    <div class="field"><input id="ptRegistro" type="text" placeholder="Prontuário"></div>
+    <div class="field"><input id="ptIdade" type="number" step="0.1" min="0" placeholder="Idade"></div>
+    <div class="field"><input id="ptPeso" type="number" step="0.1" min="0.1" placeholder="Peso"></div>
+    <div class="field"><input id="ptAdmissao" type="datetime-local" title="Data e hora da admissão"></div>
+    <div class="patientActions">
+      <button class="primary" onclick="salvarPaciente()" title="Salvar este paciente">💾</button>
+      <button class="secondary folderBtn" onclick="togglePacientesSalvos()" title="Abrir pacientes salvos">📂</button>
+      <button class="secondary" onclick="usarAgoraAdmissao()" title="Usar data/hora atual">AGORA</button>
+      <button class="secondary" onclick="novoPaciente()" title="Novo paciente">＋</button>
     </div>
-  </section>
-  <section>
-    <div id="out"></div>
-  </section>
-</main>
-<div class="footer">Ferramenta de apoio. Não substitui avaliação médica, PALS, prescrição institucional, julgamento clínico ou discussão com UTI/endocrinologia. Conferir eletrólitos, osmolaridade efetiva, diurese, estado neurológico e bomba de infusão antes de prescrever.</div>
+  </div>
+  <div id="ptSavedMsg"></div>
+  <div id="agendaPaciente"></div>
+</div>
+</div>
+</section>
+
+<div class="route">
+  <div class="routeBox"><b>1º MOMENTO — CHEGADA</b><span class="small">Poucos dados disponíveis → avaliar, obter acesso, colher exames e expandir.</span></div>
+  <div class="routeArrow">→</div>
+  <div class="routeBox"><b>2º MOMENTO — EXAMES EM MÃOS</b><span class="small">Confirmar/classificar CAD → repor perdas em blocos → manutenção e demais etapas.</span></div>
+</div>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">1</div>
+    <div>
+      <h2>EXPANSÃO VOLÊMICA</h2>
+      <p>Primeira medida hídrica. A expansão inicial desta ferramenta é sempre 20 mL/kg de SF 0,9%.</p>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="field sm">
+      <label>Peso (kg)</label>
+      <input id="peso" type="number" min="0.5" step="0.1" placeholder="Ex.: 20">
+    </div>
+    <div class="field sm">
+      <label>HGT da triagem (mg/dL)</label>
+      <input id="hgtEntrada" type="number" min="0" step="1" placeholder="Ex.: 420">
+    </div>
+    <div class="field md">
+      <label>Estado circulatório</label>
+      <select id="circulacao">
+        <option value="semChoque">Sem choque</option>
+        <option value="choque">Choque</option>
+      </select>
+    </div>
+    <div class="field sm">
+      <label>Glasgow inicial</label>
+      <input id="glasgowInicial" type="number" min="3" max="15" step="1" placeholder="3–15">
+    </div>
+  </div>
+
+  <div class="btns">
+    <button class="primary" onclick="calcExpansao()">CALCULAR EXPANSÃO</button>
+  </div>
+  <div id="resExpansao" class="result"></div>
+
+  <div class="rule"></div>
+  <h3 style="margin:0 0 8px">Dados a avaliar/registrar neste momento</h3>
+
+  <div class="fields">
+    <div class="field sm"><label>FC (bpm)</label><input id="fcInicial" type="number" step="1" placeholder="Se disponível"></div>
+    <div class="field sm"><label>FR (irpm)</label><input id="frInicial" type="number" step="1" placeholder="Se disponível"></div>
+    <div class="field sm"><label>PA (mmHg)</label><input id="paInicial" type="text" placeholder="Ex.: 90/55"></div>
+    <div class="field sm"><label>SatO₂ (%)</label><input id="satInicial" type="number" step="1" placeholder="Se disponível"></div>
+  </div>
+
+  <div class="checks">
+    <label class="check"><input type="checkbox"> saliva espessa / filme lacrimal presente → 5%</label>
+    <label class="check"><input type="checkbox"> mucosa seca / ausência de filme lacrimal → 7,5%</label>
+    <label class="check"><input type="checkbox"> alteração do nível de consciência</label>
+    <label class="check"><input type="checkbox"> perfusão periférica alterada</label>
+  </div>
+
+  <div class="call ok">
+    <b>Bolsas disponíveis no serviço:</b>
+    <div class="stock">
+      <span>SF 0,9% — 100 mL</span>
+      <span>SF 0,9% — 250 mL</span>
+      <span>SF 0,9% — 500 mL</span>
+    </div>
+    O cálculo da expansão abaixo sugere automaticamente qual bolsa usar e quanto retirar para administrar exatamente 20 mL/kg.
+  </div>
+
+  <div class="call info">
+    <b>Na mesma etapa:</b>
+    <ul class="list">
+      <li>abordagem inicial conforme PALS;</li>
+      <li>obter <b>dois acessos venosos periféricos</b>;</li>
+      <li>colher: <b>hemograma, ionograma, ureia, creatinina, gasometria venosa e Urina 1</b>;</li>
+      <li>registrar peso, estimativa de desidratação e Glasgow.</li>
+    </ul>
+  </div>
+  <div class="call warn"><b>Insulina:</b> não iniciar nesta primeira hora. Pelo protocolo HCA, iniciar 1 hora após a expansão inicial, juntamente com a reposição de perdas.</div>
+</section>
+
+<section class="card turn">
+  <div class="turnTitle">2º MOMENTO — EXAMES EM MÃOS</div>
+  <h2 style="margin:4px 0 5px">CONFIRMAR E CLASSIFICAR CAD</h2>
+  <p class="small" style="margin-top:0">Esta etapa não altera a numeração do tratamento; ela libera a condução da reposição de perdas.</p>
+
+  <div class="fields">
+    <div class="field sm"><label>Glicemia (mg/dL)</label><input id="glicDx" type="number" step="1"></div>
+    <div class="field sm"><label>pH venoso</label><input id="phDx" type="number" step="0.01"></div>
+    <div class="field sm"><label>HCO₃⁻ (mEq/L)</label><input id="bicDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>β-hidroxibutirato (mmol/L)</label><input id="bohbDx" type="number" step="0.1" placeholder="Se disponível"></div>
+    <div class="field sm">
+      <label>Cetonúria</label>
+      <select id="cetDx">
+        <option value="">Não informada</option>
+        <option value="0">Negativa</option>
+        <option value="1">+</option>
+        <option value="2">++</option>
+        <option value="3">+++</option>
+        <option value="4">++++</option>
+      </select>
+    </div>
+    <div class="field sm"><label>K (mEq/L)</label><input id="kDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>Na (mEq/L)</label><input id="naDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>Cl (mEq/L)</label><input id="clDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>pCO₂ venoso (mmHg)</label><input id="pco2Dx" type="number" step="0.1"></div>
+    <div class="field sm"><label>BUN (mg/dL) — se disponível</label><input id="bunDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>Osmolalidade efetiva (mOsm/kg) — se disponível</label><input id="osmDx" type="number" step="0.1"></div>
+    <div class="field sm"><label>QTc (ms) — se ECG disponível</label><input id="qtcDx" type="number" step="1"></div>
+    <div class="field sm"><label>Idade (anos)</label><input id="idadeDx" type="number" step="0.1"></div>
+  </div>
+
+  <div class="checks">
+    <label class="check"><input id="novoDM" type="checkbox"> diabetes de início recente / primodescompensação</label>
+    <label class="check"><input id="ureiaAlt" type="checkbox"> ureia alterada</label>
+    <label class="check"><input id="creatAlt" type="checkbox"> creatinina alterada</label>
+  </div>
+
+  <div class="btns"><button class="primary" onclick="avaliarCAD()">CONFIRMAR / CLASSIFICAR</button></div>
+  <div id="resDx" class="result"></div>
+
+  <div class="call uptodate" style="margin-top:12px">
+    <span class="uptag">💜 UpToDate · complemento</span>
+    <b style="display:block;margin-top:7px">Painel de evolução e alertas automáticos</b>
+    O fluxo terapêutico principal continua sendo o HCA. Este painel usa dados complementares do UpToDate para monitorização, detecção de HHS/misto, risco neurológico e necessidade de ECG/monitorização contínua.
+  </div>
+
+  <div class="btns">
+    <button class="secondary" onclick="painelComplementar()">ATUALIZAR ALERTAS / AG / Na CORRIGIDO</button>
+  </div>
+  <div id="resComplementar" class="result"></div>
+
+  <details>
+    <summary>Critérios institucionais</summary>
+    <ul class="list">
+      <li><b>CAD:</b> glicemia &gt;200 mg/dL + pH &lt;7,3 ou HCO₃⁻ &lt;18 + β-hidroxibutirato ≥3 mmol/L ou cetonúria +++.</li>
+      <li><b>Leve:</b> pH 7,2–7,3 e HCO₃⁻ 10–18.</li>
+      <li><b>Moderada:</b> pH 7,1–7,2 e HCO₃⁻ 5–9.</li>
+      <li><b>Grave:</b> pH &lt;7,1 e HCO₃⁻ &lt;5.</li>
+      <li><b>UTI:</b> casos graves ou ureia/creatinina alteradas.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">2</div>
+    <div>
+      <h2>REPOSIÇÃO DAS PERDAS</h2>
+      <p>Iniciar após a expansão inicial. O restante das perdas é dividido em 4 blocos de 2 horas.</p>
+    </div>
+  </div>
+
+  <div class="call ok">
+    <b>Material disponível para os blocos:</b>
+    <div class="stock">
+      <span>SF 0,9% — 100 mL</span>
+      <span>SF 0,9% — 250 mL</span>
+      <span>SF 0,9% — 500 mL</span>
+    </div>
+    A ferramenta propõe a bolsa física mais prática para cada bloco. O <b>volume calculado do bloco corresponde ao SF 0,9%</b>; o KCl 19,1% é acrescentado a esse volume, conforme o exemplo do protocolo institucional.
+  </div>
+
+
+  <div class="desidGuide">
+    <div class="desidCard">
+      <div class="pct">5%</div>
+      <strong>Desidratação leve</strong>
+      <ul>
+        <li>mucosa discretamente seca;</li>
+        <li>saliva ainda presente/espessa;</li>
+        <li>lágrimas ainda presentes;</li>
+        <li>perfusão geralmente preservada.</li>
+      </ul>
+    </div>
+    <div class="desidCard">
+      <div class="pct">≈7%</div>
+      <strong>Desidratação moderada</strong>
+      <ul>
+        <li>mucosas mais secas;</li>
+        <li>redução importante/ausência de lágrimas;</li>
+        <li>maior secura de mucosas e piora do aspecto geral;</li>
+        <li>usar conjunto clínico e resposta à expansão.</li>
+      </ul>
+    </div>
+    <div class="desidCard">
+      <div class="pct">10%</div>
+      <strong>Desidratação importante</strong>
+      <ul>
+        <li>sinais clínicos mais marcados;</li>
+        <li>procurar sinais de hipoperfusão/comprometimento circulatório;</li>
+        <li>alteração do estado geral/neurológico aumenta preocupação;</li>
+        <li>10% = teto usado no cálculo institucional.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="desidNote">
+    💜 Na CAD, a estimativa clínica de desidratação é imperfeita; reavaliar continuamente pelo estado hemodinâmico, perfusão, peso disponível e resposta à hidratação. Nesta ferramenta, 5/7/10% são faixas operacionais para o cálculo; nenhum sinal isolado define com precisão o percentual.
+  </div>
+
+  <div class="tabs">
+    <button class="tabbtn active" onclick="showTab('perdas','tabBlocos',this)">A) BLOCOS + POTÁSSIO</button>
+    <button class="tabbtn" onclick="showTab('perdas','tabGlicemia',this)">B) NOVA VARIAÇÃO DA GLICEMIA</button>
+  </div>
+
+  <div id="tabBlocos" class="tabpanel active" data-group="perdas">
+    <div class="fields">
+      <div class="field sm">
+        <label>Desidratação estimada</label>
+        <select id="desid">
+          <option value="">Selecione</option>
+          <option value="5">5% — leve</option>
+          <option value="7">7% — moderada / estimativa intermediária</option>
+          <option value="10">10% — importante / máximo do protocolo</option>
+        </select>
+      </div>
+      <div class="field sm"><label>K atual (mEq/L)</label><input id="kPerdas" type="number" step="0.1" placeholder="Pode copiar do resultado"></div>
+      <div class="field sm">
+        <label>KCl usado no protocolo</label>
+        <input value="KCl 19,1%" readonly>
+      </div>
+    </div>
+
+    <div class="btns"><button class="primary" onclick="calcPerdas()">CALCULAR 4 BLOCOS + KCl</button></div>
+    <div id="resPerdas" class="result"></div>
+
+    <div class="call info">
+      <b>Regra institucional do potássio:</b>
+      <ul class="list">
+        <li><b>K &lt;4,5 mEq/L:</b> 40 mEq/L.</li>
+        <li><b>K &gt;4,5 mEq/L:</b> 20 mEq/L.</li>
+        <li><b>K ≥5,5 mEq/L:</b> adiar a reposição de K até a próxima aferição.</li>
+        <li><b>K &lt;3 mEq/L:</b> reposição rápida de K a 0,5 mEq/kg/h e reavaliar.</li>
+      </ul>
+      <div class="small">Para converter mEq em mL, a ferramenta usa a equivalência prática do próprio exemplo institucional: KCl 19,1% ≈ <b>2,5 mEq/mL</b> (3,2 mL para 8 mEq em um bloco de 200 mL).</div><div class="small" style="margin-top:6px"><b>Exemplo do próprio HCA:</b> “SF 0,9% 200 mL + KCl 19,1% 3,2 mL” — portanto o bloco é 200 mL de SF e o KCl é adicionado por fora.</div>
+    </div>
+  </div>
+
+  <div id="tabGlicemia" class="tabpanel" data-group="perdas">
+    <div class="fields">
+      <div class="field sm">
+        <label>Soro em uso neste momento</label>
+        <select id="soroAtual">
+          <option value="sf">SF 0,9% (sem glicose)</option>
+          <option value="g5">Glicose 5%</option>
+          <option value="g75">Glicose 7,5%</option>
+        </select>
+      </div>
+      <div class="field sm"><label>HGT anterior (mg/dL)</label><input id="hgtAnterior" type="number" step="1"></div>
+      <div class="field sm"><label>HGT atual (mg/dL)</label><input id="hgtAtual" type="number" step="1"></div>
+      <div class="field sm"><label>Volume FINAL do bloco/soro (mL)</label><input id="volNovoSoro" type="number" step="1" placeholder="auto: usa o volume do bloco"></div>
+      <div class="field sm"><label>K atual (mEq/L)</label><input id="kGlic" type="number" step="0.1" placeholder="para incluir KCl no novo preparo"></div>
+      <div class="field sm"><label>Peso (kg)</label><input id="pesoGlic" type="number" step="0.1" placeholder="usa o peso inicial"></div>
+    </div>
+
+    <div class="btns">
+      <button class="primary" onclick="avaliarGlicemia()">AVALIAR NOVA VARIAÇÃO</button>
+    </div>
+    <div id="resGlicemia" class="result"></div>
+
+    <div class="call info">
+      <b>Sequência prática:</b>
+      <ul class="list">
+        <li>Se queda do HGT &gt;100 mg/dL em 1 hora <b>OU</b> HGT &lt;250 mg/dL → manter o <b>volume final do bloco</b> e transformar o soro em <b>glicose 5%</b>: retirar do SF o mesmo volume que será acrescentado de SG 50%.</li>
+        <li>Se na avaliação seguinte a queda persistir → manter o <b>volume final do bloco</b> e passar para <b>glicose 7,5%</b>: novamente retirar do SF o mesmo volume que será acrescentado de SG 50%.</li>
+        <li>Se já estiver em glicose 7,5% e ainda houver persistência da queda glicêmica → o protocolo permite reduzir a insulina para <b>0,05 UI/kg</b>.</li>
+      </ul>
+      <div class="small" style="margin-top:7px"><b>Importante:</b> a cada necessidade de troca, a ferramenta refaz o preparo do soro para o volume informado. Se o cálculo da reposição das perdas já foi feito, o campo “volume do novo soro” é preenchido automaticamente com o volume de 1 bloco.<br><b>“Manter volume” nesta ferramenta significa:</b> o volume final do bloco não aumenta. O volume de SG 50% é retirado previamente do SF 0,9% e depois reposto com SG 50%.</div>
+    </div>
+  </div>
+</section>
+
+
+<section class="card turn">
+  <div class="turnTitle">ANDAMENTO PRÁTICO — LINHA DO TEMPO</div>
+  <h2 style="margin:4px 0 5px">O que fazer hora a hora no PA</h2>
+  <p class="small" style="margin-top:0">Cronograma abaixo considera o paciente <b>sem choque</b>, com expansão de 20 mL/kg em 1 hora. Em choque, a expansão ocorre em 20 minutos e o cronograma deixa de ser rígido, devendo seguir o protocolo de choque.</p>
+
+  <div class="timeline">
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 0–1">HORA 0–1</div>
+      <div class="timeBody">
+        <b>EXPANSÃO + COLETA</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 0–1"></div>
+
+        <ul>
+          <li>ABCDE/PALS, peso, estimativa de desidratação e Glasgow.</li>
+          <li>Dois acessos venosos periféricos.</li>
+          <li>Coletar hemograma, ionograma, ureia, creatinina, gasometria venosa e Urina 1.</li>
+          <li>SF 0,9% <b>20 mL/kg em 1 hora</b>.</li>
+          <li>HGT, sinais vitais e avaliação neurológica.</li>
+          <li><b>Não iniciar insulina nesta primeira hora.</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 1">HORA 1</div>
+      <div class="timeBody">
+        <b>TERMINOU A EXPANSÃO → COMEÇA A FASE 2</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 1"></div>
+
+        <ul>
+          <li>Reavaliar perfusão/hidratação, sinais vitais e Glasgow.</li>
+          <li>Repetir HGT.</li>
+          <li>Com os exames em mãos: confirmar/classificar CAD e avaliar K. <span class="uptag">💜</span> Se glicemia &gt;600 mg/dL, checar alerta automático para HHS/quadro misto antes de seguir o fluxo padrão.</li>
+          <li><b>Iniciar a reposição das perdas — Bloco 1.</b></li>
+          <li><b>Iniciar a insulina ao mesmo tempo que a reposição das perdas.</b></li>
+          <li>Insulina regular 0,1 UI/kg SC 1/1 h ou 0,1 UI/kg/h EV em BIC nos casos graves/UTI.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 2">HORA 2</div>
+      <div class="timeBody">
+        <b>DURANTE O BLOCO 1</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 2"></div>
+<div class="small"><span class="sideBadge hour">1/1 h HGT / SV / Glasgow</span><span class="sideBadge two">2/2 h gasometria</span></div>
+        <ul>
+          <li>Sinais vitais + avaliação neurológica/Glasgow + HGT.</li>
+          <li><b>Gasometria venosa + eletrólitos</b> — controle de 2/2 h.</li>
+          <li>Avaliar variação do HGT: se queda &gt;100 mg/dL/h ou HGT &lt;250 → glicose 5%, <b>mantendo o volume final do bloco</b>.</li>
+          <li>Se esquema SC: realizar nova dose horária de insulina.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 3">HORA 3</div>
+      <div class="timeBody">
+        <b>FINAL DO BLOCO 1 → INICIAR BLOCO 2</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 3"></div>
+
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li>Se na avaliação anterior entrou glicose 5% e a queda persistiu → passar para glicose 7,5%, <b>mantendo o mesmo volume final do bloco</b>.</li>
+          <li>Se esquema SC: nova dose de insulina.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 4">HORA 4</div>
+      <div class="timeBody">
+        <b>DURANTE O BLOCO 2</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 4"></div>
+<div class="small"><span class="sideBadge hour">1/1 h HGT / SV / Glasgow</span><span class="sideBadge two">2/2 h gasometria</span></div>
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li><b>Gasometria venosa + eletrólitos</b> 2/2 h.</li>
+          <li>Se já estiver em glicose 7,5% e persistir queda da glicemia → reduzir insulina para 0,05 UI/kg, conforme protocolo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 5">HORA 5</div>
+      <div class="timeBody">
+        <b>FINAL DO BLOCO 2 → INICIAR BLOCO 3</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 5"></div>
+
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li>Manter ajustes de glicose conforme tendência glicêmica.</li>
+          <li>Se esquema SC: nova dose horária de insulina.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 6">HORA 6</div>
+      <div class="timeBody">
+        <b>DURANTE O BLOCO 3</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 6"></div>
+<div class="small"><span class="sideBadge hour">1/1 h HGT / SV / Glasgow</span><span class="sideBadge two">2/2 h gasometria</span></div>
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li><b>Gasometria venosa + eletrólitos</b> 2/2 h.</li>
+          <li>Continuar vigilância para edema cerebral.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 7">HORA 7</div>
+      <div class="timeBody">
+        <b>FINAL DO BLOCO 3 → INICIAR BLOCO 4</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 7"></div>
+
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li>Manter insulina e ajustes do soro conforme evolução.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 8">HORA 8</div>
+      <div class="timeBody">
+        <b>DURANTE O BLOCO 4</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 8"></div>
+<div class="small"><span class="sideBadge hour">1/1 h HGT / SV / Glasgow</span><span class="sideBadge two">2/2 h gasometria</span></div>
+        <ul>
+          <li>Sinais vitais + Glasgow + HGT.</li>
+          <li><b>Gasometria venosa + eletrólitos</b> 2/2 h.</li>
+          <li>Reavaliar tendência do pH/HCO₃⁻ e sinais clínicos.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeRow">
+      <div class="timeMark" data-hour-label="HORA 9">HORA 9</div>
+      <div class="timeBody">
+        <b>FINAL DOS 4 BLOCOS / 8 HORAS DE REPOSIÇÃO</b>
+        <div class="scheduleStrip">
+          <span class="scheduleChip">1/1 h · HGT / SV / Glasgow / BH</span>
+          <span class="scheduleChip two">2/2 h · GASO / eletrólitos</span>
+        </div>
+        <div class="blockClock" data-clock-for="HORA 9"></div>
+
+        <ul>
+          <li>Reavaliar sinais de hidratação.</li>
+          <li>Se ainda desidratado → repor mais <b>2–3% do peso</b> e reavaliar.</li>
+          <li>Após a reposição das perdas → iniciar <b>MANUTENÇÃO</b>: Holliday 100% + Na 136 mEq/L + K 40 mEq/L até aceitação plena da dieta.</li>
+          <li>Continuar HGT, sinais vitais, Glasgow e gasometrias nos intervalos institucionais até resolução.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="call ok">
+    <b>Resumo da passagem HORA 1 → HORA 2:</b> sim — após completar a expansão de 1 hora, <b>começam juntos a reposição das perdas (Bloco 1) e a insulinoterapia</b>. A partir daí, HGT/sinais vitais/neurológico são 1/1 h e gasometria venosa 2/2 h.
+  </div>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">3</div>
+    <div>
+      <h2>MANUTENÇÃO — HOLLIDAY-SEGAR</h2>
+      <p>Iniciar após a reposição das perdas. Cálculo volumétrico no mesmo padrão do módulo Holliday-Segar do HTML de Emergências, mantendo as concentrações do protocolo HCA: Na 136 mEq/L e K 40 mEq/L.</p>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="field sm">
+      <label>Peso (kg)</label>
+      <input id="pesoHol" type="number" min="0.5" step="0.1" placeholder="usa o peso inicial se vazio">
+    </div>
+    <div class="field sm">
+      <label>Na da manutenção</label>
+      <input value="136 mEq/L" readonly>
+    </div>
+    <div class="field sm">
+      <label>K da manutenção</label>
+      <input value="40 mEq/L" readonly>
+    </div>
+    <div class="field sm">
+      <label>Bolsas SG 5% disponíveis</label>
+      <input value="250 mL e 500 mL" readonly>
+    </div>
+  </div>
+
+  <div class="btns">
+    <button class="primary" onclick="calcHollidayCAD()">CALCULAR MANUTENÇÃO</button>
+  </div>
+  <div id="resHolliday" class="result"></div>
+
+  <details>
+    <summary>Regra de Holliday-Segar usada</summary>
+    <ul class="list">
+      <li>até 10 kg: <b>100 mL/kg/dia</b>;</li>
+      <li>10–20 kg: <b>1.000 mL + 50 mL/kg</b> para cada kg acima de 10;</li>
+      <li>&gt;20 kg: <b>1.500 mL + 20 mL/kg</b> para cada kg acima de 20.</li>
+    </ul>
+    <div class="small">Nesta versão de CAD, o volume diário é dividido em <b>bolsas iguais</b>, priorizando intervalos práticos (24/24 h, 12/12 h, 8/8 h, 6/6 h, 4/4 h ou 3/3 h) e mantendo cada volume-base em até 500 mL. A bolsa física utilizada é SG 5% de 250 ou 500 mL.</div>
+  </details>
+
+  <div class="call info">
+    <b>Protocolo institucional:</b> após reposição das perdas → Holliday 100% + Na 136 mEq/L + K 40 mEq/L até aceitação plena da dieta.
+  </div>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">4</div>
+    <div>
+      <h2>INSULINOTERAPIA</h2>
+      <p>Iniciar 1 hora após a expansão inicial, juntamente com a reposição de perdas.</p>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="field sm"><label>Peso para cálculo (kg)</label><input id="pesoIns" type="number" step="0.1" placeholder="usa o peso inicial se vazio"></div>
+  </div>
+  <div class="btns"><button class="secondary" onclick="calcInsulina()">CALCULAR DOSES</button></div>
+  <div id="resIns" class="result"></div>
+
+  <div class="call info">
+    <ul class="list">
+      <li><b>SC:</b> insulina regular 0,1 UI/kg por dose, a cada 1 hora; ou</li>
+      <li><b>EV em BIC:</b> 0,1 UI/kg/h nos casos graves, em UTI.</li>
+      <li>Reduzir para <b>0,05 UI/kg</b> somente quando já estiver em soro com glicose 7,5% e persistir queda da glicemia.</li>
+    </ul>
+  </div>
+  <div class="call warn"><b>Preparo EV institucional:</b> insulina regular 1,2 mL + SF 0,9% 118,8 mL. Desprezar 50 mL e trocar a solução a cada 6 horas.</div>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">5</div>
+    <div>
+      <h2>MONITORIZAÇÃO E REAVALIAÇÃO ESTRUTURADA</h2>
+      <p>HCA como protocolo principal + itens complementares do UpToDate destacados em roxo.</p>
+    </div>
+  </div>
+
+  <table class="miniTable">
+    <tr><th>Parâmetro</th><th>Frequência</th><th>O que observar / fazer</th></tr>
+    <tr><td><b>HGT + sinais vitais + Glasgow + balanço hídrico</b></td><td><b>1/1 h</b></td><td>Registrar em conjunto a cada hora: HGT, FC/FR/PA/SatO₂, avaliação neurológica/Glasgow e entrada/saída.</td></tr>
+    <tr><td><b>Gasometria venosa + eletrólitos</b></td><td><b>2/2 h</b></td><td>Repetir junto ao fechamento/andamento dos blocos para acompanhar pH/HCO₃⁻, Na, K, Cl e recalcular ânion gap.</td></tr>
+    <tr><td><b>BOHB</b> <span class="uptag">💜</span></td><td><b>2–4/4 h</b></td><td>Se disponível. BOHB ≤1 mmol/L é marcador complementar de resolução.</td></tr><tr><td><b>BUN / creatinina</b> <span class="uptag">💜</span></td><td><b>2–4/4 h</b></td><td>Reavaliar função renal e ajustar vigilância conforme alterações.</td></tr>
+    <tr><td><b>Ca / Mg / P</b> <span class="uptag">💜</span></td><td><b>4–6/6 h</b></td><td>Se disponíveis/indicados, especialmente quando houver alteração relevante.</td></tr>
+    <tr><td><b>ECG / ritmo</b> <span class="uptag">💜</span></td><td><b>Contínuo quando indicado</b></td><td>Priorizar nos graves e em distúrbios significativos de K; QTc &gt;460 ms → monitorização contínua.</td></tr>
+  </table>
+
+  <div class="fields" style="margin-top:14px">
+    <div class="field sm"><label>Entrada na última hora (mL)</label><input id="entrada1h" type="number" step="1"></div>
+    <div class="field sm"><label>Saída/diurese na última hora (mL)</label><input id="saida1h" type="number" step="1"></div>
+    <div class="field sm"><label>Peso (kg)</label><input id="pesoBal" type="number" step="0.1" placeholder="usa peso inicial"></div>
+    <div class="field sm"><label>Balanço acumulado prévio (mL)</label><input id="balPrev" type="number" step="1" value="0"></div>
+  </div>
+  <div class="btns"><button class="secondary" onclick="calcBalanco()">CALCULAR BALANÇO DA HORA</button></div>
+  <div id="resBalanco" class="result"></div>
+
+  <div class="call warn"><b>Vigilância neurológica HCA:</b> cefaleia, vômitos frequentes, redução inapropriada da FC, paralisia de nervo craniano, aumento da PA e redução da oxigenação.</div>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">6</div>
+    <div>
+      <h2>BICARBONATO — USO EXCEPCIONAL</h2>
+      <p>Não realizar reposição de rotina.</p>
+    </div>
+  </div>
+
+  <div class="call danger"><b>Motivo citado no HCA:</b> risco de acidose paradoxal em sistema nervoso central.</div>
+  <div class="call warn"><b>Indicações:</b> hipercalemia grave ou pH &lt;6,9 com evidência de contratilidade cardíaca comprometida.</div>
+
+  <div class="fields">
+    <div class="field sm"><label>Peso (kg)</label><input id="pesoBic" type="number" step="0.1" placeholder="usa o peso inicial se vazio"></div>
+    <div class="field sm"><label>BE (Base Excess)</label><input id="beBic" type="number" step="0.1" placeholder="Ex.: -20"></div>
+  </div>
+  <div class="btns"><button class="secondary" onclick="calcBic()">CALCULAR</button></div>
+  <div id="resBic" class="result"></div>
+  <div class="small">Fórmula do protocolo: 0,3 × BE × peso = bicarbonato em mEq → infundir 1/3 em 1 hora. A ferramenta usa o módulo do BE para exibir uma quantidade positiva em mEq.</div>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">7</div>
+    <div>
+      <h2>SUSPEITA DE EDEMA CEREBRAL</h2>
+      <p>Avaliação estruturada pelos critérios maiores, menores e achados diagnósticos do protocolo institucional.</p>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="field sm"><label>Idade (anos)</label><input id="idadeNeuro" type="number" step="0.1"></div>
+    <div class="field sm"><label>FC prévia (bpm)</label><input id="fcPrev" type="number" step="1"></div>
+    <div class="field sm"><label>FC atual (bpm)</label><input id="fcAtual" type="number" step="1"></div>
+    <div class="field sm"><label>PAD atual (mmHg)</label><input id="padNeuro" type="number" step="1"></div>
+    <div class="field sm"><label>Glasgow atual</label><input id="gcsNeuro" type="number" min="3" max="15" step="1"></div>
+    <div class="field sm"><label>Peso (kg)</label><input id="pesoNeuro" type="number" step="0.1" placeholder="usa o peso inicial se vazio"></div>
+  </div>
+
+  <h3>Critérios maiores</h3>
+  <div class="checks">
+    <label class="check"><input id="majMental" type="checkbox"> alteração mental / confusão</label>
+    <label class="check"><input id="majFC" type="checkbox"> redução da FC ≥20 bpm</label>
+    <label class="check"><input id="majIncont" type="checkbox"> incontinência</label>
+  </div>
+
+  <h3>Critérios menores</h3>
+  <div class="checks">
+    <label class="check"><input id="minVom" type="checkbox"> vômitos</label>
+    <label class="check"><input id="minCef" type="checkbox"> cefaleia</label>
+    <label class="check"><input id="minLet" type="checkbox"> letargia</label>
+    <label class="check"><input id="minPAD" type="checkbox"> PAD &gt;90 mmHg</label>
+    <label class="check"><input id="minIdade" type="checkbox"> idade &lt;5 anos</label>
+  </div>
+
+  <h3>Achados suficientes para fechar o diagnóstico</h3>
+  <div class="checks">
+    <label class="check"><input id="dirPostura" type="checkbox"> decorticação / descerebração</label>
+    <label class="check"><input id="dirResposta" type="checkbox"> resposta à dor, verbal ou motora anormal</label>
+    <label class="check"><input id="dirNC" type="checkbox"> resposta pupilar anormal / paralisia de nervo craniano</label>
+    <label class="check"><input id="dirResp" type="checkbox"> padrão respiratório neurogênico anormal / apneia / Cheyne-Stokes 💜</label>
+  </div>
+
+  <div class="call uptodate">
+    <span class="uptag">💜 UpToDate · critério complementar</span>
+    <div style="margin-top:7px">
+      Gerar alerta para tratamento se houver: <b>1 critério diagnóstico</b>, <b>2 critérios maiores</b>, <b>1 maior + 2 menores</b> ou, em criança &lt;5 anos, <b>1 maior + 1 menor</b>. A <b>posologia do tratamento permanece a do HCA</b> nesta ferramenta.
+    </div>
+  </div>
+
+  <div class="btns"><button class="primary" onclick="avaliarEdema()">AVALIAR E CALCULAR TRATAMENTO</button></div>
+  <div id="resEdema" class="result"></div>
+
+  <details>
+    <summary>Fatores de risco citados no protocolo</summary>
+    <ul class="list">
+      <li>idades menores;</li>
+      <li>grau de hipocapnia;</li>
+      <li>gravidade da acidose;</li>
+      <li>reposição de bicarbonato;</li>
+      <li>insulina na primeira hora.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="card">
+  <div class="stepHead">
+    <div class="num">8</div>
+    <div>
+      <h2>RESOLUÇÃO DA CAD</h2>
+      <p>Critério institucional para encerramento do protocolo e transição.</p>
+    </div>
+  </div>
+
+  <div class="call ok"><b>Encerrar protocolo quando:</b> pH &gt;7,3 <b>e</b> HCO₃⁻ &gt;15 mEq/L.</div>
+
+  <details>
+    <summary>Após resolução — esquema descrito no HCA</summary>
+    <ul class="list">
+      <li>se já usava insulina: iniciar dose habitual com ajuste posterior;</li>
+      <li>se primodescompensação: dose diária total inicial de insulina = <b>1 UI/kg/dia</b>;</li>
+      <li><b>Glargina:</b> 0,5 UI/kg/dia em dose única pela manhã; ou</li>
+      <li><b>NPH:</b> 0,5 UI/kg/dia → 50% manhã, 25% almoço e 25% às 22 h;</li>
+      <li><b>Bolus:</b> regular 30 min antes das refeições ou Novorapid 15 min antes;</li>
+      <li>HGT: antes e 2 h após café; antes e 2 h após almoço; antes do jantar; 22 h; 3 h.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="card">
+  <div class="turnTitle">REFERÊNCIA ÚNICA</div>
+  <p style="margin:5px 0 0"><b>Hospital da Criança e do Adolescente Dr. Severino Bezerra de Carvalho — Protocolo de Cetoacidose Diabética.</b></p>
+</section>
+
+<div class="footer">Ferramenta de apoio ao protocolo institucional HCA. Condutas principais e posologias permanecem HCA; itens em 💜 são complementos de monitorização/alerta baseados nos PDFs UpToDate fornecidos.</div>
+
+</div>
+<aside class="cadSidebar">
+  <div class="sideTitle">⚡ CAD — FLUXO / REAVALIAÇÕES</div>
+
+  <div class="sideSection">
+    <b>⏱️ FLUXO</b>
+    <div class="sideLine"><div class="sideTime">0–1 h</div><div><b>Expansão</b> SF 0,9% 20 mL/kg + 2 acessos + coleta + HGT + SV + Glasgow. <b>Não iniciar insulina.</b></div></div>
+    <div class="sideLine"><div class="sideTime">H1</div><div>Fim expansão → reavaliar + exames → <b>Bloco 1 + insulina</b>.</div></div>
+    <div class="sideLine"><div class="sideTime">H1–3</div><div>Bloco 1</div></div>
+    <div class="sideLine"><div class="sideTime">H3–5</div><div>Bloco 2</div></div>
+    <div class="sideLine"><div class="sideTime">H5–7</div><div>Bloco 3</div></div>
+    <div class="sideLine"><div class="sideTime">H7–9</div><div>Bloco 4</div></div>
+    <div class="sideLine"><div class="sideTime">H9</div><div>Reavaliar hidratação → se persistir, +2–3%; depois manutenção.</div></div>
+  </div>
+
+  <div class="sideSection">
+    <b>🔁 MONITORIZAÇÃO</b>
+    <div><span class="sideBadge hour">1/1 h</span> HGT / SV / Glasgow / BH</div>
+    <div><span class="sideBadge two">2/2 h</span> GASO + eletrólitos</div>
+    <div><span class="sideBadge purple">2–4 h</span> BOHB 💜</div>
+    <div><span class="sideBadge purple">2–4 h</span> BUN / Cr 💜</div>
+    <div><span class="sideBadge purple">4–6 h</span> Ca / Mg / P 💜</div>
+  </div>
+
+  <div class="sideSection">
+    <b>🩸 HGT — AJUSTE DO SORO</b>
+    <div class="small">
+      <b>↓ &gt;100 mg/dL em 1 h OU HGT &lt;250</b><br>
+      → passar para <b>G5%</b>.<br><br>
+      Queda persiste na avaliação seguinte<br>
+      → <b>G7,5%</b>.<br><br>
+      G7,5% + queda persistente<br>
+      → <b>insulina 0,05 UI/kg</b>.
+    </div>
+  </div>
+
+  <div class="sideSection">
+    <b>🧠 ALERTA NEUROLÓGICO</b>
+    <div class="small">
+      Piora mental • cefaleia/vômitos novos ou piores • queda inadequada da FC • hipertensão • pupilas/NC • padrão respiratório neurogênico.
+    </div>
+    <div class="sideAlert"><b>Se gatilho clínico:</b> tratar sem aguardar neuroimagem. Doses permanecem as do HCA.</div>
+  </div>
+
+  <div class="sideSection">
+    <b>💜 ALERTAS AUTOMÁTICOS</b>
+    <div class="small">HHS/misto • ânion gap • Na corrigido • BOHB • QTc/ECG • maior risco de lesão cerebral.</div>
+  </div>
+</aside>
+
+</div>
+
 <script>
-const q=id=>document.getElementById(id);
-const num=id=>{const el=q(id); if(!el) return null; const v=parseFloat(String(el.value).replace(',','.')); return isNaN(v)?null:v};
-function fmt(n,d=1){ if(n===null||isNaN(n)) return '—'; return Number(n).toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d}); }
-function fmt0(n){ if(n===null||isNaN(n)) return '—'; return Math.round(n).toLocaleString('pt-BR'); }
-function sev(ph,bic){
-  let score=0, name='Não classificável';
-  if(ph!==null){ if(ph<7.1) score=Math.max(score,3); else if(ph<7.2) score=Math.max(score,2); else if(ph<7.3) score=Math.max(score,1); }
-  if(bic!==null){ if(bic<5) score=Math.max(score,3); else if(bic<=9) score=Math.max(score,2); else if(bic<18) score=Math.max(score,1); }
-  if(score===1) name='CAD leve'; if(score===2) name='CAD moderada'; if(score===3) name='CAD grave'; return {score,name};
+function num(id){
+  const v=parseFloat(document.getElementById(id).value);
+  return Number.isFinite(v)?v:null;
 }
-function holliday(p){ if(p<=0)return 0; if(p<=10)return 100*p; if(p<=20)return 1000+50*(p-10); return 1500+20*(p-20); }
-function kCond(k,vol){
-  if(k===null) return {txt:'Informar potássio para definir KCl.', conc:0, ml:0, alerta:'Coletar K antes da reposição; se K ≥ 5,5, adiar K; se K < 3, repor rapidamente e reavaliar.'};
-  if(k>=5.5) return {txt:'K ≥ 5,5: adiar KCl até próxima aferição.', conc:0, ml:0, alerta:'Reavaliar K seriado antes de adicionar potássio ao soro.'};
-  if(k<3) return {txt:'K < 3: reposição rápida 0,5 mEq/kg/h e reavaliar.', conc:null, ml:null, alerta:'Hipocalemia importante. Evitar iniciar/continuar insulina antes de corrigir K, conforme protocolo local e avaliação médica.'};
-  const conc = k<4.5 ? 40 : 20; const ml = (vol/1000*conc)/2.5; return {txt:`Adicionar KCl 19,1% ${conc} mEq/L`, conc, ml, alerta:''};
+function br(v,d=1){
+  return Number.isFinite(v)?v.toFixed(d).replace('.',','):'—';
 }
-function glicose(tipo,vol){ if(tipo==='g5') return {sg:vol/10, label:'SG 50% 1 mL/10 mL de SF → glicose final ~5%'}; if(tipo==='g75') return {sg:vol*1.5/10, label:'SG 50% 1,5 mL/10 mL de SF → glicose final ~7,5%'}; return {sg:0,label:'Sem glicose no soro'}; }
-function desidLabel(v){ if(v===5) return '5%: saliva espessa, filme lacrimal presente'; if(v===7.5) return '7,5%: mucosa seca, ausência de filme lacrimal'; if(v===10) return '10%: perda máxima do protocolo / desidratação importante'; return '—'; }
-function trend(a,b,unit=''){
-  if(a===null||b===null) return '—'; const d=b-a; const sinal=d>0?'+':''; return `${fmt(a,unit==='pH'?2:1)} → ${fmt(b,unit==='pH'?2:1)} (${sinal}${fmt(d,unit==='pH'?2:1)}${unit && unit!=='pH'?' '+unit:''})`;
+function pesoBase(id){
+  return num(id) || num('peso');
 }
-function calc(){
-  const p=num('peso'), idade=num('idade'), idadeUn=q('idadeUn').value, hgt=num('hgt'), quedaInformada=num('queda'), ph=num('ph'), bic=num('bic'), be=num('be'), k=num('k'), desid=num('desid'), expKg=num('exp');
-  const hgtRe=num('hgtRe'), phRe=num('phRe'), bicRe=num('bicRe'), kRe=num('kRe'), desidReVal=q('desidRe').value?parseFloat(q('desidRe').value):null, neuroRe=q('neuroRe').value;
-  const choque=q('choque').checked, ureiaCreat=q('ureiaCreat').checked, cetonas=q('cetonas').checked, tipo=q('tipoSoro').value, vomitosCefaleia=q('vomitosCefaleia').checked, diureseOk=q('diureseOk').checked;
-  if(!p || p<=0){ q('out').innerHTML='<div class="card"><div class="alert danger">Informe um peso válido para calcular.</div></div>'; return; }
 
-  const s=sev(ph,bic), sRe=sev(phRe,bicRe);
-  const criterios=[];
-  if(hgt!==null && hgt>200) criterios.push('<span class="pill ok">Glicemia > 200</span>'); else criterios.push('<span class="pill warn">Glicemia não confirma/ausente</span>');
-  if((ph!==null && ph<7.3)||(bic!==null && bic<18)) criterios.push('<span class="pill ok">pH < 7,3 ou BIC < 18</span>'); else criterios.push('<span class="pill warn">Acidose não confirma/ausente</span>');
-  criterios.push(cetonas?'<span class="pill ok">Cetonas positivas</span>':'<span class="pill warn">Cetonas não marcadas</span>');
-  const cadProvavel=(hgt!==null&&hgt>200)&&(((ph!==null&&ph<7.3)||(bic!==null&&bic<18)))&&cetonas;
 
-  const expVol=p*expKg;
-  const expTxt=choque ? `SF 0,9% ${fmt0(p*20)} mL EV em 20 min, reavaliar e seguir protocolo de choque.` : `SF 0,9% ${fmt0(expVol)} mL EV em 1 hora (${expKg} mL/kg).`;
-  const perdaBruta=p*10*Math.min(desid,10); const perdas=Math.max(perdaBruta-expVol,0); const bloco=perdas/4;
-  const kUsado = kRe!==null ? kRe : k; const kh=kCond(kUsado,bloco); const gl=glicose(tipo,bloco);
+function planStockVolume(target, sizes){
+  if(!Number.isFinite(target) || target<=0) return {text:'Volume inválido.',stockText:'Volume inválido.',stockTotal:0};
 
-  const quedaCalculada = (hgt!==null && hgtRe!==null) ? (hgt-hgtRe) : null;
-  const quedaHora = quedaCalculada!==null ? quedaCalculada : quedaInformada;
-  const quedaRapida = quedaHora!==null && quedaHora>100;
-  const hgtMenor250 = (hgtRe!==null ? hgtRe : hgt)!==null && (hgtRe!==null ? hgtRe : hgt)<250;
-  const acidoseMelhorou = ((ph!==null&&phRe!==null&&phRe>ph) || (bic!==null&&bicRe!==null&&bicRe>bic));
-  const acidosePiorou = ((ph!==null&&phRe!==null&&phRe<ph) || (bic!==null&&bicRe!==null&&bicRe<bic));
-  const hidratacaoMelhorou = desidReVal!==null && desidReVal<desid;
-  const hidratacaoIgualPior = desidReVal!==null && desidReVal>=desid;
+  const desc=[...sizes].sort((a,b)=>b-a);
+  const parts=[];
+  let rem=target;
 
-  let proximoSoro='Manter SF 0,9% conforme perdas e eletrólitos.';
-  if((hgtMenor250 || quedaRapida) && tipo==='sf') proximoSoro='Trocar para SF 0,9% + SG 50% 1 mL/10 mL de SF (glicose final ~5%) e manter o mesmo volume.';
-  else if(quedaRapida && tipo==='g5') proximoSoro='Como manteve queda importante com glicose 5%, trocar para SF 0,9% + SG 50% 1,5 mL/10 mL de SF (glicose final ~7,5%).';
-  else if(quedaRapida && tipo==='g75') proximoSoro='Já está com glicose 7,5% e segue caindo rápido: manter glicose 7,5%, reavaliar oferta glicídica e reduzir insulina para 0,05 UI/kg/h ou SC 1/1h conforme protocolo.';
-  else if(tipo==='g75') proximoSoro='Manter glicose 7,5% se ainda necessária; se glicemia estabilizar, seguir reavaliação horária.';
-  else if(tipo==='g5') proximoSoro='Manter glicose 5% se HGT <250 ou queda controlada; se nova queda importante, subir para 7,5%.';
+  // Use full largest bags while target clearly exceeds them.
+  while(rem>desc[0]+1e-9){
+    parts.push(desc[0]);
+    rem-=desc[0];
+  }
 
-  let insDose=0.1, motivoIns='Dose padrão: 0,1 UI/kg após a primeira hora de expansão.';
-  if(kUsado!==null && kUsado<3){ insDose=0; motivoIns='K < 3: priorizar reposição rápida de K; não iniciar/segurar insulina até reavaliar, conforme protocolo local.'; }
-  else if(tipo==='g75' && quedaRapida){ insDose=0.05; motivoIns='Reduzir para 0,05 UI/kg porque já está com glicose 7,5% e persiste queda glicêmica.'; }
-  const insSc=p*insDose; const insEvRate=p*insDose;
+  if(rem>0.1){
+    const fitting=[...sizes].sort((a,b)=>a-b).find(s=>s>=rem) || desc[0];
+    parts.push(fitting);
+  }
 
-  const manitolMin=p*0.5, manitolMax=p*1, manitol20Min=manitolMin/0.2, manitol20Max=manitolMax/0.2;
-  const nacl3min=p*5, nacl3max=p*10; const nacl20min=nacl3min/6.7, adMin=nacl3min-nacl20min; const nacl20max=nacl3max/6.7, adMax=nacl3max-nacl20max;
-  const bicTotal=(be!==null && be<0)?0.3*Math.abs(be)*p:null; const bicOne=bicTotal?bicTotal/3:null;
-  const manutDia=holliday(p); const manutHora=manutDia/24; const kManutMl=(manutDia/1000*40)/2.5; const naManutMEq=manutDia/1000*136; const basal=p*0.5; const ddt=p*1;
-  let internar = s.score===3 || ureiaCreat;
+  const total=parts.reduce((a,b)=>a+b,0);
+  const excess=Math.max(total-target,0);
 
-  let presc=`EXPANSÃO INICIAL\n${expTxt}\n\nREAVALIAÇÃO APÓS 1ª HORA\n- Reavaliar HGT, sinais vitais, Glasgow, hidratação, K e gasometria.\n- Se HGT caiu >100 mg/dL/h ou HGT <250 mg/dL: acrescentar glicose ao soro.\n- Se persistir queda com glicose 5%: subir para glicose 7,5%.\n- Se persistir queda com glicose 7,5%: reduzir insulina para 0,05 UI/kg.\n\nREPOSIÇÃO DE PERDAS (após expansão, em blocos de 2h)\nPerda estimada: ${fmt0(perdaBruta)} mL (${desid}% do peso — ${desidLabel(desid)}).\nDescontando expansão: ${fmt0(perdas)} mL em 8h = ${fmt0(bloco)} mL a cada 2h.\n`;
-  if(perdas>0){ presc += `\nPrescrição por bloco de 2h:\nSF 0,9% ${fmt0(bloco)} mL`; if(gl.sg>0) presc += ` + SG 50% ${fmt(gl.sg,1)} mL`; if(kh.ml>0) presc += ` + KCl 19,1% ${fmt(kh.ml,1)} mL (${kh.conc} mEq/L)`; presc += ` EV em BIC por 2 horas. Repetir em blocos e reavaliar a cada etapa.\n`; }
-  presc += `\nINSULINA\nIniciar 1h após expansão inicial, junto com reposição de perdas.\n${motivoIns}\n`;
-  if(insDose>0){ presc += `Regular SC: ${fmt(insSc,1)} UI SC 1/1h (${insDose} UI/kg).\nSe grave/UTI EV: Regular 1,2 mL + SF 0,9% 118,8 mL; desprezar 50 mL; trocar a solução a cada 6h; correr a ${fmt(insEvRate,1)} mL/h (${insDose} UI/kg/h).\n`; }
-  else { presc += `Insulina temporariamente suspensa/não iniciada até correção do K, conforme avaliação.\n`; }
-  if(bicOne) presc += `\nBICARBONATO, APENAS SE INDICADO\nIndicações: hipercalemia grave ou pH < 6,9 com contratilidade cardíaca comprometida.\nDéficit calculado: ${fmt(bicTotal,1)} mEq; fazer 1/3 em 1h = ${fmt(bicOne,1)} mEq. Se NaHCO₃ 8,4%: ${fmt(bicOne,1)} mL em 1h.\n`;
-  presc += `\nEDEMA CEREBRAL, SE SUSPEITA CLÍNICA\nManitol: ${fmt(manitolMin,1)}–${fmt(manitolMax,1)} g EV em 30 min. Se manitol 20%: ${fmt(manitol20Min,1)}–${fmt(manitol20Max,1)} mL.\nOU NaCl 3%: ${fmt0(nacl3min)}–${fmt0(nacl3max)} mL EV em 30 min. Para preparar com NaCl 20% + AD:\n- dose 5 mL/kg: NaCl 20% ${fmt(nacl20min,1)} mL + AD ${fmt(adMin,1)} mL\n- dose 10 mL/kg: NaCl 20% ${fmt(nacl20max,1)} mL + AD ${fmt(adMax,1)} mL\nElevar cabeceira a 30°. Não aguardar neuroimagem se critérios clínicos.`;
+  const counts={};
+  parts.forEach(s=>counts[s]=(counts[s]||0)+1);
+  const label=Object.entries(counts).sort((a,b)=>Number(b[0])-Number(a[0])).map(([s,c])=>`${c}×${s} mL`).join(' + ');
 
-  let html=`<div class="card"><h2 class="section-title">Resumo <span class="badge">CAD</span></h2>${criterios.join(' ')}<div class="alert ${cadProvavel?'ok':'warn'}">${cadProvavel?'Critérios compatíveis com CAD.':'Critérios de CAD incompletos nos dados informados; confira glicemia, gasometria e cetonas.'}</div><div class="big">${s.name}</div><div class="muted small">Leve: pH 7,2–7,3 e/ou BIC 10–18 · Moderada: pH 7,1–7,2 e/ou BIC 5–9 · Grave: pH &lt; 7,1 e/ou BIC &lt; 5. A calculadora usa a pior classificação disponível.</div>${internar?'<div class="alert danger"><b>Indicação de UTI pelo protocolo:</b> CAD grave e/ou ureia/creatinina alterados.</div>':'<div class="alert info">Avaliar internação conforme gravidade clínica, hidratação, eletrólitos, capacidade de monitorização e protocolo institucional.</div>'}</div>`;
+  const stockText=`Usar <b>${label}</b> de SF 0,9% (total disponível ${br(total,0)} mL).`;
+  const text= excess>0.05
+    ? `${stockText}<br>Retirar <b>${br(excess,1)} mL</b> para administrar exatamente <b>${br(target,0)} mL</b>.`
+    : `${stockText}<br>Volume disponível já corresponde ao volume calculado: <b>${br(target,0)} mL</b>.`;
 
-  html+=`<div class="card"><h2>Reavaliação e ajustes da próxima hora</h2><table><tr><th>Parâmetro</th><th>Evolução</th><th>Interpretação</th></tr><tr><td>HGT</td><td>${hgt!==null&&hgtRe!==null?`${fmt0(hgt)} → ${fmt0(hgtRe)} mg/dL (${quedaCalculada>=0?'queda':'aumento'} ${fmt0(Math.abs(quedaCalculada))})`:quedaInformada!==null?`queda informada: ${fmt0(quedaInformada)} mg/dL/h`:'—'}</td><td>${quedaRapida?'<b>Queda >100 mg/dL/h:</b> ajustar glicose no soro.':hgtMenor250?'<b>HGT <250:</b> acrescentar glicose ao soro.':'Queda controlada ou dados insuficientes.'}</td></tr><tr><td>pH</td><td>${trend(ph,phRe,'pH')}</td><td>${acidoseMelhorou?'Tendência de melhora.':acidosePiorou?'Piora/sem resposta adequada: revisar hidratação, insulina, infecção, eletrólitos e discutir UTI.':'Sem comparação informada.'}</td></tr><tr><td>BIC</td><td>${trend(bic,bicRe,'mEq/L')}</td><td>${bicRe!==null && bicRe>15 && phRe!==null && phRe>7.3?'Critério de resolução atingido.':acidoseMelhorou?'Tendência de melhora.':'Acompanhar gasometria 2/2h.'}</td></tr><tr><td>Desidratação</td><td>${desidLabel(desid)}${desidReVal!==null?' → '+desidLabel(desidReVal):''}</td><td>${hidratacaoMelhorou?'Melhorou hidratação.':hidratacaoIgualPior?'Persistência de desidratação: ao fim dos blocos, considerar repor mais 2–3% do peso e reavaliar.':'Reavaliar clinicamente ao fim de cada bloco.'}</td></tr><tr><td>Potássio usado</td><td>${kUsado!==null?fmt(kUsado,1)+' mEq/L':'—'}</td><td>${kh.txt}${diureseOk?' · diurese marcada como presente.':' · confirmar diurese e K seriado.'}</td></tr><tr><td>Soro agora</td><td>${gl.label}</td><td>${proximoSoro}</td></tr><tr><td>Insulina agora</td><td>${insDose>0?`${insDose} UI/kg → ${fmt(insSc,1)} UI SC 1/1h ou ${fmt(insEvRate,1)} mL/h EV se grave/UTI`:'Segurar até K corrigir'}</td><td>${motivoIns}</td></tr></table>${(neuroRe==='piorou'||vomitosCefaleia)?'<div class="alert danger"><b>Alerta para edema cerebral:</b> piora neurológica/sintomas marcados. Tratar clinicamente se critérios, elevar cabeceira, manitol ou NaCl 3%, UTI. Não aguardar neuroimagem se quadro típico.</div>':''}</div>`;
-
-  html+=`<div class="result-grid"><div class="card"><h2>Hidratação</h2><table><tr><th>Etapa</th><th>Cálculo</th></tr><tr><td>Expansão</td><td>${expTxt}</td></tr><tr><td>Estimativa clínica</td><td>${desidLabel(desid)}</td></tr><tr><td>Perdas estimadas</td><td>${fmt0(perdaBruta)} mL</td></tr><tr><td>Perdas após desconto da expansão</td><td>${fmt0(perdas)} mL em 8h</td></tr><tr><td>Bloco de 2h</td><td>${fmt0(bloco)} mL por bloco</td></tr><tr><td>Glicose no soro</td><td>${gl.label}${(hgtMenor250||quedaRapida)?'<br><b>Indicado considerar glicose/ajuste:</b> HGT &lt; 250 ou queda &gt;100 mg/dL/h.':''}</td></tr></table>${kh.alert?`<div class="alert warn">${kh.alert}</div>`:''}</div><div class="card"><h2>Potássio e manutenção</h2><table><tr><th>Item</th><th>Resultado</th></tr><tr><td>Conduta K</td><td>${kh.txt}</td></tr><tr><td>KCl por bloco</td><td>${kh.ml>0?fmt(kh.ml,1)+' mL de KCl 19,1%':'—'}</td></tr><tr><td>Manutenção Holliday 100%</td><td>${fmt0(manutDia)} mL/dia ≈ ${fmt(manutHora,1)} mL/h</td></tr><tr><td>Meta Na manutenção</td><td>136 mEq/L ≈ ${fmt(naManutMEq,1)} mEq/dia</td></tr><tr><td>K manutenção</td><td>40 mEq/L ≈ ${fmt(kManutMl,1)} mL/dia de KCl 19,1%</td></tr></table></div></div>`;
-  html+=`<div class="card"><h2>Prescrição sugerida para conferência</h2><div class="presc">${presc}</div></div>`;
-  html+=`<div class="result-grid"><div class="card"><h2>Monitorização minuciosa</h2><ul><li><b>Primeira hora:</b> expansão com SF 0,9%; não iniciar insulina antes de 1h.</li><li><b>Após 1h:</b> iniciar insulina + reposição de perdas; reavaliar HGT, K, Glasgow, hidratação e sinais vitais.</li><li>Sinais vitais 1/1h.</li><li>Avaliação neurológica 1/1h com Glasgow.</li><li>HGT capilar 1/1h.</li><li>Gasometria venosa 2/2h.</li><li>Observar cefaleia, vômitos frequentes, bradicardia inapropriada, aumento de PA, queda de saturação, paresia de nervos cranianos.</li></ul></div><div class="card"><h2>Resolução / transição</h2><div class="alert ${phRe!==null&&bicRe!==null&&phRe>7.3&&bicRe>15?'ok':'info'}">Encerrar protocolo quando pH &gt; 7,3 e BIC &gt; 15.</div><table><tr><th>Esquema inicial se primodescompensação</th><th>Dose</th></tr><tr><td>Dose diária total</td><td>${fmt(ddt,1)} UI/dia</td></tr><tr><td>Glargina</td><td>${fmt(basal,1)} UI pela manhã</td></tr><tr><td>NPH total</td><td>${fmt(basal,1)} UI/dia: 50% manhã (${fmt(basal*0.5,1)} UI), 25% almoço (${fmt(basal*0.25,1)} UI), 25% 22h (${fmt(basal*0.25,1)} UI)</td></tr><tr><td>Bolus</td><td>Regular 30 min antes ou Novorapid 15 min antes das refeições.</td></tr><tr><td>HGT após transição</td><td>Antes e 2h após café; antes e 2h após almoço; antes do jantar; 22h; 3h.</td></tr></table></div></div>`;
-  html+=`<div class="card"><h2>Checklist inicial</h2><div class="alert info">PALS, peso, estimativa de desidratação, Glasgow, 2 acessos venosos periféricos, hemograma, ionograma, ureia, creatinina, gasometria venosa e urina 1.</div></div>`;
-  q('out').innerHTML=html; window.scrollTo({top:0,behavior:'smooth'});
+  return {text,stockText,stockTotal:total,parts};
 }
-function limpar(){ ['peso','idade','hgt','queda','ph','bic','be','k','hgtRe','phRe','bicRe','kRe'].forEach(id=>{if(q(id))q(id).value=''}); q('desidRe').value=''; q('out').innerHTML=''; }
+
+function calcExpansao(){
+  const p=num('peso');
+  const circ=document.getElementById('circulacao').value;
+  if(!p){
+    document.getElementById('resExpansao').innerHTML='<div class="call warn">Informe o peso.</div>';
+    return;
+  }
+  const vol=p*20;
+  const tempo=circ==='choque'?'20 minutos':'1 hora';
+  const plano=planStockVolume(vol,[500,250,100]);
+
+  const extra=circ==='choque'
+    ? '<div class="call danger"><b>Choque:</b> realizar 20 mL/kg em 20 minutos e seguir protocolo de choque.</div>'
+    : '';
+
+  document.getElementById('resExpansao').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>SF 0,9%</small><strong>${br(vol,0)} mL</strong><span class="small">20 mL/kg</span></div>
+      <div class="kpi"><small>Tempo</small><strong>${tempo}</strong></div>
+    </div>
+    <div class="call ok">
+      <b>Como montar com as bolsas do serviço:</b><br>
+      ${plano.text}
+    </div>
+    ${extra}`;
+}
+
+function avaliarCAD(){
+  const g=num('glicDx'), ph=num('phDx'), bic=num('bicDx'), bohb=num('bohbDx'), k=num('kDx');
+  const cv=document.getElementById('cetDx').value;
+  const cet=cv===''?null:parseInt(cv,10);
+
+  if(k!==null && document.getElementById('kPerdas').value===''){
+    document.getElementById('kPerdas').value=k;
+  }
+
+  const hiper=g!==null && g>200;
+  const acid=(ph!==null && ph<7.3) || (bic!==null && bic<18);
+  const cetose=(bohb!==null && bohb>=3) || (cet!==null && cet>=3);
+  const confirmou=hiper && acid && cetose;
+
+  let classe='Não classificável';
+  if(ph!==null && bic!==null){
+    if(ph<7.1 && bic<5) classe='GRAVE';
+    else if(ph>=7.1 && ph<=7.2 && bic>=5 && bic<=9) classe='MODERADA';
+    else if(ph>=7.2 && ph<7.3 && bic>=10 && bic<18) classe='LEVE';
+    else classe='Parâmetros discordantes com as faixas combinadas da tabela institucional';
+  }
+
+  const uti=(classe==='GRAVE') || document.getElementById('ureiaAlt').checked || document.getElementById('creatAlt').checked;
+
+  let ktxt='K não informado.';
+  if(k!==null){
+    if(k<3) ktxt=`K ${br(k)} mEq/L → reposição rápida de K 0,5 mEq/kg/h e reavaliar.`;
+    else if(k>=5.5) ktxt=`K ${br(k)} mEq/L → adiar reposição de K até próxima aferição.`;
+    else if(k<4.5) ktxt=`K ${br(k)} mEq/L → usar 40 mEq/L na reposição de perdas.`;
+    else if(k>4.5) ktxt=`K ${br(k)} mEq/L → usar 20 mEq/L na reposição de perdas.`;
+    else ktxt='K = 4,5 mEq/L → o documento não explicita qual das duas concentrações usar exatamente neste ponto de corte.';
+  }
+
+  document.getElementById('resDx').innerHTML=`
+    <div class="call ${confirmou?'ok':'warn'}"><b>${confirmou?'CAD CONFIRMADA PELOS CRITÉRIOS INSTITUCIONAIS':'CRITÉRIOS AINDA INCOMPLETOS OU NÃO PREENCHIDOS'}</b></div>
+    <div class="kpis">
+      <div class="kpi"><small>Classificação</small><strong>${classe}</strong></div>
+      <div class="kpi"><small>Destino</small><strong>${uti?'UTI':'Conforme evolução'}</strong><span class="small">${uti?'grave e/ou ureia/creatinina alteradas':''}</span></div>
+    </div>
+    <div class="call info"><b>Potássio:</b> ${ktxt}</div>`;
+  painelComplementar();
+}
+
+function calcPerdas(){
+  const p=num('peso');
+  const des=parseFloat(document.getElementById('desid').value);
+  const k=num('kPerdas');
+
+  if(!p || !Number.isFinite(des)){
+    document.getElementById('resPerdas').innerHTML='<div class="call warn">Informe o peso e selecione a estimativa de desidratação.</div>';
+    return;
+  }
+
+  const perdas=p*10*des;
+  const expansao=p*20;
+  const restante=Math.max(perdas-expansao,0);
+  const bloco=restante/4;
+  const mlh=bloco/2;
+
+  const volNovo=document.getElementById('volNovoSoro');
+  if(volNovo && volNovo.value==='') volNovo.value=Math.round(bloco);
+  const kGlic=document.getElementById('kGlic');
+  if(kGlic && kGlic.value==='' && k!==null) kGlic.value=k;
+
+  let ktxt='K ainda não informado → definir reposição quando houver resultado.';
+  let alvoK=null;
+
+  if(k!==null){
+    if(k<3){
+      ktxt=`K ${br(k)} mEq/L → realizar reposição rápida a <b>0,5 mEq/kg/h</b> e reavaliar antes da reposição habitual.`;
+    } else if(k>=5.5){
+      ktxt=`K ${br(k)} mEq/L → <b>adiar potássio</b> até a próxima aferição.`;
+    } else if(k<4.5){
+      alvoK=40;
+      ktxt=`K ${br(k)} mEq/L → concentração institucional: <b>40 mEq/L</b>.`;
+    } else if(k>4.5){
+      alvoK=20;
+      ktxt=`K ${br(k)} mEq/L → concentração institucional: <b>20 mEq/L</b>.`;
+    } else {
+      ktxt='K = 4,5 mEq/L → o texto institucional usa &lt;4,5 e &gt;4,5 e não explicita qual concentração usar exatamente neste valor.';
+    }
+  }
+
+  const planoBloco=planStockVolume(bloco,[500,250,100]);
+  let kCards='';
+
+  if(alvoK!==null){
+    const meqBloco=alvoK*(bloco/1000);
+    const mlKcl=meqBloco/2.5;
+    const volumeFisico=bloco+mlKcl;
+
+    kCards=`
+      <div class="kpis">
+        <div class="kpi"><small>SF 0,9% do bloco</small><strong>${br(bloco,0)} mL</strong><span class="small">volume de reposição calculado</span></div>
+        <div class="kpi"><small>K por bloco</small><strong>${br(meqBloco,1)} mEq</strong><span class="small">${alvoK} mEq/L de SF</span></div>
+        <div class="kpi"><small>KCl 19,1% a adicionar</small><strong>${br(mlKcl,2)} mL</strong><span class="small">≈ 2,5 mEq/mL</span></div>
+        <div class="kpi"><small>Volume físico preparado</small><strong>${br(volumeFisico,1)} mL</strong><span class="small">${br(bloco,0)} mL SF + ${br(mlKcl,2)} mL KCl</span></div>
+      </div>
+
+      <div class="call ok">
+        <b>MONTAGEM PRÁTICA DE CADA BLOCO</b><br>
+        ${planoBloco.text}<br><br>
+        Depois de separar exatamente <b>${br(bloco,0)} mL de SF 0,9%</b>:<br>
+        • adicionar <b>${br(mlKcl,2)} mL de KCl 19,1%</b><br>
+        • não retirar do SF o volume correspondente ao KCl<br>
+        • preparo final físico: <b>${br(bloco,0)} mL de SF 0,9% + ${br(mlKcl,2)} mL de KCl = ${br(volumeFisico,1)} mL</b><br>
+        • o <b>bloco de reposição continua sendo ${br(bloco,0)} mL de SF</b>, conforme o cálculo institucional.
+      </div>
+
+      <div class="blocks">
+        <div class="block"><b>Bloco 1</b>${br(bloco,0)} mL SF / 2 h<span>+ KCl ${br(mlKcl,2)} mL</span></div>
+        <div class="block"><b>Bloco 2</b>${br(bloco,0)} mL SF / 2 h<span>+ KCl ${br(mlKcl,2)} mL</span></div>
+        <div class="block"><b>Bloco 3</b>${br(bloco,0)} mL SF / 2 h<span>+ KCl ${br(mlKcl,2)} mL</span></div>
+        <div class="block"><b>Bloco 4</b>${br(bloco,0)} mL SF / 2 h<span>+ KCl ${br(mlKcl,2)} mL</span></div>
+      </div>`;
+  } else {
+    kCards=`
+      <div class="call ok">
+        <b>Bolsa sugerida para CADA bloco:</b><br>
+        ${planoBloco.text}
+      </div>`;
+  }
+
+  document.getElementById('resPerdas').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Perdas estimadas</small><strong>${br(perdas,0)} mL</strong><span class="small">peso × 10 × ${des}%</span></div>
+      <div class="kpi"><small>Expansão já realizada</small><strong>${br(expansao,0)} mL</strong><span class="small">20 mL/kg</span></div>
+      <div class="kpi"><small>Restante a repor</small><strong>${br(restante,0)} mL</strong><span class="small">em 8 horas</span></div>
+      <div class="kpi"><small>Cada bloco</small><strong>${br(bloco,0)} mL SF / 2 h</strong><span class="small">${br(mlh,0)} mL/h de SF</span></div>
+    </div>
+
+    <div class="call warn"><b>Potássio:</b> ${ktxt}</div>
+    ${kCards}
+  `;
+}
+
+
+
+
+
+const CAD_PATIENT_KEY='cadHcaPatientV16'; // legado
+const CAD_PATIENTS_KEY='cadHcaPatientsV25';
+const CAD_ACTIVE_PATIENT_KEY='cadHcaActivePatientV25';
+
+function pad2(n){return String(n).padStart(2,'0')}
+
+function parseLocalDateTime(v){
+  if(!v) return null;
+  const d=new Date(v);
+  return isNaN(d.getTime())?null:d;
+}
+
+function fmtDateTimeBR(d){
+  if(!d) return '—';
+  return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+function addHours(d,h){
+  const x=new Date(d.getTime());
+  x.setMinutes(x.getMinutes()+h*60);
+  return x;
+}
+
+function uidPaciente(){
+  return 'pt_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
+}
+
+function getPacientes(){
+  try{
+    const data=JSON.parse(localStorage.getItem(CAD_PATIENTS_KEY)||'[]');
+    return Array.isArray(data)?data:[];
+  }catch(e){return []}
+}
+
+function setPacientes(arr){
+  localStorage.setItem(CAD_PATIENTS_KEY,JSON.stringify(arr));
+}
+
+function dadosPacienteAtual(){
+  return {
+    id: localStorage.getItem(CAD_ACTIVE_PATIENT_KEY)||'',
+    nome:(document.getElementById('ptNome').value||'').trim(),
+    registro:(document.getElementById('ptRegistro').value||'').trim(),
+    idade:document.getElementById('ptIdade').value||'',
+    peso:document.getElementById('ptPeso').value||'',
+    admissao:document.getElementById('ptAdmissao').value||'',
+    updatedAt:new Date().toISOString()
+  };
+}
+
+function preencherPaciente(d){
+  document.getElementById('ptNome').value=d?.nome||'';
+  document.getElementById('ptRegistro').value=d?.registro||'';
+  document.getElementById('ptIdade').value=d?.idade||'';
+  document.getElementById('ptPeso').value=d?.peso||'';
+  document.getElementById('ptAdmissao').value=d?.admissao||'';
+  if(d?.id) localStorage.setItem(CAD_ACTIVE_PATIENT_KEY,d.id);
+  else localStorage.removeItem(CAD_ACTIVE_PATIENT_KEY);
+  syncPatientToProtocol(true);
+  atualizarAgendaAdmissao();
+}
+
+function usarAgoraAdmissao(){
+  const d=new Date();
+  const local = new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);
+  document.getElementById('ptAdmissao').value=local;
+  atualizarAgendaAdmissao();
+}
+
+function syncPatientToProtocol(force=false){
+  const p=parseFloat(document.getElementById('ptPeso').value);
+  const age=parseFloat(document.getElementById('ptIdade').value);
+
+  const pesoIds=['peso','pesoGlic','pesoHol','pesoBal','pesoNeuro'];
+  if(Number.isFinite(p)){
+    pesoIds.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && (force || !el.value)) el.value=p;
+    });
+  }
+
+  const ageIds=['idadeDx','idadeNeuro'];
+  if(Number.isFinite(age)){
+    ageIds.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && (force || !el.value)) el.value=age;
+    });
+  }
+}
+
+function salvarPaciente(){
+  const d=dadosPacienteAtual();
+  if(!d.nome && !d.registro){
+    alert('Informe ao menos Nome ou Prontuário antes de salvar.');
+    return;
+  }
+
+  let arr=getPacientes();
+  let id=d.id;
+
+  if(id){
+    const idx=arr.findIndex(x=>x.id===id);
+    if(idx>=0){
+      d.id=id;
+      d.createdAt=arr[idx].createdAt||d.updatedAt;
+      arr[idx]=d;
+    }else{
+      d.id=id;
+      d.createdAt=d.updatedAt;
+      arr.unshift(d);
+    }
+  }else{
+    // Se já houver um mesmo prontuário, atualiza esse registro.
+    const sameReg=d.registro ? arr.findIndex(x=>x.registro===d.registro) : -1;
+    if(sameReg>=0){
+      d.id=arr[sameReg].id;
+      d.createdAt=arr[sameReg].createdAt||d.updatedAt;
+      arr[sameReg]=d;
+      id=d.id;
+    }else{
+      d.id=uidPaciente();
+      d.createdAt=d.updatedAt;
+      arr.unshift(d);
+      id=d.id;
+    }
+  }
+
+  arr.sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
+  setPacientes(arr);
+  localStorage.setItem(CAD_ACTIVE_PATIENT_KEY,id);
+  localStorage.setItem(CAD_PATIENT_KEY,JSON.stringify(d)); // mantém compatibilidade
+  syncPatientToProtocol();
+  atualizarAgendaAdmissao();
+  renderPacientesSalvos();
+  const msg=document.getElementById('ptSavedMsg');
+  if(msg) msg.textContent='✓ Salvo';
+}
+
+function carregarPaciente(id){
+  const arr=getPacientes();
+  let d=null;
+
+  if(id){
+    d=arr.find(x=>x.id===id)||null;
+  }else{
+    const active=localStorage.getItem(CAD_ACTIVE_PATIENT_KEY);
+    if(active) d=arr.find(x=>x.id===active)||null;
+    if(!d && arr.length) d=arr[0];
+  }
+
+  if(!d){
+    // Migração do sistema antigo de paciente único.
+    try{
+      const old=JSON.parse(localStorage.getItem(CAD_PATIENT_KEY)||'null');
+      if(old){
+        old.id=old.id||uidPaciente();
+        old.createdAt=old.createdAt||new Date().toISOString();
+        old.updatedAt=old.updatedAt||old.createdAt;
+        setPacientes([old]);
+        d=old;
+      }
+    }catch(e){}
+  }
+
+  if(d){
+    preencherPaciente(d);
+    togglePacientesSalvos(false);
+  }
+}
+
+function excluirPaciente(id){
+  const arr=getPacientes();
+  const pt=arr.find(x=>x.id===id);
+  const nome=pt?.nome || pt?.registro || 'este paciente';
+  if(!confirm(`Excluir ${nome} dos pacientes salvos?`)) return;
+
+  const novo=arr.filter(x=>x.id!==id);
+  setPacientes(novo);
+
+  if(localStorage.getItem(CAD_ACTIVE_PATIENT_KEY)===id){
+    localStorage.removeItem(CAD_ACTIVE_PATIENT_KEY);
+    novoPaciente(false);
+  }
+  renderPacientesSalvos();
+}
+
+function novoPaciente(fecharPainel=true){
+  localStorage.removeItem(CAD_ACTIVE_PATIENT_KEY);
+  ['ptNome','ptRegistro','ptIdade','ptPeso','ptAdmissao'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  const agenda=document.getElementById('agendaPaciente');
+  if(agenda) agenda.innerHTML='';
+  document.querySelectorAll('[data-clock-for]').forEach(el=>el.textContent='');
+  if(fecharPainel) togglePacientesSalvos(false);
+}
+
+function limparPaciente(){
+  novoPaciente();
+}
+
+function togglePacientesSalvos(force){
+  const p=document.getElementById('savedPatientsPanel');
+  if(!p) return;
+  const abrir = typeof force==='boolean' ? force : !p.classList.contains('open');
+  p.classList.toggle('open',abrir);
+  if(abrir) renderPacientesSalvos();
+}
+
+function renderPacientesSalvos(){
+  const box=document.getElementById('savedPatientsList');
+  if(!box) return;
+  const arr=getPacientes();
+
+  if(!arr.length){
+    box.innerHTML='<div class="savedEmpty">Nenhum paciente salvo.</div>';
+    return;
+  }
+
+  box.innerHTML=arr.map(d=>{
+    const adm=d.admissao ? fmtDateTimeBR(parseLocalDateTime(d.admissao)) : 'sem data/hora';
+    const nome=d.nome||'Sem nome';
+    const reg=d.registro?`Pront. ${d.registro}`:'sem prontuário';
+    const idade=d.idade?`${d.idade} a`:'';
+    const peso=d.peso?`${d.peso} kg`:'';
+    return `
+      <div class="savedPatientItem">
+        <div class="savedPatientMain">
+          <div class="savedPatientName">${escapeHtml(nome)}</div>
+          <div class="savedPatientMeta">${escapeHtml(reg)}${idade?' · '+escapeHtml(idade):''}${peso?' · '+escapeHtml(peso):''}<br>Admissão: ${escapeHtml(adm)}</div>
+        </div>
+        <div class="savedPatientActions">
+          <button class="primary" onclick="carregarPaciente('${d.id}')">ABRIR</button>
+          <button class="secondary" onclick="excluirPaciente('${d.id}')">EXCLUIR</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  })[c]);
+}
+
+function atualizarAgendaAdmissao(){
+  const adm=parseLocalDateTime(document.getElementById('ptAdmissao').value);
+  if(!adm){
+    const ag=document.getElementById('agendaPaciente');
+    if(ag) ag.innerHTML='';
+    document.querySelectorAll('[data-clock-for]').forEach(el=>el.textContent='');
+    return;
+  }
+
+  const times={
+    'HORA 0–1':[0,1],
+    'HORA 1':[1,1],
+    'HORA 2':[2,2],
+    'HORA 3':[3,3],
+    'HORA 4':[4,4],
+    'HORA 5':[5,5],
+    'HORA 6':[6,6],
+    'HORA 7':[7,7],
+    'HORA 8':[8,8],
+    'HORA 9':[9,9]
+  };
+
+  document.querySelectorAll('[data-clock-for]').forEach(el=>{
+    const key=el.getAttribute('data-clock-for');
+    const span=times[key];
+    if(!span) return;
+    if(key==='HORA 0–1'){
+      el.textContent=`🕒 ${fmtDateTimeBR(addHours(adm,0))} → ${fmtDateTimeBR(addHours(adm,1))}`;
+    }else{
+      el.textContent=`🕒 ${fmtDateTimeBR(addHours(adm,span[0]))}`;
+    }
+  });
+
+  // Resumo fica oculto no topo por design; horários aparecem na linha do tempo.
+  const ag=document.getElementById('agendaPaciente');
+  if(ag) ag.innerHTML='';
+}
+
+function initPatientStorage(){
+  const adm=document.getElementById('ptAdmissao');
+  if(adm) adm.addEventListener('change',atualizarAgendaAdmissao);
+
+  const peso=document.getElementById('ptPeso');
+  if(peso) peso.addEventListener('input',()=>syncPatientToProtocol(false));
+
+  const idade=document.getElementById('ptIdade');
+  if(idade) idade.addEventListener('input',()=>syncPatientToProtocol(false));
+
+  renderPacientesSalvos();
+
+  // Reabre o último paciente ativo, se houver.
+  const active=localStorage.getItem(CAD_ACTIVE_PATIENT_KEY);
+  if(active) carregarPaciente(active);
+
+  document.addEventListener('click',e=>{
+    const panel=document.getElementById('savedPatientsPanel');
+    if(!panel || !panel.classList.contains('open')) return;
+    if(panel.contains(e.target)) return;
+    if(e.target.closest && e.target.closest('.folderBtn')) return;
+    togglePacientesSalvos(false);
+  });
+}
+
+function painelComplementar(){
+  const g=num('glicDx'), ph=num('phDx'), bic=num('bicDx'), bohb=num('bohbDx');
+  const na=num('naDx'), cl=num('clDx'), k=num('kDx'), pco2=num('pco2Dx');
+  const bun=num('bunDx'), osm=num('osmDx'), qtc=num('qtcDx'), idade=num('idadeDx');
+  const cetRaw=document.getElementById('cetDx').value;
+  const cet=cetRaw===''?null:parseInt(cetRaw,10);
+  const novo=document.getElementById('novoDM').checked;
+
+  let ag=null, nac=null;
+  if(na!==null && cl!==null && bic!==null) ag=na-(cl+bic);
+  if(na!==null && g!==null) nac=na + 1.6*((g-100)/100);
+
+  const cad=(g!==null && g>200) && ((ph!==null && ph<7.3)||(bic!==null && bic<18)) && ((bohb!==null && bohb>=3)||(cet!==null && cet>=3));
+  const poucaAcidose=(ph!==null && ph>7.25)||(bic!==null && bic>15);
+  const poucaCetose=((bohb!==null && bohb<3)||(cet!==null && cet<=1));
+  const hhsStrong=(g!==null && g>600)&&(osm!==null && osm>320)&&poucaAcidose&&poucaCetose;
+  const hhsPossible=(g!==null && g>600)&&((osm!==null && osm>320)||poucaAcidose);
+  const mixed=cad && g!==null && g>600 && osm!==null && osm>320;
+
+  let severity='';
+  if(ph!==null && bic!==null){
+    if(ph<7.1 && bic<5) severity='grave';
+    else if(ph>=7.1 && ph<7.2 && bic>=5 && bic<=9) severity='moderada';
+    else if(ph>=7.2 && ph<7.3 && bic>=10 && bic<18) severity='leve';
+  }
+
+  const ecgReasons=[];
+  if(severity==='grave') ecgReasons.push('CAD grave');
+  if(k!==null && (k<3.5 || k>=5.5)) ecgReasons.push('distúrbio importante de K');
+  if(qtc!==null && qtc>460) ecgReasons.push('QTc >460 ms');
+
+  const neuroRisk=[];
+  if(severity==='grave') neuroRisk.push('acidose grave');
+  if(bun!==null && bun>20) neuroRisk.push('BUN >20 mg/dL');
+  if(pco2!==null && pco2<=20) neuroRisk.push('pCO₂ ≤20 mmHg');
+  if(idade!==null && idade<5) neuroRisk.push('idade <5 anos');
+  if(novo) neuroRisk.push('novo diagnóstico');
+
+  let alerts='';
+  if(mixed){
+    alerts+=`<div class="alertbox red"><strong>⚠️ POSSÍVEL CAD + HIPEROSMOLARIDADE / APRESENTAÇÃO MISTA</strong>Preenche critérios de CAD e apresenta glicemia >600 mg/dL com osmolalidade efetiva >320 mOsm/kg. <b>Não seguir automaticamente o fluxo padrão sem reavaliar abordagem.</b></div>`;
+  } else if(hhsStrong){
+    alerts+=`<div class="alertbox red"><strong>⚠️ PADRÃO COMPATÍVEL COM HHS</strong>Hiperglicemia >600 + osmolalidade efetiva >320 + pouca acidose + pouca cetose. O manejo difere da CAD clássica.</div>`;
+  } else if(hhsPossible){
+    alerts+=`<div class="alertbox amber"><strong>⚠️ ALERTA PARA HHS / QUADRO MISTO</strong>Há elementos de hiperosmolaridade. Conferir osmolalidade efetiva, acidose e cetose antes de seguir automaticamente o fluxo de CAD.</div>`;
+  }
+  if(cad) alerts+=`<div class="alertbox green"><strong>✓ Critérios de CAD presentes</strong>Hiperglicemia + acidose + cetose preenchidas pelos dados informados.</div>`;
+  if(ecgReasons.length) alerts+=`<div class="alertbox purple"><strong>💜 ECG / MONITORIZAÇÃO DE RITMO</strong>${ecgReasons.join(' + ')} → priorizar ECG/monitorização contínua. ${qtc!==null?`QTc informado: ${br(qtc,0)} ms.`:''}</div>`;
+  if(neuroRisk.length) alerts+=`<div class="alertbox purple"><strong>💜 MAIOR VIGILÂNCIA PARA LESÃO CEREBRAL</strong>Fatores presentes: ${neuroRisk.join('; ')}. Manter avaliação neurológica pelo menos 1/1 h.</div>`;
+  if(bohb!==null) alerts+=`<div class="alertbox ${bohb<=1?'green':'purple'}"><strong>💜 BOHB: ${br(bohb,1)} mmol/L</strong>${bohb<=1?'BOHB ≤1 mmol/L: marcador complementar de resolução pelo UpToDate.':'Ainda acima do marcador complementar de resolução (≤1 mmol/L).'}</div>`;
+
+  const agNormal=ag!==null && ag>=10 && ag<=14;
+  document.getElementById('resComplementar').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Ânion gap 💜</small><strong>${ag===null?'—':br(ag,1)}</strong><span class="small">${ag===null?'Na + Cl + HCO₃ necessários':agNormal?'12±2: normalizado':'fora de 12±2'}</span></div>
+      <div class="kpi"><small>Na corrigido 💜</small><strong>${nac===null?'—':br(nac,1)+' mEq/L'}</strong><span class="small">Na + 1,6 × [(glicose−100)/100]</span></div>
+      <div class="kpi"><small>BOHB 💜</small><strong>${bohb===null?'—':br(bohb,1)+' mmol/L'}</strong><span class="small">${bohb!==null&&bohb<=1?'≤1: marcador complementar de resolução':''}</span></div>
+      <div class="kpi"><small>Osmolalidade efetiva</small><strong>${osm===null?'—':br(osm,1)}</strong><span class="small">${osm!==null&&osm>320?'>320: alerta HHS':''}</span></div>
+    </div>
+    <div class="alertgrid">${alerts || '<div class="alertbox green"><strong>Sem alertas complementares automáticos</strong>Nenhum gatilho adicional foi identificado com os dados preenchidos.</div>'}</div>
+    <div class="call uptodate"><span class="uptag">💜 Resolução complementar UpToDate</span><div style="margin-top:6px">
+      ${agNormal?'✓ Ânion gap em 12±2.':'• Ânion gap ainda não normalizado ou não calculável.'}<br>
+      ${bohb!==null&&bohb<=1?'✓ BOHB ≤1 mmol/L.':'• BOHB >1 mmol/L ou não informado.'}<br>
+      ${ph!==null&&ph>=7.3?'✓ pH ≥7,3.':'• pH <7,3 ou não informado.'}<br>
+      <b>O critério oficial de encerramento da ferramenta continua sendo o do HCA.</b>
+    </div></div>`;
+}
+
+function calcBalanco(){
+  const ent=num('entrada1h') || 0;
+  const sai=num('saida1h') || 0;
+  const prev=num('balPrev') || 0;
+  const p=pesoBase('pesoBal');
+  const hora=ent-sai;
+  const acum=prev+hora;
+  const diurese=(p && sai>=0)?sai/p:null;
+  document.getElementById('resBalanco').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Balanço da hora</small><strong>${hora>=0?'+':''}${br(hora,0)} mL</strong></div>
+      <div class="kpi"><small>Balanço acumulado</small><strong>${acum>=0?'+':''}${br(acum,0)} mL</strong></div>
+      <div class="kpi"><small>Saída / peso / h</small><strong>${diurese===null?'—':br(diurese,2)+' mL/kg/h'}</strong><span class="small">usar somente se a saída informada corresponder à diurese</span></div>
+    </div>`;
+}
+
+function showTab(group, targetId, btn){
+  document.querySelectorAll('.tabpanel[data-group="'+group+'"]').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tabs .tabbtn').forEach(el=>{
+    if(el.closest('.card')===btn.closest('.card')) el.classList.remove('active');
+  });
+  document.getElementById(targetId).classList.add('active');
+  btn.classList.add('active');
+}
+
+function avaliarGlicemia(){
+  const anterior=num('hgtAnterior');
+  const atual=num('hgtAtual');
+  const soro=document.getElementById('soroAtual').value;
+  const p=pesoBase('pesoGlic');
+  const vol=num('volNovoSoro');
+  const k=num('kGlic');
+
+  if(anterior===null || atual===null){
+    document.getElementById('resGlicemia').innerHTML='<div class="call warn">Informe HGT anterior e HGT atual.</div>';
+    return;
+  }
+
+  const queda=anterior-atual;
+  const gatilho=(queda>100 || atual<250);
+
+  function kData(baseVol){
+    if(baseVol===null || k===null) return {ml:0,meq:0,txt:'K não informado nesta aba; o preparo abaixo não inclui KCl.'};
+    if(k<3) return {ml:0,meq:0,txt:'K <3 mEq/L: seguir reposição rápida institucional e reavaliar antes da reposição habitual.'};
+    if(k>=5.5) return {ml:0,meq:0,txt:'K ≥5,5 mEq/L: adiar K até nova aferição.'};
+    let conc=null;
+    if(k<4.5) conc=40;
+    else if(k>4.5) conc=20;
+    else return {ml:0,meq:0,txt:'K = 4,5 mEq/L: ponto de corte não explicitado no documento.'};
+    const meq=conc*(baseVol/1000);
+    const ml=meq/2.5;
+    return {ml,meq,txt:`K ${br(k)} → ${conc} mEq/L: ${br(meq,1)} mEq = ${br(ml,2)} mL de KCl 19,1%.`};
+  }
+
+  function preparo(v, percentualGlicose){
+    if(v===null) return '<div class="call warn"><b>Novo cálculo:</b> informe o volume FINAL do bloco/soro.</div>';
+
+    // Para a glicose: manter o volume-base do bloco.
+    const sg = v*(percentualGlicose/50); // 5%=>10%; 7,5%=>15%
+    const sf = v-sg;
+    const kd = kData(v);
+    const volumeFisico=v+kd.ml;
+
+    const plan=planStockVolume(v,[500,250,100]);
+    const retirarSF=Math.max(plan.stockTotal-sf,0);
+
+    return `
+      <div class="call ok">
+        <b>NOVO PREPARO — GLICOSE ${String(percentualGlicose).replace('.',',')}%</b><br>
+        Volume-base do bloco a manter: <b>${br(v,0)} mL</b>.<br><br>
+        ${plan.stockText}<br>
+        • retirar do SF <b>${br(retirarSF,1)} mL</b> no total<br>
+        • deixar <b>${br(sf,1)} mL de SF 0,9%</b><br>
+        • acrescentar <b>${br(sg,1)} mL de SG 50%</b><br>
+        → SF + SG50% = <b>${br(v,0)} mL</b> (volume-base do bloco mantido)<br>
+        ${kd.ml>0?`• depois acrescentar <b>${br(kd.ml,2)} mL de KCl 19,1%</b> por fora do volume-base<br>
+        → volume físico final preparado = <b>${br(volumeFisico,1)} mL</b><br>`:''}
+        <br><span class="small">${kd.txt}</span>
+      </div>`;
+  }
+
+  let acao='', preparoHtml='', proximo=soro;
+
+  if(soro==='sf'){
+    if(gatilho){
+      acao='<b>Trocar para glicose 5%, mantendo o volume-base do bloco.</b>';
+      preparoHtml=preparo(vol,5);
+      proximo='g5';
+    } else {
+      acao=`Manter SF 0,9%. Queda ${br(queda,0)} mg/dL; HGT atual ${br(atual,0)} mg/dL.`;
+    }
+  } else if(soro==='g5'){
+    if(gatilho){
+      acao='<b>Persistência da queda → passar para glicose 7,5%, mantendo o volume-base do bloco.</b>';
+      preparoHtml=preparo(vol,7.5);
+      proximo='g75';
+    } else {
+      acao='Manter glicose 5% e seguir reavaliação horária.';
+    }
+  } else if(soro==='g75'){
+    if(gatilho){
+      const dose=p?` Para ${br(p,1)} kg: ${br(p*0.05,2)} UI/dose SC ou ${br(p*0.05,2)} UI/h EV.`:'';
+      acao=`Já em glicose 7,5% com persistência da queda → reduzir insulina para <b>0,05 UI/kg</b>.${dose}`;
+      preparoHtml=preparo(vol,7.5);
+    } else {
+      acao='Manter glicose 7,5% e seguir reavaliação horária.';
+    }
+  }
+
+  const nomes={sf:'SF 0,9%',g5:'Glicose 5%',g75:'Glicose 7,5%'};
+
+  document.getElementById('resGlicemia').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>HGT anterior</small><strong>${br(anterior,0)} mg/dL</strong></div>
+      <div class="kpi"><small>HGT atual</small><strong>${br(atual,0)} mg/dL</strong></div>
+      <div class="kpi"><small>Variação</small><strong>${queda>=0?'-':'+'}${br(Math.abs(queda),0)} mg/dL</strong></div>
+      <div class="kpi"><small>Soro atual</small><strong>${nomes[soro]}</strong></div>
+    </div>
+    <div class="call ${gatilho?'warn':'info'}"><b>Conduta:</b> ${acao}</div>
+    ${preparoHtml}
+    ${proximo!==soro?`<div class="call info"><b>Próxima reavaliação:</b> selecione ${nomes[proximo]} como soro em uso e informe os novos HGTs. Se houver nova troca, a ferramenta recalculará o preparo.</div>`:''}
+  `;
+}
+
+
+function hollidayVolumeCAD(p){
+  if(p<=10) return 100*p;
+  if(p<=20) return 1000 + 50*(p-10);
+  return 1500 + 20*(p-20);
+}
+
+function calcHollidayCAD(){
+  const p=pesoBase('pesoHol');
+  if(!p){
+    document.getElementById('resHolliday').innerHTML='<div class="call warn">Informe o peso.</div>';
+    return;
+  }
+
+  const raw=hollidayVolumeCAD(p);
+  const rate=raw/24;
+  const macro=rate*20/60;
+  const micro=rate;
+
+  // Divisão IGUAL das bolsas, priorizando intervalos práticos e volume-base <=500 mL.
+  // Frequências possíveis: 24/24h, 12/12h, 8/8h, 6/6h, 4/4h, 3/3h.
+  const opcoes=[1,2,3,4,6,8];
+  let bags=opcoes.find(n => (raw/n) <= 500);
+  if(!bags) bags=Math.ceil(raw/500);
+
+  const bag=raw/bags;
+  const hours=24/bags;
+
+  // Bolsa física disponível: SG5% 250 ou 500 mL.
+  const physical = bag <= 250 ? 250 : 500;
+  const sobraBase = physical - bag;
+
+  const naMeqBag = bag*13.6/100;   // 136 mEq/L
+  const kMeqBag  = bag*4/100;      // 40 mEq/L
+  const naclBag  = naMeqBag/3.4;   // NaCl 20% ~3,4 mEq/mL
+  const kclBag   = kMeqBag/2.5;    // KCl 19,1% ~2,5 mEq/mL
+  const finalPhysical = bag + naclBag + kclBag;
+
+  const naTotal=naMeqBag*bags;
+  const kTotal=kMeqBag*bags;
+  const naclTotal=naclBag*bags;
+  const kclTotal=kclBag*bags;
+
+  const intervalo = Number.isInteger(hours) ? `${br(hours,0)}/${br(hours,0)} h` : `${br(hours,1)} h`;
+
+  document.getElementById('resHolliday').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Holliday 100% / 24 h</small><strong>${br(raw,0)} mL</strong><span class="small">volume-base SG5%</span></div>
+      <div class="kpi"><small>Divisão igual</small><strong>${bags} × ${br(bag,0)} mL</strong><span class="small">${intervalo}</span></div>
+      <div class="kpi"><small>Velocidade-base</small><strong>${br(rate,1)} mL/h</strong><span class="small">${br(macro,1)} gotas/min ou ${br(micro,1)} microgotas/min</span></div>
+      <div class="kpi"><small>Bolsa física usada</small><strong>SG5% ${physical} mL</strong><span class="small">por preparo</span></div>
+    </div>
+
+    <div class="call ok">
+      <b>PRESCRIÇÃO — TODAS AS BOLSAS COM O MESMO VOLUME</b><br><br>
+      Preparar <b>${bags} bolsas iguais</b>, cada uma com volume-base de <b>${br(bag,0)} mL de SG 5%</b>, para infusão a cada <b>${intervalo}</b>.<br><br>
+
+      Em <b>CADA bolsa</b>:<br>
+      • usar SG 5% de <b>${physical} mL</b>${sobraBase>0.05?` e retirar <b>${br(sobraBase,1)} mL</b>, deixando <b>${br(bag,0)} mL</b>`:''}<br>
+      • adicionar NaCl 20% <b>${br(naclBag,1)} mL</b> → Na 136 mEq/L<br>
+      • adicionar KCl 19,1% <b>${br(kclBag,1)} mL</b> → K 40 mEq/L<br>
+      • volume físico preparado por bolsa: <b>${br(finalPhysical,1)} mL</b><br>
+      • infundir cada bolsa em <b>${br(hours,1)} h</b>, mantendo velocidade-base de <b>${br(rate,1)} mL/h</b>.
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><small>Na total / dia</small><strong>${br(naTotal,1)} mEq</strong><span class="small">NaCl 20% ${br(naclTotal,1)} mL/dia</span></div>
+      <div class="kpi"><small>K total / dia</small><strong>${br(kTotal,1)} mEq</strong><span class="small">KCl 19,1% ${br(kclTotal,1)} mL/dia</span></div>
+      <div class="kpi"><small>NaCl 20% / bolsa</small><strong>${br(naclBag,1)} mL</strong></div>
+      <div class="kpi"><small>KCl 19,1% / bolsa</small><strong>${br(kclBag,1)} mL</strong></div>
+    </div>
+
+    <div class="call info">
+      <b>Exemplo da lógica:</b> se o Holliday resultar em <b>1.600 mL/24 h</b>, a ferramenta propõe <b>400 mL 6/6 h</b> (4 bolsas iguais), em vez de 500 + 500 + 500 + 100 mL.
+    </div>`;
+}
+
+function calcInsulina(){
+  const p=pesoBase('pesoIns');
+  if(!p){
+    document.getElementById('resIns').innerHTML='<div class="call warn">Informe o peso.</div>';
+    return;
+  }
+  document.getElementById('resIns').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Regular SC 1/1 h</small><strong>${br(p*0.1,2)} UI/dose</strong><span class="small">0,1 UI/kg</span></div>
+      <div class="kpi"><small>Regular EV grave/UTI</small><strong>${br(p*0.1,2)} UI/h</strong><span class="small">0,1 UI/kg/h</span></div>
+      <div class="kpi"><small>Dose reduzida</small><strong>${br(p*0.05,2)} UI</strong><span class="small">0,05 UI/kg somente na condição descrita</span></div>
+    </div>`;
+}
+
+function calcBic(){
+  const p=pesoBase('pesoBic');
+  const be=num('beBic');
+  if(!p || be===null){
+    document.getElementById('resBic').innerHTML='<div class="call warn">Informe peso e BE.</div>';
+    return;
+  }
+  const total=0.3*Math.abs(be)*p;
+  const terco=total/3;
+  document.getElementById('resBic').innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><small>Bicarbonato calculado</small><strong>${br(total,1)} mEq</strong></div>
+      <div class="kpi"><small>1/3 do cálculo</small><strong>${br(terco,1)} mEq</strong><span class="small">infundir em 1 hora</span></div>
+    </div>`;
+}
+
+function avaliarEdema(){
+  const idade=num('idadeNeuro');
+  const fcp=num('fcPrev');
+  const fca=num('fcAtual');
+  const pad=num('padNeuro');
+  const p=pesoBase('pesoNeuro');
+
+  if(idade!==null) document.getElementById('minIdade').checked=idade<5;
+  if(pad!==null) document.getElementById('minPAD').checked=pad>90;
+  if(fcp!==null && fca!==null) document.getElementById('majFC').checked=(fcp-fca)>=20;
+
+  const majors=['majMental','majFC','majIncont'].filter(id=>document.getElementById(id).checked).length;
+  const minors=['minVom','minCef','minLet','minPAD','minIdade'].filter(id=>document.getElementById(id).checked).length;
+  const diagnostic=['dirPostura','dirResposta','dirNC','dirResp'].filter(id=>document.getElementById(id).checked).length;
+
+  const utdTreat=diagnostic>=1 || majors>=2 || (majors>=1 && minors>=2) || (idade!==null && idade<5 && majors>=1 && minors>=1);
+  const hcaCriteria=diagnostic>=1 || majors>=2 || (majors>=1 && minors>=2);
+
+  let motivo='';
+  if(diagnostic>=1) motivo=`${diagnostic} critério(s) diagnóstico(s) presente(s).`;
+  else if(majors>=2) motivo=`${majors} critérios maiores presentes.`;
+  else if(majors>=1 && minors>=2) motivo=`${majors} maior + ${minors} menores.`;
+  else if(idade!==null && idade<5 && majors>=1 && minors>=1) motivo='Criança <5 anos com 1 critério maior + 1 menor — gatilho complementar UpToDate.';
+  else motivo=`${majors} maior(es) + ${minors} menor(es): combinação para tratamento ainda não atingida.`;
+
+  let fc='';
+  if(fcp!==null && fca!==null) fc=`<div class="kpi"><small>Queda da FC</small><strong>${br(fcp-fca,0)} bpm</strong></div>`;
+
+  let tratamento='';
+  if(utdTreat && p){
+    const man05=p*0.5, man1=p*1, nacl5=p*5, nacl10=p*10;
+    const comp5=nacl5/6.7, ad5=nacl5-comp5;
+    const comp10=nacl10/6.7, ad10=nacl10-comp10;
+    tratamento=`
+      <div class="call danger"><b>TRATAR SEM AGUARDAR NEUROIMAGEM.</b> Cabeceira a 30°. A decisão é clínica.</div>
+      <div class="call ok"><b>POSOLOGIA DESTA FERRAMENTA = HCA</b> — o UpToDate foi usado apenas como complemento dos critérios/alertas.</div>
+      <div class="kpis">
+        <div class="kpi"><small>Manitol — HCA</small><strong>${br(man05,1)}–${br(man1,1)} g</strong><span class="small">0,5–1 g/kg EV em 30 min; 2ª dose em 30 min S/N</span></div>
+        <div class="kpi"><small>NaCl 3% — HCA</small><strong>${br(nacl5,0)}–${br(nacl10,0)} mL</strong><span class="small">5–10 mL/kg em 30 min</span></div>
+      </div>
+      <details open>
+        <summary>Preparo HCA de NaCl 3% com NaCl 20% + AD</summary>
+        <div class="small" style="margin-top:8px">Regra institucional: volume total ÷ 6,7 = NaCl 20%; completar o restante com AD.</div>
+        <div class="kpis">
+          <div class="kpi"><small>Para ${br(nacl5,0)} mL</small><strong>${br(comp5,1)} mL NaCl 20%</strong><span class="small">+ ${br(ad5,1)} mL AD</span></div>
+          <div class="kpi"><small>Para ${br(nacl10,0)} mL</small><strong>${br(comp10,1)} mL NaCl 20%</strong><span class="small">+ ${br(ad10,1)} mL AD</span></div>
+        </div>
+      </details>`;
+  } else if(utdTreat && !p){
+    tratamento='<div class="call warn">Gatilho para tratamento atingido. Informe o peso para calcular as doses conforme o HCA.</div>';
+  } else {
+    tratamento='<div class="call warn">Manter avaliação neurológica pelo menos 1/1 h e reavaliar imediatamente se houver piora.</div>';
+  }
+
+  document.getElementById('resEdema').innerHTML=`
+    <div class="call ${utdTreat?'danger':'info'}"><b>${utdTreat?'GATILHO CLÍNICO PARA TRATAMENTO ATINGIDO':'GATILHO PARA TRATAMENTO AINDA NÃO ATINGIDO'}</b><br>${motivo}</div>
+    <div class="kpis">
+      <div class="kpi"><small>Maiores</small><strong>${majors}</strong></div>
+      <div class="kpi"><small>Menores</small><strong>${minors}</strong></div>
+      <div class="kpi"><small>Diagnósticos</small><strong>${diagnostic}</strong></div>
+      ${fc}
+    </div>
+    <div class="call uptodate"><span class="uptag">💜 Critério UpToDate</span><div style="margin-top:6px">${utdTreat?'Critério complementar atingido.':'Critério complementar não atingido.'} ${hcaCriteria?'Também preenche a combinação previamente usada pelo HCA nesta ferramenta.':'Se o gatilho ocorreu por <5 anos + 1 maior + 1 menor, trata-se do complemento UpToDate.'}</div></div>
+    ${tratamento}`;
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  try{initPatientStorage();}catch(e){console.warn(e);}
+});
 </script>
 </body>
 </html>
