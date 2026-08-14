@@ -1,9 +1,10 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Asma no PA — Calculadora GINA 2026 + Protocolo HCA</title>
+<title>Asma no PA — GINA 2026 | PRAM + Doses do serviço</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -33,7 +34,7 @@ h1,h2,h3,.brandFont{font-family:'Sora',-apple-system,sans-serif}
 .mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
 header{
-  padding:20px 20px 22px;color:white;position:sticky;top:0;z-index:20;
+  padding:12px 18px 13px;color:white;position:sticky;top:0;z-index:20;
   background:linear-gradient(120deg,#0b4a3d 0%,#0f6e5c 45%,#12967d 100%);
   box-shadow:0 6px 18px rgba(10,60,50,.18);
 }
@@ -52,14 +53,14 @@ header p{font-size:12.5px;margin:0;opacity:.92;line-height:1.4}
 }
 
 .layout{
-  display:grid;grid-template-columns:minmax(320px,390px) minmax(0,1fr);
-  gap:16px;max-width:1320px;margin:0 auto;padding:16px;
+  display:grid;grid-template-columns:minmax(400px,470px) minmax(0,1fr);
+  gap:12px;max-width:1580px;margin:0 auto;padding:12px;
 }
-.leftPane{align-self:start;position:sticky;top:100px;max-height:calc(100vh - 116px);overflow:auto;padding-right:2px}
+.leftPane{align-self:start;position:sticky;top:78px;max-height:calc(100vh - 90px);overflow:auto;padding-right:2px}
 .rightPane{min-width:0}
 
 .card{
-  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin:0 0 10px;
   box-shadow:0 2px 10px rgba(16,24,40,.05);
 }
 .sectionHead{display:flex;align-items:center;gap:9px;margin:0 0 12px}
@@ -108,7 +109,7 @@ button.tab{
   font-weight:700;border-radius:999px;box-shadow:none;font-family:'Inter',sans-serif;
 }
 button.tab.active{background:linear-gradient(120deg,var(--brand),var(--brand2));color:white;box-shadow:0 3px 8px rgba(15,110,92,.28)}
-.tabsRow{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
+.tabsRow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 11px;position:sticky;top:76px;z-index:8;background:rgba(255,255,255,.96);padding:7px 0;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
 .autoTag{display:inline-flex;align-items:center;margin-left:5px;padding:2px 6px;border-radius:999px;background:var(--brandSoft);color:var(--brand);font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;vertical-align:1px}
 #frRel:disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);background:#f5f8fb;cursor:not-allowed}
 
@@ -251,6 +252,33 @@ summary::marker{color:var(--brand2)}
   .step{animation:none;page-break-inside:avoid}
   .severityBanner{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+
+/* GINA 2026: PRAM como classificação principal em 2–17 anos */
+.classificationMode{border:1.5px solid var(--line);border-radius:14px;padding:11px;margin:10px 0;background:#fbfcfe}
+.classificationMode.pramMode{border-color:#93c5fd;background:#f4f8ff;box-shadow:0 0 0 3px rgba(37,99,235,.05)}
+.modeBadge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.045em;padding:4px 8px;border-radius:999px;background:#dbeafe;color:#1d4ed8;margin-bottom:8px}
+.pramPrincipal{display:none;border:1.5px solid #93c5fd;background:linear-gradient(145deg,#f8fbff,#eef5ff);border-radius:15px;padding:12px;margin:10px 0}
+.pramPrincipal .pramHead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.pramPrincipal .pramHead h3{margin:0;font-size:14.5px;color:#1e3a8a}
+.pramPrincipal .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pramSafety{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+.pramSafety .chk{background:#fff}
+#classificacaoClinica{display:none}
+
+.mainAlert{margin:0 0 10px;border-radius:15px;padding:14px 16px;border:2px solid;font-family:'Sora',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.025em;line-height:1.35;box-shadow:0 5px 16px rgba(15,23,42,.10)}
+.mainAlert small{display:block;font-family:'Inter',sans-serif;font-size:11.5px;font-weight:700;text-transform:none;letter-spacing:0;margin-top:5px;line-height:1.45}
+.mainAlertModerada{background:#fff7e6;border-color:#f59e0b;color:#92400e}
+.mainAlertGrave{background:#fff0f0;border-color:#dc2626;color:#991b1b}
+.mainAlertAmeaca{background:#450a0a;border-color:#7f1d1d;color:#fff;box-shadow:0 7px 20px rgba(127,29,29,.24)}
+.mainAlertRisco{background:#fff1f2;border-color:#e11d48;color:#9f1239}
+.alertPulse{animation:alertPulse 1.8s ease-in-out infinite}
+@keyframes alertPulse{0%,100%{box-shadow:0 5px 16px rgba(127,29,29,.12)}50%{box-shadow:0 5px 24px rgba(127,29,29,.30)}}
+@media(prefers-reduced-motion:reduce){.alertPulse{animation:none}}
+.responseTopGrid{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.responseTopGrid #resumo,.responseTopGrid #racional,.responseTopGrid #alertas{grid-column:1;width:100%;min-width:0}
+@media(max-width:900px){.tabsRow{position:relative;top:auto}.pramSafety{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -259,7 +287,7 @@ summary::marker{color:var(--brand2)}
     <div class="headIcon">🫁</div>
     <div>
       <h1>Asma no PA — Pediátrica + Domiciliar</h1>
-      <p>Classificação, prescrição por hora e critérios de alta/internação, passo a passo</p>
+      <p>GINA 2026 • ≤5 anos | 6–11 anos | 12–17 anos • doses operacionais do serviço</p>
     </div>
     <div class="headBadges">
       <span class="headBadge">📘 GINA 2026</span>
@@ -283,7 +311,9 @@ summary::marker{color:var(--brand2)}
         <div class="fieldWrap" id="wrapPef"><label>PEF (% melhor pessoal/previsto)</label><input id="pef" type="number" min="0" max="150" step="1" placeholder="Opcional"><div class="fieldHint" id="hintPef">Aplicável principalmente acima de 5 anos.</div></div>
       </div>
 
-      <h3 class="subHead"><span class="ic">🩺</span>Parâmetros da tabela de gravidade</h3>
+      <div id="classificacaoClinica" class="classificationMode">
+        <span class="modeBadge">🩺 CLASSIFICAÇÃO CLÍNICA — FORA DA FAIXA DO PRAM</span>
+        <h3 class="subHead"><span class="ic">🩺</span>Parâmetros da tabela de gravidade</h3>
       <div class="severityLegend">
         <span class="legendItem legendLeve">🟢 Leve</span>
         <span class="legendItem legendMod">🟡 Moderada</span>
@@ -327,19 +357,29 @@ summary::marker{color:var(--brand2)}
         </select><div class="fieldHint" id="hintSibilos">Pouco sibilo com entrada de ar mínima não significa melhora.</div></div>
       </div>
       <div class="liveRule">A cor muda enquanto os dados são preenchidos. A classificação final segue o <b>critério mais grave informado</b>; em crianças ≤5 anos, “leve” exige que todos os parâmetros sejam leves.</div>
+      </div>
 
       <h3 class="subHead"><span class="ic">➕</span>Condições associadas</h3>
       <div class="checks">
         <label class="chk dangerChk"><input type="checkbox" id="anafilaxia"> Sinais de anafilaxia associados</label>
-        <label class="chk"><input type="checkbox" id="voImpossivel"> Vômitos/dispneia impedindo via oral</label>
+        <label class="chk dangerChk"><input type="checkbox" id="voImpossivel"> <b>VO IMPOSSÍVEL</b> — vômitos/dispneia: usar metilprednisolona EV como alternativa</label>
         <label class="chk"><input type="checkbox" id="controle"> Já usa corticoide inalatório de controle</label>
+        <label class="chk"><input type="checkbox" id="sintomasIntervalo"> Sintomas de asma entre crises ≥2 dias/semana</label>
+        <label class="chk"><input type="checkbox" id="primeiraApresentacao"> Primeira apresentação/diagnóstico de asma durante esta exacerbação</label>
       </div>
+
+      <div class="fieldWrap" style="margin-top:9px"><label>Tratamento habitual / aliviador</label><select id="tratamentoHabitual">
+        <option value="nenhum">Nenhum / não sabe</option>
+        <option value="saba">SABA (salbutamol) isolado</option>
+        <option value="ics">ICS diário + SABA</option>
+        <option value="outro">Outro esquema</option>
+      </select><div class="fieldHint">Usado para organizar a alta em 6–17 anos. O serviço não dispõe de ICS-formoterol; a trilha operacional usa SABA + ICS.</div></div>
 
       <details>
         <summary>⚠️ Red flags de risco de morte</summary>
         <div class="checks" style="margin-top:9px">
           <label class="chk dangerChk"><input type="checkbox" id="rfUti"> História de intubação ou UTI por asma</label>
-          <label class="chk dangerChk"><input type="checkbox" id="rfInternacao"> ≥1 internação ou ≥2 PS por asma no último ano</label>
+          <label class="chk dangerChk"><input type="checkbox" id="rfInternacao"> ≥1 exacerbação com OCS, atendimento não programado/PS ou internação no último ano</label>
           <label class="chk dangerChk"><input type="checkbox" id="rfCorticoide"> Uso atual ou recente de corticoide oral</label>
           <label class="chk dangerChk"><input type="checkbox" id="rfSaba"> Uso excessivo de SABA, ex.: ≥1 frasco/mês</label>
           <label class="chk dangerChk"><input type="checkbox" id="rfIcs"> Má adesão ao ICS ou ausência de plano escrito</label>
@@ -347,21 +387,40 @@ summary::marker{color:var(--brand2)}
         </div>
       </details>
 
-      <details>
-        <summary>📊 PRAM opcional</summary>
-        <p class="note">GINA 2026 recomenda escore clínico validado em &lt;18 anos. Use quando der tempo.</p>
-        <div class="grid">
-          <div><label>Retração supraesternal</label><select id="pramSupra"><option value="0">Ausente = 0</option><option value="2">Presente = 2</option></select></div>
-          <div><label>Contração de escalenos</label><select id="pramEscaleno"><option value="0">Ausente = 0</option><option value="2">Presente = 2</option></select></div>
-          <div><label>Entrada de ar</label><select id="pramEntrada"><option value="0">Normal = 0</option><option value="1">Reduzida bases = 1</option><option value="2">Redução difusa = 2</option><option value="3">Mínima/ausente = 3</option></select></div>
-          <div><label>Sibilância</label><select id="pramSibilo"><option value="0">Ausente = 0</option><option value="1">Expiratória = 1</option><option value="2">Insp + exp = 2</option><option value="3">Audível/tórax silencioso = 3</option></select></div>
-          <div><label>Usar PRAM?</label><select id="usarPram"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-          <div><label>SatO₂ no PRAM</label><select id="pramSatModo"><option value="auto">Automático pela SatO₂ geral</option><option value="0">≥ 95% = 0</option><option value="1">92–94% = 1</option><option value="2">&lt; 92% = 2</option></select></div>
+      <section id="pramPrincipal" class="pramPrincipal">
+        <div class="pramHead">
+          <h3>📊 PRAM — CLASSIFICAÇÃO PRINCIPAL</h3>
+          <span class="modeBadge">GINA 2026 • 2–17 ANOS</span>
         </div>
-        <p class="note" id="pramSatInfo">SatO₂ do PRAM: usa automaticamente o campo "SatO₂ ar ambiente (%)" acima. Pontuação: ≥95% = 0; 92–94% = 1; &lt;92% = 2.</p>
+        <p class="note" id="pramNota">Após informar a idade, o PRAM é usado automaticamente como método principal de classificação quando aplicável.</p>
+        <input type="hidden" id="usarPram" value="sim">
+        <div class="grid">
+          <div><label>Retração supraesternal</label><select id="pramSupra"><option value="">Selecione</option><option value="0">Ausente = 0</option><option value="2">Presente = 2</option></select></div>
+          <div><label>Contração de escalenos</label><select id="pramEscaleno"><option value="">Selecione</option><option value="0">Ausente = 0</option><option value="2">Presente = 2</option></select></div>
+          <div><label>Entrada de ar</label><select id="pramEntrada"><option value="">Selecione</option><option value="0">Normal = 0</option><option value="1">Reduzida bases = 1</option><option value="2">Redução difusa = 2</option><option value="3">Mínima/ausente = 3</option></select></div>
+          <div><label>Sibilância</label><select id="pramSibilo"><option value="">Selecione</option><option value="0">Ausente = 0</option><option value="1">Expiratória = 1</option><option value="2">Insp + exp = 2</option><option value="3">Audível/tórax silencioso = 3</option></select></div>
+          <div><label>SatO₂ no PRAM</label><select id="pramSatModo"><option value="auto">Automático pela SatO₂ geral</option><option value="0">≥ 95% = 0</option><option value="1">92–94% = 1</option><option value="2">&lt; 92% = 2</option></select></div>
+          <div class="fieldWrap"><label>Resultado</label><div id="pramResultado" class="fieldHint" style="font-size:13px;font-weight:800;min-height:38px;display:flex;align-items:center">Preencha os componentes.</div></div>
+        </div>
+        <div class="pramSafety">
+          <label class="chk dangerChk"><input type="checkbox" id="pramSeveroClinico"> INCAPAZ DE FALAR/BEber/DEITAR OU EXAUSTÃO IMPORTANTE → TRATAR COMO GRAVE</label>
+          <label class="chk dangerChk"><input type="checkbox" id="pramAmeaca"> SONOLÊNCIA/CONFUSÃO/CIANOSE CENTRAL → AMEAÇA À VIDA</label>
+        </div>
+        <p class="note" id="pramSatInfo">SatO₂ do PRAM usa automaticamente a saturação em ar ambiente. PRAM 0–3 leve; 4–7 moderada; 8–10 grave; 11–12 categoria extrema.</p>
+      </section>
+
+      <details>
+        <summary>💊 Apresentações disponíveis no serviço</summary>
+        <div class="basesBox" style="margin-top:9px">
+          <b>Resgate:</b> Aerolin®/salbutamol 100 mcg/jato (não há salbutamol para nebulização); ipratrópio 0,25 mg/mL, 20 gotas/mL, com dose por peso do protocolo local e diluição em 5 mL de SF 0,9%.<br>
+          <b>Corticoide sistêmico:</b> prednisolona 3 mg/mL VO; se VO impossível, metilprednisolona succinato 500 mg + diluente 8 mL (62,5 mg/mL após reconstituição).<br>
+          <b>ICS:</b> budesonida/Pulmicort® 0,25 mg/mL para nebulização; Clenil® HFA 50 mcg/jato e 200 mcg/jato; Clenil® A 400 mcg/mL inalatório.<br>
+          <b>MgSO₄:</b> 10% (100 mg/mL) e 50% (500 mg/mL), ambas em ampolas de 10 mL.<br>
+          <b>Indisponível:</b> ICS-formoterol. A calculadora usa a trilha SABA + ICS disponível no serviço e sinaliza que ela não equivale ao Track 1/MART preferido pelo GINA em adolescentes e em algumas crianças 6–11 anos.
+          <div class="note" style="margin-top:7px">Clenil HFA 200 não é auto-prescrito em menores de 18 anos; para pré-escolares, a opção operacional preferida nesta ferramenta é budesonida nebulizada, por corresponder diretamente à apresentação e à dose diária descritas no GINA.</div>
+        </div>
       </details>
 
-      <button type="button" onclick="calcularTudo()">⚙️ Gerar / atualizar resposta</button>
       <button type="button" class="ghost" onclick="limparTudo()">🧹 Limpar campos</button>
       <div id="erro" class="box dangerbox" style="display:none"></div>
     </section>
@@ -373,14 +432,17 @@ summary::marker{color:var(--brand2)}
       <div id="placeholder" class="placeholder">
         <div>
           <b>Preencha os dados à esquerda</b>
-          e clique em <b>Gerar / atualizar resposta</b> para aparecer aqui a classificação, prescrição e conduta por hora.
+          e a classificação, os alertas, as doses e a conduta serão atualizados <b>automaticamente</b>.
         </div>
       </div>
 
       <div id="saida" style="display:none">
-        <div id="resumo"></div>
-        <div id="racional"></div>
-        <div id="alertas"></div>
+        <div id="alertaPrincipal"></div>
+        <div class="responseTopGrid">
+          <div id="resumo"></div>
+          <div id="racional"></div>
+          <div id="alertas"></div>
+        </div>
 
         <div class="tabsRow noprint">
           <button type="button" class="tab active" onclick="mostrarPainel('hora1', this)">⏱️ 1ª hora</button>
@@ -394,7 +456,6 @@ summary::marker{color:var(--brand2)}
         <div id="hora1" class="painel">
           <h3 class="subHead"><span class="ic">💨</span>Prescrição PA — 1ª hora</h3>
           <div id="rx1"></div>
-          <button type="button" class="secondary noprint" onclick="copiarTexto('hora1')">📋 Copiar 1ª hora</button>
         </div>
 
         <div id="hora2" class="painel" style="display:none">
@@ -406,7 +467,6 @@ summary::marker{color:var(--brand2)}
           </div>
           <button type="button" class="secondary noprint" onclick="gerarHora2()">Atualizar 2ª hora</button>
           <div id="rx2" style="margin-top:10px"></div>
-          <button type="button" class="secondary noprint" onclick="copiarTexto('hora2')">📋 Copiar 2ª hora</button>
         </div>
 
         <div id="hora3" class="painel" style="display:none">
@@ -418,19 +478,16 @@ summary::marker{color:var(--brand2)}
           </div>
           <button type="button" class="secondary noprint" onclick="gerarHora3()">Atualizar 3ª hora</button>
           <div id="rx3" style="margin-top:10px"></div>
-          <button type="button" class="secondary noprint" onclick="copiarTexto('hora3')">📋 Copiar 3ª hora</button>
         </div>
 
         <div id="alta" class="painel" style="display:none">
           <h3 class="subHead"><span class="ic">🏠</span>Prescrição e orientações de alta</h3>
           <div id="rxAlta"></div>
-          <button type="button" class="secondary noprint" onclick="copiarTexto('alta')">📋 Copiar alta</button>
         </div>
 
         <div id="internacao" class="painel" style="display:none">
           <h3 class="subHead"><span class="ic">🛏️</span>Internação/observação</h3>
           <div id="rxInternacao"></div>
-          <button type="button" class="secondary noprint" onclick="copiarTexto('internacao')">📋 Copiar internação</button>
         </div>
 
         <div id="bases" class="painel" style="display:none">
@@ -438,19 +495,13 @@ summary::marker{color:var(--brand2)}
           <div id="rxBases" class="basesBox"></div>
         </div>
 
-        <button type="button" class="secondary noprint" onclick="window.print()" style="margin-top:12px">🖨️ Imprimir / salvar PDF</button>
       </div>
-    </section>
-
-    <section class="card">
-      <p class="note">🔎 Ferramenta de apoio offline, atualizada com o GINA 2026 oficial, o Guia ArkaMed GINA 2026, o Protocolo Clínico de Asma na Urgência do HCA e faixas etárias de FR do Royal Children’s Hospital Melbourne para o preenchimento automático. Conferir apresentação disponível, dose máxima, contraindicações, técnica inalatória, protocolo local e julgamento clínico antes de administrar.</p>
     </section>
   </main>
 </div>
 
 <script>
 var estado = {};
-var textos = {}; // versão em texto simples de cada painel, para copiar/imprimir
 
 function el(id){ return document.getElementById(id); }
 function val(id){ var x=parseFloat(el(id).value); return isNaN(x)?0:x; }
@@ -463,21 +514,43 @@ function fmtDose(x){
   return Number(x).toFixed(2).replace('.',',').replace(/0+$/,'').replace(/,$/,'');
 }
 
+var SERVICO = {
+  salbutamolMcgJato: 100,
+  ipraMgMl: 0.25,
+  ipraGotasMl: 20,
+  predMgMl: 3,
+  metilFrascoMg: 500,
+  metilDiluenteMl: 8,
+  metilMgMl: 62.5,
+  dexaMgMl: 4,
+  clenilHfa50: 50,
+  clenilHfa200: 200,
+  clenilA: 400,
+  budesonidaMgMl: 0.25,
+  mag10MgMl: 100,
+  mag50MgMl: 500
+};
+
 function faixaEtaria(){
   var a=idadeAnos();
-  if(a < 6) return '<6 anos';
+  if(a < 6) return '≤5 anos';
   if(a <= 11) return '6–11 anos';
   if(a < 18) return '12–17 anos';
   return 'adulto';
 }
+function ehPediatrico(){ return idadeAnos() < 18; }
+function pramElegivel(){ var a=idadeAnos(); return a>=2 && a<18; }
+function pramCompleto(){
+  return ['pramSupra','pramEscaleno','pramEntrada','pramSibilo'].every(function(id){return el(id).value!=='';});
+}
 
-/* ---------- PRAM ---------- */
+/* ---------- PRAM (2–17 anos) ---------- */
 function pramScore(){
+  if(!pramCompleto()) return null;
   var satModo = el('pramSatModo') ? el('pramSatModo').value : 'auto';
   var sp=0;
-  if(satModo !== 'auto'){
-    sp = parseInt(satModo);
-  } else {
+  if(satModo !== 'auto') sp=parseInt(satModo);
+  else {
     var sat=val('sat');
     if(sat && sat < 92) sp=2;
     else if(sat && sat <= 94) sp=1;
@@ -486,6 +559,7 @@ function pramScore(){
   return parseInt(el('pramSupra').value)+parseInt(el('pramEscaleno').value)+parseInt(el('pramEntrada').value)+parseInt(el('pramSibilo').value)+sp;
 }
 function pramClasse(score){
+  if(score===null || isNaN(score)) return 'NÃO CALCULADO';
   if(score >= 11) return 'AMEAÇA À VIDA';
   if(score >= 8) return 'GRAVE';
   if(score >= 4) return 'MODERADA';
@@ -494,49 +568,37 @@ function pramClasse(score){
 function pramSatDescricao(){
   var modo = el('pramSatModo') ? el('pramSatModo').value : 'auto';
   var sat = val('sat');
-  var pontos = 0, faixa = '';
   if(modo !== 'auto'){
-    pontos = parseInt(modo);
-    if(pontos === 0) faixa = '≥95%';
-    else if(pontos === 1) faixa = '92–94%';
-    else faixa = '<92%';
-    return faixa + ' = ' + pontos + ' ponto(s), manual';
+    var p=parseInt(modo);
+    return (p===0?'≥95%':p===1?'92–94%':'<92%')+' = '+p+' ponto(s), manual';
   }
-  if(sat && sat < 92){ pontos=2; faixa='<92%'; }
-  else if(sat && sat <= 94){ pontos=1; faixa='92–94%'; }
-  else { pontos=0; faixa='≥95% ou não informada'; }
-  return faixa + ' = ' + pontos + ' ponto(s), automático';
+  if(!sat) return 'aguardando SatO₂';
+  if(sat < 92) return '<92% = 2 pontos, automático';
+  if(sat <= 94) return '92–94% = 1 ponto, automático';
+  return '≥95% = 0 ponto, automático';
 }
 
-/* ---------- FR automática por idade ---------- */
-function referenciaFrEtaria(){
-  if(!(val('idade') > 0)) return null;
-  var a=idadeAnos(), meses=a*12;
-  // Limites superiores de faixas aceitáveis em crianças doentes (RCH),
-  // usados apenas para operacionalizar "normal/pouco aumentada" versus "aumentada".
-  if(meses < 6) return {max:60, faixa:'0–5 meses'};
-  if(meses < 12) return {max:55, faixa:'6–11 meses'};
-  if(a < 2) return {max:45, faixa:'1 ano'};
-  if(a < 4) return {max:40, faixa:'2–3 anos'};
-  if(a < 10) return {max:30, faixa:'4–9 anos'};
-  return {max:25, faixa:'≥10 anos'};
-}
+/* ---------- FR: usar o ponto de corte de gravidade do GINA, sem importar tabela externa ---------- */
+function limiteFrGrave(){ return idadeAnos()<6 ? 40 : 30; }
 function avaliarFrAutomatica(){
-  var fr=val('fr'), ref=referenciaFrEtaria();
-  if(!ref || !(fr > 0)) return {valor:'',severity:null,label:'Aguardando idade e FR',hint:'Preencha idade e FR para o cálculo automático.'};
-  var limiteGrave=idadeAnos()<6?40:30;
-  if(fr>limiteGrave){
-    return {valor:'grave',severity:'GRAVE',label:'Acima do limite grave da asma',hint:'Grave: FR '+fr+'/min >'+limiteGrave+'/min pelo GINA 2026.'};
-  }
-  if(fr>ref.max){
-    return {valor:'moderada',severity:'MODERADA',label:'Aumentada para a idade',hint:'Moderada: FR acima da faixa esperada para '+ref.faixa+' (>'+ref.max+'/min), mas sem ultrapassar o limite grave de '+limiteGrave+'/min.'};
-  }
-  return {valor:'leve',severity:'LEVE',label:'Normal ou pouco aumentada',hint:'Leve pela FR: dentro da faixa aceitável para '+ref.faixa+' (≤'+ref.max+'/min) e abaixo do limite grave.'};
+  var fr=val('fr');
+  if(!(fr>0)) return {valor:'',severity:null,label:'Aguardando FR',hint:'Preencha a FR.'};
+  var limite=limiteFrGrave();
+  if(fr>limite && pramElegivel()) return {valor:'grave',severity:'GRAVE',label:'Taquipneia importante — fora do PRAM',hint:'FR '+fr+'/min > '+limite+'/min. A FR não integra o PRAM: sinalizar discordância e reavaliar, sem elevar automaticamente a categoria do escore.'};
+  if(fr>limite) return {valor:'grave',severity:'GRAVE',label:'Acima do limite grave',hint:'GINA 2026: FR '+fr+'/min > '+limite+'/min = critério grave fora da faixa do PRAM.'};
+  return {valor:'',severity:null,label:'Não grave isoladamente',hint:'FR '+fr+'/min ≤ '+limite+'/min. O GINA diferencia leve de moderada pelo conjunto clínico; o HTML não usa tabela externa para inventar essa classificação.'};
 }
 function atualizarFrRelAutomatico(){
   var r=avaliarFrAutomatica(), campo=el('frRel');
-  if(campo) campo.value=r.valor;
+  if(campo){ campo.value=r.valor; campo.options[0].text=r.label; }
   return r;
+}
+function taquipneiaDiscordantePram(){
+  var age=idadeAnos(), fr=val('fr'), ps=pramScore();
+  return age>=2 && age<6 && fr>40 && ps!==null && ps<=3;
+}
+function textoAlertaTaquipneia(){
+  return 'FR '+fmtDose(val('fr'))+'/min em criança de '+idadeTexto()+', com PRAM '+pramScore()+' (faixa leve). Repetir a contagem por 1 minuto com a criança calma e sem febre/choro; reavaliar esforço respiratório, entrada de ar e evolução. Considerar febre, dor, pneumonia, acidose, desidratação, efeito/toxicidade por SABA e outros diagnósticos. Não decidir alta apenas pelo PRAM enquanto a taquipneia persistir sem explicação.';
 }
 
 /* ---------- Classificação ---------- */
@@ -549,52 +611,53 @@ function maiorGravidade(lista){
 function criterio(id,label,value,severity,reason){ return {id:id,label:label,value:value,severity:severity,reason:reason}; }
 function criteriosAtivos(incluirPram){
   var age=idadeAnos(), sat=val('sat'), fr=val('fr'), pef=val('pef'), lista=[];
-  var limiteFr = age < 6 ? 40 : 30;
 
+  // GINA 2026: em 2–17 anos, o PRAM é o eixo principal de classificação.
+  if(pramElegivel()){
+    if(incluirPram && pramCompleto()){
+      var ps=pramScore(), pc=pramClasse(ps);
+      lista.push(criterio('pram','PRAM',String(ps),pc,'PRAM '+ps+' = '+pc.toLowerCase()));
+    }
+    // Travas clínicas independentes do escore para não perder sinais críticos.
+    if(chk('pramSeveroClinico')) lista.push(criterio('severoClinico','Sinal clínico grave','Presente','GRAVE','Incapacidade de falar/beber/deitar ou exaustão importante'));
+    if(chk('pramAmeaca')) lista.push(criterio('ameacaClinica','Ameaça à vida','Presente','AMEAÇA À VIDA','Sonolência, confusão ou cianose central'));
+    return lista;
+  }
+
+  // Fora da faixa do PRAM (<2 anos), usar classificação clínica GINA.
   if(sat){
     if(sat < 92) lista.push(criterio('sat','SatO₂',sat+'%','GRAVE','SatO₂ <92% em ar ambiente'));
     else if(sat < 94) lista.push(criterio('sat','SatO₂',sat+'%','MODERADA','SatO₂ 92–93%'));
     else lista.push(criterio('sat','SatO₂',sat+'%','LEVE','SatO₂ ≥94%'));
   }
-
-  if(fr){
-    var frAuto=avaliarFrAutomatica();
-    if(frAuto.severity) lista.push(criterio('fr','FR',fr+' irpm',frAuto.severity,frAuto.hint));
-  }
-
+  if(fr && fr>limiteFrGrave()) lista.push(criterio('fr','FR',fr+' irpm','GRAVE','FR >'+limiteFrGrave()+'/min pelo GINA 2026'));
   var mapaSelect={leve:'LEVE',moderada:'MODERADA',grave:'GRAVE',ameaca:'AMEAÇA À VIDA'};
   var fala=el('fala').value;
   if(fala) lista.push(criterio('fala','Fala/posição',el('fala').options[el('fala').selectedIndex].text,mapaSelect[fala],
-    fala==='leve'?'Fala em frases e consegue deitar':fala==='moderada'?'Frases curtas e prefere sentar':'Palavras ou incapacidade de falar, beber ou deitar'));
-
+    fala==='leve'?'Compatível com apresentação leve':fala==='moderada'?'Compatível com apresentação moderada':'Incapacidade de falar/beber/deitar ou fala em palavras'));
   var consc=el('consciencia').value;
   if(consc==='normal') lista.push(criterio('consciencia','Consciência','Alerta, sem cianose','LEVE','Sem alteração de consciência ou cianose central'));
-  else if(consc==='ameaca') lista.push(criterio('consciencia','Consciência/cianose',el('consciencia').options[el('consciencia').selectedIndex].text,'AMEAÇA À VIDA','Sonolência, confusão, desorientação ou cianose central'));
-  else if(consc==='agitado') lista.push(criterio('consciencia','Agitação','Agitação importante','GRAVE','Agitação importante é tratada de forma conservadora como sinal grave de possível hipóxia'));
-
+  else if(consc==='ameaca') lista.push(criterio('consciencia','Consciência/cianose',el('consciencia').options[el('consciencia').selectedIndex].text,'AMEAÇA À VIDA','Sonolência, confusão/desorientação ou cianose central'));
+  else if(consc==='agitado') lista.push(criterio('consciencia','Agitação','Agitação importante','GRAVE','Sinal de possível hipóxia; usado como trava de segurança conservadora'));
   [['musculatura','Musculatura acessória'],['entradaAr','Entrada de ar'],['sibilos','Sibilância']].forEach(function(par){
     var e=el(par[0]), v=e.value;
     if(v) lista.push(criterio(par[0],par[1],e.options[e.selectedIndex].text,mapaSelect[v],
-      v==='grave'?(par[0]==='entradaAr'?'Tórax silencioso ou entrada mínima':par[0]==='sibilos'?'Tórax quieto/silencioso':'Uso intenso ou retração de escalenos'):
+      v==='grave'?(par[0]==='entradaAr'?'Entrada mínima/tórax silencioso':par[0]==='sibilos'?'Tórax silencioso/fluxo mínimo':'Uso intenso/retrações importantes'):
       v==='moderada'?'Achado da coluna moderada':'Achado compatível com apresentação leve'));
   });
-
-  if(age >= 6 && pef){
-    if(pef < 50) lista.push(criterio('pef','PEF',pef+'%','GRAVE','PEF <50% do melhor pessoal/previsto'));
-    else if(pef <= 70) lista.push(criterio('pef','PEF',pef+'%','MODERADA','PEF 50–70%'));
-    else lista.push(criterio('pef','PEF',pef+'%','LEVE','PEF >70%'));
-  }
-
-  if(incluirPram && el('usarPram').value==='sim'){
-    var ps=pramScore(), pc=pramClasse(ps);
-    lista.push(criterio('pram','PRAM',String(ps),pc,'PRAM '+ps+' = '+pc.toLowerCase()));
-  }
   return lista;
 }
-function classificarBase(){ return maiorGravidade(criteriosAtivos(false)); }
-function classificarFinal(){ return maiorGravidade(criteriosAtivos(true)); }
+function classificarFinal(){
+  var lista=criteriosAtivos(true);
+  return lista.length?maiorGravidade(lista):'LEVE';
+}
 function camposObrigatoriosAusentes(){
   var aus=[];
+  if(pramElegivel()){
+    if(!val('sat')) aus.push('SatO₂');
+    if(!pramCompleto()) aus.push('componentes do PRAM');
+    return aus;
+  }
   if(!val('sat')) aus.push('SatO₂');
   if(!val('fr')) aus.push('FR');
   if(!el('fala').value) aus.push('fala/posição');
@@ -604,175 +667,190 @@ function camposObrigatoriosAusentes(){
   if(!el('sibilos').value) aus.push('sibilância');
   return aus;
 }
-function redFlags(){
-  return chk('rfUti')||chk('rfInternacao')||chk('rfCorticoide')||chk('rfSaba')||chk('rfIcs')||chk('rfComorb');
-}
-function sevClass(g){
-  if(g==='LEVE') return 'LEVE';
-  if(g==='MODERADA') return 'MODERADA';
-  if(g==='GRAVE') return 'GRAVE';
-  return 'AMEACA';
-}
-function sevIcon(g){
-  if(g==='LEVE') return '🟢';
-  if(g==='MODERADA') return '🟡';
-  if(g==='GRAVE') return '🔴';
-  return '🆘';
-}
-
+function redFlags(){ return chk('rfUti')||chk('rfInternacao')||chk('rfCorticoide')||chk('rfSaba')||chk('rfIcs')||chk('rfComorb'); }
+function sevClass(g){ return g==='LEVE'?'LEVE':g==='MODERADA'?'MODERADA':g==='GRAVE'?'GRAVE':'AMEACA'; }
+function sevIcon(g){ return g==='LEVE'?'🟢':g==='MODERADA'?'🟡':g==='GRAVE'?'🔴':'🆘'; }
 
 /* ---------- Cores ao vivo e justificativa ---------- */
-function limparClasseCampo(w){
-  if(!w) return;
-  w.classList.remove('sevField-LEVE','sevField-MODERADA','sevField-GRAVE','sevField-AMEACA');
-}
+function limparClasseCampo(w){ if(w) w.classList.remove('sevField-LEVE','sevField-MODERADA','sevField-GRAVE','sevField-AMEACA'); }
 function aplicarClasseCampo(id,severity,hint){
   var w=el(id); if(!w) return; limparClasseCampo(w);
   if(severity) w.classList.add('sevField-'+(severity==='AMEAÇA À VIDA'?'AMEACA':severity));
   var h=w.querySelector('.fieldHint'); if(h && hint) h.textContent=hint;
 }
 function atualizarRotulosEtarios(){
-  var idadeInformada=val('idade')>0, menor=idadeAnos()<6;
+  var idadeInformada=val('idade')>0, age=idadeAnos(), menor=age<6;
   var mus=el('musculatura');
   if(mus){
     mus.options[1].text=menor?'Ausente':'Ausente ou leve';
     mus.options[2].text=menor?'Algumas retrações':'Presente / algumas retrações';
     mus.options[3].text=menor?'Retrações presentes/intensas; escalenos':'Uso intenso; retração de escalenos';
   }
+
+  var pramBox=el('pramPrincipal'), clinBox=el('classificacaoClinica');
   if(!idadeInformada){
-    el('hintFr').textContent='Informe a idade para aplicar o limite de FR.';
+    if(pramBox) pramBox.style.display='none';
+    if(clinBox) clinBox.style.display='none';
     el('pef').disabled=false;
-    el('hintPef').textContent='Opcional; usado principalmente a partir de 6 anos.';
+    return;
   }
+
+  if(pramElegivel()){
+    if(pramBox) pramBox.style.display='block';
+    if(clinBox) clinBox.style.display='none';
+    el('usarPram').value='sim';
+    ['pramSupra','pramEscaleno','pramEntrada','pramSibilo','pramSatModo'].forEach(function(id){el(id).disabled=false;});
+    if(el('pramNota')) el('pramNota').innerHTML='<b>PRAM ATIVO AUTOMATICAMENTE.</b> O escore é a classificação principal nesta faixa etária; sinais clínicos críticos abaixo podem elevar a gravidade independentemente do escore.';
+  } else {
+    if(pramBox) pramBox.style.display='none';
+    if(clinBox) clinBox.style.display='block';
+    el('usarPram').value='nao';
+    ['pramSupra','pramEscaleno','pramEntrada','pramSibilo','pramSatModo'].forEach(function(id){el(id).disabled=true;});
+  }
+
+  if(age<6){ el('pef').disabled=true; el('pef').value=''; }
+  else el('pef').disabled=false;
 }
 function atualizarCoresAoVivo(){
   atualizarRotulosEtarios();
-  var idadeInformada=val('idade')>0, age=idadeAnos(), limite=age<6?40:30, sat=val('sat'), fr=val('fr'), pef=val('pef');
-  if(sat){
-    aplicarClasseCampo('wrapSat',sat<92?'GRAVE':sat<94?'MODERADA':'LEVE',sat<92?'Grave: SatO₂ <92% em ar ambiente.':sat<94?'Moderada: SatO₂ 92–93%.':'Leve: SatO₂ ≥94%.');
-  } else aplicarClasseCampo('wrapSat',null,'≥94% leve · 92–93% moderada · <92% grave');
+  var idadeInformada=val('idade')>0, age=idadeAnos(), sat=val('sat'), pef=val('pef');
+  if(sat) aplicarClasseCampo('wrapSat',sat<92?'GRAVE':sat<94?'MODERADA':'LEVE',sat<92?'Grave: SatO₂ <92% em ar ambiente.':sat<94?'Moderada: SatO₂ 92–93%.':'Leve: SatO₂ ≥94%.');
+  else aplicarClasseCampo('wrapSat',null,'≥94% leve · 92–93% moderada · <92% grave');
 
   var frAuto=atualizarFrRelAutomatico();
-  var frSev=frAuto.severity;
-  var frHint=idadeInformada?(fr?frAuto.hint:'Informe a FR para classificação automática.'):'Informe a idade para aplicar os limites de FR.';
-  aplicarClasseCampo('wrapFr',frSev,frHint);
-  aplicarClasseCampo('wrapFrRel',frSev,frAuto.hint);
-
+  aplicarClasseCampo('wrapFr',frAuto.severity,frAuto.hint);
+  aplicarClasseCampo('wrapFrRel',frAuto.severity,frAuto.hint);
   var selectMap=[['wrapFala','fala'],['wrapMusculatura','musculatura'],['wrapEntrada','entradaAr'],['wrapSibilos','sibilos']];
   selectMap.forEach(function(p){var v=el(p[1]).value; aplicarClasseCampo(p[0],v?({leve:'LEVE',moderada:'MODERADA',grave:'GRAVE'}[v]):null,null);});
   var cv=el('consciencia').value;
-  aplicarClasseCampo('wrapConsciencia',cv==='ameaca'?'AMEAÇA À VIDA':cv==='agitado'?'GRAVE':cv==='normal'?'LEVE':null,cv==='ameaca'?'Ameaça à vida: alteração neurológica ou cianose central.':cv==='agitado'?'Grave: agitação importante pode indicar hipóxia e exige reavaliação imediata.':'Alteração de consciência ou cianose central = ameaça à vida.');
-
-  if(!idadeInformada){
-    aplicarClasseCampo('wrapPef',null,'Opcional; usado principalmente a partir de 6 anos.');
-    el('pef').disabled=false;
-  } else if(age<6){
-    aplicarClasseCampo('wrapPef',null,'PEF não é necessário para classificar crianças ≤5 anos.');
-    el('pef').disabled=true; el('pef').value='';
-  } else {
-    el('pef').disabled=false;
-    if(pef) aplicarClasseCampo('wrapPef',pef<50?'GRAVE':pef<=70?'MODERADA':'LEVE',pef<50?'Grave: PEF <50%.':pef<=70?'Moderada: PEF 50–70%.':'Leve: PEF >70%.');
-    else aplicarClasseCampo('wrapPef',null,'Opcional: >70% leve · 50–70% moderada · <50% grave.');
+  aplicarClasseCampo('wrapConsciencia',cv==='ameaca'?'AMEAÇA À VIDA':cv==='agitado'?'GRAVE':cv==='normal'?'LEVE':null,cv==='ameaca'?'Ameaça à vida: alteração neurológica ou cianose central.':cv==='agitado'?'Trava de segurança: agitação importante pode indicar hipóxia.':'Alteração de consciência ou cianose central = ameaça à vida.');
+  if(!idadeInformada) aplicarClasseCampo('wrapPef',null,'Opcional; usado principalmente a partir de 6 anos.');
+  else if(age<6) aplicarClasseCampo('wrapPef',null,'PEF não é necessário para classificar crianças ≤5 anos.');
+  else if(pef) aplicarClasseCampo('wrapPef',pef<50?'GRAVE':pef<=70?'MODERADA':'LEVE',pef<50?'Grave: PEF <50%.':pef<=70?'Moderada: PEF 50–70%.':'Leve: PEF >70%.');
+  else aplicarClasseCampo('wrapPef',null,'Recomendado quando viável: >70% leve · 50–70% moderada · <50% grave.');
+  if(el('pramSatInfo')) el('pramSatInfo').textContent='SatO₂ do PRAM: '+pramSatDescricao()+'. PRAM 0–3 leve; 4–7 moderada; 8–10 grave; 11–12 categoria extrema.';
+  if(el('pramResultado')){
+    var ps=pramScore();
+    el('pramResultado').innerHTML = ps===null ? 'Preencha os 4 componentes do PRAM.' : '<span>'+sevIcon(pramClasse(ps))+' PRAM '+ps+' — '+pramClasse(ps)+'</span>';
   }
-  if(el('pramSatInfo')) el('pramSatInfo').textContent='SatO₂ do PRAM: '+pramSatDescricao()+'. PRAM 0–3 leve; 4–7 moderada; 8–10 grave; 11–12 ameaça à vida.';
 }
+
 function textoRegraClassificacao(g){
-  if(g==='AMEAÇA À VIDA') return 'Foi identificado ao menos um sinal de ameaça à vida. A conduta deve ser imediata e não depende da soma dos demais critérios.';
-  if(g==='GRAVE') return 'Basta um critério grave para classificar o caso como grave, mesmo que outros parâmetros estejam melhores.';
-  if(g==='MODERADA') return 'Há parâmetros da coluna moderada e nenhum critério grave ou de ameaça à vida informado.';
-  return idadeAnos()<6?'Todos os parâmetros obrigatórios informados ficaram na faixa leve.':'Todos os parâmetros informados ficaram na faixa leve, sem critério moderado, grave ou de ameaça à vida.';
+  if(pramElegivel()){
+    if(g==='AMEAÇA À VIDA') return 'PRAM e/ou sinal clínico crítico identificou ameaça à vida; a trava clínica prevalece sobre o escore.';
+    if(g==='GRAVE') return 'PRAM em faixa grave ou sinal clínico grave independente do escore.';
+    if(g==='MODERADA') return 'PRAM 4–7, sem sinal clínico de gravidade maior.';
+    return 'PRAM 0–3, sem sinal clínico crítico independente.'+(taquipneiaDiscordantePram()?' Há, porém, taquipneia importante discordante do escore, que exige repetição da medida e reavaliação antes de alta.':'');
+  }
+  if(g==='AMEAÇA À VIDA') return 'Há sinal de ameaça à vida; tratar imediatamente.';
+  if(g==='GRAVE') return 'Basta um critério grave para classificar a apresentação como grave.';
+  if(g==='MODERADA') return 'Há achado(s) moderados sem critério grave/ameaça à vida.';
+  return 'Classificação clínica compatível com apresentação leve.';
 }
 function criteriosTabelaHTML(g){
-  var menor=idadeAnos()<6;
+  var menor=idadeAnos()<6, pramTxt=pramElegivel()?'PRAM 0–3':'PRAM: não aplicável <2 anos';
   var cols = menor ? [
-    ['LEVE',['Alerta, sem cianose','SatO₂ ≥94%','Fala em frases','FR ≤40/min e normal/pouco aumentada','Sem uso de musculatura acessória','Entrada normal ou leve redução basal','Sem sibilo ou leve expiratório','PRAM 0–3']],
-    ['MODERADA',['Alerta, sem cianose','SatO₂ 92–93%','Fala em frases curtas','FR aumentada, mas ≤40/min','Algumas retrações','Entrada de ar reduzida','Sibilância expiratória ± inspiratória','PRAM 4–7']],
-    ['GRAVE',['Qualquer um destes','SatO₂ <92%','Fala apenas palavras / não bebe','FR >40/min','Retrações intensas ou escalenos','Tórax silencioso/entrada mínima','PRAM 8–10']],
-    ['AMEAÇA À VIDA',['Qualquer um destes','Sonolência ou confusão','Cianose central','Categoria clínica mais grave','PRAM 11–12']]
+    ['LEVE',['Alerta, sem cianose','SatO₂ ≥94%','Fala conforme desenvolvimento / consegue deitar','FR não >40/min','Sem uso de musculatura acessória','Entrada normal ou leve redução basal','Sem sibilo ou leve expiratório',pramTxt]],
+    ['MODERADA',['Alerta, sem cianose','SatO₂ ≥92% (frequentemente 92–93%)','Fala em frases curtas / prefere sentar','FR aumentada, mas não >40/min','Algumas retrações','Entrada de ar reduzida','Sibilância expiratória ± inspiratória',pramElegivel()?'PRAM 4–7':'—']],
+    ['GRAVE',['Qualquer um destes','SatO₂ <92%','Não consegue falar/beber/deitar','FR >40/min','Retrações importantes','Entrada mínima/tórax silencioso',pramElegivel()?'PRAM 8–10':'—']],
+    ['AMEAÇA À VIDA',['Sonolência/confusão','Cianose central','Categoria clínica mais extrema',pramElegivel()?'PRAM 11–12':'—']]
   ] : [
-    ['LEVE',['Fala em frases; consegue deitar','Não agitado','FR normal ou pouco aumentada','Sem/leve musculatura acessória','Sem/leve sibilo expiratório','Entrada de ar normal','SatO₂ ≥94%','PEF >70%','PRAM 0–3 se <18 anos']],
-    ['MODERADA',['Frases curtas; prefere sentar','FR aumentada, mas ≤30/min','Musculatura acessória presente','Sibilo expiratório audível','Entrada de ar reduzida','SatO₂ 92–93%','PEF 50–70%','PRAM 4–7 se <18 anos']],
-    ['GRAVE',['Qualquer um destes','Não consegue falar, beber ou deitar','FR >30/min','Uso intenso de musculatura','Tórax silencioso/quieto','SatO₂ <92%','PEF <50%','PRAM 8–10 se <18 anos']],
-    ['AMEAÇA À VIDA',['Sonolência, confusão ou desorientação','Cianose central','Tórax silencioso com deterioração','PRAM 11–12 se <18 anos']]
+    ['LEVE',['Fala em frases; consegue deitar','Não agitado','FR não >30/min','Sem/leve musculatura acessória','Sem/leve sibilo expiratório','Entrada de ar normal','SatO₂ ≥94%','PEF >70%','PRAM 0–3 (2–17 anos)']],
+    ['MODERADA',['Frases curtas; prefere sentar','FR aumentada, mas não >30/min','Musculatura acessória presente','Sibilo expiratório ± inspiratório','Entrada reduzida','SatO₂ 92–93%','PEF 50–70%','PRAM 4–7']],
+    ['GRAVE',['Qualquer um destes','Não consegue falar/beber/deitar','FR >30/min','Uso intenso de musculatura','Tórax silencioso/entrada mínima','SatO₂ <92%','PEF <50%','PRAM 8–10']],
+    ['AMEAÇA À VIDA',['Sonolência/confusão/desorientação','Cianose central','Deterioração/fluxo mínimo','PRAM 11–12']]
   ];
   return '<div class="criteriaGrid">'+cols.map(function(c){
-    var cls=''; if(c[0]===g) cls=' current-'+(g==='AMEAÇA À VIDA'?'AMEACA':g);
+    var cls=c[0]===g?' current-'+(g==='AMEAÇA À VIDA'?'AMEACA':g):'';
     return '<div class="criteriaCol'+cls+'"><h4>'+sevIcon(c[0])+' '+c[0]+'</h4><ul>'+c[1].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>';
   }).join('')+'</div>';
 }
 function renderRacionalClassificacao(g){
   var ativos=criteriosAtivos(true), determinantes=ativos.filter(function(c){return c.severity===g;});
-  var pills=determinantes.length?determinantes.map(function(c){return '<span class="reasonPill reason-'+(g==='AMEAÇA À VIDA'?'AMEACA':g)+'"><b>'+c.label+':</b> '+c.value+' — '+c.reason+'</span>';}).join(''):'<span class="reasonPill reasonNeutral">Nenhum critério determinante identificado.</span>';
+  var pills=determinantes.length?determinantes.map(function(c){return '<span class="reasonPill reason-'+(g==='AMEAÇA À VIDA'?'AMEACA':g)+'"><b>'+c.label+':</b> '+c.value+' — '+c.reason+'</span>';}).join(''):'<span class="reasonPill reasonNeutral">Classificação baseada no conjunto dos parâmetros informados.</span>';
   var outros=ativos.filter(function(c){return c.severity && c.severity!==g;});
   var outrosHtml=outros.length?'<div class="reasonList" style="margin-top:7px">'+outros.map(function(c){return '<span class="reasonPill reason-'+(c.severity==='AMEAÇA À VIDA'?'AMEACA':c.severity)+'">'+c.label+': '+c.value+'</span>';}).join('')+'</div>':'';
-  return '<div class="whyBox"><h3 class="whyTitle">🔎 Por que este caso é '+g+'?</h3><p class="whyText">'+textoRegraClassificacao(g)+'</p><div class="reasonList">'+pills+'</div>'+outrosHtml+'<details><summary>Ver os critérios de leve, moderada, grave e ameaça à vida</summary>'+criteriosTabelaHTML(g)+'</details></div>';
+  var discordancia=taquipneiaDiscordantePram()?'<div class="box dangerbox" style="margin-top:8px">⚠️ <b>PRAM BAIXO + TAQUIPNEIA IMPORTANTE:</b> a FR não integra o PRAM e não muda automaticamente sua categoria, mas este resultado é discordante e precisa ser explicado antes de considerar alta.</div>':'';
+  return '<div class="whyBox"><h3 class="whyTitle">🔎 Por que este caso é '+g+'?</h3><p class="whyText">'+textoRegraClassificacao(g)+'</p><div class="reasonList">'+pills+'</div>'+outrosHtml+discordancia+'<details><summary>Ver os critérios de gravidade</summary>'+criteriosTabelaHTML(g)+'</details></div>';
 }
 
-/* ---------- Doses ---------- */
+/* ---------- Doses e apresentações do serviço ---------- */
 function sabaDose(g, age){
-  // GINA 2026 oficial: não criar dose exata por peso quando a diretriz fornece uma faixa.
   if(age < 6){
-    if(g === 'GRAVE' || g === 'AMEAÇA À VIDA') return '4–6';
-    return '4'; // leve e moderada
+    if(g==='LEVE') return '4';
+    return '4–6'; // PA/acute care: moderada ou grave
   }
-  if(g === 'LEVE') return '4';
-  if(g === 'MODERADA') return '4–6';
-  return '6–10'; // grave ou ameaça à vida
+  if(g==='LEVE') return '4';
+  if(g==='MODERADA') return '4–6';
+  return '6–10';
 }
 function sabaFaixa(g, age){ return sabaDose(g,age)+' jatos'; }
 function sabaEsquema(g, age){
-  if(g === 'LEVE'){
-    return 'pMDI + espaçador AGORA, um jato por vez; avaliar resposta e, se necessário, repetir uma vez após 30–60 min.';
+  if(g==='LEVE') return 'pMDI + espaçador agora, 1 jato por vez; reavaliar e só repetir se necessário (geralmente após 30–60 min).';
+  if(g==='MODERADA') return 'pMDI + espaçador, 1 jato por vez; se necessário, repetir até 3 administrações na 1ª hora, a cada 20–30 min.';
+  return age<6?'pMDI + espaçador, 1 jato por vez; repetir se necessário a cada 20–30 min, até 3 administrações na 1ª hora.':'pMDI + espaçador, 1 jato por vez; repetir se necessário a cada 20–30 min, até 3 administrações na 1ª hora.';
+}
+function ipraDose(age,peso){
+  var gotas=peso<10?10:peso<=20?20:40;
+  var ml=gotas/SERVICO.ipraGotasMl, mg=ml*SERVICO.ipraMgMl;
+  var comparacao=age<6?(mg===0.25?' Coincide com a dose nebulizada de 250 mcg do GINA para ≤5 anos.':' Atenção: em ≤5 anos, esta dose local difere dos 250 mcg nebulizados citados pelo GINA.'):' O GINA recomenda associar ipratrópio ao SABA em ≥6 anos nas exacerbações moderadas/graves, mas esta conversão por peso é institucional.';
+  return {doseDefinida:true,mg:mg,ml:ml,gotas:gotas,texto:'PROTOCOLO LOCAL — '+fmtDose(mg)+' mg = '+fmtDose(ml)+' mL = '+gotas+' gotas por dose; diluir em 5 mL de SF 0,9% para nebulização.'+comparacao};
+}
+function predRange(peso, age){
+  if(age>=12){
+    return {lo:40,hi:50,loMl:40/SERVICO.predMgMl,hiMl:50/SERVICO.predMgMl,max:50,dias:'5–7 dias',tipo:'adolescente'};
   }
-  if(g === 'MODERADA'){
-    return 'pMDI + espaçador, um jato por vez; repetir se necessário até 3 administrações na 1ª hora, com intervalo de 20–30 min.';
+  var max=age<2?20:age<6?30:40;
+  var brutoLo=peso, brutoHi=2*peso;
+  var lo=Math.min(brutoLo,max), hi=Math.min(brutoHi,max);
+  return {lo:lo,hi:hi,loMl:lo/SERVICO.predMgMl,hiMl:hi/SERVICO.predMgMl,
+    brutoLo:brutoLo,brutoHi:brutoHi,brutoLoMl:brutoLo/SERVICO.predMgMl,brutoHiMl:brutoHi/SERVICO.predMgMl,
+    max:max,maxMl:max/SERVICO.predMgMl,dias:'3–5 dias',tipo:'crianca'};
+}
+function predDoseTexto(peso,age){
+  var p=predRange(peso,age);
+  var mg=p.lo===p.hi?fmtDose(p.lo)+' mg':fmtDose(p.lo)+'–'+fmtDose(p.hi)+' mg';
+  var ml=Math.abs(p.loMl-p.hiMl)<0.01?fmtDose(roundDose(p.loMl))+' mL':fmtDose(roundDose(p.loMl))+'–'+fmtDose(roundDose(p.hiMl))+' mL';
+  if(age>=12){
+    return {dose:'<b>FAIXA FINAL UTILIZÁVEL: '+mg+' = '+ml+'/dia VO</b>', detalhe:'Prednisolona '+SERVICO.predMgMl+' mg/mL • GINA 12–17 anos: 40–50 mg/dia • '+p.dias, obj:p};
   }
-  if(age < 6){
-    return 'pMDI + espaçador, um jato por vez; repetir a cada 20 min, se necessário, até 3 administrações na 1ª hora.';
-  }
-  return 'pMDI + espaçador, um jato por vez; repetir a cada 20–30 min, se necessário, até 3 administrações na 1ª hora.';
+  var bruto=fmtDose(p.brutoLo)+'–'+fmtDose(p.brutoHi)+' mg = '+fmtDose(roundDose(p.brutoLoMl))+'–'+fmtDose(roundDose(p.brutoHiMl))+' mL/dia';
+  var teto=fmtDose(p.max)+' mg = '+fmtDose(roundDose(p.maxMl))+' mL/dia';
+  return {dose:'<b>FAIXA FINAL UTILIZÁVEL: '+mg+' = '+ml+'/dia VO</b>', detalhe:'Prednisolona '+SERVICO.predMgMl+' mg/mL — 1–2 mg/kg/dia<br>Cálculo bruto pelo peso: '+bruto+'<br>Teto etário GINA 2026: '+teto+'<br>'+p.dias, obj:p};
 }
-function ipraDose(peso, age){
-  // GINA 2026 oficial: 4 jatos de 20 mcg ou 0,25 mg por nebulização, inclusive em ≤5 anos.
-  return {spray:4, gotas:20, neb:'0,25 mg = 1 mL da solução 0,25 mg/mL'};
+function metilPreschoolDose(peso){
+  var mg=roundDose(peso); // GINA ≤5: 1 mg/kg por dose
+  return {mg:mg, ml:roundDose(mg/SERVICO.metilMgMl)};
 }
-function tetoPred(age){
-  if(age < 2) return 20;
-  if(age < 6) return 30;
-  if(age <= 11) return 40;
-  return 60;
+function metilEdComplementarDose(peso){
+  // Complemento operacional para ≥6 anos quando VO é impossível: CHOP ED pathway, 2 mg/kg IV, máx. 60 mg.
+  // Não é uma dose específica fornecida pelo GINA 2026; manter explicitamente identificada como complemento.
+  var mg=Math.min(roundDose(2*peso),60);
+  return {mg:mg,ml:roundDose(mg/SERVICO.metilMgMl)};
 }
-function predDose(peso, age, mgkg){
-  var max=tetoPred(age);
-  var dia=Math.min(Math.round(peso*mgkg), max);
-  return {dia:dia, dose12:roundHalf(dia/2), max:max};
+function budesonidaNebDose(mgDia){
+  var mlDia=mgDia/SERVICO.budesonidaMgMl;
+  return {mgDia:mgDia,mlDia:mlDia};
 }
-function dexaDose(peso){ return Math.min(roundHalf(0.6*peso),12); }
-function magDose(peso){
-  var mg=Math.min(Math.round(50*peso),2000);
-  return {mg:mg, gr:(mg/1000).toFixed(mg%1000?1:0), ml10:roundHalf(Math.min(0.5*peso,20)), ml50:roundHalf(Math.min(0.1*peso,4))};
+function magDose(peso,age){
+  if(age<2) return {eligible:false,texto:'GINA 2026: considerar MgSO₄ EV apenas a partir de 2 anos; não calcular automaticamente em <2 anos.'};
+  var lo=Math.min(40*peso,2000), hi=Math.min(50*peso,2000);
+  var lo10=lo/SERVICO.mag10MgMl, hi10=hi/SERVICO.mag10MgMl;
+  var lo50=lo/SERVICO.mag50MgMl, hi50=hi/SERVICO.mag50MgMl;
+  return {eligible:true,texto:fmtDose(lo)+'–'+fmtDose(hi)+' mg EV (40–50 mg/kg; máximo 2 g) = MgSO₄ 10%: '+fmtDose(lo10)+'–'+fmtDose(hi10)+' mL OU MgSO₄ 50%: '+fmtDose(lo50)+'–'+fmtDose(hi50)+' mL. Infundir em 10–20 minutos. Protocolo local antigo: diluir em 50 mL de SF 0,9%; confirmar volume, compatibilidade e monitorização com farmácia/rotina institucional. Dose única: não repetir automaticamente.',doseMgHi:hi};
 }
 function adrenalinaDose(peso, age){
-  // Adrenalina 1 mg/mL (1:1000): 0,01 mg/kg IM. Em pediatria/adolescência, máx. 0,5 mg.
-  // Em adultos, a faixa recomendada é 0,3–0,5 mg; a dose calculada é limitada a essa faixa.
-  var calculada = roundDose(0.01*peso);
-  var mg, texto;
-  if(age >= 18){
-    mg = roundDose(Math.min(Math.max(calculada,0.3),0.5));
-    texto = 'adulto: 0,3–0,5 mg IM; cálculo de 0,01 mg/kg limitado à faixa adulta';
-  } else {
-    mg = roundDose(Math.min(calculada,0.5));
-    texto = 'criança/adolescente: 0,01 mg/kg IM, máx. 0,5 mg';
-  }
-  return {
-    mg:fmtDose(mg),
-    ml:fmtDose(mg),
-    texto:texto,
-    formula:'0,01 × '+peso+' kg = '+fmtDose(calculada)+' mg'+(calculada>0.5?' → teto 0,5 mg':'')
-  };
+  var calculada=roundDose(0.01*peso), mg=age>=18?roundDose(Math.min(Math.max(calculada,0.3),0.5)):roundDose(Math.min(calculada,0.5));
+  return {mg:fmtDose(mg),ml:fmtDose(mg),texto:age>=18?'adulto: 0,3–0,5 mg IM':'criança/adolescente: 0,01 mg/kg IM, máx. 0,5 mg',formula:'0,01 × '+peso+' kg = '+fmtDose(calculada)+' mg'+(calculada>0.5?' → teto 0,5 mg':'')};
 }
-function corticoideIndicado(g){
-  return (g === 'MODERADA' || g === 'GRAVE' || g === 'AMEAÇA À VIDA' || redFlags());
+function corticoideIndicado(g){ return g==='MODERADA'||g==='GRAVE'||g==='AMEAÇA À VIDA'; }
+function precisaIcsPreschool(){ return estado.age<6 && (estado.grav==='MODERADA'||estado.grav==='GRAVE'||estado.grav==='AMEAÇA À VIDA'||chk('sintomasIntervalo')); }
+function followupTexto(age){ return age<6?'revisão em 1–3 dias e nova revisão em 2–3 meses':'revisão em 2–5 dias após a alta'; }
+
+function clenilHfa50Dose(diariaMcg){
+  var jatosDia=diariaMcg/SERVICO.clenilHfa50;
+  var jatosDose=jatosDia/2;
+  return {diaria:diariaMcg,jatosDia:jatosDia,jatosDose:jatosDose,texto:fmtDose(jatosDose)+' jato(s) 12/12h = '+diariaMcg+' mcg/dia'};
 }
 
 /* ---------- Motor de "steps" (cards coloridos) ---------- */
@@ -803,165 +881,166 @@ function stepsToText(steps){
 }
 function pintar(painelId, containerId, steps){
   el(containerId).innerHTML = renderSteps(steps);
-  textos[painelId] = stepsToText(steps);
 }
 
 /* ---------- 1ª hora ---------- */
 function stepsPrimeiraHora(){
-  var age=estado.age, peso=estado.peso, g=estado.grav;
-  var saba=sabaDose(g,age), ip=ipraDose(peso,age), pr=predDose(peso,age,1), pr2=predDose(peso,age,2), mag=magDose(peso), dex=dexaDose(peso), ad=adrenalinaDose(peso,age);
-  var s=[];
+  var age=estado.age,peso=estado.peso,g=estado.grav;
+  var saba=sabaDose(g,age),ip=ipraDose(age,peso),pred=predDoseTexto(peso,age),mag=magDose(peso,age),ad=adrenalinaDose(peso,age),s=[];
+  if(chk('anafilaxia')) s.push(step('alerta','🚨','Anafilaxia associada — adrenalina IM primeiro','Face anterolateral da coxa antes do broncodilatador; repetir 5–15 min se necessário. '+ad.texto+'.','Adrenalina 1 mg/mL: '+ad.mg+' mg = '+ad.ml+' mL IM'));
 
-  if(chk('anafilaxia')){
-    s.push(step('alerta','🚨','Anafilaxia associada — adrenalina IM primeiro',
-      'Aplicar na face anterolateral da coxa ANTES do broncodilatador. Pode repetir a cada 5–15 min se necessário. '+ad.texto+'. Macete: '+ad.formula+'.',
-      'Adrenalina 1 mg/mL (1:1000): '+ad.mg+' mg = '+ad.ml+' mL IM'));
-  }
+  if(g==='GRAVE'||g==='AMEAÇA À VIDA') s.push(step('alerta','🏥','Suporte imediato','Leito de emergência, monitorização contínua e acesso venoso; acionar suporte avançado/PICU conforme evolução.'));
+  else s.push(step('obs','👁️','Observação no PA','Tratar e reavaliar a resposta; não prescrever múltiplos ciclos automaticamente sem nova avaliação.'));
 
-  if(g==='GRAVE' || g==='AMEAÇA À VIDA'){
-    s.push(step('alerta','🏥','Leito de vermelha / suporte imediato','Acesso venoso, monitorização contínua; considerar UTI/VNI conforme resposta.'));
-  } else {
-    s.push(step('obs','👁️','Observação no PA','Manter em observação e reavaliar resposta clínica.'));
-  }
+  s.push(step('broncho','💨','Salbutamol — Aerolin® 100 mcg/jato',sabaEsquema(g,age)+' Fazer 5–6 respirações correntes após cada jato e agitar o inalador imediatamente antes de cada acionamento.',saba+' jatos por administração'));
 
-  s.push(step('broncho','💨','Salbutamol — broncodilatador',
-    sabaEsquema(g,age)+' Dose: '+sabaFaixa(g,age)+'. Fazer 5–6 respirações correntes após cada jato e agitar o inalador imediatamente antes de cada acionamento.',
-    saba+' jatos (100 mcg/jato)'));
-
-  if(g==='LEVE'){
-    s.push(step('info','ℹ️','Ipratrópio — não usar de rotina','Associar apenas se evoluir para moderada, resposta insuficiente ou decisão do plantonista.'));
-  } else {
-    s.push(step('broncho','💨','Ipratrópio associado',
-      'Junto ao salbutamol nas crises moderada/grave, pMDI + espaçador, até 3 administrações na 1ª hora. Alternativa: '+ip.neb+'. Se o conta-gotas fornecer 20 gotas/mL, corresponde a '+ip.gotas+' gotas.',
-      ip.spray+' jatos (20 mcg/jato)'));
-  }
+  if(g==='LEVE') s.push(step('info','ℹ️','Ipratrópio — não usar de rotina','Reservar para moderada/grave ou resposta insuficiente.'));
+  else s.push(step('broncho','💨','Ipratrópio associado','Associar ao SABA somente na fase inicial da exacerbação moderada/grave; não manter rotineiramente após 1–2 h. O serviço dispõe apenas da solução nebulizável.',ip.texto));
 
   if(corticoideIndicado(g)){
     if(chk('voImpossivel')){
-      s.push(step('cortico','💊','Corticoide sistêmico sem VO',
-        'Metilprednisolona EV 1–2 mg/kg/dia em 2 doses. Frasco 125 mg reconstituído em 2 mL, diluir em SF 0,9% 20–50 mL, infundir em 30 min.',
-        roundHalf(0.01*peso)+' mL EV 12/12h'));
+      if(age<6){
+        var mp=metilPreschoolDose(peso);
+        s.push(step('cortico','💉','Metilprednisolona EV — sem via oral','GINA ≤5 anos: 1 mg/kg EV a cada 6 h no dia 1. Frasco do serviço 500 mg + 8 mL = 62,5 mg/mL. Como o volume pode ser pequeno, preparar/diluir para medição segura conforme farmácia/enfermagem.',fmtDose(mp.mg)+' mg = '+fmtDose(mp.ml)+' mL da solução reconstituída, EV 6/6h no dia 1'));
+      } else {
+        var mpe=metilEdComplementarDose(peso);
+        s.push(step('cortico','💉','Metilprednisolona EV — ≥6 anos sem via oral','GINA 2026 recomenda corticosteroide EV quando a via oral não é possível, mas não fornece neste capítulo uma dose pediátrica específica de metilprednisolona. Para deixar a prescrição operacional, esta ferramenta usa como <b>complemento externo claramente identificado</b> o pathway de emergência pediátrica do CHOP: 2 mg/kg EV, máx. 60 mg. Solução do serviço após reconstituição = 62,5 mg/mL. Diluir para administração/medição segura conforme rotina local.',fmtDose(mpe.mg)+' mg = '+fmtDose(mpe.ml)+' mL da solução reconstituída EV'));
+      }
     } else {
-      s.push(step('cortico','💊','Prednisolona/Prednisona VO',
-        'Por 3–5 dias. Teto etário aplicado: '+pr.max+' mg/dia.',
-        pr.dia+'–'+pr2.dia+' mg/dia ('+pr.dose12+' mg 12/12h)'));
-      if(age >= 6) s.push(step('cortico','💊','Alternativa: dexametasona VO','1x/dia por 1–2 dias (0,3–0,6 mg/kg; máx. 12 mg).', dex+' mg 1x/dia'));
+      s.push(step('cortico','💊','Prednisolona VO — solução 3 mg/mL',pred.detalhe,pred.dose));
     }
-  } else {
-    s.push(step('info','ℹ️','Corticoide sistêmico — não obrigatório','Crise leve com boa resposta não exige corticoide automático. Considerar se crise >4h, internação/crise grave prévia, red flags ou má resposta à 1ª dose de SABA.'));
+  } else s.push(step('info','ℹ️','Corticoide sistêmico — não automático','Apresentação leve com boa resposta não exige OCS de rotina. Reconsiderar se não houver melhora sustentada ou houver outros fatores clínicos relevantes.'));
+
+  if(estado.sat<92) s.push(step('o2','🫁','Oxigênio suplementar — iniciar',age<6?'Titular para manter SpO₂ ≥92%.':'Titular para alvo SpO₂ 92–95%.')); 
+  else s.push(step('o2','🫁','Oxigênio — não por reflexo','SpO₂ ≥92%: não iniciar rotineiramente se não houver ameaça à vida; manter oximetria e reavaliar.'));
+
+  if(chk('controle')) s.push(step('controle','🔁','Manter ICS habitual','Não suspender o corticoide inalatório durante a exacerbação; revisar técnica e adesão.'));
+
+  if(g==='GRAVE'||g==='AMEAÇA À VIDA'){
+    if(mag.eligible) s.push(step('mag','⚡','Sulfato de magnésio EV — ≥2 anos, exacerbação grave','No PA, considerar após resposta inadequada ao tratamento inicial em exacerbação grave. Não usar de rotina e não nebulizar.',mag.texto));
   }
 
-  if(estado.sat && estado.sat < 92){
-    if(age >= 6) s.push(step('o2','🫁','Oxigênio suplementar — iniciar','SatO₂ <92%. Alvo GINA 2026 em ≥6 anos/adolescentes: 92–95%; evitar O₂ liberal.'));
-    else s.push(step('o2','🫁','Oxigênio suplementar — iniciar','SatO₂ <92%. Alvo GINA 2026 ≤5 anos: manter ≥92%; HCA/guia local usa metas mais altas (ver aba Bases).'));
-  } else {
-    s.push(step('o2','🫁','Oxigênio — não por reflexo','Não iniciar se SatO₂ ≥92% e sem ameaça à vida. Monitorizar oximetria — pode superestimar em pele escura.'));
-  }
-
-  s.push(step('controle','🔁','Corticoide inalatório de controle',
-    chk('controle') ? 'Já usa — revisar adesão e técnica; considerar dobrar temporariamente conforme protocolo local.' : 'Não usa — antes da alta, iniciar tratamento anti-inflamatório de controle conforme idade e disponibilidade.'));
-
-  if(g==='GRAVE' || g==='AMEAÇA À VIDA'){
-    s.push(step('mag','⚡','Sulfato de magnésio — se refratária',
-      'Se grave refratária após 1h de tratamento intensivo, ou ameaça à vida. Diluir em SF 0,9% 50–100 mL, infundir em 20–30 min.',
-      mag.mg+' mg ('+mag.gr+' g) — MgSO₄10%: '+mag.ml10+' mL OU 50%: '+mag.ml50+' mL'));
-  }
-
-  s.push(step('obs','⏱️','Reavaliação em 1 hora (ou antes)','SatO₂, FR, musculatura acessória, entrada de ar, fala/alimentação, PEF/VEF1 se possível e PRAM se disponível.'));
+  if(g!=='LEVE') s.push(step('alerta','⚠️','Evitar sobretratamento com SABA','Taquicardia, hipocalemia, arritmia e acidose láctica podem causar hiperventilação. Se a entrada de ar melhorou mas a taquipneia persiste após doses altas, reavaliar antes de simplesmente aumentar salbutamol.'));
+  if(age<1) s.push(step('info','👶','Lactente <12 meses — rever diagnóstico diferencial','Bronquiolite, crupe, corpo estranho e outras causas de sibilância devem ser ativamente consideradas antes de rotular o episódio como asma.'));
+  s.push(step('obs','⏱️','Reavaliar em 1 hora ou antes','SatO₂, FR, esforço respiratório, entrada de ar, fala/alimentação; PRAM em 2–17 anos quando aplicado; PEF/VEF1 em ≥6 anos quando viável.'));
   return s;
 }
 
 /* ---------- 2ª e 3ª hora ---------- */
 function gerarHora2(){
-  var r=document.querySelector('input[name="resp1"]:checked');
-  if(!r){ alert('Marque a resposta após a 1ª hora.'); return; }
-  var age=estado.age, peso=estado.peso, g=estado.grav, ip=ipraDose(peso,age), mag=magDose(peso);
-  var saba=sabaDose(g==='LEVE'?'MODERADA':g,age);
-  var sabaGrave=sabaDose('GRAVE',age);
-  var s=[];
+  var r=document.querySelector('input[name="resp1"]:checked'); if(!r){alert('Marque a resposta após a 1ª hora.');return;}
+  var age=estado.age,peso=estado.peso,g=estado.grav,ip=ipraDose(age,peso),mag=magDose(peso,age),s=[];
   if(r.value==='boa'){
-    s.push(step('obs','👁️','Manter observação',''));
-    s.push(step('alta','✅','Considerar alta','Se sintomas resolvidos por 1–2 h após a última dose de SABA e SatO₂ ≥92% em ar ambiente.'));
-    s.push(step('controle','🔁','Organizar tratamento de alta','Checar técnica inalatória; não deixar apenas SABA em ≥6 anos — iniciar anti-inflamatório.'));
-    s.push(redFlags()
-      ? step('alerta','🚩','Red flag presente','Considerar observação mais longa ou reavaliação precoce.')
-      : step('info','ℹ️','Orientação','Orientar sinais de alerta para retorno.'));
+    s.push(step('obs','👁️','Observar estabilidade','Sem necessidade de SABA adicional se a resposta foi boa.'));
+    s.push(step('alta','✅','Considerar alta','Se permanecer compatível com apresentação leve por 1–2 h após a última dose, SpO₂ ≥92% em ar ambiente e condições domiciliares adequadas.'));
+    s.push(step('controle','🔁','Planejar alta anti-inflamatória','Organizar ICS conforme idade e revisar técnica; ver aba Alta.'));
   } else if(r.value==='parcial'){
-    s.push(step('broncho','💨','Salbutamol — repetir','pMDI + espaçador a cada 20–30 min por mais 1 hora, conforme resposta.', saba+' jatos (100 mcg/jato)'));
-    s.push(step('broncho','💨','Ipratrópio, se ainda não feito','Apenas se crise moderada/grave. Não manter indefinidamente — após 1–2h o benefício adicional é pequeno.', ip.spray+' jatos ou '+ip.gotas+' gotas neb.'));
-    s.push(step('cortico','💊','Garantir corticoide sistêmico','Se moderada/grave ou sem resposta à dose inicial.'));
-    s.push(step('o2','🫁','Oxigênio','Manter apenas se SatO₂ <92% ou ameaça à vida, com alvo adequado.'));
-    s.push(step('alerta','⚠️','Se piorar','Tratar como grave e considerar MgSO₄ EV.'));
+    s.push(step('broncho','💨','Salbutamol adicional — conforme necessidade','Após a primeira hora, titular dose e frequência pela resposta clínica; não iniciar automaticamente outro bloco fixo de 3 ciclos.',sabaDose(g==='LEVE'?'MODERADA':g,age)+' jatos por administração, se necessário'));
+    s.push(step('broncho','💨','Ipratrópio — somente fase inicial','Se ainda não completou a fase inicial de moderada/grave, pode ser associado. Suspender após 1–2 h de tratamento agudo.',ip.texto));
+    s.push(step('cortico','💊','Garantir corticoide sistêmico','Moderada/grave: confirmar que OCS foi administrado; lembrar que a resposta clínica ao OCS leva horas.'));
+    s.push(step('interna','🛏️','Critérios de internação','Considerar se SatO₂ <92% em ar ambiente, falha de resposta em 1 h, necessidade de SABA mais frequente que 1/1–2/2 h ou piora.'));
+    if(mag.eligible && (g==='GRAVE'||g==='AMEAÇA À VIDA')) s.push(step('mag','⚡','Se grave/refratária — idade ≥2 anos','Considerar MgSO₄ EV conforme critérios; não nebulizar.',mag.texto));
   } else {
-    s.push(step('alerta','🚨','Tratar como GRAVE / AMEAÇA À VIDA',''));
-    s.push(step('alerta','🏥','Suporte imediato','Leito de vermelha, acesso venoso, monitorização contínua; O₂ se SatO₂ <92%/ameaça à vida; acionar suporte.'));
-    s.push(step('broncho','💨','Salbutamol em alta dose','pMDI + espaçador, um jato por vez; repetir conforme resposta e monitorização de toxicidade.', sabaGrave+' jatos (100 mcg/jato)'));
-    s.push(step('broncho','💨','Ipratrópio, se ainda na fase inicial','', ip.spray+' jatos ou '+ip.gotas+' gotas neb.'));
-    s.push(step('mag','⚡','Sulfato de magnésio EV','Máximo 2 g; diluir em SF 0,9% 50–100 mL, infundir em 20–30 min.', mag.mg+' mg ('+mag.gr+' g) — 10%: '+mag.ml10+' mL OU 50%: '+mag.ml50+' mL'));
-    s.push(step('interna','🏥','Considerar UTI','VNI e terbutalina EV conforme protocolo local.'));
+    s.push(step('alerta','🚨','Piora / refratariedade','Reavaliar diagnóstico, suporte imediato, monitorização contínua e considerar PICU/UTI.'));
+    s.push(step('broncho','💨','Salbutamol','Titrar pela resposta com vigilância para toxicidade.',sabaDose('GRAVE',age)+' jatos por administração'));
+    s.push(step('broncho','💨','Ipratrópio','Se ainda dentro das primeiras 1–2 h, associar ao SABA.',ip.texto));
+    if(mag.eligible) s.push(step('mag','⚡','Sulfato de magnésio EV — idade ≥2 anos','Exacerbação grave/refratária: segunda linha após resposta inadequada; não nebulizar.',mag.texto));
+    s.push(step('alerta','⚠️','SABA em altas doses','Considerar K+, lactato/acidose láctica e taquicardia como possíveis efeitos do tratamento, não apenas “asma pior”.'));
   }
   pintar('hora2','rx2',s);
 }
 function gerarHora3(){
-  var r=document.querySelector('input[name="resp2"]:checked');
-  if(!r){ alert('Marque a resposta após a 2ª hora.'); return; }
-  var mag=magDose(estado.peso);
-  var s=[];
+  var r=document.querySelector('input[name="resp2"]:checked'); if(!r){alert('Marque a resposta após a 2ª hora.');return;}
+  var age=estado.age,mag=magDose(estado.peso,age),s=[];
   if(r.value==='boa'){
-    s.push(step('obs','👁️','Observar estabilidade','Por 1–2 h após a última dose de SABA.'));
-    s.push(step('alta','✅','Avaliar alta','Se sem desconforto, SatO₂ ≥92% em ar ambiente, boa aceitação e família orientada.'));
-    s.push(step('info','ℹ️','Uso da aba Alta','Não liberar ≥6 anos apenas com SABA isolado.'));
+    s.push(step('obs','👁️','Observar estabilidade','Completar 1–2 h sem recorrência relevante após a última dose de SABA.'));
+    s.push(step('alta','✅','Avaliar alta','Estável, sem desconforto relevante, SpO₂ ≥92% em ar ambiente e, nos pequenos, alimentando-se/bebendo adequadamente.'));
   } else if(r.value==='parcial'){
-    s.push(step('obs','👁️','Manter observação','Individualizar intervalo do salbutamol conforme resposta.'));
-    s.push(step('info','ℹ️','Reavaliar','Diagnóstico diferencial e técnica inalatória.'));
-    s.push(step('interna','🛏️','Considerar internação','Se persistir necessidade frequente de salbutamol, desconforto ou hipoxemia.'));
-    s.push(step('info','ℹ️','Ipratrópio','Não prolongar sem benefício claro após 1–2h.'));
+    s.push(step('obs','👁️','Manter observação','Individualizar o intervalo do salbutamol conforme necessidade e resposta.'));
+    s.push(step('interna','🛏️','Considerar internação','Especialmente se SABA segue necessário mais frequentemente que 1/1–2/2 h, hipoxemia ou dispneia persistente.'));
+    if(age<6) s.push(step('interna','🕓','Dispneia após OCS','Em ≤5 anos, dispneia persistente 4–6 h após OCS é critério para internação.'));
+    s.push(step('info','ℹ️','Ipratrópio','Não manter rotineiramente além de 1–2 h.'));
   } else {
-    s.push(step('interna','🏥','Internação/UTI','Conforme gravidade.'));
-    s.push(step('alerta','🚨','Suporte contínuo','Acionar equipe, monitorização contínua e avaliar VNI.'));
-    s.push(step('mag','⚡','MgSO₄ EV, se ainda não realizado','Máximo 2 g.', mag.mg+' mg ('+mag.gr+' g)'));
-    s.push(step('info','ℹ️','Considerar','Terbutalina EV / altas doses de corticoide inalatório conforme protocolo local.'));
-    s.push(step('alerta','🚩','Sinais de fadiga','Sonolência, confusão, cianose, tórax silencioso, bradicardia/hipotensão, PaCO₂ normal/elevada.'));
+    s.push(step('interna','🏥','Internação / PICU','Escalonar suporte conforme gravidade e resposta.'));
+    if(mag.eligible) s.push(step('mag','⚡','MgSO₄ EV — idade ≥2 anos, se ainda não realizado','Somente em exacerbação grave/refratária; não nebulizar.',mag.texto));
+    s.push(step('alerta','🚩','Sinais de falência respiratória','Sonolência/confusão, cianose, tórax silencioso, fadiga; PaCO₂ normal/elevada em paciente previamente hiperventilando é preocupante.'));
   }
   pintar('hora3','rx3',s);
 }
 
-/* ---------- Alta / Internação ---------- */
-function stepsAlta(){
-  var age=estado.age, peso=estado.peso, pr=predDose(peso,age,1);
-  var s=[];
-  s.push(step('obs','✅','Critérios de alta',
-    'Sintomas resolvidos por 1–2h após a última dose de SABA; SatO₂ ≥92% em ar ambiente (HCA antigo usava >94% — ver Bases); técnica inalatória demonstrada e plano escrito; retorno em 2–5 dias em crianças.'));
-  if(redFlags()) s.push(step('alerta','🚩','Atenção — red flag marcada','Considerar limiar menor para observação/internação ou reavaliação precoce.'));
-
-  if(age >= 6){
-    s.push(step('cortico','🚫','Não dar alta com SABA isolado','Preferir estratégia anti-inflamatória: ICS-formoterol quando disponível/adequado, ou ICS associado ao resgate.'));
-    s.push(step('cortico','💊','Opção GINA 2026 — Track 1','Budesonida-formoterol como manutenção + resgate, conforme prescrição do serviço/especialista.'));
-    s.push(step('broncho','💨','Se ICS-formoterol indisponível','Salbutamol com espaçador apenas se necessário, não de horário fixo; manter/iniciar corticoide inalatório. Procurar reavaliação se precisar de doses repetidas ou >12 jatos em 24 h.', '2 jatos por resgate (100 mcg/jato)'));
-  } else {
-    s.push(step('info','ℹ️','Menor de 6 anos','GINA 2026 oficial: manter resgate apenas conforme necessidade e procurar reavaliação se o salbutamol for necessário novamente em menos de 4 horas.'));
-    s.push(step('broncho','💨','Salbutamol','Usar com espaçador apenas se necessário, não de rotina. Se precisar novamente em menos de 4 horas, procurar reavaliação.', '2 jatos por resgate (100 mcg/jato)'));
-    s.push(step('controle','🔁','Corticoide inalatório','Iniciar/manter se indicação clínica de controle/recorrência, conforme protocolo local.'));
+/* ---------- Alta ---------- */
+function stepsIcsAlta(){
+  var age=estado.age,g=estado.grav,s=[];
+  if(age<6){
+    if(precisaIcsPreschool()){
+      var low=budesonidaNebDose(0.5); // GINA low daily dose: 500 mcg/day
+      var pos=budesonidaNebDose(1.0); // after ED/hospital: ~2x low initial dose for first month
+      s.push(step('controle','🫁','Budesonida/Pulmicort® 0,25 mg/mL — controlador pós-exacerbação','GINA ≤5: se apresentação moderada/grave ou sintomas de intervalo ≥2 dias/semana, iniciar ICS antes da alta. Após ED/internação, o GINA orienta aproximadamente 2× a dose baixa inicial durante o primeiro mês e depois ajustar.','2 mL por nebulização 12/12h = 1 mg/dia por 1 mês; depois reavaliar (dose baixa GINA = '+fmtDose(low.mlDia)+' mL/dia = 0,5 mg/dia)'));
+      s.push(step('info','🧼','Após budesonida nebulizada','Lavar o rosto se usar máscara e higienizar boca/face após a nebulização; revisar técnica e adesão no retorno.'));
+    } else {
+      s.push(step('info','🫁','ICS em pré-escolar','Se a apresentação foi leve e não há sintomas de intervalo, individualizar necessidade de controlador e revisar diagnóstico/risco.'));
+    }
+  } else if(age<=11){
+    var med=clenilHfa50Dose(400), low=clenilHfa50Dose(200);
+    if(chk('primeiraApresentacao') || g==='MODERADA' || g==='GRAVE' || g==='AMEAÇA À VIDA'){
+      s.push(step('controle','🫁','Sem formoterol no serviço — Clenil HFA 50 mcg + SABA','GINA 6–11: após apresentação durante exacerbação, iniciar Step 3/4 antes da alta. Como não há ICS-formoterol/ICS-LABA no serviço, a alternativa operacional disponível é ICS em dose média + SABA; Clenil HFA 50 é a apresentação pediátrica cadastrada.','Clenil HFA 50 mcg: 4 jatos 12/12h = 400 mcg/dia por 2–4 semanas + Aerolin PRN; reavaliar precocemente'));
+    } else {
+      s.push(step('controle','🫁','Clenil HFA 50 mcg — manutenção com SABA PRN','Evitar alta com SABA isolado. Para quadro leve/estável conhecido, manter ICS diário e revisar em 2–5 dias.','Clenil HFA 50 mcg: 2 jatos 12/12h = 200 mcg/dia + Aerolin PRN'));
+    }
+    s.push(step('info','⚠️','Limitação do formulário','O GINA 2026 inclui AIR/MART com ICS-formoterol como opção/preferência em 6–11 anos, mas o serviço não dispõe dessa combinação. O esquema acima é a alternativa disponível baseada em ICS + SABA, não equivalente ao MART.'));
+  } else if(age<18){
+    var adolLow=clenilHfa50Dose(400);
+    s.push(step('controle','🫁','Adolescente — serviço sem ICS-formoterol','O GINA prefere MART após ED/internação, porém essa combinação não está disponível. Garantir ao menos ICS + SABA e seguimento precoce; não apresentar o esquema abaixo como equivalente ao MART.','Clenil HFA 50 mcg: 4 jatos 12/12h = 400 mcg/dia + Aerolin PRN por 2–4 semanas, depois reavaliar'));
+    s.push(step('info','🚫','Clenil HFA 200 mcg','Não auto-prescrever em <18 anos nesta ferramenta: a bula profissional brasileira do fabricante restringe essa apresentação a adultos.'));
   }
-  s.push(step('cortico','💊','Prednisolona/Prednisona','Se crise moderada/grave ou já iniciada no PA, por 3–5 dias.', pr.dia+' mg/dia ('+pr.dose12+' mg 12/12h)'));
-  s.push(step('obs','👁️','Checar antes de liberar','Técnica do espaçador, adesão e sinais de retorno: piora, cansaço, fala entrecortada, sonolência, cianose, SatO₂ baixa ou resgate muito frequente.'));
   return s;
 }
+function stepsAlta(){
+  var age=estado.age,peso=estado.peso,g=estado.grav,pred=predDoseTexto(peso,age),s=[];
+  if(taquipneiaDiscordantePram()) s.push(step('alerta','⚠️','NÃO BASEAR ALTA APENAS NO PRAM',textoAlertaTaquipneia()));
+  s.push(step('obs','✅','Critérios de alta','Melhora sustentada e apresentação compatível com leve por 1–2 h após a última dose de SABA; SpO₂ ≥92% em ar ambiente; recursos domiciliares adequados. Em ≤5 anos, criança estável e capaz de comer/beber.'));
+  if(age>=6) s.push(step('obs','📈','Função pulmonar antes da alta','Quando viável, repetir PEF/VEF1; GINA recomenda mensuração objetiva em ≥6 anos, exceto apresentações ameaçadoras à vida.'));
+  if(redFlags()) s.push(step('alerta','🚩','Red flag presente','Baixar limiar para observação/internação e garantir seguimento precoce. Uma única exacerbação com urgência/OCS já é alerta para revisar o tratamento.'));
+
+  if(age<6){
+    s.push(step('broncho','💨','Salbutamol para casa','Somente se necessário, com espaçador. Se precisar novamente antes de 4 horas ou em >3 ocasiões nas primeiras 12 h, procurar avaliação médica.','2 jatos de 100 mcg por resgate'));
+    s.push(step('info','🚫','Ipratrópio para casa — NÃO','Suspender após a fase aguda; não há benefício após as primeiras 1–2 h.'));
+    s.push(step('info','🚫','Não iniciar OCS por conta própria em crise futura','Em ≤5 anos, o GINA não recomenda que o cuidador inicie prednisolona em casa sem avaliação/orientação médica.'));
+  } else {
+    s.push(step('broncho','💨','Salbutamol para casa — Aerolin®','Usar somente se necessário; não programar de horário fixo. Procurar atendimento se precisar de >12 inalações em 24 h ou se a necessidade estiver ficando mais frequente.','2 jatos de 100 mcg por resgate'));
+    s.push(step('info','🚫','Não dar alta apenas com SABA','Garantir tratamento contendo ICS. O serviço não dispõe de ICS-formoterol; usar a trilha ICS + SABA abaixo e organizar seguimento precoce.'));
+  }
+
+  if(corticoideIndicado(g)) s.push(step('cortico','💊','Prednisolona 3 mg/mL — completar curso',pred.detalhe,pred.dose));
+  stepsIcsAlta().forEach(function(x){s.push(x);});
+  s.push(step('obs','🧑‍🏫','Técnica + plano escrito','Demonstrar 1 jato por vez no espaçador; revisar adesão, diferenciar resgate de manutenção e entregar/revisar plano de ação escrito.'));
+  s.push(step('obs','🏠','Orientações aos cuidadores','Retornar imediatamente se dificuldade intensa para respirar, incapacidade para falar/beber, cianose, sonolência/prostração, piora progressiva ou má resposta ao aliviador. Rever gatilhos: fumaça/vape, poluição, alérgenos relevantes e infecções virais.'));
+  s.push(step('alta','📅','Seguimento',followupTexto(age)+'. Encaminhar/referenciar mais cedo se exacerbações recorrentes, OCS repetido ou necessidade de UTI.'));
+  return s;
+}
+
+/* ---------- Internação / observação ---------- */
 function stepsInternacao(){
-  var age=estado.age, peso=estado.peso, pr=predDose(peso,age,1), ip=ipraDose(peso,age), mag=magDose(peso);
-  var gravInternacao = (estado.grav==='LEVE') ? 'MODERADA' : estado.grav;
-  var saba = sabaDose(gravInternacao,age);
-  var s=[];
-  s.push(step('info','📌','Critérios práticos', 'Persistência de desconforto, hipoxemia ou necessidade frequente de broncodilatador; má resposta à 1ª hora ou evolução para grave/ameaça à vida; red flags, dificuldade de tratamento domiciliar ou dúvida diagnóstica.'));
-  s.push(step('obs','🧪','Exames/monitorização', 'Eletrólitos (especialmente K+, se doses repetidas de salbutamol); gasometria se fadiga, alteração de consciência ou hipoxemia persistente; radiografia se dúvida diagnóstica, assimetria, dor pleurítica, febre/infiltrado; hemograma tem pouco valor em crise puramente asmática.'));
-  s.push(step('obs','🍽️','Dieta e hidratação','Dieta livre se confortável; suspender se desconforto importante. Hidratação conforme aceitação; considerar solução isotônica e potássio conforme eletrólitos/serviço.'));
-  s.push(step('broncho','💨','Salbutamol','Espaçador de 2/2h, ajustar conforme resposta; se grave, repetir ciclos conforme reavaliação.', saba+' jatos (100 mcg/jato)'));
-  s.push(step('broncho','💨','Ipratrópio','Apenas na fase inicial; após 1–2h o benefício adicional é pequeno.', ip.spray+' jatos ou '+ip.gotas+' gotas neb.'));
-  s.push(step('cortico','💊','Prednisolona/Prednisona VO','Por 3–5 dias; se sem VO, considerar metilprednisolona EV.', pr.dia+' mg/dia ('+pr.dose12+' mg 12/12h)'));
-  s.push(step('controle','🔁','Corticoide inalatório','Iniciar se não usava; se já usava, revisar técnica/adesão e ajustar.'));
-  s.push(step('mag','⚡','Se refratário','MgSO₄ EV, se ainda não realizado.', mag.mg+' mg ('+mag.gr+' g), máx. 2 g'));
-  s.push(step('interna','🏥','Considerar','VNI/UTI/terbutalina EV conforme protocolo local e resposta.'));
-  s.push(step('info','ℹ️','Antibiótico','Não é necessário em crise puramente asmática, salvo suspeita infecciosa associada.'));
+  var age=estado.age,peso=estado.peso,pred=predDoseTexto(peso,age),ip=ipraDose(age,peso),mag=magDose(peso,age),s=[];
+  s.push(step('info','📌','Critérios objetivos para internar/continuar hospital','Falha de resposta em 1 h ou piora; SpO₂ <92% em ar ambiente; necessidade de SABA mais frequente que a cada 1–2 h; incapacidade de alimentação/hidratação; fatores sociais. Em ≤5 anos, dispneia persistente 4–6 h após OCS também favorece internação.'));
+  s.push(step('broncho','💨','Salbutamol','Após a primeira hora, a frequência deve ser titulada à necessidade e resposta; evitar “2/2 h” como regra automática. Reavaliar antes de cada novo escalonamento.'));
+  s.push(step('broncho','🚫','Ipratrópio — suspender após fase inicial','Não manter rotineiramente na enfermaria após 1–2 h; não reduz tempo de internação em crianças.',ip.texto+' apenas se ainda na fase inicial'));
+  if(corticoideIndicado(estado.grav)) s.push(step('cortico','💊','Prednisolona VO, se tolera via oral',pred.detalhe,pred.dose));
+  if(chk('voImpossivel')){
+    if(age<6){
+      var mp=metilPreschoolDose(peso);
+      s.push(step('cortico','💉','Metilprednisolona EV — ≤5 anos sem VO','GINA: 1 mg/kg EV 6/6 h no dia 1. Solução do serviço após reconstituição =62,5 mg/mL.',fmtDose(mp.mg)+' mg = '+fmtDose(mp.ml)+' mL por dose'));
+    } else {
+      var mpe=metilEdComplementarDose(peso);
+      s.push(step('cortico','💉','Metilprednisolona EV — ≥6 anos sem VO','GINA permite via EV quando VO é impossível; dose operacional complementar do CHOP ED: 2 mg/kg EV, máx. 60 mg. Não é uma dose específica do GINA. Solução do serviço =62,5 mg/mL.',fmtDose(mpe.mg)+' mg = '+fmtDose(mpe.ml)+' mL da solução reconstituída EV'));
+    }
+  }
+  s.push(step('controle','🫁','Tratamento contendo ICS','Manter ICS previamente prescrito e organizar estratégia adequada à idade antes da alta; não postergar toda a decisão para o ambulatório.'));
+  s.push(step('obs','🧪','Exames apenas quando indicados','Considerar K+/eletrólitos se doses repetidas de SABA; gasometria se falha de resposta, deterioração/fadiga ou função pulmonar muito baixa; RX não é rotina, reservar para suspeita de pneumotórax, pneumonia/parênquima ou corpo estranho.'));
+  s.push(step('alerta','⚠️','Toxicidade por SABA','Taquicardia, hipocalemia, arritmia e acidose láctica podem manter hiperventilação mesmo com melhora do broncoespasmo.'));
+  if(mag.eligible && (estado.grav==='GRAVE'||estado.grav==='AMEAÇA À VIDA')) s.push(step('mag','⚡','MgSO₄ EV — ≥2 anos, não é rotina','Usar como segunda linha na exacerbação grave com resposta inadequada. Não nebulizar.',mag.texto));
+  s.push(step('interna','🏥','PICU/UTI','Acionar se deterioração apesar de broncodilatador + corticoide, alteração de consciência, cianose, tórax silencioso/fadiga ou necessidade de suporte ventilatório.'));
+  s.push(step('info','ℹ️','Antibiótico','Não usar rotineiramente em exacerbação asmática sem evidência forte de infecção bacteriana/pneumonia.'));
   return s;
 }
 
@@ -969,76 +1048,98 @@ function stepsInternacao(){
 function rxBasesHTML(){
   return ''
     +'<h4>Base prioritária</h4>'
-    +'<p>GINA 2026 oficial como base prioritária para todas as faixas etárias; Guia ArkaMed GINA 2026 e Protocolo Clínico HCA Severino Bezerra de Carvalho como apoio/complemento local.</p>'
-    +'<h4>Classificação dinâmica</h4>'
-    +'<p>Os campos seguem as tabelas do GINA 2026: ≥6 anos (Box 9-4) e crianças ≤5 anos (Box 12-1). SatO₂, FR, fala, consciência/cianose, musculatura acessória, entrada de ar, sibilância, PEF e PRAM recebem cores conforme a coluna correspondente. O campo “FR em relação ao esperado” é calculado automaticamente a partir da idade e da FR.</p>'
-    +'<h4>Mudanças aplicadas do GINA 2026</h4>'
+    +'<p><b>GINA 2026 oficial</b>. O HTML evita completar lacunas do documento com uma dose inventada; quando a apresentação do serviço não corresponde diretamente ao esquema estudado, isso é explicitado.</p>'
+    +'<h4>Faixas etárias</h4>'
+    +'<ul><li>≤5 anos: capítulo específico de pré-escolares.</li><li>6–11 anos: GINA inclui AIR/MART, mas o serviço não possui ICS-formoterol; o HTML usa SABA + ICS disponível.</li><li>12–17 anos: GINA prefere Track 1/MART após ED/internação, porém o formulário local não dispõe de formoterol; a ferramenta explicita essa limitação.</li></ul>'
+    +'<h4>Mudanças aplicadas</h4>'
     +'<ul>'
-    +'<li>FR automática: as faixas aceitáveis por idade são usadas para diferenciar normal/pouco aumentada de aumentada; os pontos de corte de gravidade do GINA 2026 (&gt;40/min em ≤5 anos e &gt;30/min em ≥6 anos) sempre têm prioridade.</li>'
-    +'<li>SpO₂: O₂ suplementar só se SatO₂ &lt;92%, salvo ameaça à vida. Alvo em ≥6 anos: 92–95%; em ≤5 anos: manter ≥92%.</li>'
-    +'<li>Salbutamol pMDI + espaçador: ≤5 anos — leve 4 jatos, moderada 4 jatos, grave/ameaça 4–6 jatos; ≥6 anos — leve 4, moderada 4–6, grave/ameaça 6–10.</li>'
-    +'<li>Não foi criada conversão arbitrária de peso para escolher um número dentro das faixas 4–6 ou 6–10; a faixa é exibida como na diretriz e deve ser individualizada pela gravidade/resposta.</li>'
-    +'<li>Ipratrópio em moderada/grave: 4 jatos de 20 mcg ou 0,25 mg nebulizado, até 3 administrações na 1ª hora; evitar prolongar além de 1–2h sem benefício.</li>'
-    +'<li>Anafilaxia + asma: adrenalina IM antes do broncodilatador. Dose pediátrica/adolescente: 0,01 mg/kg da solução 1 mg/mL, máx. 0,5 mg; adulto: 0,3–0,5 mg.</li>'
-    +'<li>Alta: resgate conforme necessidade, não de horário fixo; não dar alta com SABA isolado em ≥6 anos.</li>'
+    +'<li>PRAM: recomendado para 2–17 anos; desabilitado em &lt;2 anos.</li>'
+    +'<li>FR: na faixa do PRAM, não altera automaticamente a categoria do escore. Em crianças de 2–5 anos, FR &gt;40/min com PRAM 0–3 gera alerta destacado de discordância, repetição da medida em repouso, investigação de outras causas e orientação para não decidir alta apenas pelo PRAM.</li>'
+    +'<li>O₂: iniciar se SatO₂ &lt;92%; alvo 92–95% em ≥6 e ≥92% em ≤5.</li>'
+    +'<li>Salbutamol no PA: ≤5 anos — leve 4 jatos, moderada/grave 4–6; ≥6 — leve 4, moderada 4–6, grave 6–10. Sempre reavaliar antes de repetir automaticamente.</li>'
+    +'<li>Ipratrópio — protocolo local, não dose GINA: &lt;10 kg = 10 gotas (0,125 mg/0,5 mL); 10–20 kg = 20 gotas (0,25 mg/1 mL); &gt;20 kg = 40 gotas (0,5 mg/2 mL). Diluir cada dose em 5 mL de SF 0,9%. Em ≤5 anos, o HTML sinaliza quando a dose local diverge dos 250 mcg nebulizados citados pelo GINA. Usar associado ao SABA apenas na fase inicial; não manter após 1–2 h.</li>'
+    +'<li>Prednisolona 3 mg/mL: cálculo em mg e mL pronto. ≤11 anos: 1–2 mg/kg/dia com tetos etários; 12–17 anos: 40–50 mg/dia.</li>'
+    +'<li>Metilprednisolona: em ≤5 anos sem VO, GINA fornece 1 mg/kg EV 6/6 h no dia 1. Em ≥6 anos, GINA permite via EV quando VO é impossível, mas não fornece dose específica; para operacionalizar, o HTML exibe em bloco separado a dose complementar do CHOP ED (2 mg/kg EV, máx. 60 mg), claramente identificada como externa ao GINA. Solução local: 62,5 mg/mL.</li>'
+    +'<li>MgSO₄ EV: somente a partir de 2 anos, em exacerbação grave no PA após resposta inadequada ao tratamento inicial; 40–50 mg/kg, máximo 2 g, em 10–20 minutos. Não usar de rotina, não nebulizar e não repetir automaticamente. A diluição em 50 mL de SF 0,9% vem do protocolo local antigo e deve ser confirmada com farmácia/rotina institucional.</li>'
+    +'<li>Alta: SABA PRN, nunca ipratrópio domiciliar; ≤5 anos com indicação de ICS recebe budesonida 0,25 mg/mL com dose operacional pronta; 6–17 anos usa Clenil HFA 50 + SABA por indisponibilidade de formoterol; seguimento 1–3 dias em ≤5 e 2–5 dias em crianças maiores.</li>'
     +'</ul>'
-    +'<h4>Conflitos/complementos com o protocolo local (HCA)</h4>'
-    +'<ul>'
-    +'<li>O HCA antigo usava alvo O₂ 94–98%; esta versão prioriza GINA 2026.</li>'
-    +'<li>O HCA usava 1 jato de salbutamol a cada 2–3 kg e ipratrópio spray por peso; esta versão prioriza as doses fixas/faixas do GINA 2026.</li>'
-    +'<li>As apresentações locais e orientações operacionais do HCA permanecem apenas como complemento quando não conflitarem com o GINA 2026.</li>'
-    +'</ul>';
+    +'<h4>Apresentações do serviço já cadastradas</h4>'
+    +'<p>Aerolin 100 mcg/jato; ipratrópio 0,25 mg/mL (20 gotas = 1 mL); prednisolona 3 mg/mL; metilprednisolona 500 mg + 8 mL (62,5 mg/mL); budesonida/Pulmicort 0,25 mg/mL; Clenil HFA 50 e 200 mcg/jato; Clenil A 400 mcg/mL; MgSO₄ 10% (100 mg/mL) e 50% (500 mg/mL). <b>Não há dexametasona, ICS-formoterol nem salbutamol para nebulização.</b> Clenil HFA 200 não é auto-prescrito em menores de 18 anos nesta ferramenta.</p>'
+    +'<p><b>Conversões automáticas:</b> ipratrópio em gotas/mL; prednisolona em mL; metilprednisolona em mg/mL; budesonida em mL por nebulização; MgSO₄ 10% e 50% em mL. As doses externas ao GINA são rotuladas explicitamente.</p>';
+}
+
+function renderAlertaPrincipal(g){
+  var risco=redFlags();
+  if(g==='AMEAÇA À VIDA') return '<div class="mainAlert mainAlertAmeaca alertPulse">🆘 AMEAÇA À VIDA — TRATAMENTO IMEDIATO + ACIONAR SUPORTE/PICU<small>Não aguardar completar reavaliações. Se houver anafilaxia associada, administrar adrenalina primeiro.</small></div>';
+  if(g==='GRAVE') return '<div class="mainAlert mainAlertGrave alertPulse">🔴 EXACERBAÇÃO GRAVE — LEITO DE EMERGÊNCIA, MONITORIZAÇÃO CONTÍNUA E REAVALIAÇÃO PRECOCE<small>SABA + ipratrópio + corticoide sistêmico; O₂ se SatO₂ &lt;92%; avaliar escalonamento se resposta inadequada.</small></div>';
+  if(g==='MODERADA' && risco) return '<div class="mainAlert mainAlertGrave">⚠️ EXACERBAÇÃO MODERADA + FATOR DE RISCO — MAIOR VIGILÂNCIA / MENOR LIMIAR PARA OBSERVAÇÃO OU INTERNAÇÃO<small>Tratar imediatamente e reavaliar em até 1 hora ou antes se houver piora.</small></div>';
+  if(g==='MODERADA') return '<div class="mainAlert mainAlertModerada">🟡 EXACERBAÇÃO MODERADA — TRATAMENTO IMEDIATO E REAVALIAÇÃO EM ATÉ 1 HORA<small>Manter vigilância da resposta; piora ou resposta insuficiente deve elevar rapidamente a intensidade do cuidado.</small></div>';
+  if(risco) return '<div class="mainAlert mainAlertRisco">🚩 FATOR DE RISCO / RED FLAG PRESENTE — NÃO TRATAR COMO ALTA ROTINEIRA<small>Considerar observação mais prolongada, reavaliação precoce e menor limiar para internação conforme contexto.</small></div>';
+  return '';
 }
 
 /* ---------- Motor principal ---------- */
 function calcularTudo(){
   try{
     el('erro').style.display='none';
-    var idade=val('idade'), peso=val('peso');
-    if(!idade || !peso){ el('erro').textContent='Preencha idade e peso.'; el('erro').style.display='block'; return; }
+    var idade=val('idade'),peso=val('peso');
+    if(!idade||!peso){ return false; }
+    if(idadeAnos()>=18){
+      el('placeholder').style.display='flex';
+      el('saida').style.display='none';
+      el('erro').textContent='Esta versão foi ajustada para pediatria/adolescência (<18 anos).';
+      el('erro').style.display='block';
+      return false;
+    }
     var faltantes=camposObrigatoriosAusentes();
-    if(faltantes.length){ el('erro').innerHTML='<b>Complete os parâmetros de gravidade:</b> '+faltantes.join(', ')+'.'; el('erro').style.display='block'; return; }
-    estado={age:idadeAnos(), peso:peso, grav:classificarFinal(), sat:val('sat')};
-
-    el('placeholder').style.display='none';
-    el('saida').style.display='block';
-
-    var g=estado.grav, sc=sevClass(g), pscore=pramScore();
-    el('resumo').innerHTML =
-      '<div class="severityBanner sev-'+sc+'">'
-      +'<div class="sevIcon">'+sevIcon(g)+'</div>'
-      +'<div class="sevMain"><div class="sevLabel">Classificação da crise</div><div class="sevValue">'+g+'</div></div>'
-      +'<div class="sevChips">'
-      +'<span class="sevChip">'+faixaEtaria()+'</span>'
-      +'<span class="sevChip">'+idadeTexto()+'</span>'
-      +'<span class="sevChip">'+peso+' kg</span>'
-      +'<span class="sevChip">'+(el('usarPram').value==='sim'?'PRAM '+pscore+' · '+pramClasse(pscore):'PRAM não aplicado')+'</span>'
-      +'</div></div>';
-    el('racional').innerHTML = renderRacionalClassificacao(g);
-
+    if(faltantes.length){ return false; }
+    estado={age:idadeAnos(),peso:peso,grav:classificarFinal(),sat:val('sat')};
+    el('placeholder').style.display='none';el('saida').style.display='block';
+    var g=estado.grav,sc=sevClass(g),pscore=pramScore(),pramChip='PRAM não aplicado';
+    if(pramElegivel()&&pscore!==null) pramChip='PRAM '+pscore+' · '+pramClasse(pscore);
+    else if(!pramElegivel()) pramChip='PRAM não aplicável';
+    el('resumo').innerHTML='<div class="severityBanner sev-'+sc+'"><div class="sevIcon">'+sevIcon(g)+'</div><div class="sevMain"><div class="sevLabel">Classificação da exacerbação</div><div class="sevValue">'+g+'</div></div><div class="sevChips"><span class="sevChip">'+faixaEtaria()+'</span><span class="sevChip">'+idadeTexto()+'</span><span class="sevChip">'+peso+' kg</span><span class="sevChip">'+pramChip+'</span></div></div>';
+    el('alertaPrincipal').innerHTML=renderAlertaPrincipal(g);
+    el('racional').innerHTML=renderRacionalClassificacao(g);
     var a='';
-    if(g==='AMEAÇA À VIDA') a+='<div class="box dangerbox">🆘 <b>Ameaça à vida:</b> suporte imediato, leito de vermelha, monitorização, considerar UTI. Se anafilaxia, adrenalina IM antes do broncodilatador.</div>';
-    else if(g==='GRAVE') a+='<div class="box dangerbox">🔴 <b>Crise grave:</b> broncodilatador em alta dose, ipratrópio, corticoide sistêmico, vigilância estreita e considerar MgSO₄ se refratária.</div>';
-    else if(g==='MODERADA') a+='<div class="box warn">🟡 <b>Crise moderada:</b> salbutamol '+sabaDose(g,estado.age)+' jatos, ipratrópio 4 jatos associado, corticoide sistêmico e reavaliação em 1 hora.</div>';
-    else a+='<div class="box ok">🟢 <b>Crise leve:</b> salbutamol 4 jatos; avaliar resposta antes de repetir. Corticoide sistêmico não automático se boa resposta.</div>';
-
-    if(el('consciencia').value==='agitado') a+='<div class="box dangerbox">⚠️ <b>Agitação importante:</b> tratada de forma conservadora como sinal grave de possível hipóxia; reavaliar imediatamente.</div>';
-    if(redFlags()) a+='<div class="box dangerbox">🚩 <b>Red flag marcada:</b> menor limiar para observação prolongada, internação ou retorno precoce.</div>';
-    if(estado.sat && estado.sat>=92) a+='<div class="box info">💡 <b>Oxigênio:</b> GINA 2026 priorizado — não dar O₂ por reflexo se SatO₂ ≥92% e sem ameaça à vida.</div>';
+    if(g==='AMEAÇA À VIDA') a+='<div class="box dangerbox">🆘 <b>Ameaça à vida:</b> manter monitorização contínua e preparar escalonamento de suporte.</div>';
+    else if(g==='GRAVE') a+='<div class="box dangerbox">🔴 <b>Grave:</b> SABA + ipratrópio + corticoide sistêmico; O₂ se &lt;92%; considerar MgSO₄ se resposta inadequada.</div>';
+    else if(g==='MODERADA') a+='<div class="box warn">🟡 <b>Moderada:</b> salbutamol '+sabaDose(g,estado.age)+' jatos + ipratrópio + corticoide sistêmico; reavaliar em 1 h ou antes.</div>';
+    else a+='<div class="box ok">🟢 <b>Leve:</b> salbutamol 4 jatos e reavaliar antes de repetir; OCS não é automático.</div>';
+    if(taquipneiaDiscordantePram()) a+='<div class="box dangerbox">⚠️ <b>TAQUIPNEIA DISCORDANTE DO PRAM:</b> '+textoAlertaTaquipneia()+'</div>';
+    if(pramElegivel()&&el('usarPram').value!=='sim') a+='<div class="box warn">📊 <b>PRAM não aplicado:</b> GINA 2026 recomenda fortemente um escore clínico validado em 2–17 anos. Use o escore quando possível, sem substituir o julgamento clínico.</div>';
+    if(redFlags()) a+='<div class="box dangerbox">🚩 <b>Risco aumentado:</b> menor limiar para observação/internação e revisão precoce do tratamento.</div>';
+    if(estado.sat>=92) a+='<div class="box info">💡 <b>Oxigênio:</b> não iniciar por reflexo se SpO₂ ≥92% e sem ameaça à vida.</div>';
+    if(estado.age>=6) a+='<div class="box warn">💊 <b>Formulário local:</b> não há ICS-formoterol. A alta será organizada com Aerolin PRN + ICS disponível, com aviso de que isso não equivale ao Track 1/MART preferido pelo GINA quando aplicável.</div>';
+    if(estado.age<1) a+='<div class="box info">👶 <b>Lactente:</b> rever bronquiolite e outros diagnósticos alternativos.</div>';
     el('alertas').innerHTML=a;
-
-    pintar('hora1','rx1', stepsPrimeiraHora());
-    pintar('alta','rxAlta', stepsAlta());
-    pintar('internacao','rxInternacao', stepsInternacao());
-    el('rxBases').innerHTML = rxBasesHTML();
-
-    el('rx2').innerHTML='<p class="note">Selecione a resposta após a 1ª hora para gerar a conduta adaptada.</p>';
-    el('rx3').innerHTML='<p class="note">Selecione a resposta após a 2ª hora para gerar a conduta adaptada.</p>';
-  } catch(e){
-    el('erro').textContent='Erro ao gerar conduta: '+e.message;
-    el('erro').style.display='block';
-  }
+    pintar('hora1','rx1',stepsPrimeiraHora());
+    pintar('alta','rxAlta',stepsAlta());
+    pintar('internacao','rxInternacao',stepsInternacao());
+    el('rxBases').innerHTML=rxBasesHTML();
+    el('rx2').innerHTML='<p class="note">Selecione a resposta após a 1ª hora.</p>';
+    el('rx3').innerHTML='<p class="note">Selecione a resposta após a 2ª hora.</p>';
+    return true;
+  }catch(e){el('erro').textContent='Erro ao gerar conduta: '+e.message;el('erro').style.display='block'; return false;}
 }
+function atualizarAutomaticamente(){
+  atualizarCoresAoVivo();
+  el('erro').style.display='none';
+
+  var idade=val('idade'), peso=val('peso');
+  var pronto = idade>0 && peso>0 && idadeAnos()<18 && camposObrigatoriosAusentes().length===0;
+
+  if(!pronto){
+    estado={};
+    el('saida').style.display='none';
+    el('placeholder').style.display='flex';
+    if(el('alertaPrincipal')) el('alertaPrincipal').innerHTML='';
+    return;
+  }
+
+  calcularTudo();
+}
+
 function mostrarPainel(id,btn){
   var p=document.querySelectorAll('.painel');
   for(var i=0;i<p.length;i++) p[i].style.display='none';
@@ -1046,11 +1147,6 @@ function mostrarPainel(id,btn){
   var t=document.querySelectorAll('button.tab');
   for(var j=0;j<t.length;j++) t[j].classList.remove('active');
   btn.classList.add('active');
-}
-function copiarTexto(id){
-  var text = textos[id] || (el(id)?el(id).textContent:'');
-  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){alert('Copiado!')}).catch(function(){alert('Não foi possível copiar automaticamente. Copie manualmente.');}); }
-  else alert('Copie manualmente o texto.');
 }
 function limparTudo(){
   var inputs=document.querySelectorAll('input');
@@ -1063,19 +1159,29 @@ function limparTudo(){
   el('unidade').value='anos';
   el('usarPram').value='nao';
   el('pramSatModo').value='auto';
+  if(el('pramSeveroClinico')) el('pramSeveroClinico').checked=false;
+  if(el('pramAmeaca')) el('pramAmeaca').checked=false;
+  if(el('alertaPrincipal')) el('alertaPrincipal').innerHTML='';
+  el('tratamentoHabitual').value='nenhum';
   el('placeholder').style.display='flex';
   el('saida').style.display='none';
   el('erro').style.display='none';
-  textos={};
   atualizarCoresAoVivo();
 }
 document.addEventListener('DOMContentLoaded',function(){
-  var campos=document.querySelectorAll('#idade,#unidade,#sat,#fr,#frRel,#pef,#fala,#consciencia,#musculatura,#entradaAr,#sibilos,#usarPram,#pramSatModo,#pramSupra,#pramEscaleno,#pramEntrada,#pramSibilo');
-  for(var i=0;i<campos.length;i++){
-    campos[i].addEventListener('input',atualizarCoresAoVivo);
-    campos[i].addEventListener('change',atualizarCoresAoVivo);
+  // Toda a lateral funciona em modo reativo: qualquer alteração recalcula a conduta.
+  var lateral=document.querySelector('.leftPane');
+  if(lateral){
+    lateral.addEventListener('input',function(e){
+      if(e.target.matches('input,select')) atualizarAutomaticamente();
+    });
+    lateral.addEventListener('change',function(e){
+      if(e.target.matches('input,select')) atualizarAutomaticamente();
+    });
   }
+
   atualizarCoresAoVivo();
+  atualizarAutomaticamente();
 });
 </script>
 </body>
