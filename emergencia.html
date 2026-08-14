@@ -780,12 +780,15 @@ function calcIOT(){
  <div class="box red"><b>Pós-IOT:</b> confirmar posição, fixar tubo, capnografia se disponível, RX, analgesia/sedação contínua, ventilação adequada e reavaliar hemodinâmica.</div>`
 }
 function calcDor(){
- const p=n("peso"),dip=15*p,para=15*p,ibu=10*p,onda=Math.min(.15*p,8);
+ const p=n("peso"),dip=15*p,para=15*p,ibu=Math.min(10*p,200),onda=Math.min(.15*p,8);
+ const ibu50=Math.min(ibu/5,40),ibu100=Math.min(ibu/10,20),ibu200=Math.min(ibu/20,10);
  return `
  ${medCard("Dipirona 500 mg/mL injetável",`${mg(dip)} = ${ml(dip/500)}`,`EV: diluir em SF 0,9% para formar 10–20 mL e administrar lento. IM: sem diluir.`,`Macete EV/IM: peso × 0,02 a 0,03 mL.`,"blue")}
  ${medCard("Dipirona 500 mg/mL gotas",`${fmt(.4*p)}–${fmt(.6*p)} gotas`,`VO se dor/febre, conforme intervalo do serviço.`,`Macete em gotas: peso × 0,4 a 0,6. Evitar 1 gota/kg para não superdosar.`,"blue")}
  ${medCard("Paracetamol 200 mg/mL gotas",`${mg(para)} ≈ ${fmt(Math.min(p,35))} gotas`,`Dose 10–15 mg/kg/dose a cada 4–6 h. Máx. usual 35 gotas/dose.`,`Macete: 1 gota/kg, máximo 35 gotas/dose.`,"blue")}
- ${medCard("Ibuprofeno 100 mg/5 mL",`${mg(ibu)} = ${ml(ibu/20)}`,`Dose 5–10 mg/kg/dose. Evitar em desidratação, doença renal, sangramento e lactentes pequenos.`,`Macete com 100 mg/5 mL: 10 mg/kg = peso × 0,5 mL.`,"warn")}
+ ${medCard("Ibuprofeno 50 mg/mL gotas",`${mg(ibu)} = ${fmt(ibu50)} gotas`,`Dose calculada em 10 mg/kg/dose, limitada a 200 mg por dose.`,`Máximo: 40 gotas por dose.`,"warn")}
+ ${medCard("Ibuprofeno 100 mg/mL gotas",`${mg(ibu)} = ${fmt(ibu100)} gotas`,`Dose calculada em 10 mg/kg/dose, limitada a 200 mg por dose.`,`Máximo: 20 gotas por dose.`,"warn")}
+ ${medCard("Ibuprofeno 200 mg/mL gotas",`${mg(ibu)} = ${fmt(ibu200)} gotas`,`Dose calculada em 10 mg/kg/dose, limitada a 200 mg por dose.`,`Máximo: 10 gotas por dose.`,"warn")}
  ${medCard("Ondansetrona 2 mg/mL EV",`${mg(onda)} = ${ml(onda/2)}`,`Dose 0,15 mg/kg/dose, máx. usual 8 mg. Administrar EV lento.`,`Macete: peso × 0,075 mL.`,"warn")}
  ${medCard("Ondansetrona 4 mg/5 mL VO",`${mg(onda)} = ${ml(onda/0.8)}`,`Solução oral 0,8 mg/mL. Útil se vômitos e sem necessidade EV.`,`Macete: dose mg ÷ 0,8 = mL.`,"warn")}`
 }
