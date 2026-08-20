@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icterícia Neonatal — SBP | Apoio Clínico Offline</title>
+<style>
+:root{
+  --bg:#f4f7fb;
+  --panel:#ffffff;
+  --panel2:#f8fbff;
+  --ink:#17324d;
+  --muted:#61758a;
+  --line:#d9e4ee;
+  --navy:#123a5a;
+  --blue:#1f6fa8;
+  --cyan:#0d8b8f;
+  --cyan2:#e8f8f7;
+  --green:#2f7d57;
+  --green2:#eaf7ef;
+  --amber:#a66608;
+  --amber2:#fff5df;
+  --red:#a33838;
+  --red2:#fff0ef;
+  --purple:#7052a0;
+  --purple2:#f4effc;
+  --shadow:0 10px 28px rgba(18,58,90,.08);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.48;
+}
+button,input,select,textarea{font:inherit}
+a{color:var(--blue)}
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(110deg,var(--navy),#16567e);
+  color:white; padding:14px 20px;
+  box-shadow:0 6px 18px rgba(18,58,90,.18);
+}
+.topbar-inner{max-width:1600px;margin:auto;display:flex;gap:18px;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:12px;align-items:center}
+.brand-badge{
+  width:42px;height:42px;border-radius:12px;background:#fff;color:var(--navy);
+  display:grid;place-items:center;font-size:22px;font-weight:900
+}
+.brand h1{font-size:18px;margin:0;line-height:1.2}
+.brand small{opacity:.85}
+.status-pill{
+  padding:7px 10px;border:1px solid rgba(255,255,255,.35);border-radius:999px;
+  font-size:12px;white-space:nowrap;background:rgba(255,255,255,.08)
+}
+.layout{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:255px minmax(0,1fr);gap:18px;padding:18px}
+.sidebar{
+  position:sticky;top:88px;align-self:start;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;max-height:calc(100vh - 105px);overflow:auto
+}
+.navtitle{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;padding:8px}
+.navlink{
+  display:block;text-decoration:none;color:var(--ink);padding:9px 10px;border-radius:10px;font-weight:650;font-size:13px
+}
+.navlink:hover{background:#eef6fb;color:var(--blue)}
+.clear-btn{
+  width:100%;border:0;border-radius:11px;background:var(--navy);color:white;font-weight:850;
+  padding:11px 10px;cursor:pointer;margin-top:10px
+}
+.clear-btn:hover{filter:brightness(1.08)}
+main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#f8fdff,#eff9fb);
+  border:1px solid #cfe4eb;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:14px
+}
+.hero-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:18px}
+.hero h2{margin:2px 0 4px;font-size:21px;letter-spacing:-.01em}
+.hero p{margin:0;color:var(--muted);font-size:12px}
+.source-box{
+  border-left:4px solid var(--cyan);background:white;border-radius:12px;padding:12px 14px;font-size:13px
+}
+.source-box strong{display:block;color:var(--navy)}
+.alert{
+  border-radius:13px;padding:12px 14px;margin:12px 0;border:1px solid
+}
+.alert.red{background:var(--red2);border-color:#f0c0bb;color:#7e2828}
+.emergency-compact{background:#ffd8d4!important;border-color:#d83b32!important;color:#7f1713!important;padding:6px 9px!important;margin:0!important;font-size:11px!important;line-height:1.25!important;border-left:5px solid #b91c1c!important;box-shadow:none!important}
+.emergency-compact b{color:#a30f0a;letter-spacing:.02em}
+.alert.amber{background:var(--amber2);border-color:#efd39c;color:#7c510a}
+.alert.green{background:var(--green2);border-color:#bfe1cb;color:#245f43}
+.alert.blue{background:#edf7ff;border-color:#c5deef;color:#20577a}
+.alert.purple{background:var(--purple2);border-color:#d9cbed;color:#59407f}
+.section{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;margin-bottom:18px;scroll-margin-top:92px
+}
+.section h2{margin:0 0 4px;font-size:22px}
+.section h3{margin:20px 0 8px;font-size:17px}
+.section-sub{color:var(--muted);margin:0 0 14px;font-size:13px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;color:var(--muted);font-weight:750}
+.field input,.field select{
+  width:100%;border:1px solid #cfdde8;background:white;color:var(--ink);
+  border-radius:10px;padding:10px 11px;outline:none
+}
+.field input:focus,.field select:focus{border-color:#6ca8ca;box-shadow:0 0 0 3px rgba(31,111,168,.10)}
+.checkbox-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.check{
+  border:1px solid var(--line);border-radius:10px;padding:9px 10px;display:flex;gap:8px;align-items:flex-start;
+  background:var(--panel2);font-size:12px
+}
+.check input{margin-top:2px}
+.card{
+  border:1px solid var(--line);border-radius:13px;padding:13px;background:var(--panel2)
+}
+.card h4{margin:0 0 6px;font-size:14px}
+.metric-wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.metric{
+  border-radius:13px;padding:12px;background:white;border:1px solid var(--line);min-height:88px
+}
+.metric .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:850}
+.metric .v{font-size:22px;font-weight:900;margin-top:5px;color:var(--navy)}
+.metric .s{font-size:11px;color:var(--muted)}
+.result{
+  border:2px solid #bfd8e6;border-radius:16px;padding:16px;background:#f7fcff;margin-top:14px
+}
+.result h3{margin:0 0 10px}
+.result-line{padding:8px 0;border-bottom:1px dashed #d3e1e9}
+.result-line:last-child{border-bottom:0}
+.tag{
+  display:inline-block;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.04em;
+  margin-left:5px;vertical-align:middle
+}
+.tag.red{background:#f7d5d2;color:#8c2d2d}
+.tag.amber{background:#f7e5b8;color:#79500c}
+.tag.green{background:#dcefe3;color:#276244}
+.tag.blue{background:#dceefa;color:#275b7b}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:680px;background:white}
+th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center;font-size:12px}
+th{background:#eaf5f8;color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:0}
+td:first-child,th:first-child{text-align:left}
+.kv{display:grid;grid-template-columns:210px 1fr;border-top:1px solid var(--line)}
+.kv div{padding:9px 10px;border-bottom:1px solid var(--line);font-size:12px}
+.kv div:nth-child(odd){font-weight:800;background:#f8fbfd}
+details{border:1px solid var(--line);border-radius:12px;background:#fbfdff;margin:10px 0}
+summary{cursor:pointer;padding:12px 14px;font-weight:850;color:var(--navy)}
+details>div{padding:0 14px 14px}
+ul.compact{margin:7px 0;padding-left:19px}
+ul.compact li{margin:4px 0}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:stretch}
+.flow .step{
+  border:1px solid #cddfe8;border-radius:12px;padding:11px;background:#f7fbfd;font-size:12px;position:relative
+}
+.flow .step strong{display:block;color:var(--navy);margin-bottom:4px}
+.flow .danger{background:var(--red2);border-color:#efc0ba}
+.flow .warn{background:var(--amber2);border-color:#ecd19f}
+.flow .ok{background:var(--green2);border-color:#c3dfcc}
+.note{font-size:11px;color:var(--muted)}
+.generated{
+  white-space:pre-wrap;background:#112f49;color:#eef8ff;border-radius:14px;padding:14px;
+  min-height:180px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.55
+}
+footer{padding:10px 4px 32px;color:var(--muted);font-size:11px}
+.ref-list li{margin:7px 0}
+.smallcaps{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted)}
+hr.soft{border:0;border-top:1px solid var(--line);margin:16px 0}
+@media (max-width:1050px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .navtitle{grid-column:1/-1}
+  .clear-btn{grid-column:1/-1}
+  .hero-grid,.g4,.g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .checkbox-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .metric-wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:650px){
+  .layout{padding:10px}
+  .topbar{padding:10px 12px}
+  .status-pill{display:none}
+  .sidebar{grid-template-columns:repeat(2,1fr)}
+  .hero{padding:15px}
+  .hero-grid,.g2,.g3,.g4,.checkbox-grid,.metric-wrap,.flow{grid-template-columns:1fr}
+  .hero h2{font-size:23px}
+  .section{padding:14px}
+  .kv{grid-template-columns:1fr}
+}
+@media print{
+  .sidebar,.topbar{display:none}
+  .layout{display:block;padding:0}
+  .section,.hero{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-badge">☀</div>
+      <div>
+        <h1>Icterícia Neonatal — SBP</h1>
+      </div>
+    </div>
+    <div class="status-pill">SBP 2021 + Colestase 2024 + Prematuro tardio 2026</div>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="navtitle">Navegação rápida</div>
+  <a class="navlink" href="#avaliacao">🩺 Avaliação do RN</a>
+  <a class="navlink" href="#resultado">⚡ Conduta automática</a>
+  <a class="navlink" href="#triagem">🔎 Triagem / investigação</a>
+  <a class="navlink" href="#maior35">💡 RN ≥35 semanas</a>
+  <a class="navlink" href="#menor35">👶 RN &lt;35 semanas</a>
+  <a class="navlink" href="#fototerapia">🔆 Fototerapia</a>
+  <a class="navlink" href="#est">🩸 Exsanguíneotransfusão</a>
+  <a class="navlink" href="#colestase">🟡 Colestase</a>
+  <a class="navlink" href="#alta">🏠 Alta / seguimento</a>
+  <a class="navlink" href="#pais">👨‍👩‍👧 Orientações</a>
+  <a class="navlink" href="#resumo">📋 Resumo clínico</a>
+  <a class="navlink" href="#fontes">📚 Fontes</a>
+  <button class="clear-btn" id="clearBtn">LIMPAR CAMPOS</button>
+</aside>
+
+<main>
+<section class="hero">
+  <div class="alert red emergency-compact"><b>EMERGÊNCIA:</b> sinais de encefalopatia bilirrubínica (sucção débil/hipotonia, hipertonia, opistótono, choro agudo, febre ou convulsões) → abordagem imediata e avaliação para exsanguíneotransfusão.</div>
+</section>
+
+<section class="section" id="avaliacao">
+  <h2>🩺 1. Avaliação do recém-nascido</h2>
+  <p class="section-sub">Preencha apenas o que estiver disponível. A conduta abaixo é atualizada automaticamente.</p>
+
+  <div class="grid g4">
+    <div class="field">
+      <label>Idade gestacional ao nascer — semanas</label>
+      <input id="gaWeeks" type="number" min="22" max="42" step="1" placeholder="Ex.: 38">
+    </div>
+    <div class="field">
+      <label>Dias adicionais da IG</label>
+      <select id="gaDays">
+        <option value="0">0/7</option><option value="1">1/7</option><option value="2">2/7</option>
+        <option value="3">3/7</option><option value="4">4/7</option><option value="5">5/7</option><option value="6">6/7</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Idade pós-natal atual (horas)</label>
+      <input id="ageHours" type="number" min="0" max="2160" step="1" placeholder="Ex.: 48">
+    </div>
+    <div class="field">
+      <label>Icterícia presente?</label>
+      <select id="jaundice">
+        <option value="">Não informado</option>
+        <option value="no">Não</option>
+        <option value="yes">Sim</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:12px">
+    <div class="field">
+      <label>Peso ao nascer (g)</label>
+      <input id="birthWeight" type="number" min="300" max="6000" step="1" placeholder="Ex.: 3200">
+    </div>
+    <div class="field">
+      <label>Peso atual (g)</label>
+      <input id="currentWeight" type="number" min="300" max="6000" step="1" placeholder="Ex.: 2950">
+    </div>
+    <div class="field">
+      <label>BT sérica (mg/dL)</label>
+      <input id="bt" type="number" min="0" max="60" step="0.1" placeholder="Ex.: 14.2">
+    </div>
+    <div class="field">
+      <label>BD (mg/dL)</label>
+      <input id="bd" type="number" min="0" max="40" step="0.1" placeholder="Ex.: 0.5">
+    </div>
+  </div>
+
+  <div class="grid g4" style="margin-top:12px">
+    <div class="field">
+      <label>Bilirrubina transcutânea — TcB (mg/dL)</label>
+      <input id="tcb" type="number" min="0" max="40" step="0.1" placeholder="Opcional">
+    </div>
+    <div class="field">
+      <label>Albumina sérica (g/dL)</label>
+      <input id="albumin" type="number" min="0" max="6" step="0.1" placeholder="Opcional">
+    </div>
+    <div class="field">
+      <label>Extensão clínica</label>
+      <select id="zone">
+        <option value="">Não informado</option>
+        <option value="none">Sem icterícia visível</option>
+        <option value="z1">Face (zona 1)</option>
+        <option value="z2">Face até umbigo (zona 2)</option>
+        <option value="z3">Até joelhos (zona 3)</option>
+        <option value="belowNipple">Abaixo da linha mamilar</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Em fototerapia atualmente?</label>
+      <select id="onPhoto">
+        <option value="">Não informado</option>
+        <option value="no">Não</option>
+        <option value="yes">Sim</option>
+      </select>
+    </div>
+  </div>
+
+  <h3>Fatores clínico-epidemiológicos / etiológicos</h3>
+  <div class="checkbox-grid">
+    <label class="check"><input class="riskEpi" id="rh" type="checkbox"> Incompatibilidade materno-fetal Rh</label>
+    <label class="check"><input class="riskEpi" id="abo" type="checkbox"> Incompatibilidade ABO (mãe O / RN A ou B)</label>
+    <label class="check"><input class="riskEpi" id="otherAb" type="checkbox"> Anticorpos eritrocitários irregulares</label>
+    <label class="check"><input class="riskEpi" id="feeding" type="checkbox"> Dificuldade de amamentação / baixa ingesta</label>
+    <label class="check"><input class="riskEpi" id="siblingPhoto" type="checkbox"> Irmão prévio tratou icterícia com fototerapia</label>
+    <label class="check"><input class="riskEpi" id="cephalo" type="checkbox"> Céfalo-hematoma / equimoses</label>
+    <label class="check"><input class="riskEpi" id="maternalDM" type="checkbox"> Mãe diabética</label>
+    <label class="check"><input class="riskEpi" id="asian" type="checkbox"> Descendência asiática (fator epidemiológico SBP 2021)</label>
+    <label class="check"><input class="riskEpi" id="male" type="checkbox"> Sexo masculino (fator epidemiológico SBP 2021)</label>
+  </div>
+
+  <h3>Fatores que reduzem o limiar de fototerapia em RN ≥35 semanas</h3>
+  <div class="checkbox-grid">
+    <label class="check"><input class="neuroRisk" id="hemolysis" type="checkbox"> Doença hemolítica</label>
+    <label class="check"><input class="neuroRisk" id="g6pd" type="checkbox"> Deficiência de G6PD / forte suspeita</label>
+    <label class="check"><input class="neuroRisk" id="asphyxia" type="checkbox"> Asfixia</label>
+    <label class="check"><input class="neuroRisk" id="lethargy" type="checkbox"> Letargia</label>
+    <label class="check"><input class="neuroRisk" id="tempInstability" type="checkbox"> Instabilidade térmica</label>
+    <label class="check"><input class="neuroRisk" id="sepsis" type="checkbox"> Sepse</label>
+    <label class="check"><input class="neuroRisk" id="acidosis" type="checkbox"> Acidose</label>
+    <label class="check"><input class="neuroRisk" id="albLow" type="checkbox"> Albumina &lt;3 g/dL</label>
+  </div>
+
+  <h3>Sinais neurológicos de alarme</h3>
+  <div class="checkbox-grid">
+    <label class="check"><input class="neuroSign" id="poorSuck" type="checkbox"> Sucção débil / hipotonia</label>
+    <label class="check"><input class="neuroSign" id="hypertonia" type="checkbox"> Hipertonia</label>
+    <label class="check"><input class="neuroSign" id="opistho" type="checkbox"> Opistótono</label>
+    <label class="check"><input class="neuroSign" id="highCry" type="checkbox"> Choro agudo / neurológico</label>
+    <label class="check"><input class="neuroSign" id="seizure" type="checkbox"> Convulsão</label>
+    <label class="check"><input class="neuroSign" id="feverNeuro" type="checkbox"> Febre associada ao quadro neurológico</label>
+  </div>
+
+  <h3>Pistas de colestase</h3>
+  <div class="checkbox-grid">
+    <label class="check"><input class="cholSign" id="acholia" type="checkbox"> Acolia / hipocolia fecal</label>
+    <label class="check"><input class="cholSign" id="darkUrine" type="checkbox"> Colúria / urina escura</label>
+    <label class="check"><input class="cholSign" id="hepatomegaly" type="checkbox"> Hepatomegalia / esplenomegalia</label>
+  </div>
+
+  <div class="metric-wrap">
+    <div class="metric"><div class="k">IG calculada</div><div class="v" id="mGa">—</div><div class="s" id="mGaSub">preencher IG</div></div>
+    <div class="metric"><div class="k">Perda ponderal</div><div class="v" id="mWeight">—</div><div class="s" id="mWeightSub">preencher pesos</div></div>
+    <div class="metric"><div class="k">BI calculada</div><div class="v" id="mBi">—</div><div class="s">BT − BD</div></div>
+    <div class="metric"><div class="k">Ponto SBP usado</div><div class="v" id="mAgePoint">—</div><div class="s">sem interpolação</div></div>
+  </div>
+</section>
+
+<section class="section" id="resultado">
+  <h2>⚡ 2. Conduta automática</h2>
+  <p class="section-sub">A ferramenta usa os pontos discretos da Tabela 9 da SBP para RN ≥35 semanas. Entre dois pontos, usa o ponto anterior de forma conservadora e informa isso no resultado; não realiza interpolação.</p>
+
+  <div id="criticalAlerts"></div>
+
+  <div class="result">
+    <h3>Resultado atual</h3>
+    <div id="mainResult"><div class="result-line">Preencha idade gestacional, idade pós-natal e BT para calcular os limiares.</div></div>
+  </div>
+
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card">
+      <h4>💡 Limiar de fototerapia</h4>
+      <div id="photoThreshold">—</div>
+    </div>
+    <div class="card">
+      <h4>🩸 Limiar de EST</h4>
+      <div id="estThreshold">—</div>
+    </div>
+    <div class="card">
+      <h4>⏱ Repetir BT</h4>
+      <div id="repeatBt">Conforme evolução clínica e distância do limiar terapêutico.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="triagem">
+  <h2>🔎 3. Triagem e investigação etiológica</h2>
+  <p class="section-sub">A inspeção visual isolada não é suficiente para excluir hiperbilirrubinemia importante; BT sérica é o padrão-ouro.</p>
+
+  <div class="flow">
+    <div class="step danger"><strong>Icterícia &lt;24–36 h</strong>BT com frações + investigar etiologia, especialmente hemólise.</div>
+    <div class="step warn"><strong>Icterícia &gt;36 h</strong>Se ≥ zona 2, colher BT/frações, reavaliar fatores de risco e etiologia.</div>
+    <div class="step"><strong>Sem icterícia / zona 1 até 48 h</strong>Reavaliar fatores de risco e programar seguimento.</div>
+    <div class="step ok"><strong>≥14 dias</strong>BT + BD, cor de fezes/urina; pensar em colestase.</div>
+  </div>
+
+  <h3>Quando a SBP orienta solicitar BT antes da alta em RN ≥35 semanas</h3>
+  <div class="grid g2">
+    <div class="card">
+      <ul class="compact">
+        <li>Icterícia nas primeiras 24–36 horas.</li>
+        <li>Incompatibilidade materno-fetal Rh.</li>
+        <li>Incompatibilidade ABO: mãe O e RN A ou B.</li>
+        <li>Icterícia em RN de 35–36 semanas, independentemente do peso.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <ul class="compact">
+        <li>Dificuldade de amamentação e/ou perda de peso &gt;7% do peso de nascimento.</li>
+        <li>RN termo com icterícia abaixo da linha mamilar.</li>
+        <li>Outros fatores de risco devem reduzir a tolerância para investigação.</li>
+      </ul>
+    </div>
+  </div>
+
+  <details open>
+    <summary>Investigação prática — hiperbilirrubinemia indireta / suspeita de hemólise</summary>
+    <div>
+      <div class="grid g3">
+        <div class="card"><h4>Laboratório básico</h4><ul class="compact"><li>BT e frações.</li><li>Hemograma / Hb / Ht.</li><li>Reticulócitos.</li></ul></div>
+        <div class="card"><h4>Imuno-hematologia</h4><ul class="compact"><li>ABO/Rh materno e do RN.</li><li>Coombs direto no RN.</li><li>Anticorpos irregulares, quando pertinente.</li></ul></div>
+        <div class="card"><h4>Etiologias adicionais</h4><ul class="compact"><li>G6PD.</li><li>Considerar urocultura em icterícia prolongada.</li><li>Triagem metabólica / TSH e T4L em icterícia prolongada.</li></ul></div>
+      </div>
+      <div class="alert amber"><b>G6PD:</b> em hemólise com reticulocitose, a dosagem pode resultar falsamente normal pela maior atividade das hemácias jovens; correlacionar com contexto clínico.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Icterícia relacionada ao aleitamento / leite materno</summary>
+    <div>
+      <p><b>Baixa ingesta / dificuldade de amamentação:</b> aumenta a circulação entero-hepática, perda de peso e risco de hiperbilirrubinemia. Deve levar a avaliação da técnica, frequência/efetividade das mamadas, diurese, evacuações e evolução ponderal.</p>
+      <p><b>Icterícia do leite materno:</b> pode iniciar após os primeiros dias e persistir por semanas em lactente clinicamente bem, com ganho ponderal e fezes/urina de coloração habitual. É diagnóstico de exclusão, após afastar hemólise, G6PD, hipotireoidismo e colestase.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Zonas clínicas — usar apenas como triagem</summary>
+    <div>
+      <div class="kv">
+        <div>Zona 1 — face</div><div>Historicamente associada a BI ~4–8 mg/dL.</div>
+        <div>Zona 2 — face até umbigo</div><div>Historicamente associada a BI ~5–12 mg/dL.</div>
+        <div>Zona 3 — até joelhos</div><div>Pode ocorrer com BI &gt;15 mg/dL.</div>
+      </div>
+      <div class="alert red"><b>Não usar zona clínica para decisão terapêutica.</b> A SBP ressalta baixa concordância entre avaliação visual e bilirrubinemia, com influência da iluminação e pigmentação da pele.</div>
+    </div>
+  </details>
+</section>
+
+<section class="section" id="maior35">
+  <h2>💡 4. RN ≥35 semanas — limiares SBP</h2>
+  <p class="section-sub">Tabela simplificada do Manual de Orientação SBP 2021. Usar BT total; não descontar BD.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">Idade pós-natal</th>
+          <th colspan="2">Fototerapia — BT mg/dL</th>
+          <th colspan="2">Exsanguíneotransfusão — BT mg/dL</th>
+        </tr>
+        <tr>
+          <th>35–37+6 sem</th><th>≥38 sem</th><th>35–37+6 sem</th><th>≥38 sem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>24 h</td><td>8</td><td>10</td><td>15</td><td>18</td></tr>
+        <tr><td>36 h</td><td>9,5</td><td>11,5</td><td>16</td><td>20</td></tr>
+        <tr><td>48 h</td><td>11</td><td>13</td><td>17</td><td>21</td></tr>
+        <tr><td>72 h</td><td>13</td><td>15</td><td>18</td><td>22</td></tr>
+        <tr><td>96 h</td><td>14</td><td>16</td><td>20</td><td>23</td></tr>
+        <tr><td>5–7 dias</td><td>15</td><td>17</td><td>21</td><td>24</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert amber"><b>Ajuste SBP:</b> reduzir em <b>2 mg/dL o limiar de fototerapia</b> quando houver doença hemolítica, deficiência de G6PD, asfixia, letargia, instabilidade térmica, sepse, acidose ou albumina &lt;3 g/dL.</div>
+
+  <div class="grid g3">
+    <div class="card"><h4>BT 17–19 mg/dL</h4>Fototerapia de alta intensidade; repetir BT em <b>4–6 h</b>.</div>
+    <div class="card"><h4>BT 20–25 mg/dL</h4>Fototerapia de alta intensidade; repetir BT em <b>3–4 h</b>.</div>
+    <div class="card"><h4>BT &gt;25 mg/dL</h4>Fototerapia intensiva; repetir BT em <b>2–3 h</b> enquanto se prepara material para EST.</div>
+  </div>
+
+  <div class="alert red"><b>EST imediata:</b> se houver sinais de encefalopatia bilirrubínica/kernicterus ou BT ≥5 mg/dL acima do limiar correspondente de EST.</div>
+</section>
+
+<section class="section" id="menor35">
+  <h2>👶 5. RN &lt;35 semanas</h2>
+  <p class="section-sub">Os valores SBP são apresentados como faixas por idade gestacional corrigida. Em presença de fatores de neurotoxicidade, usar o limite inferior da faixa.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>IG corrigida</th><th>Fototerapia BT mg/dL</th><th>EST BT mg/dL</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;28 sem</td><td>5–6</td><td>11–14</td></tr>
+        <tr><td>28+0–29+6</td><td>6–8</td><td>12–14</td></tr>
+        <tr><td>30+0–31+6</td><td>8–10</td><td>13–16</td></tr>
+        <tr><td>32+0–33+6</td><td>10–12</td><td>15–18</td></tr>
+        <tr><td>34+0–34+6</td><td>10–12</td><td>17–19</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Quando usar os valores inferiores da faixa</h3>
+  <div class="grid g3">
+    <div class="card">Doença hemolítica, deficiência de G6PD, albumina &lt;2,5 g/dL ou rápido aumento de BT.</div>
+    <div class="card">pH &lt;7,15, ventilação mecânica, sepse/meningite.</div>
+    <div class="card">Apneia/bradicardia com necessidade de ventilação ou drogas vasoativas nas últimas 24 h.</div>
+  </div>
+
+  <div class="alert amber"><b>RN ≤1000 g ou IG ≤26 semanas:</b> a SBP descreve fototerapia profilática até 12 h de vida com irradiância padrão; evitar fototerapia de alta intensidade no extremo baixo peso instável, pelo risco relacionado ao estresse oxidativo.</div>
+
+  <details>
+    <summary>Fatores de risco de neurotoxicidade no pré-termo</summary>
+    <div>
+      <ul class="compact">
+        <li>Peso ao nascer &lt;1000 g.</li>
+        <li>Apgar &lt;3 no 5º minuto.</li>
+        <li>PaO₂ &lt;40 mmHg por &gt;2 h.</li>
+        <li>pH &lt;7,15 por &gt;1 h.</li>
+        <li>Temperatura &lt;35°C por &gt;4 h.</li>
+        <li>Albumina &lt;2,5 g/dL.</li>
+        <li>Sepse, rápido aumento de BT, deterioração clínica, apneia/bradicardia ou hipotensão com necessidade de suporte.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<section class="section" id="fototerapia">
+  <h2>🔆 6. Fototerapia — prescrição, efetividade e segurança</h2>
+  <p class="section-sub">A eficácia depende principalmente da irradiância, comprimento de onda, distância e superfície corporal exposta.</p>
+
+  <div class="grid g3">
+    <div class="card"><h4>Fototerapia padrão</h4><b>8–10 μW/cm²/nm</b>, com distribuição homogênea.</div>
+    <div class="card"><h4>Fototerapia intensiva</h4><b>≥30 μW/cm²/nm</b> na maior superfície corporal possível.</div>
+    <div class="card"><h4>Luz</h4>Maior absorção da bilirrubina em torno de <b>460 nm</b>; aparelhos LED são amplamente utilizados.</div>
+  </div>
+
+  <h3>Checklist prático</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h4>Equipamento / ambiente</h4>
+      <ul class="compact">
+        <li>Confirmar funcionamento das lâmpadas.</li>
+        <li>Aferir irradiância no nível da pele; idealmente média de vários pontos.</li>
+        <li>Respeitar distância mínima do fabricante e maximizar área exposta.</li>
+        <li>Se BT próxima da EST: usar alta irradiância e ampliar exposição anterior + dorsal.</li>
+        <li>Evitar barreiras desnecessárias à luz.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Cuidados com o RN</h4>
+      <ul class="compact">
+        <li>Proteção ocular radiopaca adequada.</li>
+        <li>Temperatura corporal a cada ~3 h durante fototerapia.</li>
+        <li>Peso diário e atenção ao balanço hídrico/ingesta.</li>
+        <li>Fralda pequena; evitar meias, luvas, cobertas e panos que reduzam a área exposta.</li>
+        <li>Interromper para amamentação apenas quando clinicamente seguro e BT não estiver próxima de neurotoxicidade.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Quando suspender fototerapia — SBP</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Momento</th><th>Grupo</th><th>Critério sugerido</th></tr></thead>
+      <tbody>
+        <tr><td>Antes do 5º dia</td><td>≥38 sem</td><td>BT ≤11,5 mg/dL</td></tr>
+        <tr><td>Antes do 5º dia</td><td>35–37 sem</td><td>BT ≤9,5 mg/dL</td></tr>
+        <tr><td>Antes do 5º dia</td><td>&lt;35 sem</td><td>BT 2 mg/dL abaixo do nível de indicação de fototerapia</td></tr>
+        <tr><td>A partir do 5º dia</td><td>≥35 sem</td><td>BT ≤14 mg/dL</td></tr>
+        <tr><td>A partir do 5º dia</td><td>&lt;35 sem</td><td>BT 2 mg/dL abaixo do limiar para IG corrigida</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">A redação original da SBP utiliza “até o quinto dia” e “a partir do 5º dia”; no limite temporal exato, considerar tendência da BT, etiologia e quadro clínico.</div>
+
+  <div class="alert blue"><b>Após suspensão:</b> RN ≥35 semanas com fatores de risco e BT de difícil controle devem permanecer em observação clínica por cerca de 12 h antes da alta.</div>
+</section>
+
+<section class="section" id="est">
+  <h2>🩸 7. Exsanguíneotransfusão (EST)</h2>
+  <p class="section-sub">Procedimento de alta complexidade, indicado em ambiente neonatal com equipe habilitada.</p>
+
+  <div class="flow">
+    <div class="step danger"><strong>Sinais neurológicos</strong>Encefalopatia bilirrubínica → EST imediata / estabilização intensiva.</div>
+    <div class="step danger"><strong>BT ≥ limiar de EST +5</strong>Indicação imediata segundo o manual SBP.</div>
+    <div class="step warn"><strong>BT no limiar de EST</strong>Iniciar fototerapia intensiva imediatamente, preparar EST e repetir BT em 2–3 h.</div>
+    <div class="step"><strong>Doença hemolítica imune</strong>Se resposta inadequada e BT aproximando-se do limiar, discutir imunoglobulina de forma individualizada.</div>
+  </div>
+
+  <details>
+    <summary>Imunoglobulina na doença hemolítica imune — posição do documento SBP</summary>
+    <div>
+      <p>O manual descreve imunoglobulina EV <b>0,5–1,0 g/kg em 2 h</b>, com possibilidade de repetição após 12 h em casos selecionados de doença hemolítica imune com aumento de BT apesar de fototerapia intensiva ou BT a 2–3 mg/dL do limiar de EST.</p>
+      <div class="alert amber"><b>Importante:</b> a própria SBP ressalta baixa/limitada qualidade da evidência e recomenda uso individualizado, não rotineiro.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Dados técnicos descritos no manual</summary>
+    <div>
+      <ul class="compact">
+        <li>Em RN hemodinamicamente estável e Hb &gt;10 g/dL, o documento descreve troca com duas volemias (2 × 80 mL/kg).</li>
+        <li>Seleção e compatibilidade do hemocomponente dependem da etiologia (Rh, ABO, outros anticorpos).</li>
+        <li>Complicações possíveis: metabólicas, hemodinâmicas, infecciosas, vasculares, hematológicas e transfusionais.</li>
+      </ul>
+      <div class="alert red">Este bloco é referência de alto nível; execução da EST exige protocolo transfusional institucional/neonatologia e banco de sangue.</div>
+    </div>
+  </details>
+</section>
+
+<section class="section" id="colestase">
+  <h2>🟡 8. Colestase neonatal — atualização SBP 2024</h2>
+  <p class="section-sub">Toda elevação de bilirrubina direta deve ser tratada como patológica até esclarecimento.</p>
+
+  <div class="alert red"><b>Critério objetivo:</b> todo RN ou lactente com <b>BD &gt;1,0 mg/dL</b> merece investigação diagnóstica. Icterícia ≥14 dias, acolia/hipocolia ou colúria devem disparar avaliação clínica e dosagem de BT/BD.</div>
+
+  <div class="grid g3">
+    <div class="card"><h4>Fezes</h4>Acolia ou hipocolia é sinal de alarme. Fezes inicialmente pigmentadas não excluem atresia biliar.</div>
+    <div class="card"><h4>Urina</h4>Colúria/urina escura sugere presença de bilirrubina conjugada e reforça investigação hepatobiliar.</div>
+    <div class="card"><h4>Tempo</h4>Icterícia persistente a partir de 14 dias → medir bilirrubina total e direta.</div>
+  </div>
+
+  <div class="alert amber"><b>Atresia biliar:</b> o diagnóstico é tempo-dependente; o documento enfatiza investigação e referência precoces. Não aguardar “desaparecer sozinho” quando houver BD elevada, acolia/hipocolia ou colúria.</div>
+
+  <details open>
+    <summary>Investigação inicial da colestase — nível 1 (SBP 2024)</summary>
+    <div>
+      <div class="grid g2">
+        <div class="card">
+          <h4>Sangue</h4>
+          <ul class="compact">
+            <li>Hemograma, reticulócitos, plaquetas.</li>
+            <li>Eletrólitos, cálcio, fósforo, magnésio, ureia, creatinina.</li>
+            <li>INR/TAP e TTPA.</li>
+            <li>AST, ALT, fosfatase alcalina, GGT, bilirrubinas total/frações.</li>
+            <li>Proteinograma e glicose.</li>
+            <li>Alfa-1-antitripsina / fenótipo.</li>
+            <li>TSH e T4 livre.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Infecção, urina e imagem</h4>
+          <ul class="compact">
+            <li>Investigação infecciosa direcionada pelo contexto clínico.</li>
+            <li>EAS/urina e urocultura; culturas se RN/lactente clinicamente doente.</li>
+            <li>Ultrassonografia de abdome em jejum.</li>
+            <li>Outros exames/imagens conforme fenótipo e hipótese etiológica.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Principais grupos etiológicos</summary>
+    <div>
+      <div class="grid g3">
+        <div class="card"><h4>Obstrução / vias biliares</h4>Atresia biliar, cisto de colédoco, coledocolitíase, perfuração de via biliar, colangite esclerosante neonatal.</div>
+        <div class="card"><h4>Hepatocelular / genética</h4>Deficiência de alfa-1-antitripsina, defeitos de síntese/conjugação de ácidos biliares, PFIC, síndrome de Alagille e outras doenças genéticas/metabólicas.</div>
+        <div class="card"><h4>Sistêmica / infecciosa</h4>Sepse, infecções congênitas/adquiridas, endocrinopatias, fibrose cística e doenças multissistêmicas.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="alert blue"><b>Cor de fezes na tela:</b> este HTML não tenta reproduzir a cartela colorimétrica oficial; diferenças de brilho/tela podem distorcer cores. Em dúvida, usar a Caderneta da Criança/material oficial e encaminhar.</div>
+</section>
+
+<section class="section" id="alta">
+  <h2>🏠 9. Alta e seguimento</h2>
+  <p class="section-sub">A prevenção do kernicterus depende tanto da decisão terapêutica quanto de uma alta segura e reavaliação programada.</p>
+
+  <div class="grid g3">
+    <div class="card"><h4>RN ≥35 semanas</h4>Reavaliar risco de hiperbilirrubinemia antes da alta e programar retorno conforme BT, idade, amamentação e fatores de risco.</div>
+    <div class="card"><h4>Prematuro tardio 34–36+6</h4>SBP 2026 reforça consulta pediátrica <b>em até 48 h após a alta</b>, avaliando amamentação, peso e progressão da icterícia.</div>
+    <div class="card"><h4>Seguimento</h4>Manter acompanhamento até haver segurança do declínio da BT, estabelecimento da amamentação e ganho ponderal adequado.</div>
+  </div>
+
+  <h3>Fatores que aumentam risco de readmissão por hiperbilirrubinemia</h3>
+  <ul class="compact">
+    <li>Prematuridade tardia e termo precoce.</li>
+    <li>Icterícia já presente na internação inicial.</li>
+    <li>Aleitamento materno ainda não estabelecido / baixa ingesta.</li>
+    <li>Perda de peso &gt;7%.</li>
+    <li>Alta muito precoce e seguimento insuficiente.</li>
+  </ul>
+
+  <div class="alert amber"><b>Prematuro tardio:</b> o documento SBP 2026 destaca maior frequência e maior intensidade de hiperbilirrubinemia, pico mais tardio e maior vulnerabilidade neurológica. Não manejar PTT como RN termo “quase normal”.</div>
+</section>
+
+<section class="section" id="pais">
+  <h2>👨‍👩‍👧 10. Orientações aos pais / cuidadores</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h4>Orientações gerais</h4>
+      <ul class="compact">
+        <li>Manter aleitamento frequente, observando pega, sucção e sinais de transferência de leite.</li>
+        <li>Observar diurese, evacuações, peso e progressão da coloração amarelada.</li>
+        <li>Comparecer obrigatoriamente à reavaliação programada, mesmo se o RN parecer bem.</li>
+        <li>Não usar “banho de sol” como substituto de fototerapia indicada.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Retorno imediato / emergência</h4>
+      <ul class="compact">
+        <li>Sonolência intensa, sucção fraca ou recusa alimentar.</li>
+        <li>Choro agudo incomum, alteração do tônus, arqueamento do corpo ou convulsões.</li>
+        <li>Icterícia muito intensa ou em progressão rápida.</li>
+        <li>Febre, hipotermia ou aspecto tóxico.</li>
+        <li>Urina escura ou fezes muito claras/brancas/cinzentas.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="resumo">
+  <h2>📋 11. Resumo clínico gerado</h2>
+  <p class="section-sub">Texto automático para revisão rápida. Sempre confira os dados antes de usar em prontuário.</p>
+  <div class="generated" id="generatedText">PREENCHA OS DADOS DO RN PARA GERAR O RESUMO.</div>
+</section>
+
+<section class="section" id="fontes">
+  <h2>📚 12. Fontes SBP utilizadas</h2>
+  <p class="section-sub">Fontes oficiais localizadas até agosto de 2026. O arquivo foi estruturado com linguagem própria e tabelas numéricas de referência.</p>
+  <ol class="ref-list">
+    <li><b>Sociedade Brasileira de Pediatria — Departamento Científico de Neonatologia.</b> Hiperbilirrubinemia indireta no período neonatal. Manual de Orientação nº 10, 29/09/2021. <a href="https://www.sbp.com.br/fileadmin/user_upload/23176c-MO_Hiperbilirrubinemia_indireta_periodo_neo.pdf" target="_blank" rel="noopener">Abrir fonte oficial</a>.</li>
+    <li><b>Sociedade Brasileira de Pediatria — Departamento Científico de Hepatologia.</b> Colestase em lactentes: Um tema do Pediatra. Documento Científico nº 169, 16/09/2024. <a href="https://www.sbp.com.br/fileadmin/user_upload/24571b-DC_Colastase_em_lactentes_Um_tema_do_pediatra.pdf" target="_blank" rel="noopener">Abrir fonte oficial</a>.</li>
+    <li><b>Sociedade Brasileira de Pediatria — Departamento Científico de Neonatologia (2025–2028).</b> Prematuridade Tardia: Motivo de Alerta. Documento Científico nº 33, 19/03/2026. <a href="https://www.sbp.com.br/wp-content/uploads/2026/03/25158c-DocCient-Prematuridade-tardia_Motivo-de-alerta-2025-2028.pdf" target="_blank" rel="noopener">Abrir fonte oficial</a>.</li>
+    <li><b>Sociedade Brasileira de Pediatria.</b> Recomendações para alta hospitalar do Recém-Nascido Termo Potencialmente Saudável, 2020. <a href="https://www.sbp.com.br/fileadmin/user_upload/22649c-DC_-_Recom_Alta_hospitalar_RN_TermoPotenc_Saudavel.pdf" target="_blank" rel="noopener">Abrir fonte oficial</a>.</li>
+  </ol>
+  <div class="alert purple"><b>Nota metodológica:</b> este arquivo não substitui protocolo institucional, neonatologista ou avaliação clínica. Os limiares numéricos refletem o documento SBP dedicado de 2021; não foram substituídos por curvas de outras sociedades.</div>
+</section>
+
+<footer>
+  Ferramenta de apoio clínico offline · Versão gerada em agosto de 2026 · Conferir atualizações da SBP antes de uso continuado.
+</footer>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const inputs = [...document.querySelectorAll('input,select')];
+
+const table35 = {
+  "24": {photo3537:8, photo38:10, est3537:15, est38:18},
+  "36": {photo3537:9.5, photo38:11.5, est3537:16, est38:20},
+  "48": {photo3537:11, photo38:13, est3537:17, est38:21},
+  "72": {photo3537:13, photo38:15, est3537:18, est38:22},
+  "96": {photo3537:14, photo38:16, est3537:20, est38:23},
+  "120": {photo3537:15, photo38:17, est3537:21, est38:24}
+};
+
+const pretermRanges = [
+  {min:-Infinity,max:27.999,label:"<28 sem",photo:[5,6],est:[11,14]},
+  {min:28,max:29.999,label:"28+0–29+6",photo:[6,8],est:[12,14]},
+  {min:30,max:31.999,label:"30+0–31+6",photo:[8,10],est:[13,16]},
+  {min:32,max:33.999,label:"32+0–33+6",photo:[10,12],est:[15,18]},
+  {min:34,max:34.999,label:"34+0–34+6",photo:[10,12],est:[17,19]}
+];
+
+function num(id){
+  const v = parseFloat($(id).value);
+  return Number.isFinite(v) ? v : null;
+}
+function checked(cls){
+  return [...document.querySelectorAll('.'+cls+':checked')];
+}
+function fmt(v, dec=1){
+  if(v===null || v===undefined || Number.isNaN(v)) return "—";
+  return Number(v).toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+function getGA(){
+  const w=num("gaWeeks");
+  if(w===null) return null;
+  return w + parseInt($("gaDays").value||"0",10)/7;
+}
+function gaText(){
+  const w=num("gaWeeks");
+  if(w===null) return "—";
+  return `${Math.trunc(w)}+${$("gaDays").value}/7`;
+}
+function agePoint(hours){
+  if(hours===null || hours<24) return null;
+  if(hours<36) return 24;
+  if(hours<48) return 36;
+  if(hours<72) return 48;
+  if(hours<96) return 72;
+  if(hours<120) return 96;
+  if(hours<=168) return 120;
+  return null;
+}
+function riskNames(){
+  const map={
+    hemolysis:"doença hemolítica",g6pd:"deficiência de G6PD",asphyxia:"asfixia",lethargy:"letargia",
+    tempInstability:"instabilidade térmica",sepsis:"sepse",acidosis:"acidose",albLow:"albumina <3 g/dL"
+  };
+  const arr=checked("neuroRisk").map(x=>map[x.id]||x.id);
+  const alb=num("albumin");
+  if(alb!==null && alb<3 && !arr.includes("albumina <3 g/dL")) arr.push("albumina <3 g/dL");
+  return arr;
+}
+function pretermRisk(){
+  const ga=getGA();
+  const alb=num("albumin");
+  const ids=checked("neuroRisk").map(x=>x.id);
+  return ids.includes("hemolysis") || ids.includes("g6pd") || ids.includes("sepsis") ||
+         ids.includes("acidosis") || ids.includes("tempInstability") ||
+         (alb!==null && alb<2.5);
+}
+function weightLoss(){
+  const bw=num("birthWeight"), cw=num("currentWeight");
+  if(bw===null || cw===null || bw<=0) return null;
+  return ((bw-cw)/bw)*100;
+}
+function updateMetrics(){
+  const ga=getGA();
+  const wl=weightLoss();
+  const bt=num("bt"), bd=num("bd");
+  const age=num("ageHours"), ap=agePoint(age);
+  $("mGa").textContent=gaText();
+  if(ga!==null){
+    $("mGaSub").textContent = ga<34 ? "pré-termo <34 sem" : ga<37 ? "prematuro tardio" : ga<38 ? "termo precoce / 37 sem" : "≥38 semanas";
+  }
+  $("mWeight").textContent=wl===null?"—":fmt(wl,1)+"%";
+  $("mWeightSub").textContent=wl===null?"preencher pesos":wl>7?"perda >7% = fator de risco":"perda ≤7%";
+  $("mBi").textContent=(bt!==null && bd!==null)?fmt(Math.max(0,bt-bd),1):"—";
+  $("mAgePoint").textContent=ap===null?"—":(ap===120?"5–7 d":ap+" h");
+}
+function calcThresholds(){
+  const ga=getGA(), age=num("ageHours"), bt=num("bt");
+  if(ga===null || age===null || bt===null) return {ready:false};
+
+  if(ga>=35){
+    const ap=agePoint(age);
+    if(ap===null) return {ready:true,type:"ge35",outOfTable:true,reason:age<24?"<24h":">7d"};
+    const row=table35[String(ap)];
+    const group38=ga>=38;
+    let photo=group38?row.photo38:row.photo3537;
+    const est=group38?row.est38:row.est3537;
+    const nr=riskNames();
+    if(nr.length) photo=Math.max(0,photo-2);
+    return {ready:true,type:"ge35",ap,photo,est,basePhoto:group38?row.photo38:row.photo3537,group:group38?"≥38 sem":"35–37+6 sem",risk:nr};
+  }
+
+  const r=pretermRanges.find(x=>ga>=x.min && ga<=x.max);
+  if(!r) return {ready:true,type:"lt35",outOfTable:true,reason:"IG fora da tabela <35"};
+  const risk=pretermRisk();
+  const photoChosen=risk?r.photo[0]:r.photo[1];
+  const estChosen=risk?r.est[0]:r.est[1];
+  return {ready:true,type:"lt35",range:r,risk,photo:photoChosen,est:estChosen};
+}
+function monitoringText(bt){
+  if(bt===null) return "Conforme evolução clínica e distância do limiar terapêutico.";
+  if(bt>25) return "2–3 h; preparar material para EST enquanto mantém fototerapia intensiva.";
+  if(bt>=20) return "3–4 h sob fototerapia intensiva.";
+  if(bt>=17) return "4–6 h sob fototerapia intensiva.";
+  return "Individualizar conforme idade, tendência da BT, etiologia e proximidade do limiar.";
+}
+function buildAlerts(calc){
+  const age=num("ageHours"), bt=num("bt"), bd=num("bd"), tcb=num("tcb"), wl=weightLoss();
+  const neuro=checked("neuroSign").length>0;
+  const acholia=$("acholia").checked, dark=$("darkUrine").checked;
+  const jaundice=$("jaundice").value==="yes";
+  const arr=[];
+
+  if(neuro){
+    arr.push(`<div class="alert red"><b>🚨 ENCEFALOPATIA BILIRRUBÍNICA SUSPEITA:</b> sinais neurológicos assinalados. Iniciar abordagem neonatal intensiva, fototerapia de alta irradiância e avaliar EST imediatamente.</div>`);
+  }
+  if(jaundice && age!==null && age<36){
+    arr.push(`<div class="alert red"><b>⚠️ ICTERÍCIA PRECOCE:</b> presente antes de 24–36 h. Colher BT com frações e investigar etiologia/hemólise.</div>`);
+  }
+  if(bd!==null && bd>1){
+    arr.push(`<div class="alert red"><b>🟡 COLESTASE ATÉ PROVA EM CONTRÁRIO:</b> BD ${fmt(bd)} mg/dL &gt;1,0 mg/dL. Investigação urgente e referência conforme quadro.</div>`);
+  }
+  if((age!==null && age>=336 && jaundice) || acholia || dark){
+    arr.push(`<div class="alert amber"><b>ALERTA AMARELO:</b> icterícia ≥14 dias e/ou acolia/hipocolia/colúria exige BT + BD e avaliação de colestase.</div>`);
+  }
+  if(wl!==null && wl>7){
+    arr.push(`<div class="alert amber"><b>PERDA PONDERAL ${fmt(wl)}%:</b> acima de 7%; revisar amamentação/ingesta, hidratação e risco de hiperbilirrubinemia.</div>`);
+  }
+  if(tcb!==null && tcb>=15){
+    arr.push(`<div class="alert blue"><b>TcB ${fmt(tcb)} mg/dL:</b> o documento SBP descreve boa correlação com BT sérica até valores próximos de 15 mg/dL; BT sérica é o padrão-ouro e deve guiar decisão terapêutica.</div>`);
+  }
+  if(calc && calc.ready && !calc.outOfTable && num("bt")!==null && num("bt")>=calc.est+5){
+    arr.push(`<div class="alert red"><b>🚨 BT ≥5 mg/dL ACIMA DO LIMIAR DE EST:</b> critério de EST imediata no manual SBP.</div>`);
+  }
+  return arr.join("");
+}
+function stopPhotoText(){
+  const ga=getGA(), age=num("ageHours");
+  if(ga===null || age===null) return "";
+  if(ga>=35){
+    if(age>=120) return "Se em fototerapia: a partir do 5º dia, SBP sugere suspensão quando BT ≤14 mg/dL, considerando tendência e etiologia.";
+    if(ga>=38) return "Se em fototerapia antes do 5º dia: SBP sugere suspensão quando BT ≤11,5 mg/dL.";
+    return "Se em fototerapia antes do 5º dia: SBP sugere suspensão quando BT ≤9,5 mg/dL.";
+  }
+  return "Se RN <35 semanas: considerar suspensão quando BT estiver 2 mg/dL abaixo do nível de indicação para a IG corrigida.";
+}
+function mainUpdate(){
+  updateMetrics();
+  const calc=calcThresholds();
+  const bt=num("bt"), age=num("ageHours"), ga=getGA(), bd=num("bd"), wl=weightLoss();
+  $("criticalAlerts").innerHTML=buildAlerts(calc);
+  $("repeatBt").textContent=monitoringText(bt);
+
+  let result=[];
+  if(!calc.ready){
+    result.push("Preencha idade gestacional, idade pós-natal e BT para calcular os limiares.");
+    $("photoThreshold").textContent="—";
+    $("estThreshold").textContent="—";
+  }else if(calc.outOfTable){
+    if(calc.type==="ge35" && calc.reason==="<24h"){
+      result.push(`<b>Idade &lt;24 h:</b> a tabela simplificada SBP começa em 24 h. Qualquer icterícia precoce requer BT/frações e investigação etiológica; não extrapolar limiar automaticamente.`);
+    }else{
+      result.push(`<b>Fora do intervalo da tabela automática.</b> Consultar avaliação neonatal/seguimento e a causa da icterícia; não extrapolar os valores.`);
+    }
+    $("photoThreshold").textContent="Fora da tabela automática";
+    $("estThreshold").textContent="Fora da tabela automática";
+  }else if(calc.type==="ge35"){
+    const diffPhoto=bt-calc.photo, diffEst=bt-calc.est;
+    $("photoThreshold").innerHTML=`<b>${fmt(calc.photo)} mg/dL</b><br><span class="note">${calc.group}; ponto ${calc.ap===120?"5–7 dias":calc.ap+" h"}${calc.risk.length?" · redução de 2 mg/dL por risco":""}</span>`;
+    $("estThreshold").innerHTML=`<b>${fmt(calc.est)} mg/dL</b><br><span class="note">${calc.group}; usar BT total</span>`;
+
+    if(bt>=calc.est+5){
+      result.push(`<b>BT ${fmt(bt)} mg/dL:</b> ≥5 mg/dL acima do limiar de EST (${fmt(calc.est)}). <span class="tag red">EST IMEDIATA</span>`);
+    }else if(bt>=calc.est){
+      result.push(`<b>BT ${fmt(bt)} mg/dL:</b> atingiu o limiar de EST (${fmt(calc.est)}). <span class="tag red">ESCALONAMENTO URGENTE</span> Iniciar/manter fototerapia intensiva, preparar EST e repetir BT em 2–3 h.`);
+    }else if(bt>=calc.photo){
+      result.push(`<b>BT ${fmt(bt)} mg/dL:</b> atingiu o limiar de fototerapia (${fmt(calc.photo)}). <span class="tag amber">FOTOTERAPIA</span>`);
+      result.push(`Distância para limiar de EST: <b>${fmt(calc.est-bt)} mg/dL abaixo</b>.`);
+    }else{
+      result.push(`<b>BT ${fmt(bt)} mg/dL:</b> abaixo do limiar de fototerapia calculado (${fmt(calc.photo)}). <span class="tag green">ABAIXO DO LIMIAR</span>`);
+      result.push(`Distância para fototerapia: <b>${fmt(calc.photo-bt)} mg/dL abaixo</b>. Reavaliar pela tendência, etiologia, risco e idade.`);
+    }
+    if(calc.risk.length){
+      result.push(`Fatores de neurotoxicidade selecionados: <b>${calc.risk.join(", ")}</b>. O limiar de fototerapia foi reduzido de ${fmt(calc.basePhoto)} para ${fmt(calc.photo)} mg/dL.`);
+    }
+    if(age!==null && calc.ap!==age && calc.ap!==120){
+      result.push(`<span class="note">Idade atual ${age} h: usado o ponto anterior publicado (${calc.ap} h), sem interpolação.</span>`);
+    }
+  }else{
+    const r=calc.range;
+    $("photoThreshold").innerHTML=`<b>${r.photo[0]}–${r.photo[1]} mg/dL</b><br><span class="note">${r.label}${calc.risk?" · usar limite inferior":""}</span>`;
+    $("estThreshold").innerHTML=`<b>${r.est[0]}–${r.est[1]} mg/dL</b><br><span class="note">${r.label}${calc.risk?" · usar limite inferior":""}</span>`;
+    if(bt>=calc.est){
+      result.push(`<b>RN &lt;35 sem (${r.label}):</b> BT ${fmt(bt)} mg/dL atingiu o valor operacional ${fmt(calc.est)} mg/dL da faixa de EST. <span class="tag red">NEONATOLOGIA / EST</span>`);
+    }else if(bt>=calc.photo){
+      result.push(`<b>RN &lt;35 sem (${r.label}):</b> BT ${fmt(bt)} mg/dL atingiu o valor operacional ${fmt(calc.photo)} mg/dL da faixa de fototerapia. <span class="tag amber">FOTOTERAPIA</span>`);
+    }else{
+      result.push(`<b>RN &lt;35 sem (${r.label}):</b> BT ${fmt(bt)} mg/dL abaixo do valor operacional ${fmt(calc.photo)} mg/dL. <span class="tag green">ABAIXO DO LIMIAR</span>`);
+    }
+    result.push(`Faixa SBP publicada: fototerapia ${r.photo[0]}–${r.photo[1]} mg/dL; EST ${r.est[0]}–${r.est[1]} mg/dL. ${calc.risk?"Há fator de risco → foi usado o limite inferior.":"Sem fator de risco marcado → foi usado o limite superior como referência operacional; individualizar."}`);
+  }
+
+  if(bd!==null){
+    if(bd>1) result.push(`<b>BD ${fmt(bd)} mg/dL &gt;1,0:</b> investigar colestase com urgência.`);
+    else result.push(`BD ${fmt(bd)} mg/dL: não ultrapassa o critério &gt;1,0 mg/dL do documento SBP 2024, mas interpretar no contexto clínico.`);
+  }
+  if(wl!==null) result.push(`Perda ponderal calculada: <b>${fmt(wl)}%</b>${wl>7?" — acima do ponto de alerta de 7%.":"."}`);
+  result.push(stopPhotoText());
+
+  $("mainResult").innerHTML=result.filter(Boolean).map(x=>`<div class="result-line">${x}</div>`).join("");
+  generateSummary(calc);
+}
+function generateSummary(calc){
+  const ga=getGA(), age=num("ageHours"), bt=num("bt"), bd=num("bd"), tcb=num("tcb"), alb=num("albumin"), wl=weightLoss();
+  if(ga===null && age===null && bt===null){
+    $("generatedText").textContent="PREENCHA OS DADOS DO RN PARA GERAR O RESUMO.";
+    return;
+  }
+  const lines=[];
+  let id=`RN`;
+  if(ga!==null) id+=` IG ${gaText()}`;
+  if(age!==null) id+=` | ${age} H DE VIDA`;
+  if(num("birthWeight")!==null) id+=` | PN ${Math.round(num("birthWeight"))} G`;
+  lines.push(id.toUpperCase());
+
+  let lab=[];
+  if(bt!==null) lab.push(`BT ${fmt(bt)} MG/DL`);
+  if(bd!==null) lab.push(`BD ${fmt(bd)} MG/DL`);
+  if(bt!==null && bd!==null) lab.push(`BI ${fmt(Math.max(0,bt-bd))} MG/DL`);
+  if(tcb!==null) lab.push(`TCB ${fmt(tcb)} MG/DL`);
+  if(alb!==null) lab.push(`ALBUMINA ${fmt(alb)} G/DL`);
+  if(lab.length) lines.push(lab.join(" | "));
+
+  if(wl!==null) lines.push(`PERDA PONDERAL: ${fmt(wl)}%${wl>7?" (>7%; FATOR DE RISCO)":""}.`);
+
+  if(calc && calc.ready && !calc.outOfTable){
+    if(calc.type==="ge35"){
+      lines.push(`REFERÊNCIA SBP: LIMIAR DE FOTOTERAPIA ${fmt(calc.photo)} MG/DL; LIMIAR DE EST ${fmt(calc.est)} MG/DL; PONTO ${calc.ap===120?"5–7 DIAS":calc.ap+" H"}.`);
+      if(calc.risk.length) lines.push(`FATORES DE NEUROTOXICIDADE: ${calc.risk.join(", ").toUpperCase()}. LIMIAR DE FOTOTERAPIA REDUZIDO EM 2 MG/DL.`);
+      if(bt!==null){
+        if(bt>=calc.est+5) lines.push("CONDUTA: CRITÉRIO SBP PARA EST IMEDIATA; FOTOTERAPIA INTENSIVA E MANEJO EM UNIDADE NEONATAL.");
+        else if(bt>=calc.est) lines.push("CONDUTA: FOTOTERAPIA INTENSIVA IMEDIATA, PREPARAR EST E REPETIR BT EM 2–3 H.");
+        else if(bt>=calc.photo) lines.push("CONDUTA: INDICAÇÃO DE FOTOTERAPIA CONFORME LIMIAR SBP; MONITORAR BT E RESPOSTA.");
+        else lines.push("CONDUTA: BT ABAIXO DO LIMIAR CALCULADO; SEGUIMENTO CONFORME TENDÊNCIA, ETIOLOGIA, AMAMENTAÇÃO E FATORES DE RISCO.");
+      }
+    }else{
+      lines.push(`RN <35 SEM: FAIXA SBP FOTOTERAPIA ${calc.range.photo[0]}–${calc.range.photo[1]} MG/DL; EST ${calc.range.est[0]}–${calc.range.est[1]} MG/DL.`);
+      lines.push(calc.risk?"PRESENÇA DE RISCO: UTILIZAR LIMITE INFERIOR DA FAIXA.":"SEM RISCO MARCADO: INDIVIDUALIZAR DENTRO DA FAIXA CONFORME CONDIÇÃO CLÍNICA.");
+    }
+  }
+
+  if(checked("neuroSign").length) lines.push("ALERTA: SINAIS COMPATÍVEIS COM ENCEFALOPATIA BILIRRUBÍNICA — AVALIAÇÃO/INTERVENÇÃO IMEDIATA.");
+  if(bd!==null && bd>1) lines.push("ALERTA COLESTASE: BD >1,0 MG/DL — INVESTIGAÇÃO DIAGNÓSTICA URGENTE.");
+  if((age!==null && age>=336 && $("jaundice").value==="yes") || checked("cholSign").length) lines.push("ALERTA AMARELO: ICTERÍCIA PROLONGADA E/OU ACOLIA/HIPOCOLIA/COLÚRIA — AVALIAR COLESTASE.");
+  if($("jaundice").value==="yes" && age!==null && age<36) lines.push("ICTERÍCIA PRECOCE (<24–36 H): SOLICITAR BT/FRAÇÕES E INVESTIGAR ETIOLOGIA/HEMÓLISE.");
+  if(bt!==null) lines.push(`REAVALIAÇÃO DE BT: ${monitoringText(bt).toUpperCase()}`);
+  if(ga!==null && ga>=34 && ga<37) lines.push("PREMATURO TARDIO: PROGRAMAR REAVALIAÇÃO PEDIÁTRICA EM ATÉ 48 H APÓS A ALTA, COM PESO, AMAMENTAÇÃO E ICTERÍCIA.");
+  lines.push("FONTE: SBP — HIPERBILIRRUBINEMIA INDIRETA 2021; COLESTASE 2024; PREMATURIDADE TARDIA 2026.");
+  $("generatedText").textContent=lines.join("\n");
+}
+
+inputs.forEach(el=>el.addEventListener("input",mainUpdate));
+inputs.forEach(el=>el.addEventListener("change",mainUpdate));
+
+$("clearBtn").addEventListener("click",()=>{
+  document.querySelectorAll('input').forEach(el=>{
+    if(el.type==="checkbox") el.checked=false;
+    else el.value="";
+  });
+  document.querySelectorAll('select').forEach(el=>{
+    el.selectedIndex=0;
+  });
+  mainUpdate();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+mainUpdate();
+</script>
+</body>
+</html>
