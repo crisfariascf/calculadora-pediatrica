@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fafafa">
+<title>Medicações Rápidas — Pediatria</title>
+<style>
+:root{
+  --bg:#f7f7f8;--panel:#ffffff;--panel2:#fbfbfc;--line:#e6e7eb;--ink:#202124;--muted:#73767c;
+  --accent:#9f1239;--accent2:#be123c;--accentSoft:#fff1f4;--blue:#2563eb;--green:#15803d;--yellow:#a16207;--red:#b91c1c;
+  --shadow:0 6px 22px rgba(15,23,42,.055)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#fafafa 0,#f5f6f8 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select{font:inherit}
+.top{position:sticky;top:0;z-index:50;background:rgba(250,250,250,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topin{max-width:1120px;margin:auto;padding:10px 12px}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.brand h1{font-size:18px;margin:0;letter-spacing:-.02em}.brand small{display:block;color:var(--muted);margin-top:2px;font-size:11px}
+.status{font-size:11px;color:var(--accent);border:1px solid #f3c6d2;background:var(--accentSoft);padding:5px 8px;border-radius:999px;font-weight:800;white-space:nowrap}
+.patient{display:grid;grid-template-columns:1.1fr .8fr .85fr 1fr;gap:7px}
+.field label{display:block;font-size:10px;color:var(--muted);margin:0 0 4px 2px;font-weight:800;letter-spacing:.02em}
+.field input,.field select{width:100%;height:39px;border-radius:11px;border:1px solid #dedfe3;background:#fff;color:var(--ink);padding:0 10px;outline:none}
+.field input:focus,.field select:focus{border-color:#d57b96;box-shadow:0 0 0 3px rgba(159,18,57,.08)}
+.searchrow{max-width:1120px;margin:10px auto 0;padding:0 12px}.searchbox{display:flex;gap:8px}
+.searchbox input{flex:1;height:46px;border-radius:14px;border:1px solid #dedfe3;background:#fff;color:var(--ink);padding:0 14px;outline:none;box-shadow:0 2px 10px rgba(15,23,42,.03)}
+.searchbox input:focus{border-color:#d57b96;box-shadow:0 0 0 3px rgba(159,18,57,.08)}
+.searchbox button{width:46px;border:1px solid #ead7dd;border-radius:14px;background:#fff5f7;color:var(--accent);cursor:pointer}
+.chips{display:flex;gap:7px;overflow:auto;padding:9px 12px 4px;max-width:1120px;margin:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid #e3e4e8;background:#fff;color:#555b63;padding:8px 11px;border-radius:999px;white-space:nowrap;font-size:12px;font-weight:800;cursor:pointer}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+main{max-width:1120px;margin:auto;padding:10px 12px 40px}
+.notice{border:1px solid #e5e7eb;background:#fff;border-radius:14px;padding:10px 12px;color:#50545a;font-size:12px;line-height:1.45;margin:7px 0 12px;box-shadow:var(--shadow)}
+.notice b{color:#25272b}.notice.warn{border-color:#f0dfb7;background:#fffbeb;color:#73551b}.notice.red{border-color:#f3c2c2;background:#fff5f5;color:#8f3030}
+.section{margin:17px 0 5px;scroll-margin-top:180px}.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 9px}.sectionHead h2{margin:0;font-size:17px}.sectionHead span{color:var(--muted);font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.card{background:#fff;border:1px solid #e7e8eb;border-radius:16px;padding:13px;box-shadow:var(--shadow);min-width:0}
+.card[data-hidden="1"],.section[data-hidden="1"]{display:none}
+.cardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}.drug{font-weight:850;font-size:14px;line-height:1.25}.badges{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:wrap}.route{font-size:9px;font-weight:900;letter-spacing:.05em;padding:4px 7px;border-radius:999px;background:#f2f5ff;color:#3157a5;white-space:nowrap}.hack{font-size:9px;font-weight:900;padding:4px 7px;border-radius:999px;background:var(--accentSoft);border:1px solid #f1c5d1;color:var(--accent);white-space:nowrap;letter-spacing:0}
+.dose{font-size:20px;font-weight:900;letter-spacing:-.02em;margin:10px 0 2px;color:#17181b;word-break:break-word}.dose.pending{color:#9a9ca2;font-size:14px}
+.subdose{font-size:12px;color:var(--accent);font-weight:850;margin-top:3px;line-height:1.38}
+.meta{display:grid;gap:7px;margin-top:10px}.metaRow{padding:9px 10px;border-radius:11px;background:#fafafa;border:1px solid #ececef}.metaRow b{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#8b8e94;margin-bottom:4px}.metaRow span{font-size:12px;line-height:1.42;color:#45484e}
+.tagline{font-size:10px;color:#92959a;margin-top:8px}.tagline strong{color:#676b72}.empty{display:none;text-align:center;color:var(--muted);padding:28px 10px}.empty.show{display:block}.footer{color:#8a8d93;font-size:10px;line-height:1.45;margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
+@media(max-width:720px){.patient{grid-template-columns:1fr .72fr .8fr 1fr}.grid{grid-template-columns:1fr}.topin{padding:8px}.searchrow{padding:0 8px}.chips{padding-left:8px;padding-right:8px}main{padding:8px 8px 30px}.field input,.field select{padding:0 7px;font-size:13px}.brand h1{font-size:16px}.brand small{font-size:10px}.status{font-size:9px}.dose{font-size:19px}}
+@media(max-width:440px){.patient{grid-template-columns:1fr .72fr .72fr}.field.sex{grid-column:1/-1}.field.sex select{height:36px}.brand small{display:none}}
+@media print{.top,.searchrow,.chips{display:none!important}body{background:#fff;color:#111}main{max-width:none}.card{break-inside:avoid;background:#fff;color:#111;box-shadow:none;border-color:#bbb}.dose{color:#111}.metaRow{background:#fff}.metaRow span{color:#222}.sectionHead span,.tagline,.footer{color:#555}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="topin">
+    <div class="brandrow">
+      <div class="brand"><h1>💊 Medicações Rápidas — Pediatria</h1></div>
+      <div class="status" id="patientSummary">PREENCHA O PESO</div>
+    </div>
+    <div class="patient">
+      <div class="field"><label>PESO (KG)</label><input id="weight" inputmode="decimal" type="number" min="0" step="0.1" placeholder="Ex.: 15,3"></div>
+      <div class="field"><label>IDADE</label><input id="age" inputmode="decimal" type="number" min="0" step="0.1" placeholder="Ex.: 4"></div>
+      <div class="field"><label>UNIDADE</label><select id="ageUnit"><option value="years">anos</option><option value="months">meses</option><option value="days">dias</option></select></div>
+      <div class="field sex"><label>SEXO</label><select id="sex"><option value="">não informado</option><option>masculino</option><option>feminino</option><option>outro</option></select></div>
+    </div>
+  </div>
+</div>
+
+<div class="searchrow"><div class="searchbox"><input id="search" type="search" placeholder="Pesquisar: asma, magnésio, adrenalina, ondansetrona..."><button id="clearSearch" title="Limpar">×</button></div></div>
+<div class="chips" id="chips"></div>
+
+<main>
+  <div class="notice warn"><b>Asma:</b> salbutamol, ipratrópio e magnésio foram apresentados conforme GINA 2026; os demais blocos preservam principalmente as regras/apresentações do HTML-base e precisam continuar sendo conferidos com o protocolo institucional.</div>
+  <div id="content"></div>
+  <div id="empty" class="empty">Nenhuma medicação encontrada para essa pesquisa.</div>
+  <div class="footer">Ferramenta de apoio profissional. Conferir alergias, indicação, dose máxima, função renal/hepática, apresentação realmente disponível e protocolo do serviço antes de administrar. Em drogas de ressuscitação, sedação, vasoativos ou eletrólitos, realizar dupla checagem.</div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = (v,d=1) => {
+  if(v===null || v===undefined || !isFinite(v)) return '—';
+  const x = Math.round(v*Math.pow(10,d))/Math.pow(10,d);
+  return x.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:(Math.abs(x)<10 && x%1!==0)?1:0});
+};
+const weight = () => Number(String($('weight').value).replace(',','.')) || 0;
+const ageValue = () => Number(String($('age').value).replace(',','.')) || 0;
+function ageYears(){const a=ageValue(),u=$('ageUnit').value;return u==='months'?a/12:u==='days'?a/365:a}
+function ageMonths(){const a=ageValue(),u=$('ageUnit').value;return u==='years'?a*12:u==='days'?a/30.44:a}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const mg=x=>`${fmt(x)} mg`, ml=x=>`${fmt(x,2)} mL`, mcg=x=>`${fmt(x)} mcg`, g=x=>`${fmt(x,2)} g`;
+function needWeight(calc){return weight()>0?calc():{dose:'Informe o peso',sub:'',prep:'O cálculo aparece automaticamente após preencher o peso.'}}
+function ageLabel(){if(!$('age').value)return '';return `${$('age').value} ${$('ageUnit').value==='years'?'a':$('ageUnit').value==='months'?'m':'d'}`}
+
+const sections = [
+  {id:'asma',title:'🫁 Asma exacerbada',hint:'broncodilatadores • corticoide • MgSO₄',cards:[
+    {name:'Salbutamol spray 100 mcg/jato',route:'INALATÓRIO',tags:'asma broncodilatador saba puff jato espaçador salbutamol',calc:()=>{
+      const a=ageYears(); const dose=a<6?'4–6 jatos':'4–10 jatos';
+      return {dose,sub:'1 jato por vez com espaçador',prep:'Repetir a cada 20–30 min, até 3 séries na primeira hora conforme gravidade e resposta. Em ≤5 anos, GINA 2026 também aceita 2,5 mg por nebulização quando pMDI + espaçador não está disponível.',detail:'Após cada série, reavaliar SatO₂, trabalho respiratório, fala, ausculta, FR e FC.',source:'GINA 2026'};
+    }},
+    {name:'Ipratrópio 0,25 mg/mL',route:'NBZ',tags:'asma ipratropio atrovent gotas nebulização',calc:()=>{
+      const a=ageYears(); const low=a<6?0.25:0.25, high=a<6?0.25:0.5;
+      const d=high===low?`${mcg(low*1000)} = ${ml(low/0.25)} ≈ 20 gotas`:`${mcg(low*1000)}–${mcg(high*1000)} = ${ml(low/0.25)}–${ml(high/0.25)} ≈ 20–40 gotas`;
+      return {dose:doseFix(d),sub:a<6?'GINA: 250 mcg por nebulização':'Faixa operacional conforme apresentação do serviço',prep:'Completar com SF 0,9% até volume adequado para o nebulizador. Associar ao salbutamol em exacerbação moderada/grave; até 3 doses, 20–30 min apartadas.',detail:'Conversão em gotas pressupõe 20 gotas/mL; conferir o conta-gotas do fabricante.',source:'GINA 2026 + apresentação 0,25 mg/mL'};
+    }},
+    {name:'Prednisolona 3 mg/mL VO',route:'VO',tags:'asma prednisolona corticoide',calc:()=>needWeight(()=>{
+      const p=weight(),a=ageYears(); let max=a<2?20:a<6?30:a<12?40:50; const lo=Math.min(p,max),hi=Math.min(2*p,max);
+      return {dose:`${mg(lo)}–${mg(hi)}`,sub:`${ml(lo/3)}–${ml(hi/3)} da solução 3 mg/mL`,prep:'1–2 mg/kg/dia por curso curto conforme avaliação. Pode ser dose única diária ou conforme protocolo local.',detail:`Teto operacional nesta calculadora: ${max} mg/dia pela faixa etária.`,source:'GINA 2026 / protocolo local'};
+    })},
+    {name:'Metilprednisolona 125 mg/fr',route:'EV',tags:'asma metilprednisolona corticoide ev',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(p,60),vol=dose/62.5;
+      return {dose:mg(dose),sub:`${ml(vol)} após reconstituir para 62,5 mg/mL`,prep:'Reconstituir o frasco de 125 mg em 2 mL. Diluir a dose calculada em SF 0,9% 20–50 mL e infundir em cerca de 30 min.',detail:'Regra preservada do HTML-base: 1 mg/kg/dose, teto operacional 60 mg.',source:'HTML-base / protocolo institucional'};
+    })},
+    {name:'Dexametasona 4 mg/mL',route:'EV/IM/VO',tags:'asma dexametasona corticoide',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.6*p,16);
+      return {dose:mg(dose),sub:ml(dose/4),prep:'Dose de referência desta calculadora: 0,6 mg/kg. Ajustar teto e via conforme idade/indicação/protocolo.',detail:'Em crianças pequenas, GINA 2026 usa 0,3–0,6 mg/kg e teto menor em algumas faixas.',source:'HTML-base + GINA 2026'};
+    })},
+    {name:'Sulfato de magnésio 50% / 10%',route:'EV • BIC',tags:'asma magnesio sulfato magnésio grave 50% 10% macete',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(50*p,2000),v50=dose/500,v10=dose/100;
+      const cap=p>40?' (teto de 2 g atingido)':'';
+      return {dose:`${mg(dose)}${cap}`,sub:`50%: ${ml(v50)}  •  10%: ${ml(v10)}`,prep:'SF 0,9% 100 mL • BIC 30 min, se padronizado no serviço.',detail:'GINA 2026: 40–50 mg/kg EV (máx. 2 g), infusão em 20–60 min. Diluição final conforme protocolo local.',source:'GINA 2026'};
+    })}
+  ]},
+
+  {id:'anafilaxia',title:'🚨 Anafilaxia',hint:'adrenalina IM primeiro',cards:[
+    {name:'Adrenalina 1 mg/mL (1:1000)',route:'IM',tags:'anafilaxia adrenalina epinefrina im',calc:()=>needWeight(()=>{
+      const p=weight(),max=p>50?.5:.3,dose=Math.min(.01*p,max);
+      return {dose:`${fmt(dose,2)} mg = ${ml(dose)}`,sub:'IM na face anterolateral da coxa',prep:'0,01 mg/kg = 0,01 mL/kg da solução 1 mg/mL. Repetir a cada 5–15 min se necessário.',detail:`Teto usado no HTML-base: ${max} mg nesta faixa de peso.`,source:'HTML-base / protocolo institucional'};
+    })},
+    {name:'SF 0,9% ou Ringer Lactato',route:'EV/IO',tags:'anafilaxia choque volume expansão cristalóide',calc:()=>needWeight(()=>{
+      const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'bolus de 20 mL/kg',prep:'Administrar rapidamente se hipotensão/má perfusão e reavaliar após cada bolus.',detail:`Referência do HTML-base: até ${fmt(30*p)} mL na primeira hora como teto operacional inicial, conforme resposta.`,source:'HTML-base'};
+    })},
+    {name:'Salbutamol se broncoespasmo residual',route:'INALATÓRIO',tags:'anafilaxia salbutamol broncoespasmo',calc:()=>({dose:ageYears()<6?'4–6 jatos':'4–10 jatos',sub:'100 mcg/jato + espaçador',prep:'Adjuvante para broncoespasmo. Não substitui adrenalina IM.',detail:'Usar conforme resposta respiratória.',source:'GINA 2026 / HTML-base'})}
+  ]},
+
+  {id:'pcr',title:'🫀 PCR pediátrica',hint:'doses de ressuscitação',cards:[
+    {name:'Adrenalina 0,1 mg/mL (1:10.000)',route:'EV/IO',tags:'pcr parada adrenalina epinefrina',calc:()=>needWeight(()=>{
+      const p=weight(),dose=.01*p,vol=.1*p;return {dose:`${mg(dose)} = ${ml(vol)}`,sub:'0,01 mg/kg = 0,1 mL/kg',prep:'Se houver apenas adrenalina 1 mg/mL: 1 mL + 9 mL de SF/AD → 0,1 mg/mL.',detail:'Repetir a cada 3–5 min durante PCR conforme protocolo.',source:'HTML-base / PALS'};
+    })},
+    {name:'Amiodarona 50 mg/mL',route:'EV/IO',tags:'pcr amiodarona fv tv',calc:()=>needWeight(()=>{
+      const p=weight(),dose=5*p;return {dose:mg(dose),sub:ml(dose/50),prep:'5 mg/kg para FV/TV sem pulso refratária, conforme algoritmo de ressuscitação.',detail:'Conferir teto e número de doses no protocolo de PCR vigente.',source:'HTML-base / PALS'};
+    })},
+    {name:'Lidocaína 20 mg/mL',route:'EV/IO',tags:'pcr lidocaina fv tv',calc:()=>needWeight(()=>{
+      const p=weight(),dose=p;return {dose:mg(dose),sub:ml(dose/20),prep:'1 mg/kg como alternativa antiarrítmica quando indicada.',detail:'Conferir concentração disponível.',source:'HTML-base / PALS'};
+    })}
+  ]},
+
+  {id:'convulsao',title:'⚡ Crise convulsiva',hint:'benzodiazepínico • 2ª linha',cards:[
+    {name:'Midazolam 5 mg/mL',route:'IN/IM',tags:'convulsão crise midazolam intranasal im',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.2*p,10);return {dose:mg(dose),sub:ml(dose/5),prep:'0,2 mg/kg por via intranasal ou intramuscular; máximo 10 mg no esquema do HTML-base. Reavaliar em 5 min.',detail:'Se repetir benzodiazepínico, manter preparo para suporte ventilatório.',source:'HTML-base'};
+    })},
+    {name:'Diazepam 5 mg/mL — retal',route:'RETAL',tags:'convulsão diazepam retal',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.4*p,10);return {dose:mg(dose),sub:ml(dose/5),prep:'0,4 mg/kg por via retal; máximo 10 mg. Usar quando não houver acesso/alternativa apropriada.',detail:'No fluxo do HTML-base, máximo de 2 doses de benzodiazepínico no total.',source:'HTML-base'};
+    })},
+    {name:'Fenitoína 50 mg/mL',route:'EV',tags:'convulsão fenitoina fenitoína segunda linha',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(20*p,1500);return {dose:mg(dose),sub:ml(dose/50),prep:'Ataque 20 mg/kg. Diluir em SF 0,9% (não usar solução glicosada) e infundir com monitorização cardíaca e de PA.',detail:'HTML-base usa 100 mL de SF e cerca de 20 min; adaptar à concentração/velocidade institucional.',source:'HTML-base'};
+    })},
+    {name:'Fenobarbital 100 mg/mL',route:'EV',tags:'convulsão fenobarbital neonatal segunda linha',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(20*p,1000);return {dose:mg(dose),sub:ml(dose/100),prep:'Ataque 20 mg/kg EV. No RN, aparece como droga de escolha no fluxo do HTML-base.',detail:'Risco de depressão respiratória, especialmente após benzodiazepínicos.',source:'HTML-base'};
+    })}
+  ]},
+
+  {id:'hipoglicemia',title:'🍬 Hipoglicemia',hint:'glicose • preparo rápido',cards:[
+    {name:'Glicose 10%',route:'EV',tags:'hipoglicemia sg10 glicose bolus',calc:()=>needWeight(()=>{
+      const p=weight(),vol=2*p;return {dose:`${ml(vol)} de SG10%`,sub:`0,2 g/kg de glicose`,prep:'Bolus 2 mL/kg. Reavaliar glicemia em ~15 min e repetir/ajustar conforme resposta e protocolo.',detail:'Evitar SG50% não diluída como bolus pediátrico inicial.',source:'HTML-base / guia PS 2026'};
+    })},
+    {name:'Preparar SG10% a partir de SG50% + AD',route:'PREPARO',tags:'hipoglicemia sg50 agua destilada preparo sg10',calc:()=>needWeight(()=>{
+      const p=weight(),final=2*p,g50=.2*final,ad=.8*final;return {dose:`${ml(g50)} SG50% + ${ml(ad)} AD`,sub:`volume final ${ml(final)} de SG10%`,prep:'Proporção 1:4. Exemplo-padrão: 20 mL de SG50% + 80 mL de AD = 100 mL de SG10%.',detail:'Administrar apenas o volume final calculado para o paciente.',source:'HTML-base'};
+    })},
+    {name:'Glucagon',route:'IM',tags:'hipoglicemia glucagon im sem acesso',calc:()=>needWeight(()=>{
+      const p=weight(),a=ageYears(),dose=(p<25||a<6)?0.5:1;return {dose:`${fmt(dose,1)} mg IM`,sub:'quando via EV não está imediatamente disponível e houver indicação',prep:'Dose por faixa de peso/idade conforme o fluxo do HTML-base.',detail:'Após resposta, garantir carboidrato e prevenção de recorrência conforme causa.',source:'HTML-base'};
+    })}
+  ]},
+
+  {id:'crupe',title:'🗣️ Crupe',hint:'dexametasona • adrenalina NBZ',cards:[
+    {name:'Dexametasona 4 mg/mL',route:'VO/IM/EV',tags:'crupe laringite dexametasona',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.6*p,16);return {dose:mg(dose),sub:ml(dose/4),prep:'0,6 mg/kg em dose única no esquema operacional desta calculadora. Doses menores podem ser utilizadas em protocolos específicos.',detail:'Escolher a via conforme tolerância e gravidade.',source:'HTML-base / prática pediátrica'};
+    })},
+    {name:'Adrenalina 1 mg/mL nebulização',route:'NBZ',tags:'crupe epinefrina adrenalina nebulização estridor',calc:()=>needWeight(()=>{
+      const p=weight(),vol=Math.min(.5*p,5);return {dose:`${ml(vol)} da solução 1 mg/mL`,sub:'0,5 mL/kg; máximo 5 mL',prep:'Nebulizar sem diluição ou conforme volume mínimo do nebulizador/protocolo do serviço.',detail:'Indicação típica: crupe moderado/grave com estridor em repouso; observar após administração pelo risco de recorrência.',source:'referência pediátrica usual'};
+    })}
+  ]},
+
+  {id:'choque',title:'🩸 Choque / sepse',hint:'volume • vasoativos',cards:[
+    {name:'Cristaloide isotônico',route:'EV/IO',tags:'choque sepse cristalóide sf ringer volume',calc:()=>needWeight(()=>{
+      const p=weight();return {dose:`${fmt(10*p)}–${fmt(20*p)} mL`,sub:'10–20 mL/kg por etapa',prep:'SF 0,9% ou Ringer Lactato; reavaliar perfusão e sinais de sobrecarga após cada etapa.',detail:'Em suspeita cardiogênica, usar volumes menores e reavaliação mais estreita.',source:'HTML-base'};
+    })},
+    {name:'Noradrenalina — solução exemplo 16 mcg/mL',route:'BIC',tags:'choque sepse noradrenalina norepinefrina vasopressor',calc:()=>needWeight(()=>{
+      const p=weight(),rate=.05*p*60/16;return {dose:`${fmt(rate,1)} mL/h`,sub:'equivale a 0,05 mcg/kg/min',prep:'Exemplo do HTML-base: 4 mg em SG5% até 250 mL ≈ 16 mcg/mL.',detail:'Titular por bomba e monitorização contínua. Confirmar diluição institucional.',source:'HTML-base'};
+    })},
+    {name:'Adrenalina — solução 10 mcg/mL',route:'BIC',tags:'choque adrenalina epinefrina bomba infusão',calc:()=>needWeight(()=>{
+      const p=weight(),rate=.05*p*60/10;return {dose:`${fmt(rate,1)} mL/h`,sub:'equivale a 0,05 mcg/kg/min',prep:'Exemplo: adrenalina 1 mg/mL, 1 mL + diluente até 100 mL = 10 mcg/mL.',detail:'Titular à resposta; ambiente monitorizado.',source:'HTML-base'};
+    })}
+  ]},
+
+  {id:'iot',title:'🫧 IOT — sequência rápida',hint:'sedação • bloqueio',cards:[
+    {name:'Fentanil 50 mcg/mL',route:'EV',tags:'iot intubação fentanil analgesia',calc:()=>needWeight(()=>{const p=weight(),d=p;return {dose:mcg(d),sub:ml(d/50),prep:'1 mcg/kg EV no esquema do HTML-base.',detail:'Titular conforme hemodinâmica e contexto.',source:'HTML-base'}})},
+    {name:'Cetamina 50 mg/mL',route:'EV',tags:'iot intubação cetamina ketamina sedação',calc:()=>needWeight(()=>{const p=weight(),lo=p,hi=2*p;return {dose:`${mg(lo)}–${mg(hi)}`,sub:`${ml(lo/50)}–${ml(hi/50)}`,prep:'1–2 mg/kg EV. Opção útil em broncoespasmo/instabilidade conforme cenário.',detail:'Preparar suporte hemodinâmico e ventilatório.',source:'HTML-base'}})},
+    {name:'Etomidato 2 mg/mL',route:'EV',tags:'iot intubação etomidato sedação',calc:()=>needWeight(()=>{const p=weight(),d=.3*p;return {dose:mg(d),sub:ml(d/2),prep:'0,3 mg/kg EV.',detail:'Usar quando apropriado ao contexto clínico.',source:'HTML-base'}})},
+    {name:'Midazolam 5 mg/mL',route:'EV',tags:'iot intubação midazolam sedação',calc:()=>needWeight(()=>{const p=weight(),d=.1*p;return {dose:mg(d),sub:ml(d/5),prep:'0,1 mg/kg EV no bloco de IOT do HTML-base.',detail:'Cautela em instabilidade respiratória/hemodinâmica.',source:'HTML-base'}})},
+    {name:'Rocurônio 10 mg/mL',route:'EV',tags:'iot intubação rocuronio bloqueador neuromuscular',calc:()=>needWeight(()=>{const p=weight(),d=p;return {dose:mg(d),sub:ml(d/10),prep:'1 mg/kg EV.',detail:'Garantir sedação/analgesia adequada e plano de ventilação.',source:'HTML-base'}})},
+    {name:'Succinilcolina 20 mg/mL',route:'EV',tags:'iot intubação succinilcolina bloqueador neuromuscular',calc:()=>needWeight(()=>{const p=weight(),d=1.5*p;return {dose:mg(d),sub:ml(d/20),prep:'Referência operacional: 1,5 mg/kg EV.',detail:'Checar contraindicações: hipercalemia, doença neuromuscular, queimaduras/trauma tardio, hipertermia maligna etc.',source:'HTML-base'}})}
+  ]},
+
+  {id:'sintomaticos',title:'🌡️ Sintomáticos',hint:'dor • febre • náusea',cards:[
+    {name:'Dipirona 500 mg/mL — injetável',route:'EV/IM',tags:'dipirona febre dor analgesia',calc:()=>needWeight(()=>{const p=weight(),d=15*p;return {dose:mg(d),sub:ml(d/500),prep:'Referência operacional: 15 mg/kg/dose. EV: diluir e administrar lentamente; IM: conforme apresentação.',detail:'Conferir intervalo e teto diário do serviço.',source:'HTML-base'}})},
+    {name:'Dipirona 500 mg/mL — gotas',route:'VO',tags:'dipirona gotas febre dor',calc:()=>needWeight(()=>{const p=weight();return {dose:`${fmt(.4*p)}–${fmt(.6*p)} gotas`,sub:'faixa usada no HTML-base',prep:'Evitar regra automática de 1 gota/kg com esta concentração.',detail:'Conferir conta-gotas/concentração do fabricante.',source:'HTML-base'}})},
+    {name:'Paracetamol 200 mg/mL — gotas',route:'VO',tags:'paracetamol acetaminofeno febre dor gotas',calc:()=>needWeight(()=>{const p=weight(),d=15*p,g=Math.min(p,35);return {dose:mg(d),sub:`≈ ${fmt(g)} gotas`,prep:'10–15 mg/kg/dose a cada 4–6 h, conforme necessidade e protocolo.',detail:'HTML-base usa máximo operacional de 35 gotas/dose.',source:'HTML-base'}})},
+    {name:'Ibuprofeno 100 mg/5 mL',route:'VO',tags:'ibuprofeno febre dor aine',calc:()=>needWeight(()=>{const p=weight(),d=10*p;return {dose:mg(d),sub:ml(d/20),prep:'5–10 mg/kg/dose. O cálculo exibido usa 10 mg/kg.',detail:'Evitar em desidratação, doença renal, sangramento e outras contraindicações.',source:'HTML-base'}})},
+    {name:'Ondansetrona 2 mg/mL',route:'EV',tags:'ondansetrona nausea vomito antiemetico',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:mg(d),sub:ml(d/2),prep:'0,15 mg/kg/dose, máximo operacional 8 mg. Administrar EV lentamente.',detail:'Avaliar QT, interações e indicação.',source:'HTML-base'}})},
+    {name:'Ondansetrona 4 mg/5 mL',route:'VO',tags:'ondansetrona nausea vomito antiemetico oral',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:mg(d),sub:ml(d/.8),prep:'Solução 0,8 mg/mL. Dose operacional 0,15 mg/kg, máximo 8 mg.',detail:'Ajustar à indicação e faixa etária.',source:'HTML-base'}})}
+  ]},
+
+  {id:'hidratacao',title:'💧 Hidratação',hint:'bolus • manutenção',cards:[
+    {name:'Expansão com SF 0,9%',route:'EV/IO',tags:'hidratação desidratação expansão volume sf',calc:()=>needWeight(()=>{const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'20 mL/kg',prep:'Bolus isotônico com reavaliação clínica após cada etapa. Em situações específicas, usar 10 mL/kg conforme risco de sobrecarga.',detail:'A indicação depende do estado hemodinâmico.',source:'HTML-base'}})},
+    {name:'Manutenção — Holliday–Segar',route:'EV',tags:'hidratação holliday manutenção volume',calc:()=>needWeight(()=>{
+      const p=weight(); let v=p<=10?100*p:p<=20?1000+50*(p-10):1500+20*(p-20);return {dose:`${fmt(v)} mL/24 h`,sub:`≈ ${fmt(v/24,1)} mL/h`,prep:'Fórmula 100/50/20 mL/kg/dia. Eletrólitos não são adicionados automaticamente nesta tela.',detail:'Ajustar à doença de base, eletrólitos, função renal, diurese e protocolo específico.',source:'HTML-base'};
+    })}
+  ]}
+];
+
+function doseFix(x){return x}
+
+let active='all';
+function buildChips(){
+  const c=$('chips'); c.innerHTML='';
+  const items=[['all','Todos'],...sections.map(s=>[s.id,s.title.replace(/^\S+\s/,'')])];
+  items.forEach(([id,label])=>{const b=document.createElement('button');b.className='chip'+(active===id?' active':'');b.textContent=label;b.onclick=()=>{active=id;buildChips();filterCards();if(id!=='all'){const el=document.getElementById('sec-'+id); if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}};c.appendChild(b)});
+}
+
+const doseHacks = {
+  'Sulfato de magnésio 50% / 10%':'50%: P×0,1 • 10%: P×0,5 mL',
+  'Adrenalina 1 mg/mL (1:1000)':'P×0,01 = mL',
+  'SF 0,9% ou Ringer Lactato':'P×20 = mL',
+  'Adrenalina 0,1 mg/mL (1:10.000)':'P×0,1 = mL',
+  'Amiodarona 50 mg/mL':'P×0,1 = mL',
+  'Lidocaína 20 mg/mL':'P×0,05 = mL',
+  'Midazolam 5 mg/mL':'P×0,04 = mL',
+  'Diazepam 5 mg/mL — retal':'P×0,08 = mL',
+  'Fenitoína 50 mg/mL':'P×0,4 = mL',
+  'Fenobarbital 100 mg/mL':'P×0,2 = mL',
+  'Glicose 10%':'P×2 = mL',
+  'Dexametasona 4 mg/mL':'P×0,15 = mL',
+  'Adrenalina 1 mg/mL nebulização':'P×0,5 = mL (máx 5)',
+  'Cristaloide isotônico':'P×10–20 = mL',
+  'Fentanil 50 mcg/mL':'P×0,02 = mL',
+  'Cetamina 50 mg/mL':'P×0,02–0,04 = mL',
+  'Etomidato 2 mg/mL':'P×0,15 = mL',
+  'Rocurônio 10 mg/mL':'P×0,1 = mL',
+  'Succinilcolina 20 mg/mL':'P×0,075 = mL',
+  'Dipirona 500 mg/mL — injetável':'P×0,03 = mL',
+  'Ibuprofeno 100 mg/5 mL':'P×0,5 = mL (10 mg/kg)',
+  'Ondansetrona 2 mg/mL':'P×0,075 = mL',
+  'Expansão com SF 0,9%':'P×20 = mL'
+};
+
+function cardHtml(card,calc){
+  const dose=calc.dose||'—',pending=dose==='Informe o peso';
+  return `<article class="card" data-search="${esc((card.name+' '+card.tags).toLowerCase())}">
+    <div class="cardTop"><div class="drug">${esc(card.name)}</div><div class="badges"><span class="route">${esc(card.route)}</span>${doseHacks[card.name]?`<span class="hack">${esc(doseHacks[card.name])}</span>`:''}</div></div>
+    <div class="dose ${pending?'pending':''}">${esc(dose)}</div>
+    ${calc.sub?`<div class="subdose">${esc(calc.sub)}</div>`:''}
+    <div class="meta">
+      ${calc.prep?`<div class="metaRow"><b>Preparo / uso</b><span>${esc(calc.prep)}</span></div>`:''}
+      ${calc.detail?`<div class="metaRow"><b>Atenção</b><span>${esc(calc.detail)}</span></div>`:''}
+    </div>
+    ${calc.source?`<div class="tagline">Fonte de organização: <strong>${esc(calc.source)}</strong></div>`:''}
+  </article>`;
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function render(){
+  const root=$('content'); root.innerHTML='';
+  sections.forEach(sec=>{
+    const wrap=document.createElement('section');wrap.className='section';wrap.id='sec-'+sec.id;wrap.dataset.section=sec.id;
+    wrap.innerHTML=`<div class="sectionHead"><h2>${sec.title}</h2><span>${sec.hint}</span></div><div class="grid">${sec.cards.map(c=>{let r;try{r=c.calc()}catch(e){r={dose:'Erro de cálculo',prep:String(e.message||e)}}return cardHtml(c,r)}).join('')}</div>`;
+    root.appendChild(wrap);
+  });
+  updateSummary(); filterCards();
+}
+
+function filterCards(){
+  const q=$('search').value.trim().toLowerCase(); let visible=0;
+  document.querySelectorAll('.section').forEach(sec=>{
+    const secActive=active==='all'||sec.dataset.section===active; let secCount=0;
+    sec.querySelectorAll('.card').forEach(card=>{
+      const ok=secActive && (!q || card.dataset.search.includes(q) || sec.querySelector('.sectionHead h2').textContent.toLowerCase().includes(q));
+      card.dataset.hidden=ok?'0':'1'; if(ok){visible++;secCount++}
+    });
+    sec.dataset.hidden=secCount?'0':'1';
+  });
+  $('empty').classList.toggle('show',visible===0);
+}
+function updateSummary(){
+  const p=weight(),a=ageLabel(),s=$('sex').value;
+  $('patientSummary').textContent=p?`${fmt(p)} KG${a?' • '+a:''}${s?' • '+s.charAt(0).toUpperCase():''}`:'PREENCHA O PESO';
+}
+
+['weight','age'].forEach(id=>$(id).addEventListener('input',render));
+['ageUnit','sex'].forEach(id=>$(id).addEventListener('change',render));
+$('search').addEventListener('input',filterCards);
+$('clearSearch').onclick=()=>{$('search').value='';filterCards();$('search').focus()};
+buildChips();render();
+</script>
+</body>
+</html>
