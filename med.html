@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -68,7 +69,7 @@ main{max-width:1120px;margin:auto;padding:10px 12px 40px}
 <div class="chips" id="chips"></div>
 
 <main>
-  <div class="notice warn"><b>Asma:</b> salbutamol, ipratrópio e magnésio foram apresentados conforme GINA 2026; os demais blocos preservam principalmente as regras/apresentações do HTML-base e precisam continuar sendo conferidos com o protocolo institucional.</div>
+  <div class="notice warn"><b>Uso rápido:</b> tela resumida derivada do módulo de Emergências Pediátricas. Prioriza dose, apresentação, mL/kg, via, diluição, velocidade e máximos. Conferir sempre o protocolo institucional e a apresentação disponível antes de administrar.</div>
   <div id="content"></div>
   <div id="empty" class="empty">Nenhuma medicação encontrada para essa pesquisa.</div>
   <div class="footer">Ferramenta de apoio profissional. Conferir alergias, indicação, dose máxima, função renal/hepática, apresentação realmente disponível e protocolo do serviço antes de administrar. Em drogas de ressuscitação, sedação, vasoativos ou eletrólitos, realizar dupla checagem.</div>
@@ -103,67 +104,79 @@ const sections = [
     }},
     {name:'Prednisolona 3 mg/mL VO',route:'VO',tags:'asma prednisolona corticoide',calc:()=>needWeight(()=>{
       const p=weight(),a=ageYears(); let max=a<2?20:a<6?30:a<12?40:50; const lo=Math.min(p,max),hi=Math.min(2*p,max);
-      return {dose:`${mg(lo)}–${mg(hi)}`,sub:`${ml(lo/3)}–${ml(hi/3)} da solução 3 mg/mL`,prep:'1–2 mg/kg/dia por curso curto conforme avaliação. Pode ser dose única diária ou conforme protocolo local.',detail:`Teto operacional nesta calculadora: ${max} mg/dia pela faixa etária.`,source:'GINA 2026 / protocolo local'};
+      return {dose:`${ml(lo/3)}–${ml(hi/3)}`,sub:`${mg(lo)}–${mg(hi)} • solução 3 mg/mL`,prep:'1–2 mg/kg/dia por curso curto conforme avaliação. Pode ser dose única diária ou conforme protocolo local.',detail:`Teto operacional nesta calculadora: ${max} mg/dia pela faixa etária.`,source:'GINA 2026 / protocolo local'};
     })},
     {name:'Metilprednisolona 125 mg/fr',route:'EV',tags:'asma metilprednisolona corticoide ev',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(p,60),vol=dose/62.5;
-      return {dose:mg(dose),sub:`${ml(vol)} após reconstituir para 62,5 mg/mL`,prep:'Reconstituir o frasco de 125 mg em 2 mL. Diluir a dose calculada em SF 0,9% 20–50 mL e infundir em cerca de 30 min.',detail:'Regra preservada do HTML-base: 1 mg/kg/dose, teto operacional 60 mg.',source:'HTML-base / protocolo institucional'};
+      return {dose:`${ml(vol)} + 20–50 mL SF 0,9%`,sub:`${mg(dose)} • após reconstituir para 62,5 mg/mL`,prep:'Reconstituir o frasco de 125 mg em 2 mL. Diluir a dose calculada em SF 0,9% 20–50 mL e infundir em cerca de 30 min.',detail:'Regra preservada do HTML-base: 1 mg/kg/dose, teto operacional 60 mg.',source:'HTML-base / protocolo institucional'};
     })},
     {name:'Dexametasona 4 mg/mL',route:'EV/IM/VO',tags:'asma dexametasona corticoide',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(.6*p,16);
-      return {dose:mg(dose),sub:ml(dose/4),prep:'Dose de referência desta calculadora: 0,6 mg/kg. Ajustar teto e via conforme idade/indicação/protocolo.',detail:'Em crianças pequenas, GINA 2026 usa 0,3–0,6 mg/kg e teto menor em algumas faixas.',source:'HTML-base + GINA 2026'};
+      return {dose:ml(dose/4),sub:`${mg(dose)} • 0,6 mg/kg`,prep:'Dose de referência desta calculadora: 0,6 mg/kg. Ajustar teto e via conforme idade/indicação/protocolo.',detail:'Em crianças pequenas, GINA 2026 usa 0,3–0,6 mg/kg e teto menor em algumas faixas.',source:'HTML-base + GINA 2026'};
     })},
     {name:'Sulfato de magnésio 50% / 10%',route:'EV • BIC',tags:'asma magnesio sulfato magnésio grave 50% 10% macete',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(50*p,2000),v50=dose/500,v10=dose/100;
       const cap=p>40?' (teto de 2 g atingido)':'';
-      return {dose:`${mg(dose)}${cap}`,sub:`50%: ${ml(v50)}  •  10%: ${ml(v10)}`,prep:'SF 0,9% 100 mL • BIC 30 min, se padronizado no serviço.',detail:'GINA 2026: 40–50 mg/kg EV (máx. 2 g), infusão em 20–60 min. Diluição final conforme protocolo local.',source:'GINA 2026'};
+      return {dose:`50%: ${ml(v50)} + 100 mL SF 0,9%`,sub:`10%: ${ml(v10)} • ${mg(dose)}${cap}`,prep:'SF 0,9% 100 mL • BIC 30 min, se padronizado no serviço.',detail:'GINA 2026: 40–50 mg/kg EV (máx. 2 g), infusão em 20–60 min. Diluição final conforme protocolo local.',source:'GINA 2026'};
     })}
   ]},
 
   {id:'anafilaxia',title:'🚨 Anafilaxia',hint:'adrenalina IM primeiro',cards:[
     {name:'Adrenalina 1 mg/mL (1:1000)',route:'IM',tags:'anafilaxia adrenalina epinefrina im',calc:()=>needWeight(()=>{
       const p=weight(),max=p>50?.5:.3,dose=Math.min(.01*p,max);
-      return {dose:`${fmt(dose,2)} mg = ${ml(dose)}`,sub:'IM na face anterolateral da coxa',prep:'0,01 mg/kg = 0,01 mL/kg da solução 1 mg/mL. Repetir a cada 5–15 min se necessário.',detail:`Teto usado no HTML-base: ${max} mg nesta faixa de peso.`,source:'HTML-base / protocolo institucional'};
+      return {dose:`${ml(dose)}`,sub:`${fmt(dose,2)} mg • IM na face anterolateral da coxa`,prep:'0,01 mg/kg = 0,01 mL/kg da solução 1 mg/mL. Repetir a cada 5–15 min se necessário.',detail:`Teto usado no HTML-base: ${max} mg nesta faixa de peso.`,source:'HTML-base / protocolo institucional'};
     })},
     {name:'SF 0,9% ou Ringer Lactato',route:'EV/IO',tags:'anafilaxia choque volume expansão cristalóide',calc:()=>needWeight(()=>{
       const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'bolus de 20 mL/kg',prep:'Administrar rapidamente se hipotensão/má perfusão e reavaliar após cada bolus.',detail:`Referência do HTML-base: até ${fmt(30*p)} mL na primeira hora como teto operacional inicial, conforme resposta.`,source:'HTML-base'};
     })},
-    {name:'Salbutamol se broncoespasmo residual',route:'INALATÓRIO',tags:'anafilaxia salbutamol broncoespasmo',calc:()=>({dose:ageYears()<6?'4–6 jatos':'4–10 jatos',sub:'100 mcg/jato + espaçador',prep:'Adjuvante para broncoespasmo. Não substitui adrenalina IM.',detail:'Usar conforme resposta respiratória.',source:'GINA 2026 / HTML-base'})}
+    {name:'Salbutamol se broncoespasmo residual',route:'INALATÓRIO',tags:'anafilaxia salbutamol broncoespasmo',calc:()=>({dose:ageYears()<6?'4–6 jatos':'4–10 jatos',sub:'100 mcg/jato + espaçador',prep:'Adjuvante para broncoespasmo. Não substitui adrenalina IM.',detail:'Usar conforme resposta respiratória.',source:'GINA 2026 / HTML-base'})},
+    {name:'Difenidramina 50 mg/mL',route:'EV',tags:'anafilaxia urticaria prurido difenidramina antihistaminico',calc:()=>needWeight(()=>{
+      const p=weight(),d=Math.min(p,50);return {dose:`${ml(d/50)} + 50 mL SF 0,9%`,sub:`${mg(d)} • 1 mg/kg/dose (máx. 50 mg)`,prep:'Se usada para urticária/prurido residual: diluir em SF 0,9% 50 mL e infundir em 15–30 min.',detail:'Adjuvante; NÃO substitui nem deve atrasar adrenalina IM na anafilaxia.',source:'Fluxo do emergencia.html'};
+    })}
   ]},
 
   {id:'pcr',title:'🫀 PCR pediátrica',hint:'doses de ressuscitação',cards:[
     {name:'Adrenalina 0,1 mg/mL (1:10.000)',route:'EV/IO',tags:'pcr parada adrenalina epinefrina',calc:()=>needWeight(()=>{
-      const p=weight(),dose=.01*p,vol=.1*p;return {dose:`${mg(dose)} = ${ml(vol)}`,sub:'0,01 mg/kg = 0,1 mL/kg',prep:'Se houver apenas adrenalina 1 mg/mL: 1 mL + 9 mL de SF/AD → 0,1 mg/mL.',detail:'Repetir a cada 3–5 min durante PCR conforme protocolo.',source:'HTML-base / PALS'};
+      const p=weight(),dose=.01*p,vol=.1*p;return {dose:`${ml(vol)}`,sub:`${mg(dose)} • 0,01 mg/kg = 0,1 mL/kg`,prep:'Se houver apenas adrenalina 1 mg/mL: 1 mL + 9 mL de SF/AD → 0,1 mg/mL.',detail:'Repetir a cada 3–5 min durante PCR conforme protocolo.',source:'HTML-base / PALS'};
     })},
     {name:'Amiodarona 50 mg/mL',route:'EV/IO',tags:'pcr amiodarona fv tv',calc:()=>needWeight(()=>{
-      const p=weight(),dose=5*p;return {dose:mg(dose),sub:ml(dose/50),prep:'5 mg/kg para FV/TV sem pulso refratária, conforme algoritmo de ressuscitação.',detail:'Conferir teto e número de doses no protocolo de PCR vigente.',source:'HTML-base / PALS'};
+      const p=weight(),dose=5*p;return {dose:ml(dose/50),sub:`${mg(dose)} • 5 mg/kg`,prep:'5 mg/kg para FV/TV sem pulso refratária, conforme algoritmo de ressuscitação.',detail:'Conferir teto e número de doses no protocolo de PCR vigente.',source:'HTML-base / PALS'};
     })},
     {name:'Lidocaína 20 mg/mL',route:'EV/IO',tags:'pcr lidocaina fv tv',calc:()=>needWeight(()=>{
-      const p=weight(),dose=p;return {dose:mg(dose),sub:ml(dose/20),prep:'1 mg/kg como alternativa antiarrítmica quando indicada.',detail:'Conferir concentração disponível.',source:'HTML-base / PALS'};
+      const p=weight(),dose=p;return {dose:ml(dose/20),sub:`${mg(dose)} • 1 mg/kg`,prep:'1 mg/kg como alternativa antiarrítmica quando indicada.',detail:'Conferir concentração disponível.',source:'HTML-base / PALS'};
     })}
   ]},
 
   {id:'convulsao',title:'⚡ Crise convulsiva',hint:'benzodiazepínico • 2ª linha',cards:[
-    {name:'Midazolam 5 mg/mL',route:'IN/IM',tags:'convulsão crise midazolam intranasal im',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.2*p,10);return {dose:mg(dose),sub:ml(dose/5),prep:'0,2 mg/kg por via intranasal ou intramuscular; máximo 10 mg no esquema do HTML-base. Reavaliar em 5 min.',detail:'Se repetir benzodiazepínico, manter preparo para suporte ventilatório.',source:'HTML-base'};
+    {name:'Midazolam 5 mg/mL — EV/IO',route:'EV/IO',tags:'convulsão crise midazolam ev io acesso',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.15*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,03 mL`,prep:'0,15 mg/kg EV/IO. Administrar lentamente e reavaliar em 5 min.',detail:'Se a crise persistir, pode-se repetir benzodiazepínico uma única vez; manter preparo para suporte ventilatório.',source:'Ajuste rápido acordado + fluxo do HTML-base'};
+    })},
+    {name:'Midazolam 5 mg/mL — IM',route:'IM',tags:'convulsão crise midazolam im sem acesso',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.2*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,04 mL`,prep:'0,2 mg/kg IM quando não houver acesso EV/IO. Reavaliar em 5 min.',detail:'Máximo operacional 10 mg/dose.',source:'Ajuste rápido acordado + fluxo do HTML-base'};
+    })},
+    {name:'Midazolam 5 mg/mL — IN/bucal',route:'IN/BUCAL',tags:'convulsão crise midazolam intranasal nasal bucal sem acesso',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.3*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,06 mL`,prep:'0,3 mg/kg por via intranasal/bucal quando não houver acesso.',detail:'Máximo operacional 10 mg/dose.',source:'Ajuste rápido acordado'};
+    })},
+    {name:'Diazepam 5 mg/mL — EV/IO',route:'EV/IO',tags:'convulsão diazepam ev io lento',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.3*p,10),vol=dose/5;return {dose:ml(vol),sub:`DIAZEPAM 5 mg/mL • ${mg(dose)} • macete P×0,06 mL`,prep:'0,3 mg/kg EV/IO, ADMINISTRAR EV LENTAMENTE. Reavaliar em 5 min.',detail:'Máximo 10 mg/dose. Não usar IM pela absorção imprevisível.',source:'Ajuste rápido acordado'};
     })},
     {name:'Diazepam 5 mg/mL — retal',route:'RETAL',tags:'convulsão diazepam retal',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.4*p,10);return {dose:mg(dose),sub:ml(dose/5),prep:'0,4 mg/kg por via retal; máximo 10 mg. Usar quando não houver acesso/alternativa apropriada.',detail:'No fluxo do HTML-base, máximo de 2 doses de benzodiazepínico no total.',source:'HTML-base'};
+      const p=weight(),dose=Math.min(.5*p,20),vol=dose/5;return {dose:ml(vol),sub:`DIAZEPAM 5 mg/mL • ${mg(dose)} • macete P×0,1 mL`,prep:'0,5 mg/kg por via retal quando não houver acesso/alternativa apropriada.',detail:'Máximo 20 mg/dose. No total, evitar sucessivas doses de benzodiazepínicos sem avançar o tratamento.',source:'Ajuste rápido acordado'};
     })},
-    {name:'Fenitoína 50 mg/mL',route:'EV',tags:'convulsão fenitoina fenitoína segunda linha',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(20*p,1500);return {dose:mg(dose),sub:ml(dose/50),prep:'Ataque 20 mg/kg. Diluir em SF 0,9% (não usar solução glicosada) e infundir com monitorização cardíaca e de PA.',detail:'HTML-base usa 100 mL de SF e cerca de 20 min; adaptar à concentração/velocidade institucional.',source:'HTML-base'};
+    {name:'Fenitoína 50 mg/mL',route:'EV/IO',tags:'convulsão fenitoina fenitoína segunda linha ataque sf 20 minutos',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(20*p,1500),vol=dose/50;return {dose:`${ml(vol)} + 100 mL SF 0,9%`,sub:`FENITOÍNA 50 mg/mL • ${mg(dose)} • macete P×0,4 mL`,prep:'Ataque 20 mg/kg. Diluir SOMENTE em 100 mL de SF 0,9%; não usar solução glicosada. EV LENTO, em cerca de 20 min, respeitando a velocidade máxima institucional.',detail:'Monitorização contínua de FC/ECG e PA. Se persistência após carga adequada, seguir o fluxo de 2ª linha/protocolo do serviço em vez de repetir automaticamente.',source:'Fluxo do HTML-base + ajuste rápido acordado'};
     })},
-    {name:'Fenobarbital 100 mg/mL',route:'EV',tags:'convulsão fenobarbital neonatal segunda linha',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(20*p,1000);return {dose:mg(dose),sub:ml(dose/100),prep:'Ataque 20 mg/kg EV. No RN, aparece como droga de escolha no fluxo do HTML-base.',detail:'Risco de depressão respiratória, especialmente após benzodiazepínicos.',source:'HTML-base'};
+    {name:'Fenobarbital 100 mg/mL',route:'EV/IO',tags:'convulsão fenobarbital neonatal segunda linha',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(20*p,1000),vol=dose/100;return {dose:ml(vol),sub:`FENOBARBITAL 100 mg/mL • ${mg(dose)} • macete P×0,2 mL`,prep:'Ataque 20 mg/kg EV/IO. No RN, aparece como droga de escolha no fluxo do HTML-base.',detail:'Risco de depressão respiratória, especialmente após benzodiazepínicos.',source:'HTML-base'};
     })}
   ]},
 
   {id:'hipoglicemia',title:'🍬 Hipoglicemia',hint:'glicose • preparo rápido',cards:[
-    {name:'Glicose 10%',route:'EV',tags:'hipoglicemia sg10 glicose bolus',calc:()=>needWeight(()=>{
-      const p=weight(),vol=2*p;return {dose:`${ml(vol)} de SG10%`,sub:`0,2 g/kg de glicose`,prep:'Bolus 2 mL/kg. Reavaliar glicemia em ~15 min e repetir/ajustar conforme resposta e protocolo.',detail:'Evitar SG50% não diluída como bolus pediátrico inicial.',source:'HTML-base / guia PS 2026'};
+    {name:'Glicose 10%',route:'EV/IO',tags:'hipoglicemia sg10 glicose bolus',calc:()=>needWeight(()=>{
+      const p=weight(),vol=2*p;return {dose:`${ml(vol)} de SG10%`,sub:`2 mL/kg • 0,2 g/kg de glicose`,prep:'Bolus EV/IO. Reavaliar HGT em ~10–15 min e repetir/ajustar conforme resposta e protocolo.',detail:'Evitar SG50% não diluída como bolus pediátrico inicial.',source:'HTML-base / guia PS 2026'};
     })},
-    {name:'Preparar SG10% a partir de SG50% + AD',route:'PREPARO',tags:'hipoglicemia sg50 agua destilada preparo sg10',calc:()=>needWeight(()=>{
-      const p=weight(),final=2*p,g50=.2*final,ad=.8*final;return {dose:`${ml(g50)} SG50% + ${ml(ad)} AD`,sub:`volume final ${ml(final)} de SG10%`,prep:'Proporção 1:4. Exemplo-padrão: 20 mL de SG50% + 80 mL de AD = 100 mL de SG10%.',detail:'Administrar apenas o volume final calculado para o paciente.',source:'HTML-base'};
+    {name:'🚨 SG50% + SF 0,9% → SG10%',route:'PREPARO',tags:'hipoglicemia sg50 soro fisiologico sf preparo sg10 macete',calc:()=>needWeight(()=>{
+      const p=weight(),g50=.4*p,sf=1.6*p,final=2*p;return {dose:`${ml(g50)} SG50% + ${ml(sf)} SF 0,9%`,sub:`= ${ml(final)} de SG10% • MACETE: SG50% 0,4 mL/kg + SF 1,6 mL/kg`,prep:'Usar os volumes calculados para preparar exatamente o bolus de SG10% 2 mL/kg. Ex.: 30 kg → 12 mL de SG50% + 48 mL de SF = 60 mL.',detail:'Este cartão foi priorizado porque a unidade dispõe de SG50%. Administrar a solução final diluída, não SG50% pura.',source:'Macete operacional acordado'};
     })},
     {name:'Glucagon',route:'IM',tags:'hipoglicemia glucagon im sem acesso',calc:()=>needWeight(()=>{
       const p=weight(),a=ageYears(),dose=(p<25||a<6)?0.5:1;return {dose:`${fmt(dose,1)} mg IM`,sub:'quando via EV não está imediatamente disponível e houver indicação',prep:'Dose por faixa de peso/idade conforme o fluxo do HTML-base.',detail:'Após resposta, garantir carboidrato e prevenção de recorrência conforme causa.',source:'HTML-base'};
@@ -172,7 +185,7 @@ const sections = [
 
   {id:'crupe',title:'🗣️ Crupe',hint:'dexametasona • adrenalina NBZ',cards:[
     {name:'Dexametasona 4 mg/mL',route:'VO/IM/EV',tags:'crupe laringite dexametasona',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.6*p,16);return {dose:mg(dose),sub:ml(dose/4),prep:'0,6 mg/kg em dose única no esquema operacional desta calculadora. Doses menores podem ser utilizadas em protocolos específicos.',detail:'Escolher a via conforme tolerância e gravidade.',source:'HTML-base / prática pediátrica'};
+      const p=weight(),dose=Math.min(.6*p,16);return {dose:ml(dose/4),sub:`${mg(dose)} • 0,6 mg/kg`,prep:'0,6 mg/kg em dose única no esquema operacional desta calculadora. Doses menores podem ser utilizadas em protocolos específicos.',detail:'Escolher a via conforme tolerância e gravidade.',source:'HTML-base / prática pediátrica'};
     })},
     {name:'Adrenalina 1 mg/mL nebulização',route:'NBZ',tags:'crupe epinefrina adrenalina nebulização estridor',calc:()=>needWeight(()=>{
       const p=weight(),vol=Math.min(.5*p,5);return {dose:`${ml(vol)} da solução 1 mg/mL`,sub:'0,5 mL/kg; máximo 5 mL',prep:'Nebulizar sem diluição ou conforme volume mínimo do nebulizador/protocolo do serviço.',detail:'Indicação típica: crupe moderado/grave com estridor em repouso; observar após administração pelo risco de recorrência.',source:'referência pediátrica usual'};
@@ -188,25 +201,44 @@ const sections = [
     })},
     {name:'Adrenalina — solução 10 mcg/mL',route:'BIC',tags:'choque adrenalina epinefrina bomba infusão',calc:()=>needWeight(()=>{
       const p=weight(),rate=.05*p*60/10;return {dose:`${fmt(rate,1)} mL/h`,sub:'equivale a 0,05 mcg/kg/min',prep:'Exemplo: adrenalina 1 mg/mL, 1 mL + diluente até 100 mL = 10 mcg/mL.',detail:'Titular à resposta; ambiente monitorizado.',source:'HTML-base'};
+    })},
+    {name:'Dopamina — solução exemplo 1600 mcg/mL',route:'BIC',tags:'choque dopamina bomba infusão vasoativo',calc:()=>needWeight(()=>{
+      const p=weight(),rate=5*p*60/1600;return {dose:`${fmt(rate,1)} mL/h`,sub:'equivale a 5 mcg/kg/min',prep:'Exemplo do módulo longo: dopamina 400 mg em SG5% até 250 mL = 1600 mcg/mL.',detail:'Titular conforme resposta e protocolo institucional; monitorização contínua.',source:'Fluxo do emergencia.html'};
     })}
   ]},
 
   {id:'iot',title:'🫧 IOT — sequência rápida',hint:'sedação • bloqueio',cards:[
-    {name:'Fentanil 50 mcg/mL',route:'EV',tags:'iot intubação fentanil analgesia',calc:()=>needWeight(()=>{const p=weight(),d=p;return {dose:mcg(d),sub:ml(d/50),prep:'1 mcg/kg EV no esquema do HTML-base.',detail:'Titular conforme hemodinâmica e contexto.',source:'HTML-base'}})},
-    {name:'Cetamina 50 mg/mL',route:'EV',tags:'iot intubação cetamina ketamina sedação',calc:()=>needWeight(()=>{const p=weight(),lo=p,hi=2*p;return {dose:`${mg(lo)}–${mg(hi)}`,sub:`${ml(lo/50)}–${ml(hi/50)}`,prep:'1–2 mg/kg EV. Opção útil em broncoespasmo/instabilidade conforme cenário.',detail:'Preparar suporte hemodinâmico e ventilatório.',source:'HTML-base'}})},
-    {name:'Etomidato 2 mg/mL',route:'EV',tags:'iot intubação etomidato sedação',calc:()=>needWeight(()=>{const p=weight(),d=.3*p;return {dose:mg(d),sub:ml(d/2),prep:'0,3 mg/kg EV.',detail:'Usar quando apropriado ao contexto clínico.',source:'HTML-base'}})},
-    {name:'Midazolam 5 mg/mL',route:'EV',tags:'iot intubação midazolam sedação',calc:()=>needWeight(()=>{const p=weight(),d=.1*p;return {dose:mg(d),sub:ml(d/5),prep:'0,1 mg/kg EV no bloco de IOT do HTML-base.',detail:'Cautela em instabilidade respiratória/hemodinâmica.',source:'HTML-base'}})},
-    {name:'Rocurônio 10 mg/mL',route:'EV',tags:'iot intubação rocuronio bloqueador neuromuscular',calc:()=>needWeight(()=>{const p=weight(),d=p;return {dose:mg(d),sub:ml(d/10),prep:'1 mg/kg EV.',detail:'Garantir sedação/analgesia adequada e plano de ventilação.',source:'HTML-base'}})},
-    {name:'Succinilcolina 20 mg/mL',route:'EV',tags:'iot intubação succinilcolina bloqueador neuromuscular',calc:()=>needWeight(()=>{const p=weight(),d=1.5*p;return {dose:mg(d),sub:ml(d/20),prep:'Referência operacional: 1,5 mg/kg EV.',detail:'Checar contraindicações: hipercalemia, doença neuromuscular, queimaduras/trauma tardio, hipertermia maligna etc.',source:'HTML-base'}})}
+    {name:'Fentanil 50 mcg/mL',route:'EV • LENTO',tags:'iot intubação fentanil analgesia',calc:()=>needWeight(()=>{const p=weight(),d=2*p,v=.04*p;return {dose:`${ml(v)} + 10 mL SF 0,9%`,sub:`P × 0,04 mL • ${mcg(d)} (2 mcg/kg)`,prep:'Diluir o volume calculado em 10 mL de SF 0,9% e administrar EV lentamente.',detail:'Apresentação considerada: 50 mcg/mL. Monitorização e suporte ventilatório disponíveis.',source:'Ajuste operacional solicitado'}})},
+    {name:'Atropina 0,25 mg/mL — bradicardia',route:'EV/IO',tags:'iot intubação atropina bradicardia premedicação lactente succinilcolina',calc:()=>needWeight(()=>{const p=weight(),calcMg=.02*p,d=Math.max(.1,Math.min(calcMg,.5)),v=d/.25;let faixa=p<5?'mínimo 0,4 mL':p>25?'máximo 2 mL':'P × 0,08 mL';return {dose:`${ml(v)}`,sub:`${faixa} • ${mg(d)} (0,02 mg/kg; mín. 0,1 mg; máx. 0,5 mg)`,prep:'BRADICARDIA: administrar EV/IO. Pode repetir 1 vez após 5 minutos.',detail:'Apresentação 0,25 mg/mL: <5 kg → 0,4 mL; 5–25 kg → P × 0,08 mL; >25 kg → máximo 2 mL por dose.',source:'AHA/PALS 2025'}})},
+    {name:'Cetamina 50 mg/mL',route:'EV',tags:'iot intubação cetamina ketamina sedação',calc:()=>needWeight(()=>{const p=weight(),d=2*p,v=.04*p;return {dose:`${ml(v)} + 10 mL SF 0,9%`,sub:`P×0,04 mL • ${mg(d)} (2 mg/kg)`,prep:'Diluir o volume calculado em 10 mL de SF 0,9% e administrar EV lentamente.',detail:'Apresentação considerada: 50 mg/mL. Preparar suporte hemodinâmico e ventilatório.',source:'Ajuste operacional solicitado'}})},
+    {name:'Etomidato 2 mg/mL',route:'EV',tags:'iot intubação etomidato sedação',calc:()=>needWeight(()=>{const p=weight(),d=.3*p,v=.15*p;return {dose:`${ml(v)} + 10 mL SF 0,9%`,sub:`P×0,15 mL • ${mg(d)} (0,3 mg/kg)`,prep:'Diluir o volume calculado em 10 mL de SF 0,9% e administrar EV lentamente.',detail:'Apresentação considerada: 2 mg/mL.',source:'Ajuste operacional solicitado'}})},
+    {name:'Midazolam 5 mg/mL',route:'EV',tags:'iot intubação midazolam sedação',calc:()=>needWeight(()=>{const p=weight(),d=.1*p,v=d/5;return {dose:`${ml(v)}`,sub:`P × 0,02 mL • ${mg(d)} (0,1 mg/kg)`,prep:'Administrar EV conforme o bloco de IOT do HTML-base.',detail:'Cautela em instabilidade respiratória/hemodinâmica.',source:'HTML-base'}})},
+    {name:'Rocurônio 10 mg/mL',route:'EV • BOLUS',tags:'iot intubação rocuronio bloqueador neuromuscular bolus diluição',calc:()=>needWeight(()=>{const p=weight(),d=p,v=d/10;return {dose:`${ml(v)} + 10 mL SF 0,9%`,sub:`P × 0,1 mL • 1 mg/kg`,prep:'Diluir o volume calculado em 10 mL de SF 0,9% e administrar EV em bolus.',detail:'Garantir sedação/analgesia adequada e plano de ventilação.',source:'HTML-base / ajuste operacional do serviço'}})},
+    {name:'Succinilcolina — solução final 5 mg/mL após reconstituição',route:'EV • BOLUS',tags:'iot intubação succinilcolina bloqueador neuromuscular bolus reconstituir',calc:()=>needWeight(()=>{const p=weight(),v=.2*p,d=5*v;return {dose:`${ml(v)}`,sub:`P × 0,2 mL • ${mg(d)} (1 mg/kg se solução final = 5 mg/mL)`,prep:'RECONSTITUIR ANTES. Após obter solução final 5 mg/mL, administrar o volume calculado EV em bolus.',detail:'A regra P × 0,2 mL NÃO corresponde à apresentação 20 mg/mL sem diluição. Checar concentração final antes de administrar e contraindicações clínicas.',source:'Ajuste operacional do serviço'}})}
   ]},
 
   {id:'sintomaticos',title:'🌡️ Sintomáticos',hint:'dor • febre • náusea',cards:[
-    {name:'Dipirona 500 mg/mL — injetável',route:'EV/IM',tags:'dipirona febre dor analgesia',calc:()=>needWeight(()=>{const p=weight(),d=15*p;return {dose:mg(d),sub:ml(d/500),prep:'Referência operacional: 15 mg/kg/dose. EV: diluir e administrar lentamente; IM: conforme apresentação.',detail:'Conferir intervalo e teto diário do serviço.',source:'HTML-base'}})},
+    {name:'Dipirona 500 mg/mL — injetável',route:'EV/IM',tags:'dipirona febre dor analgesia',calc:()=>needWeight(()=>{const p=weight(),d=15*p;return {dose:ml(d/500),sub:`${mg(d)} • 15 mg/kg/dose`,prep:'EV: diluir e administrar lentamente; IM: conforme apresentação.',detail:'Conferir intervalo e teto diário do serviço.',source:'HTML-base'}})},
     {name:'Dipirona 500 mg/mL — gotas',route:'VO',tags:'dipirona gotas febre dor',calc:()=>needWeight(()=>{const p=weight();return {dose:`${fmt(.4*p)}–${fmt(.6*p)} gotas`,sub:'faixa usada no HTML-base',prep:'Evitar regra automática de 1 gota/kg com esta concentração.',detail:'Conferir conta-gotas/concentração do fabricante.',source:'HTML-base'}})},
-    {name:'Paracetamol 200 mg/mL — gotas',route:'VO',tags:'paracetamol acetaminofeno febre dor gotas',calc:()=>needWeight(()=>{const p=weight(),d=15*p,g=Math.min(p,35);return {dose:mg(d),sub:`≈ ${fmt(g)} gotas`,prep:'10–15 mg/kg/dose a cada 4–6 h, conforme necessidade e protocolo.',detail:'HTML-base usa máximo operacional de 35 gotas/dose.',source:'HTML-base'}})},
-    {name:'Ibuprofeno 100 mg/5 mL',route:'VO',tags:'ibuprofeno febre dor aine',calc:()=>needWeight(()=>{const p=weight(),d=10*p;return {dose:mg(d),sub:ml(d/20),prep:'5–10 mg/kg/dose. O cálculo exibido usa 10 mg/kg.',detail:'Evitar em desidratação, doença renal, sangramento e outras contraindicações.',source:'HTML-base'}})},
-    {name:'Ondansetrona 2 mg/mL',route:'EV',tags:'ondansetrona nausea vomito antiemetico',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:mg(d),sub:ml(d/2),prep:'0,15 mg/kg/dose, máximo operacional 8 mg. Administrar EV lentamente.',detail:'Avaliar QT, interações e indicação.',source:'HTML-base'}})},
-    {name:'Ondansetrona 4 mg/5 mL',route:'VO',tags:'ondansetrona nausea vomito antiemetico oral',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:mg(d),sub:ml(d/.8),prep:'Solução 0,8 mg/mL. Dose operacional 0,15 mg/kg, máximo 8 mg.',detail:'Ajustar à indicação e faixa etária.',source:'HTML-base'}})}
+    {name:'Paracetamol 200 mg/mL — gotas',route:'VO',tags:'paracetamol acetaminofeno febre dor gotas',calc:()=>needWeight(()=>{const p=weight(),d=15*p,g=Math.min(p,35);return {dose:`≈ ${fmt(g)} gotas`,sub:`${mg(d)} • 15 mg/kg/dose`,prep:'10–15 mg/kg/dose a cada 4–6 h, conforme necessidade e protocolo.',detail:'HTML-base usa máximo operacional de 35 gotas/dose.',source:'HTML-base'}})},
+    {name:'Ibuprofeno 100 mg/5 mL',route:'VO',tags:'ibuprofeno febre dor aine',calc:()=>needWeight(()=>{const p=weight(),d=10*p;return {dose:ml(d/20),sub:`${mg(d)} • 10 mg/kg`,prep:'5–10 mg/kg/dose. O cálculo exibido usa 10 mg/kg.',detail:'Evitar em desidratação, doença renal, sangramento e outras contraindicações.',source:'HTML-base'}})},
+    {name:'Ondansetrona 2 mg/mL',route:'EV',tags:'ondansetrona nausea vomito antiemetico',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:`${ml(d/2)} + 50–100 mL SF 0,9%`,sub:`${mg(d)} • 0,15 mg/kg/dose • máx. 8 mg`,prep:'Diluir em 50–100 mL de SF 0,9% e administrar EV lentamente.',detail:'Avaliar QT, interações e indicação.',source:'HTML-base'}})},
+    {name:'Ondansetrona 4 mg/5 mL',route:'VO',tags:'ondansetrona nausea vomito antiemetico oral',calc:()=>needWeight(()=>{const p=weight(),d=Math.min(.15*p,8);return {dose:ml(d/.8),sub:`${mg(d)} • solução 0,8 mg/mL`,prep:'Dose operacional 0,15 mg/kg, máximo 8 mg.',detail:'Ajustar à indicação e faixa etária.',source:'HTML-base'}})}
+  ]},
+
+  {id:'diarreia',title:'🚽 Diarreia / GECA',hint:'SRO • zinco • adjuvantes',cards:[
+    {name:'SRO — após cada perda',route:'VO',tags:'diarreia gastroenterite sro reidratacao oral perda evacuacao vomito',calc:()=>{
+      const m=ageMonths(),a=ageYears(); const dose=m<12?'50–100 mL':a<=10?'100–200 mL':'quantidade que aceitar';
+      return {dose,sub:'após cada evacuação diarreica ou episódio de vômito',prep:'Oferecer em pequenos volumes e maior frequência. Manter aleitamento e alimentação habitual.',detail:'Se houver sinais de desidratação, usar o plano de reidratação correspondente.',source:'Fluxo diarreia do emergencia.html'};
+    }},
+    {name:'Zinco',route:'VO',tags:'diarreia gastroenterite zinco unizinco',calc:()=>{
+      const m=ageMonths(); const d=m<6?'10 mg':'20 mg'; const ok=m<60;
+      return ok?{dose:`${d} 1x/dia`,sub:'por 10–14 dias',prep:m<6?'Menor de 6 meses: 10 mg/dia.':'6 meses a <5 anos: 20 mg/dia.',detail:'No fluxo do módulo longo, não é indicado rotineiramente para ≥5 anos.',source:'Fluxo diarreia do emergencia.html'}:{dose:'Não indicado rotineiramente',sub:'≥5 anos no fluxo do módulo longo',prep:'Avaliar indicação individual.',detail:'',source:'Fluxo diarreia do emergencia.html'};
+    }},
+    {name:'Racecadotrila',route:'VO',tags:'diarreia gastroenterite racecadotrila adjuvante',calc:()=>needWeight(()=>{
+      const p=weight(),d=1.5*p;return {dose:mg(d),sub:'1,5 mg/kg/dose • 3x/dia',prep:'Adjuvante discutido no módulo longo; interromper quando cessar a diarreia.',detail:'Contraindicada em menores de 3 meses no material-base. Não integra o Plano MS de rotina.',source:'Fluxo diarreia do emergencia.html'};
+    })},
+    {name:'S. boulardii CNCM I-745',route:'VO',tags:'diarreia probiotico saccharomyces boulardii floratil',calc:()=>({dose:'250–750 mg/dia',sub:'por 5–7 dias',prep:'Faixa discutida como adjuvante no módulo longo, dependente da cepa e apresentação.',detail:'Não integra o Plano MS de rotina; avaliar disponibilidade/custo-benefício.',source:'Fluxo diarreia do emergencia.html'})}
   ]},
 
   {id:'hidratacao',title:'💧 Hidratação',hint:'bolus • manutenção',cards:[
@@ -233,19 +265,24 @@ const doseHacks = {
   'Adrenalina 0,1 mg/mL (1:10.000)':'P×0,1 = mL',
   'Amiodarona 50 mg/mL':'P×0,1 = mL',
   'Lidocaína 20 mg/mL':'P×0,05 = mL',
-  'Midazolam 5 mg/mL':'P×0,04 = mL',
-  'Diazepam 5 mg/mL — retal':'P×0,08 = mL',
+  'Midazolam 5 mg/mL — EV/IO':'P×0,03 = mL',
+  'Midazolam 5 mg/mL — IM':'P×0,04 = mL',
+  'Midazolam 5 mg/mL — IN/bucal':'P×0,06 = mL',
+  'Diazepam 5 mg/mL — EV/IO':'P×0,06 = mL • EV LENTO',
+  'Diazepam 5 mg/mL — retal':'P×0,1 = mL',
   'Fenitoína 50 mg/mL':'P×0,4 = mL',
   'Fenobarbital 100 mg/mL':'P×0,2 = mL',
   'Glicose 10%':'P×2 = mL',
+  '🚨 SG50% + SF 0,9% → SG10%':'SG50 P×0,4 + SF P×1,6',
   'Dexametasona 4 mg/mL':'P×0,15 = mL',
   'Adrenalina 1 mg/mL nebulização':'P×0,5 = mL (máx 5)',
   'Cristaloide isotônico':'P×10–20 = mL',
-  'Fentanil 50 mcg/mL':'P×0,02 = mL',
-  'Cetamina 50 mg/mL':'P×0,02–0,04 = mL',
+  'Fentanil 50 mcg/mL':'P×0,04 = mL',
+  'Cetamina 50 mg/mL':'P×0,04 = mL',
   'Etomidato 2 mg/mL':'P×0,15 = mL',
+  'Atropina 0,25 mg/mL — bradicardia':'P×0,08 = mL • mín. 0,4 mL • máx. 2 mL',
   'Rocurônio 10 mg/mL':'P×0,1 = mL',
-  'Succinilcolina 20 mg/mL':'P×0,075 = mL',
+  'Succinilcolina — solução final 5 mg/mL após reconstituição':'P×0,2 = mL',
   'Dipirona 500 mg/mL — injetável':'P×0,03 = mL',
   'Ibuprofeno 100 mg/5 mL':'P×0,5 = mL (10 mg/kg)',
   'Ondansetrona 2 mg/mL':'P×0,075 = mL',
