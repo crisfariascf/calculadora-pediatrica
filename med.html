@@ -36,6 +36,7 @@ main{max-width:1120px;margin:auto;padding:10px 12px 40px}
 .notice{border:1px solid #e5e7eb;background:#fff;border-radius:14px;padding:10px 12px;color:#50545a;font-size:12px;line-height:1.45;margin:7px 0 12px;box-shadow:var(--shadow)}
 .notice b{color:#25272b}.notice.warn{border-color:#f0dfb7;background:#fffbeb;color:#73551b}.notice.red{border-color:#f3c2c2;background:#fff5f5;color:#8f3030}
 .section{margin:17px 0 5px;scroll-margin-top:180px}.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 9px}.sectionHead h2{margin:0;font-size:17px}.sectionHead span{color:var(--muted);font-size:11px}
+.protocolControl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 2px 9px;padding:9px 10px;border:1px solid #e7e8eb;border-radius:12px;background:#fff}.protocolControl label{font-size:10px;font-weight:900;color:#73767c;text-transform:uppercase;letter-spacing:.05em}.protocolControl select{height:34px;border:1px solid #dedfe3;border-radius:10px;background:#fff;padding:0 9px;color:#202124;font-weight:800}.protocolControl .quickNote{font-size:11px;line-height:1.35;color:#5f6368;flex:1 1 260px}.protocolControl .quickNote b{color:#9f1239}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .card{background:#fff;border:1px solid #e7e8eb;border-radius:16px;padding:13px;box-shadow:var(--shadow);min-width:0}
 .card[data-hidden="1"],.section[data-hidden="1"]{display:none}
@@ -69,7 +70,7 @@ main{max-width:1120px;margin:auto;padding:10px 12px 40px}
 <div class="chips" id="chips"></div>
 
 <main>
-  <div class="notice warn"><b>Uso rápido:</b> tela resumida derivada do módulo de Emergências Pediátricas. Prioriza dose, apresentação, mL/kg, via, diluição, velocidade e máximos. Conferir sempre o protocolo institucional e a apresentação disponível antes de administrar.</div>
+  <div class="notice warn"><b>Uso rápido:</b> tela resumida atualizada a partir do módulo de Emergências Pediátricas (dengue, CAD, Holliday, constipação e ajustes operacionais). Prioriza dose, apresentação, mL/kg, via, diluição, velocidade e máximos. Conferir sempre o protocolo institucional e a apresentação disponível antes de administrar.</div>
   <div id="content"></div>
   <div id="empty" class="empty">Nenhuma medicação encontrada para essa pesquisa.</div>
   <div class="footer">Ferramenta de apoio profissional. Conferir alergias, indicação, dose máxima, função renal/hepática, apresentação realmente disponível e protocolo do serviço antes de administrar. Em drogas de ressuscitação, sedação, vasoativos ou eletrólitos, realizar dupla checagem.</div>
@@ -91,47 +92,50 @@ const mg=x=>`${fmt(x)} mg`, ml=x=>`${fmt(x,2)} mL`, mcg=x=>`${fmt(x)} mcg`, g=x=
 function needWeight(calc){return weight()>0?calc():{dose:'Informe o peso',sub:'',prep:'O cálculo aparece automaticamente após preencher o peso.'}}
 function ageLabel(){if(!$('age').value)return '';return `${$('age').value} ${$('ageUnit').value==='years'?'a':$('ageUnit').value==='months'?'m':'d'}`}
 
+let dengueGroup='A';
+let cadDes=5;
+
 const sections = [
-  {id:'asma',title:'🫁 Asma exacerbada',hint:'broncodilatadores • corticoide • MgSO₄',cards:[
-    {name:'Salbutamol spray 100 mcg/jato',route:'INALATÓRIO',tags:'asma broncodilatador saba puff jato espaçador salbutamol',calc:()=>{
-      const a=ageYears(); const dose=a<6?'4–6 jatos':'4–10 jatos';
-      return {dose,sub:'1 jato por vez com espaçador',prep:'Repetir a cada 20–30 min, até 3 séries na primeira hora conforme gravidade e resposta. Em ≤5 anos, GINA 2026 também aceita 2,5 mg por nebulização quando pMDI + espaçador não está disponível.',detail:'Após cada série, reavaliar SatO₂, trabalho respiratório, fala, ausculta, FR e FC.',source:'GINA 2026'};
+  {id:'asma',title:'🫁 Asma exacerbada',hint:'dose média por gravidade • broncodilatadores • corticoide • MgSO₄',cards:[
+    {name:'Salbutamol spray 100 mcg/jato — dose média',route:'INALATÓRIO',tags:'asma broncodilatador saba puff jato espaçador salbutamol leve moderada grave dose média',calc:()=>{
+      if(!$('age').value) return {dose:'Informe a idade',sub:'',prep:'A dose por gravidade aparece após preencher a idade.',source:'emergencia.html / GINA 2026'};
+      const a=ageYears();
+      const leve=4, moderada=5, grave=a<6?5:8;
+      return {dose:`LEVE ${leve} J • MODERADA ${moderada} J • GRAVE ${grave} J`,sub:a<6?'≤5 anos • médias operacionais das faixas 4 / 4–6 / 4–6 jatos':'≥6 anos • médias operacionais das faixas 4 / 4–6 / 6–10 jatos',prep:'100 mcg/jato, 1 jato por vez com espaçador. Reavaliar antes de repetir; na fase inicial, quando indicado, repetir a cada 20 min por até 3 doses.',detail:'Foi usada uma dose única representativa (média da faixa) para consulta rápida, mantendo as faixas do módulo de asma do emergencia.html.',source:'emergencia.html / GINA 2026'};
     }},
-    {name:'Ipratrópio 0,25 mg/mL',route:'NBZ',tags:'asma ipratropio atrovent gotas nebulização',calc:()=>{
-      const a=ageYears(); const low=a<6?0.25:0.25, high=a<6?0.25:0.5;
-      const d=high===low?`${mcg(low*1000)} = ${ml(low/0.25)} ≈ 20 gotas`:`${mcg(low*1000)}–${mcg(high*1000)} = ${ml(low/0.25)}–${ml(high/0.25)} ≈ 20–40 gotas`;
-      return {dose:doseFix(d),sub:a<6?'GINA: 250 mcg por nebulização':'Faixa operacional conforme apresentação do serviço',prep:'Completar com SF 0,9% até volume adequado para o nebulizador. Associar ao salbutamol em exacerbação moderada/grave; até 3 doses, 20–30 min apartadas.',detail:'Conversão em gotas pressupõe 20 gotas/mL; conferir o conta-gotas do fabricante.',source:'GINA 2026 + apresentação 0,25 mg/mL'};
-    }},
+    {name:'Ipratrópio 0,25 mg/mL',route:'NBZ',tags:'asma ipratropio atrovent gotas nebulização',calc:()=>needWeight(()=>{
+      const p=weight(); const drops=p<10?10:p<=20?20:40; const vol=drops/20;
+      return {dose:`${drops} gotas = ${ml(vol)}`,sub:p<10?'0,125 mg':p<=20?'0,25 mg':'0,5 mg',prep:'Diluir cada dose em 5 mL de SF 0,9%. Associar ao SABA apenas na fase inicial da exacerbação moderada/grave; não manter após 1–2 h.',detail:'Regra operacional do módulo de asma: <10 kg 10 gotas; 10–20 kg 20 gotas; >20 kg 40 gotas.',source:'emergencia.html / protocolo local'};
+    })},
     {name:'Prednisolona 3 mg/mL VO',route:'VO',tags:'asma prednisolona corticoide',calc:()=>needWeight(()=>{
-      const p=weight(),a=ageYears(); let max=a<2?20:a<6?30:a<12?40:50; const lo=Math.min(p,max),hi=Math.min(2*p,max);
-      return {dose:`${ml(lo/3)}–${ml(hi/3)}`,sub:`${mg(lo)}–${mg(hi)} • solução 3 mg/mL`,prep:'1–2 mg/kg/dia por curso curto conforme avaliação. Pode ser dose única diária ou conforme protocolo local.',detail:`Teto operacional nesta calculadora: ${max} mg/dia pela faixa etária.`,source:'GINA 2026 / protocolo local'};
+      const p=weight(),a=ageYears(); if(a>=12){const lo=40,hi=50;return {dose:`${ml(lo/3)}–${ml(hi/3)}`,sub:'40–50 mg/dia • adolescente 12–17 anos',prep:'Curso de 5–7 dias no módulo completo.',detail:'Faixa fixa do GINA 2026 para adolescentes.',source:'emergencia.html / GINA 2026'}} let max=a<2?20:a<6?30:40; const lo=Math.min(p,max),hi=Math.min(2*p,max);
+      return {dose:`${ml(lo/3)}–${ml(hi/3)}`,sub:`${mg(lo)}–${mg(hi)} • 1–2 mg/kg/dia`,prep:'Curso de 3–5 dias quando indicado. Pode dividir em 2 tomadas.',detail:`Teto etário: <2 a 20 mg/dia; 2–5 a 30 mg/dia; 6–11 a 40 mg/dia.`,source:'emergencia.html / GINA 2026'};
     })},
     {name:'Metilprednisolona 125 mg/fr',route:'EV',tags:'asma metilprednisolona corticoide ev',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(p,60),vol=dose/62.5;
-      return {dose:`${ml(vol)} + 20–50 mL SF 0,9%`,sub:`${mg(dose)} • após reconstituir para 62,5 mg/mL`,prep:'Reconstituir o frasco de 125 mg em 2 mL. Diluir a dose calculada em SF 0,9% 20–50 mL e infundir em cerca de 30 min.',detail:'Regra preservada do HTML-base: 1 mg/kg/dose, teto operacional 60 mg.',source:'HTML-base / protocolo institucional'};
+      return {dose:`${ml(vol)} + 20–50 mL SF 0,9%`,sub:`${mg(dose)} • solução 62,5 mg/mL`,prep:'Reconstituir 125 mg em 2 mL. Diluir a dose em SF 0,9% 20–50 mL e infundir em cerca de 30 min.',detail:'Dose operacional rápida: 1 mg/kg/dose; conferir a faixa etária e o protocolo antes do uso.',source:'emergencia.html'};
     })},
     {name:'Dexametasona 4 mg/mL',route:'EV/IM/VO',tags:'asma dexametasona corticoide',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(.6*p,16);
-      return {dose:ml(dose/4),sub:`${mg(dose)} • 0,6 mg/kg`,prep:'Dose de referência desta calculadora: 0,6 mg/kg. Ajustar teto e via conforme idade/indicação/protocolo.',detail:'Em crianças pequenas, GINA 2026 usa 0,3–0,6 mg/kg e teto menor em algumas faixas.',source:'HTML-base + GINA 2026'};
+      return {dose:ml(dose/4),sub:`${mg(dose)} • 0,6 mg/kg`,prep:'Opção mantida da calculadora rápida; ajustar via e teto conforme indicação/protocolo.',detail:'O módulo completo de asma informa que dexametasona não é apresentação padronizada do serviço.',source:'med.html / referência operacional'};
     })},
     {name:'Sulfato de magnésio 50% / 10%',route:'EV • BIC',tags:'asma magnesio sulfato magnésio grave 50% 10% macete',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(50*p,2000),v50=dose/500,v10=dose/100;
-      const cap=p>40?' (teto de 2 g atingido)':'';
-      return {dose:`50%: ${ml(v50)} + 100 mL SF 0,9%`,sub:`10%: ${ml(v10)} • ${mg(dose)}${cap}`,prep:'SF 0,9% 100 mL • BIC 30 min, se padronizado no serviço.',detail:'GINA 2026: 40–50 mg/kg EV (máx. 2 g), infusão em 20–60 min. Diluição final conforme protocolo local.',source:'GINA 2026'};
+      return {dose:`50%: ${ml(v50)} • 10%: ${ml(v10)}`,sub:`${mg(dose)} • 40–50 mg/kg • máx. 2 g`,prep:'Considerar em ≥2 anos, exacerbação grave/refratária após resposta inadequada ao tratamento inicial. Infundir em 10–20 min conforme o módulo.',detail:'Não usar de rotina e não nebulizar. Confirmar diluição institucional.',source:'emergencia.html / GINA 2026'};
     })}
   ]},
 
-  {id:'anafilaxia',title:'🚨 Anafilaxia',hint:'adrenalina IM primeiro',cards:[
-    {name:'Adrenalina 1 mg/mL (1:1000)',route:'IM',tags:'anafilaxia adrenalina epinefrina im',calc:()=>needWeight(()=>{
-      const p=weight(),max=p>50?.5:.3,dose=Math.min(.01*p,max);
-      return {dose:`${ml(dose)}`,sub:`${fmt(dose,2)} mg • IM na face anterolateral da coxa`,prep:'0,01 mg/kg = 0,01 mL/kg da solução 1 mg/mL. Repetir a cada 5–15 min se necessário.',detail:`Teto usado no HTML-base: ${max} mg nesta faixa de peso.`,source:'HTML-base / protocolo institucional'};
+  {id:'anafilaxia',title:'🚨 Anafilaxia',hint:'adrenalina IM primeiro • escala U-100',cards:[
+    {name:'Adrenalina 1 mg/mL (1:1000)',route:'IM',tags:'anafilaxia adrenalina epinefrina im seringa insulina u100 ui',calc:()=>needWeight(()=>{
+      const p=weight(),max=p>50?.5:.3,dose=Math.min(.01*p,max),u100=dose*100;
+      return {dose:`${ml(dose)} • U-100: ${fmt(u100,1)} UI`,sub:`${fmt(dose,2)} mg • IM na face anterolateral da coxa`,prep:'0,01 mg/kg = 0,01 mL/kg da solução 1 mg/mL. Em seringa de insulina U-100: 1 mL = 100 UI de escala, portanto 0,09 mL = 9 UI de escala. Repetir a cada 5–15 min se necessário.',detail:`ATENÇÃO: “UI” aqui indica apenas a MARCAÇÃO VOLUMÉTRICA da seringa U-100, não unidade farmacológica de adrenalina. Teto do módulo: ${max} mg.`,source:'emergencia.html'};
     })},
     {name:'SF 0,9% ou Ringer Lactato',route:'EV/IO',tags:'anafilaxia choque volume expansão cristalóide',calc:()=>needWeight(()=>{
-      const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'bolus de 20 mL/kg',prep:'Administrar rapidamente se hipotensão/má perfusão e reavaliar após cada bolus.',detail:`Referência do HTML-base: até ${fmt(30*p)} mL na primeira hora como teto operacional inicial, conforme resposta.`,source:'HTML-base'};
+      const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'bolus de 20 mL/kg',prep:'Administrar rapidamente se hipotensão/má perfusão e reavaliar após cada etapa.',detail:`Teto operacional inicial no módulo: ${fmt(30*p)} mL na primeira hora, conforme resposta.`,source:'emergencia.html'};
     })},
-    {name:'Salbutamol se broncoespasmo residual',route:'INALATÓRIO',tags:'anafilaxia salbutamol broncoespasmo',calc:()=>({dose:ageYears()<6?'4–6 jatos':'4–10 jatos',sub:'100 mcg/jato + espaçador',prep:'Adjuvante para broncoespasmo. Não substitui adrenalina IM.',detail:'Usar conforme resposta respiratória.',source:'GINA 2026 / HTML-base'})},
+    {name:'Salbutamol se broncoespasmo residual',route:'INALATÓRIO',tags:'anafilaxia salbutamol broncoespasmo',calc:()=>needWeight(()=>{const p=weight(),j=Math.min(Math.max(Math.ceil(p/2),2),10);return {dose:`${j} jatos`,sub:'100 mcg/jato + espaçador',prep:'Adjuvante para broncoespasmo persistente. Não substitui adrenalina IM.',detail:'Pode repetir a cada 20 min, até 3 vezes, conforme resposta.',source:'emergencia.html'}})},
     {name:'Difenidramina 50 mg/mL',route:'EV',tags:'anafilaxia urticaria prurido difenidramina antihistaminico',calc:()=>needWeight(()=>{
-      const p=weight(),d=Math.min(p,50);return {dose:`${ml(d/50)} + 50 mL SF 0,9%`,sub:`${mg(d)} • 1 mg/kg/dose (máx. 50 mg)`,prep:'Se usada para urticária/prurido residual: diluir em SF 0,9% 50 mL e infundir em 15–30 min.',detail:'Adjuvante; NÃO substitui nem deve atrasar adrenalina IM na anafilaxia.',source:'Fluxo do emergencia.html'};
+      const p=weight(),d=Math.min(p,50);return {dose:`${ml(d/50)} + 50 mL SF 0,9%`,sub:`${mg(d)} • 1 mg/kg/dose • máx. 50 mg`,prep:'Se usada para urticária/prurido residual: diluir em SF 0,9% 50 mL e infundir em 15–30 min.',detail:'Adjuvante; NÃO substitui nem deve atrasar adrenalina IM.',source:'emergencia.html'};
     })}
   ]},
 
@@ -147,39 +151,36 @@ const sections = [
     })}
   ]},
 
-  {id:'convulsao',title:'⚡ Crise convulsiva',hint:'benzodiazepínico • 2ª linha',cards:[
-    {name:'Midazolam 5 mg/mL — EV/IO',route:'EV/IO',tags:'convulsão crise midazolam ev io acesso',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.15*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,03 mL`,prep:'0,15 mg/kg EV/IO. Administrar lentamente e reavaliar em 5 min.',detail:'Se a crise persistir, pode-se repetir benzodiazepínico uma única vez; manter preparo para suporte ventilatório.',source:'Ajuste rápido acordado + fluxo do HTML-base'};
+  {id:'convulsao',title:'⚡ Crise convulsiva',hint:'1ª escolha diazepam EV • depois midazolam IM • 2ª linha',cards:[
+    {name:'1ª escolha — Diazepam 5 mg/mL EV/IO',route:'EV/IO',tags:'convulsão diazepam ev io lento primeira escolha',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.2*p,10),vol=dose/5;return {dose:ml(vol),sub:`${mg(dose)} • 0,2 mg/kg • macete P×0,04 mL`,prep:'Administrar EV lentamente e reavaliar em 5 min.',detail:'Máximo 10 mg/dose. Manter suporte ventilatório disponível.',source:'emergencia.html + preferência operacional solicitada'};
     })},
-    {name:'Midazolam 5 mg/mL — IM',route:'IM',tags:'convulsão crise midazolam im sem acesso',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.2*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,04 mL`,prep:'0,2 mg/kg IM quando não houver acesso EV/IO. Reavaliar em 5 min.',detail:'Máximo operacional 10 mg/dose.',source:'Ajuste rápido acordado + fluxo do HTML-base'};
+    {name:'2ª escolha — Midazolam 5 mg/mL IM',route:'IM',tags:'convulsão crise midazolam im sem acesso segunda escolha',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.2*p,10),vol=dose/5;return {dose:ml(vol),sub:`${mg(dose)} • 0,2 mg/kg • macete P×0,04 mL`,prep:'Via IM quando não houver acesso EV/IO ou conforme sequência operacional. Reavaliar em 5 min.',detail:'Máximo 10 mg/dose. Evitar ultrapassar 2 doses totais de benzodiazepínico sem avançar o tratamento.',source:'emergencia.html + preferência operacional solicitada'};
     })},
-    {name:'Midazolam 5 mg/mL — IN/bucal',route:'IN/BUCAL',tags:'convulsão crise midazolam intranasal nasal bucal sem acesso',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.3*p,10),vol=dose/5;return {dose:ml(vol),sub:`MIDAZOLAM 5 mg/mL • ${mg(dose)} • macete P×0,06 mL`,prep:'0,3 mg/kg por via intranasal/bucal quando não houver acesso.',detail:'Máximo operacional 10 mg/dose.',source:'Ajuste rápido acordado'};
-    })},
-    {name:'Diazepam 5 mg/mL — EV/IO',route:'EV/IO',tags:'convulsão diazepam ev io lento',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.3*p,10),vol=dose/5;return {dose:ml(vol),sub:`DIAZEPAM 5 mg/mL • ${mg(dose)} • macete P×0,06 mL`,prep:'0,3 mg/kg EV/IO, ADMINISTRAR EV LENTAMENTE. Reavaliar em 5 min.',detail:'Máximo 10 mg/dose. Não usar IM pela absorção imprevisível.',source:'Ajuste rápido acordado'};
+    {name:'Midazolam 5 mg/mL — IN',route:'IN',tags:'convulsão crise midazolam intranasal nasal sem acesso',calc:()=>needWeight(()=>{
+      const p=weight(),dose=Math.min(.2*p,10),vol=dose/5;return {dose:ml(vol),sub:`${mg(dose)} • 0,2 mg/kg • macete P×0,04 mL`,prep:'Alternativa sem acesso EV/IO.',detail:'Máximo 10 mg/dose.',source:'emergencia.html'};
     })},
     {name:'Diazepam 5 mg/mL — retal',route:'RETAL',tags:'convulsão diazepam retal',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(.5*p,20),vol=dose/5;return {dose:ml(vol),sub:`DIAZEPAM 5 mg/mL • ${mg(dose)} • macete P×0,1 mL`,prep:'0,5 mg/kg por via retal quando não houver acesso/alternativa apropriada.',detail:'Máximo 20 mg/dose. No total, evitar sucessivas doses de benzodiazepínicos sem avançar o tratamento.',source:'Ajuste rápido acordado'};
+      const p=weight(),dose=Math.min(.4*p,10),vol=dose/5;return {dose:ml(vol),sub:`${mg(dose)} • 0,4 mg/kg • macete P×0,08 mL`,prep:'Alternativa por via retal quando necessário.',detail:'Máximo 10 mg/dose no fluxo do emergencia.html.',source:'emergencia.html'};
     })},
     {name:'Fenitoína 50 mg/mL',route:'EV/IO',tags:'convulsão fenitoina fenitoína segunda linha ataque sf 20 minutos',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(20*p,1500),vol=dose/50;return {dose:`${ml(vol)} + 100 mL SF 0,9%`,sub:`FENITOÍNA 50 mg/mL • ${mg(dose)} • macete P×0,4 mL`,prep:'Ataque 20 mg/kg. Diluir SOMENTE em 100 mL de SF 0,9%; não usar solução glicosada. EV LENTO, em cerca de 20 min, respeitando a velocidade máxima institucional.',detail:'Monitorização contínua de FC/ECG e PA. Se persistência após carga adequada, seguir o fluxo de 2ª linha/protocolo do serviço em vez de repetir automaticamente.',source:'Fluxo do HTML-base + ajuste rápido acordado'};
+      const p=weight(),dose=Math.min(20*p,1500),vol=dose/50;return {dose:`${ml(vol)} + 100 mL SF 0,9%`,sub:`${mg(dose)} • 20 mg/kg • macete P×0,4 mL`,prep:'Após 2 doses de benzodiazepínico se crise persistir. Diluir SOMENTE em SF 0,9% 100 mL e infundir em cerca de 20 min.',detail:'Monitorização de FC e PA. Não usar solução glicosada. Máx. 1.500 mg.',source:'emergencia.html'};
     })},
     {name:'Fenobarbital 100 mg/mL',route:'EV/IO',tags:'convulsão fenobarbital neonatal segunda linha',calc:()=>needWeight(()=>{
-      const p=weight(),dose=Math.min(20*p,1000),vol=dose/100;return {dose:ml(vol),sub:`FENOBARBITAL 100 mg/mL • ${mg(dose)} • macete P×0,2 mL`,prep:'Ataque 20 mg/kg EV/IO. No RN, aparece como droga de escolha no fluxo do HTML-base.',detail:'Risco de depressão respiratória, especialmente após benzodiazepínicos.',source:'HTML-base'};
+      const p=weight(),dose=Math.min(20*p,1000),vol=dose/100;return {dose:ml(vol),sub:`${mg(dose)} • 20 mg/kg • macete P×0,2 mL`,prep:'Alternativa de 2ª linha; no RN é a droga de escolha no fluxo do módulo completo.',detail:'Risco de depressão respiratória, sobretudo após benzodiazepínicos.',source:'emergencia.html'};
     })}
   ]},
 
-  {id:'hipoglicemia',title:'🍬 Hipoglicemia',hint:'glicose • preparo rápido',cards:[
-    {name:'Glicose 10%',route:'EV/IO',tags:'hipoglicemia sg10 glicose bolus',calc:()=>needWeight(()=>{
-      const p=weight(),vol=2*p;return {dose:`${ml(vol)} de SG10%`,sub:`2 mL/kg • 0,2 g/kg de glicose`,prep:'Bolus EV/IO. Reavaliar HGT em ~10–15 min e repetir/ajustar conforme resposta e protocolo.',detail:'Evitar SG50% não diluída como bolus pediátrico inicial.',source:'HTML-base / guia PS 2026'};
+  {id:'hipoglicemia',title:'🍬 Hipoglicemia',hint:'1ª escolha operacional: SG50% + AD → SG10%',cards:[
+    {name:'1ª escolha — SG50% + AD → SG10%',route:'PREPARO + EV/IO',tags:'hipoglicemia sg50 agua destilada ad preparo sg10 macete primeira escolha',calc:()=>needWeight(()=>{
+      const p=weight(),g50=.4*p,ad=1.6*p,final=2*p;return {dose:`${ml(g50)} SG50% + ${ml(ad)} AD`,sub:`= ${ml(final)} de SG10% • bolus 2 mL/kg`,prep:'MACETE: SG50% 0,4 mL/kg + ÁGUA DESTILADA 1,6 mL/kg. Administrar a solução final SG10% EV/IO e reavaliar HGT em 15 min.',detail:'Não usar SF 0,9% neste preparo. Não administrar SG50% pura como bolus nesta proposta.',source:'emergencia.html'};
     })},
-    {name:'🚨 SG50% + SF 0,9% → SG10%',route:'PREPARO',tags:'hipoglicemia sg50 soro fisiologico sf preparo sg10 macete',calc:()=>needWeight(()=>{
-      const p=weight(),g50=.4*p,sf=1.6*p,final=2*p;return {dose:`${ml(g50)} SG50% + ${ml(sf)} SF 0,9%`,sub:`= ${ml(final)} de SG10% • MACETE: SG50% 0,4 mL/kg + SF 1,6 mL/kg`,prep:'Usar os volumes calculados para preparar exatamente o bolus de SG10% 2 mL/kg. Ex.: 30 kg → 12 mL de SG50% + 48 mL de SF = 60 mL.',detail:'Este cartão foi priorizado porque a unidade dispõe de SG50%. Administrar a solução final diluída, não SG50% pura.',source:'Macete operacional acordado'};
+    {name:'Glicose 10% pronta',route:'EV/IO',tags:'hipoglicemia sg10 glicose bolus',calc:()=>needWeight(()=>{
+      const p=weight(),vol=2*p;return {dose:`${ml(vol)} de SG10%`,sub:`2 mL/kg • 0,2 g/kg de glicose`,prep:'Se SG10% já estiver disponível, administrar EV/IO. Reavaliar glicemia em 15 min.',detail:'Se resposta inadequada, o fluxo admite repetir a medida inicial e reavaliar.',source:'emergencia.html'};
     })},
     {name:'Glucagon',route:'IM',tags:'hipoglicemia glucagon im sem acesso',calc:()=>needWeight(()=>{
-      const p=weight(),a=ageYears(),dose=(p<25||a<6)?0.5:1;return {dose:`${fmt(dose,1)} mg IM`,sub:'quando via EV não está imediatamente disponível e houver indicação',prep:'Dose por faixa de peso/idade conforme o fluxo do HTML-base.',detail:'Após resposta, garantir carboidrato e prevenção de recorrência conforme causa.',source:'HTML-base'};
+      const p=weight(),a=ageYears(),dose=(p<25||a<6)?0.5:1;return {dose:`${fmt(dose,1)} mg IM`,sub:'se refratária / hiperinsulinismo / sem acesso venoso',prep:'0,5 mg se <25 kg ou <6 anos; 1 mg se >25 kg ou >6 anos.',detail:'Pode repetir uma vez após 15 min se não houver resposta, conforme o módulo.',source:'emergencia.html'};
     })}
   ]},
 
@@ -241,11 +242,67 @@ const sections = [
     {name:'S. boulardii CNCM I-745',route:'VO',tags:'diarreia probiotico saccharomyces boulardii floratil',calc:()=>({dose:'250–750 mg/dia',sub:'por 5–7 dias',prep:'Faixa discutida como adjuvante no módulo longo, dependente da cepa e apresentação.',detail:'Não integra o Plano MS de rotina; avaliar disponibilidade/custo-benefício.',source:'Fluxo diarreia do emergencia.html'})}
   ]},
 
-  {id:'hidratacao',title:'💧 Hidratação',hint:'bolus • manutenção',cards:[
-    {name:'Expansão com SF 0,9%',route:'EV/IO',tags:'hidratação desidratação expansão volume sf',calc:()=>needWeight(()=>{const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'20 mL/kg',prep:'Bolus isotônico com reavaliação clínica após cada etapa. Em situações específicas, usar 10 mL/kg conforme risco de sobrecarga.',detail:'A indicação depende do estado hemodinâmico.',source:'HTML-base'}})},
-    {name:'Manutenção — Holliday–Segar',route:'EV',tags:'hidratação holliday manutenção volume',calc:()=>needWeight(()=>{
-      const p=weight(); let v=p<=10?100*p:p<=20?1000+50*(p-10):1500+20*(p-20);return {dose:`${fmt(v)} mL/24 h`,sub:`≈ ${fmt(v/24,1)} mL/h`,prep:'Fórmula 100/50/20 mL/kg/dia. Eletrólitos não são adicionados automaticamente nesta tela.',detail:'Ajustar à doença de base, eletrólitos, função renal, diurese e protocolo específico.',source:'HTML-base'};
-    })}
+  {id:'dengue',title:'🦟 Dengue — hidratação rápida',hint:'escolha A/B/C/D • cálculo automático',control:()=>`<div class="protocolControl"><label>GRUPO</label><select onchange="dengueGroup=this.value;render()"><option value="A" ${dengueGroup==='A'?'selected':''}>A</option><option value="B" ${dengueGroup==='B'?'selected':''}>B</option><option value="C" ${dengueGroup==='C'?'selected':''}>C</option><option value="D" ${dengueGroup==='D'?'selected':''}>D</option></select><div class="quickNote"><b>Selecionado: Grupo ${dengueGroup}</b> • classificação clínica permanece obrigatória.</div></div>`,cards:[
+    {name:'Hidratação conforme grupo selecionado',route:'VO / EV',tags:'dengue grupo a b c d hidratação 130 100 80 60 10 20 25 6 horas 8 horas',calc:()=>needWeight(()=>{
+      const p=weight(),m=ageMonths(),g=dengueGroup;
+      if(g==='A'||g==='B'){
+        const factor=m>=156?60:(p<=10?130:p<=20?100:80),total=factor*p,sro=total/3,outros=total*2/3,inicio=total/3;
+        return {dose:`${fmt(total)} mL/dia`,sub:`${factor} mL/kg/dia • SRO ${fmt(sro)} mL + outros ${fmt(outros)} mL`,prep:`Nas primeiras 4–6 h, priorizar aproximadamente ${fmt(inicio)} mL (1/3 da meta diária). ${g==='B'?'Manter em observação enquanto aguarda hemograma/reavaliação.':'Tratamento ambulatorial se critérios clínicos permitirem.'}`,detail:m>=156?'≥13 anos: o módulo usa 60 mL/kg/dia.':'<13 anos: até 10 kg = 130; >10–20 kg = 100; >20 kg = 80 mL/kg/dia.',source:'emergencia.html / módulo Dengue MS'};
+      }
+      if(g==='C'){
+        const h1=10*p,h2=10*p,man6=25*p,man8=25*p;
+        return {dose:`1ª H: ${fmt(h1)} mL SF 0,9%`,sub:`2ª H: ${fmt(h2)} mL • depois ${fmt(man6)} mL/6 h + ${fmt(man8)} mL/8 h`,prep:'Fase inicial: 10 mL/kg na 1ª hora + 10 mL/kg na 2ª hora (máx. 20 mL/kg em 2 h). Se melhorar: 25 mL/kg em 6 h; mantendo melhora, mais 25 mL/kg em 8 h.',detail:'Sem melhora: repetir a fase de expansão até 3 vezes, reavaliando clínica em 1 h e hematócrito em 2 h; persistência → conduzir como Grupo D.',source:'emergencia.html / módulo Dengue MS'};
+      }
+      const bol=20*p;
+      return {dose:`${fmt(bol)} mL SF 0,9%`,sub:'20 mL/kg EV em até 20 min',prep:'Reavaliar clínica a cada 15–30 min e após cada expansão. Pode repetir até 3 vezes conforme resposta.',detail:'Se resposta adequada, retornar à estratégia do Grupo C. Hematócrito em 2 h e suporte de emergência/UTI conforme quadro.',source:'emergencia.html / módulo Dengue MS'};
+    })},
+    {name:'Reavaliação rápida — dengue',route:'MONITORIZAÇÃO',tags:'dengue reavaliação grupo c d hematocrito diurese',calc:()=>{
+      const g=dengueGroup;
+      if(g==='C') return {dose:'CLÍNICA 1 h • Ht 2 h',sub:'PA / sinais vitais / diurese + hematócrito',prep:'Melhora: sinais vitais/PA estáveis, diurese adequada e queda do hematócrito. Sem melhora: repetir expansão.',detail:'Diurese desejável no módulo: 1 mL/kg/h.',source:'emergencia.html'};
+      if(g==='D') return {dose:'CLÍNICA 15–30 min • Ht 2 h',sub:'reavaliar após cada expansão',prep:'Choque persistente exige interpretação conjunta do hematócrito, sangramento e possibilidade de hiper-hidratação.',detail:'Condução em ambiente de emergência/UTI.',source:'emergencia.html'};
+      return {dose:g==='B'?'OBSERVAÇÃO + HMG':'RETORNO PROGRAMADO',sub:g==='B'?'hidratação oral enquanto aguarda exames':'hidratação durante febre e 24–48 h após defervescência',prep:g==='B'?'Ht normal e sem alarme → ambulatorial; hemoconcentração/alarme → Grupo C.':'Orientar sinais de alarme e retorno conforme protocolo.',detail:'',source:'emergencia.html'};
+    }}
+  ]},
+
+  {id:'constipacao',title:'🚻 Constipação — PA + casa',hint:'fecaloma • desimpactação • manutenção',cards:[
+    {name:'PA — sem fecaloma / impactação clara',route:'PA',tags:'constipação pa pronto atendimento sem fecaloma',calc:()=>({dose:'SEM DESIMPACTAÇÃO RETAL DE ROTINA',sub:'se clinicamente bem e sem sinais de alarme',prep:'Iniciar manutenção oral e orientar alta/seguimento.',detail:'Sinais de alarme afastam a condução como constipação funcional simples.',source:'emergencia.html / SBP 2024'})},
+    {name:'PA — fecaloma: PEG',route:'VO',tags:'constipação fecaloma impactação peg macrogol desimpactação pa',calc:()=>needWeight(()=>{const p=weight();return {dose:`${g(p)}–${g(1.5*p)}/dia`,sub:'1–1,5 g/kg/dia • 1ª escolha',prep:'Administrar por 3 dias ou até esvaziamento, quando a via oral é possível.',detail:'Realizar desimpactação antes da fase de manutenção.',source:'emergencia.html / SBP 2024'}})},
+    {name:'PA — se PEG VO não for possível: SF 0,9% retal',route:'RETAL',tags:'constipação fecaloma sf 0,9 retal enema pa',calc:()=>needWeight(()=>{const p=weight(),m=ageMonths();return m<12?{dose:`${fmt(5*p)}–${fmt(10*p)} mL`,sub:'<1 ano • 5–10 mL/kg',prep:'SF 0,9% puro, morno/próximo à temperatura corporal; administrar lentamente e sem pressão.',detail:'Interromper se dor importante, resistência ou sangramento.',source:'emergencia.html / SBP 2024'}:{dose:`${fmt(6*p)} mL`,sub:'≥1 ano • 6 mL/kg',prep:'SF 0,9% puro, morno/próximo à temperatura corporal; administrar lentamente e sem pressão.',detail:'Preferir quando PEG VO não for possível.',source:'emergencia.html / SBP 2024'}})},
+    {name:'CASA — PEG manutenção',route:'VO',tags:'constipação casa peg macrogol manutenção',calc:()=>needWeight(()=>{const p=weight();return {dose:`${g(.2*p)}–${g(.8*p)}/dia`,sub:`início sugerido: ${g(.4*p)}/dia`,prep:'Titular pela consistência das fezes. Manter por pelo menos 2 meses.',detail:'Considerar redução gradual apenas após ≥1 mês sem sintomas.',source:'emergencia.html / SBP 2024'}})},
+    {name:'CASA — Lactulose (2ª opção)',route:'VO',tags:'constipação casa lactulose segunda opção',calc:()=>needWeight(()=>{const p=weight();return {dose:`${ml(p)}–${ml(3*p)}/dia`,sub:'1–3 mL/kg/dia',prep:'Alternativa quando PEG não for possível/tolerado.',detail:'Pode causar flatulência e cólicas.',source:'emergencia.html / SBP 2024'}})}
+  ]},
+
+  {id:'cad',title:'🧪 Cetoacidose diabética — 4 passos',hint:'resumo curto HCA',control:()=>`<div class="protocolControl"><label>DESIDRATAÇÃO</label><select onchange="cadDes=Number(this.value);render()"><option value="5" ${cadDes===5?'selected':''}>5% — leve</option><option value="7" ${cadDes===7?'selected':''}>7% — moderada</option><option value="10" ${cadDes===10?'selected':''}>10% — importante</option></select><div class="quickNote"><b>1/1 h:</b> HGT + sinais vitais + Glasgow + balanço hídrico. <b>2/2 h:</b> gasometria venosa + eletrólitos.</div></div>`,cards:[
+    {name:'1️⃣ PASSO 1 — Expansão volêmica',route:'SF 0,9% EV',tags:'cad cetoacidose passo 1 expansão 20 ml kg primeira hora',calc:()=>needWeight(()=>{const p=weight(),v=20*p;return {dose:`${fmt(v)} mL em 1 h`,sub:'SF 0,9% • 20 mL/kg',prep:'ABCDE/PALS, 2 acessos, colher HMG/ionograma/ureia/creatinina/gasometria venosa/Urina 1. Em choque, o módulo orienta 20 mL/kg em 20 min.',detail:'NÃO iniciar insulina nesta primeira hora.',source:'emergencia.html / CAD HCA'}})},
+    {name:'2️⃣ PASSO 2 — Reposição das perdas',route:'SF 0,9% ± KCl',tags:'cad cetoacidose passo 2 perdas blocos 2 horas potassio',calc:()=>needWeight(()=>{const p=weight(),total=p*10*cadDes,exp=20*p,rest=Math.max(total-exp,0),bloco=rest/4,rate=bloco/2;return {dose:`4 × ${fmt(bloco)} mL / 2 h`,sub:`${fmt(rate,1)} mL/h por bloco • desidratação ${cadDes}%`,prep:`Perda estimada ${fmt(total)} mL − expansão ${fmt(exp)} mL = ${fmt(rest)} mL restantes, divididos em 4 blocos de 2 h. K <4,5 → 40 mEq/L; K >4,5 → 20 mEq/L; K ≥5,5 → adiar K; K <3 → reposição rápida 0,5 mEq/kg/h.`,detail:'Iniciar após a expansão inicial.',source:'emergencia.html / CAD HCA'}})},
+    {name:'3️⃣ PASSO 3 — Manutenção Holliday',route:'SG5% + Na + K',tags:'cad cetoacidose passo 3 holliday manutenção na 136 k40',calc:()=>needWeight(()=>{const p=weight();let v=p<=10?100*p:p<=20?1000+50*(p-10):1500+20*(p-20);const rate=v/24,naMeq=v*13.6/100,kMeq=v*4/100,nacl=naMeq/3.4,kcl=kMeq/2.5;return {dose:`${fmt(v)} mL/24 h • ${fmt(rate,1)} mL/h`,sub:`SG5% base + NaCl 20% ${fmt(nacl,1)} mL + KCl 19,1% ${fmt(kcl,1)} mL/24 h`,prep:'Após concluir a reposição das perdas: Holliday 100% + Na 136 mEq/L + K 40 mEq/L até aceitação plena da dieta.',detail:'Ajustar composição e potássio conforme função renal/diurese e controles laboratoriais.',source:'emergencia.html / CAD HCA'}})},
+    {name:'4️⃣ PASSO 4 — Insulinoterapia',route:'SC / EV BIC',tags:'cad cetoacidose passo 4 insulina regular 0,1 ui kg',calc:()=>needWeight(()=>{const p=weight(),d=.1*p,red=.05*p;return {dose:`SC ${fmt(d,2)} UI 1/1 h • EV ${fmt(d,2)} UI/h`,sub:'insulina regular 0,1 UI/kg',prep:'Iniciar 1 h após a expansão inicial, junto com a reposição das perdas. EV em BIC nos casos graves/UTI.',detail:`Reduzir para 0,05 UI/kg (${fmt(red,2)} UI) apenas se já estiver com glicose 7,5% e persistir queda da glicemia, conforme o protocolo.`,source:'emergencia.html / CAD HCA'}})}
+  ]},
+
+  {id:'holliday',title:'🧴 Holliday–Segar',hint:'volume • velocidade • eletrólitos',cards:[
+    {name:'Manutenção — Holliday–Segar',route:'EV',tags:'hidratação holliday manutenção volume sg5 nacl kcl',calc:()=>needWeight(()=>{
+      const p=weight(); let v=p<=10?100*p:p<=20?1000+50*(p-10):1500+20*(p-20); const rate=v/24,bags=v<=500?1:v<=1500?2:3,bag=v/bags,hours=24/bags;
+      const naTotal=v*13.6/100,kTotal=v*2.5/100,nacl=naTotal/3.4,kcl=kTotal/2.5;
+      return {dose:`${fmt(v)} mL/24 h • ${fmt(rate,1)} mL/h`,sub:`${bags} bolsa(s) × ${fmt(bag)} mL • ${fmt(hours)} h cada`,prep:`Padrão do emergencia.html: Na 136 mEq/L e K 25 mEq/L. No total/24 h: NaCl 20% ${fmt(nacl,1)} mL + KCl 19,1% ${fmt(kcl,1)} mL. Por bolsa: NaCl ${fmt(nacl/bags,1)} mL + KCl ${fmt(kcl/bags,1)} mL.`,detail:'Fórmula 100/50/20 mL/kg/dia. Conferir eletrólitos, função renal e diurese antes de adicionar potássio.',source:'emergencia.html / calculadora Holliday-Segar'};
+    })},
+    {name:'Gotejamento Holliday',route:'EV',tags:'holliday gotejamento macro micro gotas hora',calc:()=>needWeight(()=>{const p=weight();let v=p<=10?100*p:p<=20?1000+50*(p-10):1500+20*(p-20);const rate=v/24;return {dose:`${fmt(rate,1)} mL/h`,sub:`${fmt(rate*20/60,1)} gts/min • ${fmt(rate,1)} microgts/min`,prep:'Cálculo com equipo macrogotas 20 gotas/mL ou microgotas 60 gotas/mL.',detail:'Ajustar à condição clínica e ao protocolo específico da doença de base.',source:'emergencia.html'}})}
+  ]},
+
+  {id:'lavagem',title:'👃 Lavagem nasal',hint:'volume por faixa etária',cards:[
+    {name:'SF 0,9% — lavagem nasal',route:'NASAL',tags:'lavagem nasal soro fisiologico rn lactente criança',calc:()=>{
+      if(!$('age').value) return {dose:'Informe a idade',sub:'',prep:'O volume aparece automaticamente conforme a faixa etária.'};
+      const m=ageMonths(); let dose,faixa;
+      if(m<=1){dose='1 mL';faixa='RN até 1 mês'}
+      else if(m<=6){dose='3–5 mL';faixa='>1 a 6 meses'}
+      else if(m<=12){dose='5–10 mL';faixa='>6 a 12 meses'}
+      else if(m<=24){dose='10–15 mL';faixa='1 a 2 anos'}
+      else {dose='15–20 mL';faixa='>2 anos'}
+      return {dose,sub:faixa,prep:'SF 0,9%. Aplicar com técnica gentil, ajustando à tolerância e ao objetivo da lavagem.',detail:'Volumes inseridos conforme solicitado para consulta rápida.',source:'ajuste solicitado'};
+    }}
+  ]},
+
+  {id:'hidratacao',title:'💧 Hidratação',hint:'bolus / expansão',cards:[
+    {name:'Expansão com SF 0,9%',route:'EV/IO',tags:'hidratação desidratação expansão volume sf',calc:()=>needWeight(()=>{const p=weight();return {dose:`${fmt(20*p)} mL`,sub:'20 mL/kg',prep:'Bolus isotônico com reavaliação clínica após cada etapa. Em situações específicas, usar 10 mL/kg conforme risco de sobrecarga.',detail:'A indicação depende do estado hemodinâmico e do protocolo específico.',source:'emergencia.html'}})}
   ]}
 ];
 
@@ -260,20 +317,19 @@ function buildChips(){
 
 const doseHacks = {
   'Sulfato de magnésio 50% / 10%':'50%: P×0,1 • 10%: P×0,5 mL',
-  'Adrenalina 1 mg/mL (1:1000)':'P×0,01 = mL',
+  'Adrenalina 1 mg/mL (1:1000)':'P×0,01 mL = P×1 UI (U-100)',
   'SF 0,9% ou Ringer Lactato':'P×20 = mL',
   'Adrenalina 0,1 mg/mL (1:10.000)':'P×0,1 = mL',
   'Amiodarona 50 mg/mL':'P×0,1 = mL',
   'Lidocaína 20 mg/mL':'P×0,05 = mL',
-  'Midazolam 5 mg/mL — EV/IO':'P×0,03 = mL',
-  'Midazolam 5 mg/mL — IM':'P×0,04 = mL',
-  'Midazolam 5 mg/mL — IN/bucal':'P×0,06 = mL',
-  'Diazepam 5 mg/mL — EV/IO':'P×0,06 = mL • EV LENTO',
-  'Diazepam 5 mg/mL — retal':'P×0,1 = mL',
+  '1ª escolha — Diazepam 5 mg/mL EV/IO':'P×0,04 = mL • EV LENTO',
+  '2ª escolha — Midazolam 5 mg/mL IM':'P×0,04 = mL',
+  'Midazolam 5 mg/mL — IN':'P×0,04 = mL',
+  'Diazepam 5 mg/mL — retal':'P×0,08 = mL',
   'Fenitoína 50 mg/mL':'P×0,4 = mL',
   'Fenobarbital 100 mg/mL':'P×0,2 = mL',
-  'Glicose 10%':'P×2 = mL',
-  '🚨 SG50% + SF 0,9% → SG10%':'SG50 P×0,4 + SF P×1,6',
+  '1ª escolha — SG50% + AD → SG10%':'SG50 P×0,4 + AD P×1,6',
+  'Glicose 10% pronta':'P×2 = mL',
   'Dexametasona 4 mg/mL':'P×0,15 = mL',
   'Adrenalina 1 mg/mL nebulização':'P×0,5 = mL (máx 5)',
   'Cristaloide isotônico':'P×10–20 = mL',
@@ -286,7 +342,9 @@ const doseHacks = {
   'Dipirona 500 mg/mL — injetável':'P×0,03 = mL',
   'Ibuprofeno 100 mg/5 mL':'P×0,5 = mL (10 mg/kg)',
   'Ondansetrona 2 mg/mL':'P×0,075 = mL',
-  'Expansão com SF 0,9%':'P×20 = mL'
+  'Expansão com SF 0,9%':'P×20 = mL',
+  'PA — fecaloma: PEG':'P×1–1,5 g/dia',
+  'CASA — PEG manutenção':'P×0,2–0,8 g/dia'
 };
 
 function cardHtml(card,calc){
@@ -308,7 +366,7 @@ function render(){
   const root=$('content'); root.innerHTML='';
   sections.forEach(sec=>{
     const wrap=document.createElement('section');wrap.className='section';wrap.id='sec-'+sec.id;wrap.dataset.section=sec.id;
-    wrap.innerHTML=`<div class="sectionHead"><h2>${sec.title}</h2><span>${sec.hint}</span></div><div class="grid">${sec.cards.map(c=>{let r;try{r=c.calc()}catch(e){r={dose:'Erro de cálculo',prep:String(e.message||e)}}return cardHtml(c,r)}).join('')}</div>`;
+    wrap.innerHTML=`<div class="sectionHead"><h2>${sec.title}</h2><span>${sec.hint}</span></div>${sec.control?sec.control():''}<div class="grid">${sec.cards.map(c=>{let r;try{r=c.calc()}catch(e){r={dose:'Erro de cálculo',prep:String(e.message||e)}}return cardHtml(c,r)}).join('')}</div>`;
     root.appendChild(wrap);
   });
   updateSummary(); filterCards();
