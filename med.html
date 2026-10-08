@@ -121,7 +121,7 @@ const sections = [
     })},
     {name:'Sulfato de magnésio 50% / 10%',route:'EV • BIC',tags:'asma magnesio sulfato magnésio grave 50% 10% macete',calc:()=>needWeight(()=>{
       const p=weight(),dose=Math.min(50*p,2000),v50=dose/500,v10=dose/100;
-      return {dose:`50%: ${ml(v50)} • 10%: ${ml(v10)}`,sub:`${mg(dose)} • 40–50 mg/kg • máx. 2 g`,prep:'Considerar em ≥2 anos, exacerbação grave/refratária após resposta inadequada ao tratamento inicial. Infundir em 10–20 min conforme o módulo.',detail:'Não usar de rotina e não nebulizar. Confirmar diluição institucional.',source:'emergencia.html / GINA 2026'};
+      return {dose:`50%: ${ml(v50)} + 100 mL SF 0,9% • 10%: ${ml(v10)} + 100 mL SF 0,9%`,sub:`${mg(dose)} • 50 mg/kg • máx. 2 g • BIC 30 min`,prep:'Considerar em ≥2 anos, exacerbação grave/refratária após resposta inadequada ao tratamento inicial. Diluir a dose calculada em 100 mL de SF 0,9% e administrar EV em BIC durante 30 minutos. Programar a bomba para administrar o volume total preparado (100 mL de SF + medicamento) em 30 min.',detail:'Não usar de rotina e não nebulizar. Monitorizar PA, FC e respiração; confirmar diluição institucional.',source:'emergencia.html / GINA 2026'};
     })}
   ]},
 
