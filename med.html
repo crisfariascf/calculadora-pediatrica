@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#fafafa">
-<title>Medicações pediátricas — doses fixas • revisão 4</title>
+<title>Medicações pediátricas — consulta • revisão 5</title>
 <style>
 :root{
   --bg:#f7f7f8;--panel:#ffffff;--panel2:#fbfbfc;--line:#e6e7eb;--ink:#202124;--muted:#73767c;
@@ -77,7 +77,7 @@ body{background:#f4f6f9}.topin,main,.chips,.searchrow{max-width:1080px}.brand h1
 <div class="top">
   <div class="topin">
     <div class="brandrow">
-      <div class="brand"><h1>💊 Medicações Rápidas — Pediatria</h1><small>REVISÃO 4 · IOT: doses fixas · Sedação contínua incluída</small></div>
+      <div class="brand"><h1>💊 Medicações Rápidas — Pediatria</h1><small>REVISÃO 5 · Salbutamol por idade e gravidade · GINA 2026</small></div>
       <div class="status" id="patientSummary">PREENCHA O PESO</div>
     </div>
     <div class="patient">
@@ -492,6 +492,22 @@ const sedSection=sections.find(s=>s.id==='sedacao');
 sedSection.cards=sedSection.cards.filter(c=>!c.name.startsWith('Propofol contínuo —'));
 for(const [percent,conc] of [[1,10],[2,20]])sedSection.cards.push({name:`Propofol ${percent}% — manutenção restrita`,route:'EV • BIC • UTI',tags:'sedação contínua propofol manutenção',calc:()=>needWeight(()=>({dose:ml(2*weight()/conc)+'/h',sub:`${mg(2*weight())}/h • referência: 2 mg/kg/h`,prep:`${percent}% = ${conc} mg/mL: sem diluir.`,calculation:`${percent===1?'0,2':'0,1'} mL/kg/h = 2 mg/kg/h.`,administration:'Somente sob protocolo de UTI; reavaliar e titular. Limitar a <48 h.',detail:'Referência selecionada, não dose do PDF (5 mg/kg/h). PANDEM sugere <4 mg/kg/h por <48 h; evidência baixa. Risco de síndrome de infusão, hipotensão e acidose; não usar como rotina prolongada.',source:'SCCM PANDEM 2022 — https://www.sccm.org/clinical-resources/guidelines/guidelines/pandem-guidelines-for-infants-and-children'}))});
 
+
+// Salbutamol: faixas e intervalos do GINA 2026, sem médias inventadas.
+const asthma=sections.find(s=>s.id==='asma');
+asthma.cards=asthma.cards.filter(c=>!c.name.startsWith('Salbutamol spray'));
+asthma.hint='Salbutamol por idade e gravidade • GINA 2026';
+const salbSource='GINA 2026, Box 9-4 (≥6 anos) e Box 12-5 (≤5 anos): manejo inicial por gravidade. https://ginasthma.org/wp-content/uploads/2026/05/GINA-2026-Strategy-Report-WMS.pdf';
+const salbCards=['leve','moderada','grave'].map(level=>({name:`Salbutamol • crise ${level}`,route:'SPRAY + ESPAÇADOR',tags:'asma salbutamol aerolin jatos leve moderada grave idade gina',calc:()=>{
+ if($('age').value==='')return {dose:'Informe a idade',prep:'Spray 100 mcg/jato + espaçador.',source:salbSource};
+ const young=ageYears()<6;
+ const dose=level==='leve'?'4 jatos':level==='moderada'?(young?'4 jatos':'4–6 jatos'):(young?'4–6 jatos':'6–10 jatos');
+ const interval=level==='leve'?'Reavaliar; se necessário, repetir uma vez após 30–60 min.':level==='moderada'?'Repetir se necessário a cada 20–30 min, até 3 administrações na fase inicial.':young?'Repetir a cada 20 min, com monitorização contínua.':'Repetir se necessário a cada 20–30 min, com monitorização contínua.';
+ const criteria=level==='leve'?'Pouco ou nenhum esforço; boa entrada de ar; SpO₂ ≥94% em ar ambiente.':level==='moderada'?'Uso de musculatura acessória, sibilos e redução da entrada de ar; considerar PRAM 4–7.':'Incapaz de falar/beber, tórax silencioso, SpO₂ <92% ou PRAM 8–12. Sonolência/confusão: risco de vida.';
+ return {dose,sub:`${young?'Até 5 anos':ageYears()<12?'6–11 anos':'≥12 anos'} • 100 mcg/jato • dose por administração`,prep:young?'1 jato por vez; agitar antes de cada jato. Fazer 5–6 respirações pelo espaçador após cada jato; máscara se necessário.':'1 jato por vez; agitar antes de cada jato. Usar espaçador, com respiração corrente se não conseguir inspiração com pausa.',calculation:interval,administration:'Reavaliar em até 1 hora; antes disso se piora. Registrar SpO₂, esforço, entrada de ar e resposta.',detail:[criteria,level==='grave'?'Atendimento imediato em área de emergência: O₂, ipratrópio e corticoide sistêmico; avaliar internação/UTI.':'Não repetir automaticamente se houve boa resposta.',young&&ageYears()<1?'Menor de 1 ano: considerar bronquiolite e outros diagnósticos antes de aplicar o fluxo de asma.':'A gravidade é definida pelo conjunto clínico; não apenas pela saturação.'],source:salbSource};
+}}));
+asthma.cards.unshift(...salbCards);
+
 function quickText(value){
  const items=Array.isArray(value)?value:String(value).split(/\n+|;\s+|(?<=[.!?])\s+(?=[A-ZÀ-Ý])/u);
  return '<ul class="quickList">'+items.filter(t=>String(t).trim()).map(t=>'<li>'+esc(String(t).trim())+'</li>').join('')+'</ul>';
@@ -500,6 +516,7 @@ for(const card of sections.find(s=>s.id==='iot').cards){if(card.name.startsWith(
 function actionRows(card,calc){
  const row=(label,cls,value)=>value?`<div class="metaRow ${cls}"><b>${esc(label)}</b><span>${quickText(value)}</span></div>`:'';
  if(calc.equipment){const e=calc.equipment;return row('SEPARAR','preparation',`Com cuff: ${fmt(e.tc-.5,1)} e ${fmt(e.tc+.5,1)} mm.`)+row('CONFIRMAR','confirmation','Cordas vocais + capnografia com curva + expansão/ausculta.')+row('CONTROLE','control','RX para profundidade, quando disponível.')+row('OBSERVAÇÃO','observation',calc.detail);}
+ if(card.name.startsWith('Salbutamol • crise'))return row('TÉCNICA','preparation',calc.prep)+row('INTERVALO','calculation',calc.calculation)+row('REAVALIAR','administration',calc.administration)+row('AVALIAR','attention',calc.detail);
  const equipment=card.route==='VIA AÉREA';
  return row(equipment?'CONFERIR':'PREPARO','preparation',calc.prep)+row('CÁLCULO','calculation',calc.calculation)+row('ADMINISTRAR','administration',calc.administration)+row('CUIDADO','attention',calc.detail);
 }
