@@ -49,6 +49,12 @@ main{max-width:1120px;margin:auto;padding:10px 12px 40px}
 @media(max-width:440px){.patient{grid-template-columns:1fr .72fr .72fr}.field.sex{grid-column:1/-1}.field.sex select{height:36px}.brand small{display:none}}
 @media print{.top,.searchrow,.chips{display:none!important}body{background:#fff;color:#111}main{max-width:none}.card{break-inside:avoid;background:#fff;color:#111;box-shadow:none;border-color:#bbb}.dose{color:#111}.metaRow{background:#fff}.metaRow span{color:#222}.sectionHead span,.tagline,.footer{color:#555}}
 .ecgFigure{margin:12px 0}.ecgFigure img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}.ecgFigure figcaption{font-size:11px;color:var(--muted);line-height:1.4;margin-top:5px}.card:has(.ecgFigure){grid-column:1/-1}
+
+/* Estilo 1: blocos coloridos e contraste para consulta rápida */
+.drug{font-size:18px;line-height:1.35;color:#881337}.route{font-size:11px}.dose{font-size:26px;color:#881337;padding:12px;border:2px solid #9f1239;border-radius:12px;background:#fffafb;margin-top:14px}.subdose{font-size:15px;line-height:1.5}.meta{gap:10px}.metaRow{padding:13px 14px;border-radius:12px;border:1px solid #cbd5e1;background:#f1f5f9}.metaRow b{font-size:13px;letter-spacing:.035em;color:#172033;margin-bottom:7px}.metaRow span{display:block;font-size:16px;line-height:1.55;color:#152235;font-weight:550;white-space:pre-line;overflow-wrap:anywhere}.metaRow.preparation{background:#dbeeff;border-color:#93c5fd;border-left:5px solid #2563eb}.metaRow.calculation{background:#dcfce7;border-color:#86d5a0;border-left:5px solid #15803d}.metaRow.administration{background:#f1f2f5;border-color:#cbd0da;border-left:5px solid #64748b}.metaRow.attention{background:#fff0b8;border-color:#e6bd4c;border-left:5px solid #b77900}.metaRow.attention span{color:#49320a}.tagline{font-size:11px;color:#555f6e;line-height:1.5}.tagline strong{color:#475569}.cardTop{padding-bottom:8px;border-bottom:2px solid #f3dce4}.card{padding:16px}.sectionHead span{color:#465264;font-size:12px}
+@media(max-width:720px){.dose{font-size:24px}.metaRow span{font-size:16px}.drug{font-size:18px}}
+@media print{.metaRow{print-color-adjust:exact;-webkit-print-color-adjust:exact}.dose{font-size:22px}.metaRow span{font-size:12px}}
+
 </style>
 </head>
 <body>
@@ -409,6 +415,23 @@ const doseHacks = {
   'CASA — PEG manutenção':'P×0,2–0,8 g/dia'
 };
 
+
+// Informações operacionais separadas: valores calculados sempre da solução indicada.
+const iotBlocks = [
+ {prefix:'Fentanil 50',preparation:'1 mL de fentanil 50 mcg/mL + 4 mL de SF 0,9%.\nVolume final: 5 mL • concentração final: 10 mcg/mL.',calculation:'0,1–0,2 mL/kg da solução diluída = 1–2 mcg/kg/dose.',administration:'Aspirar o volume calculado da solução 10 mcg/mL. Administrar EV lentamente, em 1–2 minutos.'},
+ {prefix:'Cetamina 50',preparation:'1 mL de cetamina 50 mg/mL + 4 mL de SF 0,9%.\nVolume final: 5 mL • concentração final: 10 mg/mL.',calculation:'0,1–0,2 mL/kg da solução diluída = 1–2 mg/kg/dose. Ajustar a dose à condição hemodinâmica.',administration:'Aspirar o volume calculado da solução 10 mg/mL. Administrar EV em aproximadamente 60 segundos.'},
+ {prefix:'Etomidato 2',preparation:'Solução pronta: 2 mg/mL. Usar sem diluir.',calculation:'0,1–0,2 mL/kg = 0,2–0,4 mg/kg/dose. Referência: 0,15 mL/kg = 0,3 mg/kg. Máximo: 20 mg = 10 mL.',administration:'Administrar EV em 30–60 segundos, conforme formulação.'},
+ {prefix:'Propofol 1%',preparation:'Apresentação 1% = 10 mg/mL. Usar sem diluir. Se a apresentação for 2% = 20 mg/mL, o volume será metade.',calculation:'Na apresentação 1%: 0,1–0,2 mL/kg = 1–2 mg/kg/dose.',administration:'Administrar EV lentamente e titular à resposta, aproximadamente 20–30 segundos.'},
+ {prefix:'Atropina 0,25',preparation:'Solução pronta: 0,25 mg/mL. Usar sem diluir.',calculation:'0,08 mL/kg = 0,02 mg/kg/dose. Máximo: 0,5 mg = 2 mL. Sem dose mínima na pré-medicação de IOT.',administration:'EV antes da indução, somente quando selecionada pelo risco de bradicardia peri-IOT; não é etapa obrigatória.'},
+ {prefix:'Rocurônio 10',preparation:'Solução pronta: 10 mg/mL. Usar sem diluir; não acrescentar 10 mL de SF à dose.',calculation:'0,1 mL/kg = 1 mg/kg/dose, conforme PDF.',administration:'EV em bolus, após indução adequada; lavar o acesso. Garantir sedoanalgesia após a IOT.'},
+ {prefix:'Succinilcolina 100',preparation:'Frasco de 100 mg: reconstituir conforme bula para concentração final de 20 mg/mL (volume final de 5 mL). Confirmar concentração antes de aspirar.',calculation:'Esquema do PDF: 0,1 mL/kg da solução 20 mg/mL = 2 mg/kg/dose. Se selecionada dose de 1 mg/kg em criança maior/adolescente: 0,05 mL/kg.',administration:'EV em bolus após indução adequada. Usar o volume da apresentação correta; conferir contraindicações.'},
+ {prefix:'Succinilcolina 500',preparation:'Frasco de 500 mg: reconstituir conforme bula para concentração final de 50 mg/mL (volume final de 10 mL). Confirmar concentração antes de aspirar.',calculation:'Esquema do PDF: 0,04 mL/kg da solução 50 mg/mL = 2 mg/kg/dose. Se selecionada dose de 1 mg/kg em criança maior/adolescente: 0,02 mL/kg.',administration:'EV em bolus após indução adequada. Usar o volume da apresentação correta; conferir contraindicações.'}
+];
+for(const card of sections.find(s=>s.id==='iot').cards){
+ const block=iotBlocks.find(b=>card.name.startsWith(b.prefix));
+ if(block){const base=card.calc;card.calc=()=>{const r=base();return {...r,prep:block.preparation,calculation:block.calculation,administration:block.administration};};}
+}
+
 function cardHtml(card,calc){
   const dose=calc.dose||'—',pending=dose==='Informe o peso';
   return `<article class="card" data-search="${esc((card.name+' '+card.tags).toLowerCase())}">
@@ -417,8 +440,10 @@ function cardHtml(card,calc){
     ${calc.image?`<figure class="ecgFigure"><a href="${calc.image}" target="_blank" rel="noopener"><img src="${calc.image}" alt="${esc(calc.imageAlt||'Traçados eletrocardiográficos didáticos')}" loading="lazy"></a><figcaption>${esc(calc.caption||'')}</figcaption></figure>`:''}
     ${calc.sub?`<div class="subdose">${esc(calc.sub)}</div>`:''}
     <div class="meta">
-      ${calc.prep?`<div class="metaRow"><b>Preparo / uso</b><span>${esc(calc.prep)}</span></div>`:''}
-      ${calc.detail?`<div class="metaRow"><b>Atenção</b><span>${esc(calc.detail)}</span></div>`:''}
+      ${calc.prep?`<div class="metaRow preparation"><b>PREPARO / MODO DE USO</b><span>${esc(calc.prep)}</span></div>`:''}
+      ${calc.calculation?`<div class="metaRow calculation"><b>CÁLCULO • mL/kg</b><span>${esc(calc.calculation)}</span></div>`:''}
+      ${calc.administration?`<div class="metaRow administration"><b>ADMINISTRAÇÃO • VIA E TEMPO</b><span>${esc(calc.administration)}</span></div>`:''}
+      ${calc.detail?`<div class="metaRow attention"><b>ATENÇÃO</b><span>${esc(calc.detail)}</span></div>`:''}
     </div>
     ${calc.source?`<div class="tagline">Fonte de organização: <strong>${esc(calc.source)}</strong></div>`:''}
   </article>`;
