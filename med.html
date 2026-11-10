@@ -55,6 +55,22 @@ main{max-width:1120px;margin:auto;padding:10px 12px 40px}
 @media(max-width:720px){.dose{font-size:24px}.metaRow span{font-size:16px}.drug{font-size:18px}}
 @media print{.metaRow{print-color-adjust:exact;-webkit-print-color-adjust:exact}.dose{font-size:22px}.metaRow span{font-size:12px}}
 
+
+/* Consulta compacta */
+.card{padding:11px}.drug{font-size:14px;line-height:1.3}.cardTop{padding-bottom:5px}.route,.hack{font-size:9px}.dose{font-size:20px;padding:7px 9px;margin:8px 0 3px;border-width:1px}.subdose{font-size:12px;line-height:1.35}.meta{gap:5px;margin-top:7px}.metaRow{padding:7px 9px;border-left-width:3px!important;border-radius:8px}.metaRow b{font-size:10px;margin-bottom:3px;letter-spacing:.025em}.metaRow span{font-size:13px;line-height:1.4;font-weight:500}.tagline{font-size:10px;margin-top:6px}.reference{margin-top:6px;color:#596273;font-size:10px}.reference summary{cursor:pointer}.reference .tagline{overflow-wrap:anywhere}.grid{gap:8px}
+@media(max-width:720px){.drug{font-size:14px}.dose{font-size:20px}.metaRow span{font-size:13px}}
+
+
+/* Organização de consulta: resultados, ações e checagens */
+body{background:#f4f6f9}.topin,main,.chips,.searchrow{max-width:1080px}.brand h1{font-size:16px}.sectionHead{display:block}.sectionHead h2{font-size:17px}.sectionHead>span{display:none}.cardTop{border:0;padding:0;display:block}.badges{justify-content:flex-start;margin-top:5px}.drug{font-size:14px;color:#25354a}.card{padding:12px;border-radius:12px;box-shadow:0 2px 8px #17203306}.dose{border:0;border-radius:7px;padding:7px 8px;background:#f5eaf0;font-size:19px;line-height:1.3;color:#881337}.dose.pending{font-size:13px}.subdose{color:#475569;font-size:11px;line-height:1.4}.meta{gap:0;margin-top:8px}.metaRow{background:transparent!important;border:0!important;border-radius:0;padding:7px 0;display:grid;grid-template-columns:66px minmax(0,1fr);gap:8px;border-top:1px solid #edf0f4!important}.metaRow b{font-size:9px;letter-spacing:.03em;margin:2px 0;color:#1d4ed8}.metaRow.calculation b{color:#157347}.metaRow.administration b{color:#475569}.metaRow.attention b{color:#9a6700}.metaRow span,.metaRow.attention span{font-size:12px;color:#263548;line-height:1.45}.quickList{margin:0;padding:0;list-style:none;display:grid;gap:4px}.quickList li{padding-left:10px;position:relative}.quickList li:before{content:'•';position:absolute;left:0;color:#64748b}.equipmentGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.equipmentMetric{background:#eef4fc;padding:8px;border-radius:8px;text-align:center}.equipmentMetric small{display:block;font-size:10px;color:#526176;margin-bottom:3px}.equipmentMetric strong{display:block;white-space:nowrap;font-size:19px;color:#243e67}.equipmentDepth{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#475569;margin:8px 0}.field.sex{display:none}.patient{grid-template-columns:1fr 1fr 1fr}.top{position:relative}.section{scroll-margin-top:15px}.grid{align-items:start}
+
+.grid{grid-template-columns:1fr}.card{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(140px,.7fr) minmax(230px,2fr);gap:0 15px}.cardTop{grid-column:1;grid-row:1/4}.dose,.equipmentGrid{grid-column:2;grid-row:1;margin-top:0}.subdose,.equipmentDepth{grid-column:2}.meta{grid-column:3;grid-row:1/5;margin:0}.reference{grid-column:1/3}.ecgFigure{grid-column:1/-1}
+@media(max-width:720px){.dose{font-size:19px}.drug{font-size:14px}.metaRow span{font-size:12px}.brand h1{font-size:15px}.status{font-size:10px}.card{padding:11px}.topin{padding:10px}.field input,.field select{height:35px}.grid{grid-template-columns:1fr}.card{display:block}.meta{margin-top:7px}.metaRow{grid-template-columns:58px minmax(0,1fr);padding:5px 0}.equipmentMetric strong{font-size:19px}.patient{grid-template-columns:1fr .8fr 1fr}}
+
+
+/* Lista compacta: rótulos funcionais, sem marcadores */
+.quickList li{padding-left:0}.quickList li:before{content:none}.quickList{gap:4px}.metaRow{grid-template-columns:76px minmax(0,1fr)!important;align-items:start;gap:7px}.metaRow b{display:inline-block;padding:3px 5px;border-radius:4px;background:#e5efff;color:#194a87;font-size:9px;letter-spacing:0;line-height:1.25;margin:0;text-align:left;overflow-wrap:anywhere}.metaRow.calculation b,.metaRow.confirmation b{background:#e5f3e8;color:#23633d}.metaRow.administration b{background:#e4f3f8;color:#176078}.metaRow.attention b,.metaRow.control b{background:#fff0da;color:#8b541c}.metaRow.observation b{background:#eeeafa;color:#61469a}.metaRow span{line-height:1.4}.equipmentMetric{padding:6px}.equipmentMetric small{font-size:9px}.equipmentMetric strong{font-size:18px}
+
 </style>
 </head>
 <body>
@@ -432,20 +448,45 @@ for(const card of sections.find(s=>s.id==='iot').cards){
  if(block){const base=card.calc;card.calc=()=>{const r=base();return {...r,prep:block.preparation,calculation:block.calculation,administration:block.administration};};}
 }
 
+
+const compactIot=[["Fentanil 50", "1 mL (50 mcg/mL) + 4 mL SF 0,9% → 10 mcg/mL.", "0,1–0,2 mL/kg da solução diluída.", "EV em 1–2 min.", "Analgesia adjuvante. Risco: apneia, hipotensão e rigidez torácica; evitar injeção rápida."], ["Cetamina 50", "1 mL (50 mg/mL) + 4 mL SF 0,9% → 10 mg/mL.", "0,1–0,2 mL/kg da solução diluída.", "EV em ≈60 s.", "Indutor com analgesia. No choque, reduzir conforme resposta; pode causar hipotensão."], ["Etomidato 2", "2 mg/mL: sem diluir.", "0,1–0,2 mL/kg; usual 0,15 mL/kg. Máx. 10 mL (20 mg).", "EV em 30–60 s.", "Sem analgesia. Evitar em sepse/choque séptico: supressão adrenal."], ["Propofol 1%", "1% = 10 mg/mL: sem diluir.", "0,1–0,2 mL/kg (1%).", "EV em 20–30 s; titular.", "Sem analgesia. Hipotensão/apneia; evitar no choque. Se 2%, usar metade do volume. Não é esquema de infusão contínua."], ["Atropina 0,25", "0,25 mg/mL: sem diluir.", "0,08 mL/kg; máx. 2 mL. Sem mínimo na pré-IOT.", "EV antes da indução, se indicada.", "Uso seletivo pelo risco de bradicardia; não obrigatória. Tratamento de bradicardia: ver aba própria."], ["Rocurônio 10", "10 mg/mL: sem diluir.", "0,1 mL/kg = 1 mg/kg.", "EV em bolus após indução; lavar acesso.", "Não seda nem trata dor. Manter sedoanalgesia após IOT; bloqueio prolongado."], ["Succinilcolina 100", "100 mg → volume final 5 mL = 20 mg/mL; conferir bula.", "0,1 mL/kg = 2 mg/kg.", "EV em bolus após indução.", "Criança maior/adolescente: se dose de 1 mg/kg, usar 0,05 mL/kg. Evitar: hipercalemia, miopatia/denervação, hipertermia maligna e queimadura/esmagamento no período de risco."], ["Succinilcolina 500", "500 mg → volume final 10 mL = 50 mg/mL; conferir bula.", "0,04 mL/kg = 2 mg/kg.", "EV em bolus após indução.", "Criança maior/adolescente: se dose de 1 mg/kg, usar 0,02 mL/kg. Evitar: hipercalemia, miopatia/denervação, hipertermia maligna e queimadura/esmagamento no período de risco."]];
+
+for(const card of sections.find(s=>s.id==='iot').cards){
+ const row=compactIot.find(r=>card.name.startsWith(r[0]));
+ if(row){const base=card.calc;card.calc=()=>({...base(),prep:row[1],calculation:row[2],administration:row[3],detail:row[4]});}
+}
+
+for(const card of sections.find(s=>s.id==='iot').cards){
+ const base=card.calc;
+ if(card.name.startsWith('Tubo orotraqueal'))card.calc=()=>{const r=base();return {...r,prep:'Separar tubo ±0,5 mm. Confirmar com capnografia; RX para profundidade.',detail:'≥1 ano: com cuff = idade/4 + 3,5; sem cuff = idade/4 + 4. Oral ≈3 × calibre escolhido. RN/prematuro: usar peso/idade gestacional.',source:'PDF Vanessa 2026; RCH Airway management'};};
+ if(card.name.startsWith('Lâmina'))card.calc=()=>({...base(),prep:'Conferir luz e funcionamento; separar lâmina alternativa.',detail:'Ajustar à anatomia e ao dispositivo.',source:'PDF Vanessa 2026'});
+ if(card.name.startsWith('Cuff —'))card.calc=()=>({...base(),prep:'Medir com manômetro; usar a menor pressão que vede.',detail:'Sem volume fixo de ar. Reavaliar após posicionamento.'});
+ if(card.name.startsWith('Máscara,'))card.calc=()=>({...base(),prep:'BVM + O₂, aspiração, estilete, seringa, manômetro e capnografia.',detail:'Máscara: conferir vedação. Estilete sem ultrapassar a ponta. Sonda compatível com tubo; aspirar ≤15 s, sem SF rotineiro.',source:'RCH; AARC 2022'});
+ if(card.name.startsWith('Sequência e segurança'))card.calc=()=>({...base(),dose:'Pré-oxigenar → induzir → bloquear',prep:'Monitorizar, obter acesso e otimizar perfusão. Preparar resgate.',detail:'Confirmar com capnografia. Iniciar sedoanalgesia pós-IOT imediatamente.'});
+ if(card.name.startsWith('Midazolam')){card.name='Midazolam 5 mg/mL';card.calc=()=>({...base(),prep:'5 mg/mL: 0,02 mL/kg = 0,1 mg/kg.',detail:'Alternativa; não consta no PDF. Sem analgesia; risco de hipotensão. Não associar automaticamente a outro indutor.'});}
+ if(card.name.startsWith('Pancurônio e'))card.calc=()=>({...base(),dose:'Não rotineiros na sequência rápida',prep:'Pancurônio: início lento. Lidocaína: sem uso obrigatório.',detail:'Sugamadex não é reversor padrão de pancurônio.'});
+}
+
+function quickText(value){
+ const items=Array.isArray(value)?value:String(value).split(/\n+|;\s+|(?<=[.!?])\s+(?=[A-ZÀ-Ý])/u);
+ return '<ul class="quickList">'+items.filter(t=>String(t).trim()).map(t=>'<li>'+esc(String(t).trim())+'</li>').join('')+'</ul>';
+}
+for(const card of sections.find(s=>s.id==='iot').cards){if(card.name.startsWith('Tubo orotraqueal')){card.name='Tubo orotraqueal';const base=card.calc;card.calc=()=>{const e=airwayEquipment();if(!e)return base();return {...base(),equipment:e,sub:'',prep:[`Separar também com cuff ${fmt(e.tc-.5,1)} e ${fmt(e.tc+.5,1)} mm.`,`Confirmar: cordas vocais + capnografia com curva + expansão/ausculta.`,`RX para conferir profundidade, quando disponível.`],detail:['Calibres e profundidade são estimativas.','Oral ≈ 3 × calibre do tubo usado; recalcular se trocar.','RN/prematuro: individualizar por peso e idade gestacional.']};};}}
+function actionRows(card,calc){
+ const row=(label,cls,value)=>value?`<div class="metaRow ${cls}"><b>${esc(label)}</b><span>${quickText(value)}</span></div>`:'';
+ if(calc.equipment){const e=calc.equipment;return row('SEPARAR','preparation',`Com cuff: ${fmt(e.tc-.5,1)} e ${fmt(e.tc+.5,1)} mm.`)+row('CONFIRMAR','confirmation','Cordas vocais + capnografia com curva + expansão/ausculta.')+row('CONTROLE','control','RX para profundidade, quando disponível.')+row('OBSERVAÇÃO','observation',calc.detail);}
+ const equipment=card.route==='VIA AÉREA';
+ return row(equipment?'CONFERIR':'PREPARO','preparation',calc.prep)+row('CÁLCULO','calculation',calc.calculation)+row('ADMINISTRAR','administration',calc.administration)+row('CUIDADO','attention',calc.detail);
+}
 function cardHtml(card,calc){
   const dose=calc.dose||'—',pending=dose==='Informe o peso';
   return `<article class="card" data-search="${esc((card.name+' '+card.tags).toLowerCase())}">
     <div class="cardTop"><div class="drug">${esc(card.name)}</div><div class="badges"><span class="route">${esc(card.route)}</span>${doseHacks[card.name]?`<span class="hack">${esc(doseHacks[card.name])}</span>`:''}</div></div>
-    <div class="dose ${pending?'pending':''}">${esc(dose)}</div>
+    ${calc.equipment?`<div class="equipmentGrid"><div class="equipmentMetric"><small>COM CUFF</small><strong>${esc(fmt(calc.equipment.tc,1))} mm</strong></div><div class="equipmentMetric"><small>SEM CUFF</small><strong>${esc(fmt(calc.equipment.ts,1))} mm</strong></div></div><div class="equipmentDepth"><span>Oral ≈ ${esc(fmt(calc.equipment.oral,1))} cm</span><span>Nasal ≈ ${esc(fmt(calc.equipment.nasal,1))} cm</span></div>`:`<div class="dose ${pending?'pending':''}">${esc(dose)}</div>`}
     ${calc.image?`<figure class="ecgFigure"><a href="${calc.image}" target="_blank" rel="noopener"><img src="${calc.image}" alt="${esc(calc.imageAlt||'Traçados eletrocardiográficos didáticos')}" loading="lazy"></a><figcaption>${esc(calc.caption||'')}</figcaption></figure>`:''}
     ${calc.sub?`<div class="subdose">${esc(calc.sub)}</div>`:''}
-    <div class="meta">
-      ${calc.prep?`<div class="metaRow preparation"><b>PREPARO / MODO DE USO</b><span>${esc(calc.prep)}</span></div>`:''}
-      ${calc.calculation?`<div class="metaRow calculation"><b>CÁLCULO • mL/kg</b><span>${esc(calc.calculation)}</span></div>`:''}
-      ${calc.administration?`<div class="metaRow administration"><b>ADMINISTRAÇÃO • VIA E TEMPO</b><span>${esc(calc.administration)}</span></div>`:''}
-      ${calc.detail?`<div class="metaRow attention"><b>ATENÇÃO</b><span>${esc(calc.detail)}</span></div>`:''}
-    </div>
-    ${calc.source?`<div class="tagline">Fonte de organização: <strong>${esc(calc.source)}</strong></div>`:''}
+    <div class="meta">${actionRows(card,calc)}</div>
+    ${calc.source?`<details class="reference"><summary>Referência</summary><div class="tagline">${esc(calc.source)}</div></details>`:''}
   </article>`;
 }
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
