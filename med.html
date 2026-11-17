@@ -72,6 +72,9 @@ body{background:#f4f6f9}.topin,main,.chips,.searchrow{max-width:1080px}.brand h1
 .quickList li{padding-left:0}.quickList li:before{content:none}.quickList{gap:4px}.metaRow{grid-template-columns:76px minmax(0,1fr)!important;align-items:start;gap:7px}.metaRow b{display:inline-block;padding:3px 5px;border-radius:4px;background:#e5efff;color:#194a87;font-size:9px;letter-spacing:0;line-height:1.25;margin:0;text-align:left;overflow-wrap:anywhere}.metaRow.calculation b,.metaRow.confirmation b{background:#e5f3e8;color:#23633d}.metaRow.administration b{background:#e4f3f8;color:#176078}.metaRow.attention b,.metaRow.control b{background:#fff0da;color:#8b541c}.metaRow.observation b{background:#eeeafa;color:#61469a}.metaRow span{line-height:1.4}.equipmentMetric{padding:6px}.equipmentMetric small{font-size:9px}.equipmentMetric strong{font-size:18px}
 
 </style>
+<style>
+.exanthemaCard{border-left:4px solid var(--ex-color);padding:0;overflow:hidden}.exanthemaCard summary{cursor:pointer;list-style:none;padding:18px;position:relative;padding-right:42px}.exanthemaCard summary::-webkit-details-marker{display:none}.exanthemaCard summary:after{content:'＋';position:absolute;right:15px;top:18px;color:var(--ex-color);font-size:23px}.exanthemaCard[open] summary:after{content:'−'}.exanthemaCard h3{color:var(--ex-color);font-size:16px;margin:0 0 8px}.exanthemaCard summary p{margin:0;font-size:14px;line-height:1.5}.exanthemaBody{padding:0 18px 18px}.exanthemaBody h4{color:var(--ex-color);font-size:11px;letter-spacing:1px;margin:16px 0 6px}.exanthemaBody p{font-size:14px;line-height:1.6;margin:0}.exanthemaAlert{border:1px solid #aa4663;border-radius:12px;background:#501e3022;padding:14px;line-height:1.5;margin:10px 0 18px;font-size:14px}.exanthemaIntro{font-size:13px;line-height:1.6;margin:10px 0 16px;opacity:.85}.exanthemaSource{font-size:12px;line-height:1.6;padding-top:16px;opacity:.8}.exanthemaSource a{color:inherit;text-decoration:underline}
+</style>
 </head>
 <body>
 <div class="top">
@@ -520,7 +523,31 @@ function actionRows(card,calc){
  const equipment=card.route==='VIA AÉREA';
  return row(equipment?'CONFERIR':'PREPARO','preparation',calc.prep)+row('CÁLCULO','calculation',calc.calculation)+row('ADMINISTRAR','administration',calc.administration)+row('CUIDADO','attention',calc.detail);
 }
+const exanthemaData=[
+['EXANTEMA SÚBITO','#70baff','Febre cede → manchas aparecem',[
+['CONTEXTO','Mais típico em lactentes e crianças pequenas. Exantema súbito e parvovirose são doenças diferentes.'],['SEQUÊNCIA','Febre alta por alguns dias; o exantema costuma surgir quando a febre cede, geralmente começando no tronco.'],['PROCURAR','Manchas rosadas com extensão para pescoço e membros; avaliar estado geral e hidratação.'],['NÃO PASSAR BATIDO','Febre persistente, toxemia ou piora clínica exigem reconsiderar a hipótese.']]],
+['PARVOVIROSE • ERITEMA INFECCIOSO','#6bdeb1','Bochechas vermelhas + padrão rendilhado',[
+['PISTA','Eritema malar, seguido de exantema rendilhado em tronco e membros. Nem todas as crianças apresentam o padrão clássico.'],['CONTEXTO','Pródromos leves; pode haver artralgia. As manchas podem reaparecer com calor.'],['ATENÇÃO','Hemoglobinopatias/anemias hemolíticas, imunossupressão e contato com gestantes mudam a avaliação pelo risco de complicações.']]],
+['ESCARLATINA','#ffcc70','Pele em lixa + faringite',[
+['PISTA','Exantema eritematoso fino e áspero, que costuma desaparecer à pressão, associado frequentemente a faringite. Mais comum entre 5 e 15 anos.'],['PROCURAR NO EXAME','Linhas de Pastia nas dobras, palidez perioral e língua em morango. Palmas e plantas geralmente são poupadas; pode haver descamação posterior.'],['DIRECIONAMENTO','Na suspeita, pesquisar estreptococo do grupo A com teste rápido, teste molecular ou cultura conforme disponibilidade. Teste rápido negativo em criança pode exigir cultura confirmatória.'],['LEMBRETE','Língua em morango também ocorre em Kawasaki; integrar duração da febre, conjuntivas e extremidades.']]],
+['MONONUCLEOSE','#c2a1ff','Faringite + linfonodos cervicais posteriores',[
+['PISTA','Febre, faringite e linfadenopatia, especialmente cervical posterior; fadiga pode ser marcante.'],['PROCURAR','Adenomegalias em outras cadeias e hepatoesplenomegalia. Exantema pode ocorrer, inclusive após aminopenicilinas.'],['DIRECIONAMENTO','Conforme o quadro, hemograma e testes para EBV. Um exantema após amoxicilina nesse contexto não confirma, isoladamente, alergia permanente.'],['ATENÇÃO','Obstrução de via aérea, dor abdominal importante ou suspeita de esplenomegalia exigem avaliação dirigida.']]],
+['KAWASAKI','#ff95c9','Febre persistente + sinais mucocutâneos',[
+['QUANDO LEMBRAR','Principalmente em menores de 5 anos com febre persistente sem explicação; não esperar todos os sinais para discutir a suspeita.'],['PROCURAR','Conjuntivite bilateral não purulenta; lábios vermelhos/fissurados ou língua em morango; exantema polimorfo; eritema/edema de mãos e pés; linfonodo cervical ≥1,5 cm, geralmente unilateral.'],['FORMA INCOMPLETA','Considerar com febre ≥5 dias e 2–3 achados principais; lactentes com febre inexplicada ≥7 dias merecem avaliação mesmo com poucos sinais. Esses limiares não impedem avaliação anterior se a suspeita for alta.'],['DIRECIONAMENTO','Avaliação pediátrica especializada, marcadores inflamatórios e ecocardiograma conforme suspeita. Não aguardar descamação para investigar.']]],
+['SARAMPO','#6cd8e8','Febre + tosse, coriza e conjuntivite',[
+['SEQUÊNCIA','Pródromos febris; exantema começa na face e progride para tronco e membros. Manchas de Koplik podem ocorrer, mas sua ausência não exclui.'],['CONTEXTO','Conferir vacinação, viagens e contato com caso suspeito. A apresentação deve ser avaliada mesmo sem vínculo epidemiológico reconhecido.'],['AÇÃO NA SUSPEITA','Separar imediatamente e instituir precauções para aerossóis; comunicar prontamente à vigilância epidemiológica. Organizar coleta diagnóstica com a rede local, sem aguardar confirmação para isolar.']]]
+];
+const exanthemaLinks=[
+['NHS — Roseola','https://www.nhs.uk/conditions/roseola/'],
+['CDC — Parvovírus B19','https://www.cdc.gov/parvovirus-b19/about/'],
+['CDC — Escarlatina (2026)','https://www.cdc.gov/group-a-strep/hcp/clinical-guidance/scarlet-fever.html'],
+['CDC — Mononucleose','https://www.cdc.gov/epstein-barr/about/mononucleosis.html'],
+['CPS — Kawasaki (2026)','https://cps.ca/en/documents/position/kawasaki-disease'],
+['CDC — Sarampo','https://www.cdc.gov/measles/hcp/clinical-overview/index.html']];
+sections.push({id:'exantemas',title:'Exantemas • pistas rápidas',hint:'Toque para expandir • sem necessidade de peso',control:()=>`<div class="exanthemaAlert"><strong>ATENÇÃO IMEDIATA</strong><br>Petéquias/púrpura com febre ou comprometimento geral, instabilidade, alteração de consciência, dor cutânea intensa, bolhas ou erosões extensas de mucosas exigem avaliação urgente.</div><p class="exanthemaIntro">Pistas sugestivas: não confirmam nem excluem diagnósticos isoladamente. Avaliar evolução temporal, vacinação, contatos e medicamentos. Este resumo não esgota o diferencial.</p>`,cards:exanthemaData.map(([name,color,hint,items],i)=>({name,route:'PISTAS CLÍNICAS',tags:[hint,...items.flat()].join(' '),exanthema:{color,hint,items,reference:exanthemaLinks[i]},calc:()=>({})}))});
 function cardHtml(card,calc){
+  if(card.exanthema){const e=card.exanthema;return `<details class="card exanthemaCard" style="--ex-color:${e.color}" data-search="${esc((card.name+' '+card.tags).toLowerCase())}"><summary><h3>${esc(card.name)}</h3><p>${esc(e.hint)}</p></summary><div class="exanthemaBody">${e.items.map(([title,text])=>`<h4>${esc(title)}</h4><p>${esc(text)}</p>`).join('')}<div class="exanthemaSource"><a href="${esc(e.reference[1])}" target="_blank" rel="noopener">${esc(e.reference[0])}</a><br>Consultado em 16/11/2026.</div></div></details>`;}
+
   const dose=calc.dose||'—',pending=dose==='Informe o peso';
   return `<article class="card" data-search="${esc((card.name+' '+card.tags).toLowerCase())}">
     <div class="cardTop"><div class="drug">${esc(card.name)}</div><div class="badges"><span class="route">${esc(card.route)}</span>${doseHacks[card.name]?`<span class="hack">${esc(doseHacks[card.name])}</span>`:''}</div></div>
